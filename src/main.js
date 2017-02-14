@@ -5,9 +5,59 @@ var w=1920*ratio_device
 var h2=h*.5
 var w2=640
 
+screen_first = function(){
+	Phaser.Sprite.call(this,game,w2,200,'title')
+	this.anchor.setTo(.5,.5)
+	this.button_restart=game.add.button(w2,h2+400,'button_menu',this.next_level,this)
+	this.button_restart.anchor.setTo(.5,.5)
+	this.button_next=game.add.button(w2,h2,'button_play',this.next_level,this)
+	this.button_next.anchor.setTo(.5,.5)
+	this.button_restart.scale.setTo(0,0)
+	this.button_restart.visible=false
+	this.button_next.scale.setTo(0,0)
+	this.button_next.visible=false
+	game.time.events.loop( 500,this.explosion,this )
+game.time.events.add( 200,this.show_button,this )
+	
+}
+screen_first.prototype = Object.create(Phaser.Sprite.prototype)
+screen_first.prototype.constructor = screen_first
+
+screen_first.prototype.next_level = function() {
+	this.game.state.start("game_state");
+	console.log('next-level')
+}
+
+screen_first.prototype.explosion = function() {
+			this._x=game.rnd.integerInRange(0,w)
+			this._y=game.rnd.integerInRange(0,h)
+	this.particle = game.add.emitter(this._x,this._y,200)
+	this.particle.makeParticles("rect")
+	this.particle.minParticleSpeed.setTo(-600,-600)
+	this.particle.maxParticleSpeed.setTo(800,800)
+	this.particle.setAlpha(.8, .6)
+	this.particle.minParticleScale = .2
+	this.particle.maxParticleScale = .5
+	this.particle.minRotation = 0
+	this.particle.maxRotation = 0
+	this.particle.on=false
+	this.particle.start(true,3900,null,20)
+	
+}
+screen_first.prototype.show_button = function() {
+	this.button_restart.visible=true
+this.button_next.visible=true
+	this.tween2=game.add.tween(this.button_restart.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
+	this.tween3=game.add.tween(this.button_next.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
+	
+}
+
+
+
 character = function(){
 	Phaser.Sprite.call(this,game,w2,-400,'rect')
-
+	this.flag_mouse=false
+this.flag_show_button=true
 	//cible
 	this.cible=game.add.sprite(w2,300,'cible')
 	this.cible.anchor.setTo(.5,.5)
@@ -38,9 +88,11 @@ character = function(){
 	this.button_restart=game.add.button(w2,h2,'restart',this.next_level,this)
 	this.button_restart.anchor.setTo(.5,.5)
 	this.button_restart.scale.setTo(0,0)
+	this.button_restart.visible=false
 	this.button_next=game.add.button(w2,this.cible.y,'next',this.next_level,this)
 	this.button_next.anchor.setTo(.5,.5)
 	this.button_next.scale.setTo(0,0)
+	this.button_next.visible=false
 }
 character.prototype = Object.create(Phaser.Sprite.prototype)
 character.prototype.constructor = character
@@ -52,9 +104,25 @@ character.prototype.next_level = function() {
 	this.game.state.start("game_state");
 	console.log('next-level')
 }
+character.prototype.launch_with_mouse=function(){
+	if(this.flag_level_complete==false && this.flag_mouse==false){
+this.flag_mouse=true
+		game.time.events.add( 500,function(){this.flag_mouse=false},this )
+
+		this.count=this.count+1
+		if(this.count <= 2){
+			console.log(this.count);
+			this.player[this.count].visible=true
+			this.player[this.count].body.velocity.y=-800
+			if(this.count==2){
+				game.time.events.add( 2000,this.show_button_restart,this )
+			}
+		}
+	}
+}
 
 character.prototype.launch=function(){
-	if(this.flag_level_complete==false){
+	if(this.flag_level_complete==false && this.flag_spacekey==false){
 		game.time.events.add( 500,function(){this.flag_spacekey=true;console.log('couco',this.flag_spacekey)},this )
 
 		this.count=this.count+1
@@ -128,10 +196,30 @@ character.prototype.land=function(n,flag){
 
 character.prototype.scale_x = function(n){
 	this.tween1=game.add.tween(this.player[n].scale).to({x:4.5,y:4.5},500,Phaser.Easing.Bounce.Out,true,0)
-	this.tween2=game.add.tween(this.button_restart.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
-	this.tween3=game.add.tween(this.button_next.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
+	this.show_button_restart_level_complete()
 	this.explode_cible()
 }
+character.prototype.show_button_restart_level_complete = function() {
+	if(this.flag_show_button){
+		this.flag_show_button=false
+		this.show_button_restart2()
+	}
+}
+
+character.prototype.show_button_restart = function() {
+	if(this.flag_show_button){
+		this.flag_show_button=false
+	game.time.events.add( 1500,this.show_button_restart2,this )
+	}
+}
+character.prototype.show_button_restart2 = function() {
+	this.button_restart.visible=true
+this.button_next.visible=true
+	this.tween2=game.add.tween(this.button_restart.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
+	this.tween3=game.add.tween(this.button_next.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
+	
+}
+
 
 character.prototype.update=function(){
 	if (this.spaceKey.isDown && this.flag_spacekey)
@@ -251,7 +339,10 @@ var preloadstate = {
 		//images
 		this.game.load.image("title","assets/title.png");
 
+		this.game.load.image("levelselecticons","assets/levelselecticons.png");
 		this.game.load.image("background","assets/background.png");
+		this.game.load.image("button_menu","assets/button_menu.png");
+		this.game.load.image("button_play","assets/button_play.png");
 		this.game.load.image("button_menu_level_select","assets/button_menu_level_select.png");
 		this.game.load.image("restart","assets/restart.png");
 		this.game.load.image("next","assets/next.png");
@@ -277,10 +368,10 @@ var preloadstate = {
 var game_first_screen = {
 	create: function(){
 		this.stage.backgroundColor = "0x1a1a1a"
-		this.title=game.add.sprite(w2,200,'title')
-		this.title.anchor.setTo(.5,.5)
-		//game.time.events.add( 6,() => game.state.start('menu_level_select',menu_level_select))
-		game.time.events.add( 500,() => game.state.start('game_state',game_state))
+		this.title=new screen_first()
+		game.add.existing(this.title)
+		//game.time.events.add( 6,() => game.state.start('levsel',LevelSelect))
+		game.time.events.add( 5000,() => game.state.start('game_state',game_state))
 	},
 }
 
@@ -293,8 +384,9 @@ var game_state = {
 		this.background=game.add.sprite(0,0,'background')
 		this.background.inputEnabled=true
 		this.hero = new character() 
-		this.background.events.onInputUp.add(function(){this.hero.spaceKey.isDown=true},this)
-		this.background.events.onInputUp.add(this.hero.launch,this)
+		//this.background.events.onInputUp.add(function(){this.hero.spaceKey.isDown=true},this)
+		//this.background.events.onInputUp.add(this.hero.launch,this)
+		//this.background.events.onInputDown.add(function(){this.hero.spaceKey.isDown=false},this)
 		//this.background.events.input.add(this.hero.launch,this)
 
 		this.canon=[]
@@ -309,6 +401,12 @@ var game_state = {
 		game.add.existing(this.hero)
 	},
 	update:function(){
+	if(this.hero.flag_show_button==false){
+		for (var i = 0; i < this.canon.length; i++){
+			this.canon[i].visible=false
+			this.canon[i].weapon.bullets.visible=false
+		}
+	}
 		if(this.hero.flag_level_complete){
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < this.canon.length; j++){
@@ -323,8 +421,26 @@ var game_state = {
 				game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
 			}
 		}
+		game.input.onTap.add(onTap,this);
+		function onTap(pointer, doubleTap) {
+			if(this.hero.flag_level_complete==false){
+
+			if (doubleTap)
+			{
+				console.log("value");
+			}
+			else
+			{
+this.hero.flag_spacekey=false
+				this.hero.launch_with_mouse()
+				//game.time.events.add( 500,function(){this.flag_spacekey=false})
+				
+			}
+		}
+		}
 	},
 }
+
 var menu_level_select = {
 	create: function(){
 		this.stage.backgroundColor = "0x1a1a1a"
@@ -334,22 +450,19 @@ var menu_level_select = {
 		this.interspace=200
 		this.espacement_x=(w-(this.row-2)*this.interspace)*.5
 		this.espacement_y=(h-(this.line-1)*this.interspace)*.5
-		for (var i = 0; i < this.row; i++) {
-			this.button[i]=[]
-			for (var j = 0; j < this.line; j++) {
-				this.button[i][j]=game.add.button(this.espacement_x+i*this.interspace,this.espacement_y+j*this.interspace,'button_menu_level_select',select_level,this)
-				this.button[i][j].anchor.setTo(.5,.5)
-				this.button[i][j].text=game.add.bitmapText(this.espacement_x+i*this.interspace,this.espacement_y+j*this.interspace,'fo','1',100)
-				this.button[i][j].text.anchor.setTo(.5,.5)
+		//	for (var i = 0; i < this.row; i++) {
+		//		this.button[i]=[]
+		//		for (var j = 0; j < this.line; j++) {
+		//			this.button[i][j]=game.add.button(this.espacement_x+i*this.interspace,this.espacement_y+j*this.interspace,'button_menu_level_select',select_level,this)
+		//			this.button[i][j].anchor.setTo(.5,.5)
+		//			this.button[i][j].text=game.add.bitmapText(this.espacement_x+i*this.interspace,this.espacement_y+j*this.interspace,'fo','1',100)
+		//			this.button[i][j].text.anchor.setTo(.5,.5)
 
-				game.add.existing(this.button[i][j])
-				game.add.existing(this.button[i][j].text)
-			}
-		}
-		function select_level(){
-game.state.start('game_state',game_state)
-			console.log('level')
-		}
+		//			game.add.existing(this.button[i][j])
+		//			game.add.existing(this.button[i][j].text)
+
+
+
 	},
 	update:function(){
 	},
@@ -361,6 +474,7 @@ game.state.add('preload',preloadstate)
 game.state.add('game_first_screen',game_first_screen)
 game.state.add('game_state',game_state)
 game.state.add('menu_level_select',menu_level_select)
+game.state.add('levsel', LevelSelect); // note: first parameter is only the name used to refer to the state
 game.state.start('boot',bootstate)
 
 
