@@ -198,9 +198,12 @@ this.text.anchor.setTo(.5,.5)
 
 	onLevelSelected: function(levelnr) {
 		// pass levelnr variable to 'Game' state
-		this.game.state.states['game']._levelNumber = levelnr;
-		
-		this.state.start('game');
+		//this.game.state.states['game']._levelNumber = levelnr;
+		//this.game.state.states['game']._levelNumber = levelnr;
+		//this.game.state.states('game_state',game_state)
+		this.state.start('game_state')
+
+		//this.state.start('game');
 	}
 };
 
