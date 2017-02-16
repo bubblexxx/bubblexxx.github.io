@@ -4,6 +4,7 @@ var w=1920*ratio_device
 
 var h2=h*.5
 var w2=640
+	var PLAYER_DATA=null
 
 screen_first = function(){
 	Phaser.Sprite.call(this,game,w2,200,'title')
@@ -385,7 +386,8 @@ var preloadstate = {
 		//images
 		this.game.load.image("title","assets/title.png");
 		this.game.load.spritesheet('star', 'assets/star.png', 550, 550);
-		this.game.load.image("levelselecticons","assets/levelselecticons.png");
+		this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
+		//this.game.load.image("levelselecticons","assets/levelselecticons.png");
 		this.game.load.image("background","assets/background.png");
 		this.game.load.image("button_video","assets/button_video.png");
 		this.game.load.image("button_menu","assets/button_menu.png");
@@ -417,8 +419,9 @@ var game_first_screen = {
 		this.stage.backgroundColor = "0x1a1a1a"
 		this.title=new screen_first()
 		game.add.existing(this.title)
+		game.time.events.add( 6,() => game.state.start('menu_level_select',menu_level_select))
 		//game.time.events.add( 6,() => game.state.start('levsel',LevelSelect))
-		game.time.events.add( 5000,() => game.state.start('game_state',game_state))
+		//game.time.events.add( 5000,() => game.state.start('game_state',game_state))
 	},
 }
 
@@ -486,19 +489,53 @@ var game_state = {
 	},
 }
 
+//var menu_level_select = {
+//	create: function(){
+//		this.stage.backgroundColor = "0x1a1a1a"
+//		this.row=5
+//		this.line=6
+//		this.button={}
+//		this.interspace=200
+//		this.espacement_x=(w-(this.row-2)*this.interspace)*.5
+//		this.espacement_y=(h-(this.line-1)*this.interspace)*.5
+//	},
+//	update:function(){
+//	},
+//}
+
 var menu_level_select = {
+	preload: function(){ 
+		this.initProgressData();
+	},
+
+	initProgressData: function() {
+
+		// array might be undefined at first time start up
+		if (!PLAYER_DATA) {
+			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
+			var str = window.localStorage.getItem('mygame_progress');
+
+			// error checking, localstorage might not exist yet at first time start up
+			try {
+				PLAYER_DATA = JSON.parse(str);
+			} catch(e){
+				PLAYER_DATA = []; //error in the above string(in this case,yes)!
+			};
+			// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
+			if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
+				PLAYER_DATA = [];
+			};
+		};
+	},
+
 	create: function(){
-		this.stage.backgroundColor = "0x1a1a1a"
-		this.row=5
-		this.line=6
-		this.button={}
-		this.interspace=200
-		this.espacement_x=(w-(this.row-2)*this.interspace)*.5
-		this.espacement_y=(h-(this.line-1)*this.interspace)*.5
+		//this.game.stage.backgroundColor = 0x80a0ff;
+		//this.game.add.sprite(0,0,'background')
+		this.menu_sel=new menu()
 	},
-	update:function(){
-	},
+
 }
+
 
 game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 game.state.add('boot',bootstate)
@@ -506,6 +543,7 @@ game.state.add('preload',preloadstate)
 game.state.add('game_first_screen',game_first_screen)
 game.state.add('game_state',game_state)
 game.state.add('menu_level_select',menu_level_select)
-game.state.add('levsel', LevelSelect); // note: first parameter is only the name used to refer to the state
+//game.state.add('levsel', LevelSelect); // note: first parameter is only the name used to refer to the state
+game.state.add('menu_level_select', menu_level_select); // note: first parameter is only the name used to refer to the state
 game.state.start('boot',bootstate)
 
