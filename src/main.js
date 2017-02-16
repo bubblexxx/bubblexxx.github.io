@@ -1,10 +1,11 @@
+var PLAYER_DATA = null // just declare as global variable for now
 var ratio_device=window.screen.width/window.screen.height
 var h=1920
 var w=1920*ratio_device
+//this._levelNumber = 1;
 
 var h2=h*.5
 var w2=640
-	var PLAYER_DATA=null
 
 screen_first = function(){
 	Phaser.Sprite.call(this,game,w2,200,'title')
@@ -120,6 +121,25 @@ this.star.visible=true
 		
 }
 
+character.prototype.wins=function(){
+this._levelNumber=1
+// just testing, award random nr of stars
+var randstars = this.game.rnd.integerInRange(1, 3);
+this._stars = this.game.add.bitmapText(160, 200, 'fo', 'You get '+randstars+' stars!', 48);
+
+// set nr of stars for this level
+PLAYER_DATA[this._levelNumber-1] = randstars;
+console.log(PLAYER_DATA);
+// unlock next level
+if (this._levelNumber < PLAYER_DATA.length) {
+	if (PLAYER_DATA[this._levelNumber] < 0) { // currently locked (=-1)
+		PLAYER_DATA[this._levelNumber] = 0; // set unlocked, 0 stars
+	}
+};
+
+// and write to local storage
+window.localStorage.setItem('mygame_progress', JSON.stringify(PLAYER_DATA));
+	}
 
 character.prototype.next_level = function() {
 	this.game.state.start("game_state");
@@ -239,6 +259,7 @@ character.prototype.scale_x = function(n){
 	this.explode_cible()
 	this.calculate_star()
 	this.show_star()
+	this.wins()
 }
 character.prototype.show_button_restart_level_complete = function() {
 	if(this.flag_show_button){
@@ -386,8 +407,7 @@ var preloadstate = {
 		//images
 		this.game.load.image("title","assets/title.png");
 		this.game.load.spritesheet('star', 'assets/star.png', 550, 550);
-		this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
-		//this.game.load.image("levelselecticons","assets/levelselecticons.png");
+		this.game.load.image("levelselecticons","assets/levelselecticons.png");
 		this.game.load.image("background","assets/background.png");
 		this.game.load.image("button_video","assets/button_video.png");
 		this.game.load.image("button_menu","assets/button_menu.png");
@@ -419,8 +439,7 @@ var game_first_screen = {
 		this.stage.backgroundColor = "0x1a1a1a"
 		this.title=new screen_first()
 		game.add.existing(this.title)
-		game.time.events.add( 6,() => game.state.start('menu_level_select',menu_level_select))
-		//game.time.events.add( 6,() => game.state.start('levsel',LevelSelect))
+		game.time.events.add( 6,() => game.state.start('levsel',levsel))
 		//game.time.events.add( 5000,() => game.state.start('game_state',game_state))
 	},
 }
@@ -489,61 +508,223 @@ var game_state = {
 	},
 }
 
-//var menu_level_select = {
-//	create: function(){
-//		this.stage.backgroundColor = "0x1a1a1a"
-//		this.row=5
-//		this.line=6
-//		this.button={}
-//		this.interspace=200
-//		this.espacement_x=(w-(this.row-2)*this.interspace)*.5
-//		this.espacement_y=(h-(this.line-1)*this.interspace)*.5
-//	},
-//	update:function(){
-//	},
-//}
-
 var menu_level_select = {
-	preload: function(){ 
-		this.initProgressData();
-	},
-
-	initProgressData: function() {
-
-		// array might be undefined at first time start up
-		if (!PLAYER_DATA) {
-			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
-			var str = window.localStorage.getItem('mygame_progress');
-
-			// error checking, localstorage might not exist yet at first time start up
-			try {
-				PLAYER_DATA = JSON.parse(str);
-			} catch(e){
-				PLAYER_DATA = []; //error in the above string(in this case,yes)!
-			};
-			// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
-			if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
-				PLAYER_DATA = [];
-			};
-		};
-	},
-
 	create: function(){
-		//this.game.stage.backgroundColor = 0x80a0ff;
-		//this.game.add.sprite(0,0,'background')
-		this.menu_sel=new menu()
+		this.stage.backgroundColor = "0x1a1a1a"
+		this.row=5
+		this.line=6
+		this.button={}
+		this.interspace=200
+		this.espacement_x=(w-(this.row-2)*this.interspace)*.5
+		this.espacement_y=(h-(this.line-1)*this.interspace)*.5
 	},
-
+	update:function(){
+	},
 }
 
+var levsel={
+	// define needed variables for mygame.LevelSelect
+		preload: function() {
+			this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
+			this.game.load.bitmapFont('fo','fonts/font.png', 'fonts/font.fnt');
+			//this.game.load.bitmapFont('font72', 'font72.png', 'font72.xml'); // created with http://kvazars.com/littera/
 
-game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
-game.state.add('boot',bootstate)
-game.state.add('preload',preloadstate)
-game.state.add('game_first_screen',game_first_screen)
-game.state.add('game_state',game_state)
-game.state.add('menu_level_select',menu_level_select)
-//game.state.add('levsel', LevelSelect); // note: first parameter is only the name used to refer to the state
-game.state.add('menu_level_select', menu_level_select); // note: first parameter is only the name used to refer to the state
-game.state.start('boot',bootstate)
+			this.initProgressData();
+		},
+
+		create: function() {
+			this.holdicons = [];
+			this.game.stage.backgroundColor = 0x80a0ff;
+			this.game.add.sprite(0,0,'background')
+			this.text=game.add.bitmapText(640,200,'fo','SELECT A LEVEL!',100);
+			this.text.anchor.setTo(.5,.5)
+			this.createLevelIcons();
+			this.animateLevelIcons();
+		},
+
+		update: function() {
+			// nothing to do but wait until player selects a level
+		},
+
+		render: function() {
+			// display some debug info..?
+		},
+
+		initProgressData: function() {
+
+			// array might be undefined at first time start up
+			if (!PLAYER_DATA) {
+				// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
+				var str = window.localStorage.getItem('mygame_progress');
+
+				// error checking, localstorage might not exist yet at first time start up
+				try {
+					PLAYER_DATA = JSON.parse(str);
+				} catch(e){
+					PLAYER_DATA = []; //error in the above string(in this case,yes)!
+				};
+				// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
+				if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
+					PLAYER_DATA = [];
+				};
+			};
+		},
+
+		createLevelIcons: function() {
+			var levelnr = 0;
+
+			for (var y=0; y < 5; y++) {
+				for (var x=0; x < 4; x++) {
+					// next level
+					levelnr = levelnr + 1;
+
+					// check if array not yet initialised
+					if (typeof PLAYER_DATA[levelnr-1] !== 'number') {
+						// value is null or undefined, i.e. array not defined or too short between app upgrades with more levels
+						if (levelnr == 1) {
+							PLAYER_DATA[levelnr-1] = 0; // level 1 should never be locked
+						} else {
+							PLAYER_DATA[levelnr-1] = -1;
+						};
+					};
+
+					// player progress info for this level
+					var playdata = PLAYER_DATA[levelnr-1];
+console.log("playdata",playdata);
+					// decide which icon
+					var isLocked = true; // locked
+					var stars = 0; // no stars
+
+					// check if level is unlocked
+					if (playdata > -1) {
+						isLocked = false; // unlocked
+						if (playdata < 4) {stars = playdata;}; // 0..3 stars
+					};
+
+					// calculate position on screen
+					var xpos = 60 + (x*300);
+					var ypos = 320 + (y*300);
+
+					// create icon
+					this.holdicons[levelnr-1] = this.createLevelIcon(xpos, ypos, levelnr, isLocked, stars);
+					var backicon = this.holdicons[levelnr-1].getAt(0);
+
+					// keep level nr, used in onclick method
+					backicon.health = levelnr;
+
+					// input handler
+					backicon.inputEnabled = true;
+					backicon.events.onInputDown.add(this.onSpriteDown, this);
+				};
+			};
+		},
+
+		// -------------------------------------
+		// Add level icon buttons
+		// -------------------------------------
+		createLevelIcon: function(xpos, ypos, levelnr, isLocked, stars) {
+
+			// create new group
+			var IconGroup = this.game.add.group();
+			IconGroup.x = xpos;
+			IconGroup.y = ypos;
+
+			// keep original position, for restoring after certain tweens
+			IconGroup.xOrg = xpos;
+			IconGroup.yOrg = ypos;
+
+			// determine background frame
+			var frame = 0;
+			if (isLocked == false) {frame = 1};
+
+			// add background
+			var icon1 = this.game.add.sprite(0, 0, 'levelselecticons', frame);
+			IconGroup.add(icon1);
+
+			// add stars, if needed
+			if (isLocked == false) {
+				var txt = this.game.add.bitmapText(137, 147, 'fo', ''+levelnr, 100);
+				txt.anchor.setTo(.5,.5)
+				var icon2 = this.game.add.sprite(0, 0, 'levelselecticons', (2+stars));
+
+				IconGroup.add(icon2);
+				IconGroup.add(txt);
+			}else{
+				var txt_locked = this.game.add.bitmapText(137, 147, 'fo', ''+levelnr, 100);
+				txt_locked.anchor.setTo(.5,.5)
+				txt_locked.tint=0x9a136b
+				IconGroup.add(txt_locked);
+
+			};
+
+			return IconGroup;
+		},
+
+		onSpriteDown: function(sprite, pointer) {
+
+			// retrieve the iconlevel
+			var levelnr = sprite.health;
+
+			if (PLAYER_DATA[levelnr-1] < 0) {
+				// indicate it's locked by shaking left/right
+				var IconGroup = this.holdicons[levelnr-1];
+				var xpos = IconGroup.xOrg;
+
+				var tween = this.game.add.tween(IconGroup)
+					.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos+4 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos-3 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos+2 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
+					.start();
+			} else {
+				// simulate button press animation to indicate selection
+				var IconGroup = this.holdicons[levelnr-1];
+				var tween = this.game.add.tween(IconGroup.scale)
+					.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
+					.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
+					.start();
+
+				// it's a little tricky to pass selected levelnr to callback function, but this works:
+				this.onLevelSelected(levelnr-1)
+				//tween._lastChild.onComplete.add(function(){this.onLevelSelected(sprite.health);}, this);
+			};
+		},
+
+		animateLevelIcons: function() {
+
+			// slide all icons into screen
+			for (var i=0; i < this.holdicons.length; i++) {
+				// get variables
+				var IconGroup = this.holdicons[i];
+				IconGroup.y = IconGroup.y + 600;
+				var y = IconGroup.y;
+
+				// tween animation
+				this.game.add.tween(IconGroup).to( {y: y-600}, 500, Phaser.Easing.Back.Out, true, (i*40));
+			};
+		},
+
+		onLevelSelected: function(levelnr) {
+			console.log(levelnr);
+			// pass levelnr variable to 'Game' state
+			//this.game.state.states['game']._levelNumber = levelnr;
+			//this.game.state.states['game']._levelNumber = levelnr;
+			//this.game.state.states('game_state',game_state)
+			this.game.state.start('game_state')
+
+			//this.state.start('game');
+		},
+	};
+
+
+	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
+	game.state.add('boot',bootstate)
+	game.state.add('preload',preloadstate)
+	game.state.add('game_first_screen',game_first_screen)
+	game.state.add('game_state',game_state)
+	game.state.add('menu_level_select',menu_level_select)
+	game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
+	game.state.start('boot',bootstate)
 
