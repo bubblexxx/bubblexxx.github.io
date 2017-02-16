@@ -58,11 +58,16 @@ character = function(){
 	Phaser.Sprite.call(this,game,w2,-400,'rect')
 	this.flag_mouse=false
 	this.flag_show_button=true
+	this.cible_shadow=game.add.sprite(w2,300,'cible')
+	this.cible_shadow.anchor.setTo(.5,.5)
+	this.cible_shadow.scale.setTo(1.5,1.5)
+	this.cible_shadow.alpha=.3
 	//cible
 	this.cible=game.add.sprite(w2,300,'cible')
 	this.cible.anchor.setTo(.5,.5)
 	game.physics.arcade.enable(this.cible,Phaser.Physics.ARCADE)
 	this.cible.scale.setTo(1.5,1.5)
+
 
 	this.anchor.setTo(.5,.5)
 	this.flag_level_complete=false
@@ -105,13 +110,21 @@ character = function(){
 	this.star.visible=false
 	this.star.scale.setTo(0,0)
 	this._levelNumber = 1;
-
+this.anim_cible()
 }
 character.prototype = Object.create(Phaser.Sprite.prototype)
 character.prototype.constructor = character
 
 character.prototype.audio_pop = function() {
 	this.sound_pop.play()
+}
+
+character.prototype.anim_cible = function() {
+	
+	this.tween6 = game.add.tween(this.cible_shadow.scale).to({x:2.5,y:2.4},350,Phaser.Easing.Linear.None,true,0,-1)
+	this.tween7 = game.add.tween(this.cible_shadow).to({alpha:0},350,Phaser.Easing.Linear.None,true,0,-1)
+this.tween6.yoyo(350,true)	
+this.tween7.yoyo(350,true)	
 }
 
 character.prototype.show_star = function(frame) {
