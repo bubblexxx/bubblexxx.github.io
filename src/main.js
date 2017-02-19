@@ -1,7 +1,7 @@
 var PLAYER_DATA = null // just declare as global variable for now
 var ratio_device=window.screen.width/window.screen.height
 var h=1920
-var w=1920*ratio_device
+var w=1280
 //this._levelNumber = 1;
 //var clearWorld=true
 //var clearCache=false
@@ -487,7 +487,7 @@ var level0 = {
 		this.hero = new character() 
 
 		this.canon=[]
-		this.canon[0]=new weapon(0,1400,180,3000,0,this.hero.flag_level_complete) 
+		this.canon[0]=new weapon(0,1400,880,4000,0,this.hero.flag_level_complete) 
 		this.canon[1]=new weapon (w+150,100,8000,990,135,this.hero.flag_level_complete)
 
 		this.tween_characteristic = game.add.tween(this.canon[0]).to({y:0},1200,Phaser.Easing.Linear.None,true,0,-1)
