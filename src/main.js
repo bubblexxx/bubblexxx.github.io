@@ -407,8 +407,10 @@ var bootstate= {
 	preload: function(){
 		console.log("%cStarting minimalistic game", "color:white; background:red");
 		this.load.image("loading","assets/loading.png"); 
+		this.load.image("loading_back","assets/loading_back.png"); 
 	},
 	create: function(){
+		this.stage.backgroundColor = "0x1a1a1a"
 		this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
 		this.game.width=window.innerWidth
 		this.game.height=window.innerHeight
@@ -422,6 +424,8 @@ var bootstate= {
 var preloadstate = {
 	preload: function(){ 
 		//loadingBar
+		var loadingBar_back = this.add.sprite(w2,h2,"loading_back");
+		loadingBar_back.anchor.setTo(0.5,0.5);
 		var loadingBar = this.add.sprite(w2,h2,"loading");
 		loadingBar.anchor.setTo(0.5,0.5);
 		this.load.setPreloadSprite(loadingBar);
@@ -453,6 +457,7 @@ var preloadstate = {
 		this.game.load.bitmapFont('lucky','fonts/font_ab.png', 'fonts/font_ab.fnt');
 	},
 	create: function(){
+		this.stage.backgroundColor = "0x1a1a1a"
 		this.game.state.start("game_first_screen");
 		//this.game.state.start("game_state");
 	}
