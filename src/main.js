@@ -475,6 +475,7 @@ var game_first_screen = {
 
 var level0 = {
 	create: function(){
+		this.stage.backgroundColor = "0x1a1a1a"
 		level_number=0
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
@@ -536,6 +537,7 @@ var level0 = {
 }
 var level1 = {
 	create: function(){
+		this.stage.backgroundColor = "0x1a1a1a"
 		level_number=1
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
@@ -594,6 +596,7 @@ var level1 = {
 }
 var level2 = {
 	create: function(){
+		this.stage.backgroundColor = "0x1a1a1a"
 		level_number=2
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
@@ -655,6 +658,7 @@ var level2 = {
 }
 var game_state = {
 	create: function(){
+		this.stage.backgroundColor = "0x1a1a1a"
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
 		//this.stage.backgroundColor = "0xf4eeee"
