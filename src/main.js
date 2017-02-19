@@ -410,7 +410,8 @@ var bootstate= {
 		this.load.image("loading_back","assets/loading_back.png"); 
 	},
 	create: function(){
-		this.stage.backgroundColor = "0x1a1a1a"
+		this.stage.backgroundColor = '#1a1a1a'
+
 		this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
 		//this.game.width=window.innerWidth
 		//this.game.height=window.innerHeight
@@ -457,7 +458,7 @@ var preloadstate = {
 		this.game.load.bitmapFont('lucky','fonts/font_ab.png', 'fonts/font_ab.fnt');
 	},
 	create: function(){
-		this.stage.backgroundColor = "0x1a1a1a"
+		this.stage.backgroundColor = '#1a1a1a'
 		this.game.state.start("game_first_screen");
 		//this.game.state.start("game_state");
 	}
@@ -465,7 +466,7 @@ var preloadstate = {
 
 var game_first_screen = {
 	create: function(){
-		this.stage.backgroundColor = "0x1a1a1a"
+		this.stage.backgroundColor = '#1a1a1a'
 		this.title=new screen_first()
 		game.add.existing(this.title)
 		game.time.events.add( 6,() => game.state.start('levsel',levsel))
@@ -475,12 +476,12 @@ var game_first_screen = {
 
 var level0 = {
 	create: function(){
-		this.stage.backgroundColor = "0x1a1a1a"
+		this.stage.backgroundColor = '#1a1a1a'
 		level_number=0
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
 		//this.stage.backgroundColor = "0xf4eeee"
-		this.stage.backgroundColor = "0x1a1a1a"
+		//this.stage.backgroundColor = "0x1a1a1a"
 		this.background=game.add.sprite(0,0,'background')
 		this.background.inputEnabled=true
 		this.hero = new character() 
@@ -537,12 +538,12 @@ var level0 = {
 }
 var level1 = {
 	create: function(){
-		this.stage.backgroundColor = "0x1a1a1a"
+		this.stage.backgroundColor = '#1a1a1a'
 		level_number=1
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
 		//this.stage.backgroundColor = "0xf4eeee"
-		this.stage.backgroundColor = "0x1a1a1a"
+		//this.stage.backgroundColor = "0x1a1a1a"
 		this.background=game.add.sprite(0,0,'background')
 		this.background.inputEnabled=true
 		this.hero = new character() 
@@ -596,12 +597,11 @@ var level1 = {
 }
 var level2 = {
 	create: function(){
-		this.stage.backgroundColor = "0x1a1a1a"
+		this.stage.backgroundColor = '#1a1a1a'
 		level_number=2
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
 		//this.stage.backgroundColor = "0xf4eeee"
-		this.stage.backgroundColor = "0x1a1a1a"
 		this.background=game.add.sprite(0,0,'background')
 		this.background.inputEnabled=true
 		this.hero = new character() 
@@ -658,11 +658,10 @@ var level2 = {
 }
 var game_state = {
 	create: function(){
-		this.stage.backgroundColor = "0x1a1a1a"
+		this.stage.backgroundColor = '#1a1a1a'
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
 		//this.stage.backgroundColor = "0xf4eeee"
-		this.stage.backgroundColor = "0x1a1a1a"
 		this.background=game.add.sprite(0,0,'background')
 		this.background.inputEnabled=true
 		this.hero = new character() 
@@ -719,7 +718,7 @@ var game_state = {
 
 var menu_level_select = {
 	create: function(){
-		this.stage.backgroundColor = "0x1a1a1a"
+		this.stage.backgroundColor = '#1a1a1a'
 		this.row=5
 		this.line=6
 		this.button={}
@@ -743,7 +742,8 @@ var levsel={
 
 		create: function() {
 			this.holdicons = [];
-			this.game.stage.backgroundColor = 0x80a0ff;
+			this.game.stage.backgroundColor = '#1a1a1a'
+;
 			this.game.add.sprite(0,0,'background')
 			this.text=game.add.bitmapText(640,200,'fo','SELECT A LEVEL!',100);
 			this.text.anchor.setTo(.5,.5)

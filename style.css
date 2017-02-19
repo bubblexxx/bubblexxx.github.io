@@ -11,7 +11,7 @@ html, body { width:100%; height:100%; } /* just to be sure these are full screen
 #game-area {
 	margin: auto;
 	display: table;
-	background: #1a1a1a;
+	background-color: #1a1a1a;
 }
 div {
     position: absolute;
