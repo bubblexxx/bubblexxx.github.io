@@ -412,8 +412,8 @@ var bootstate= {
 	create: function(){
 		this.stage.backgroundColor = "0x1a1a1a"
 		this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
-		this.game.width=window.innerWidth
-		this.game.height=window.innerHeight
+		//this.game.width=window.innerWidth
+		//this.game.height=window.innerHeight
 		this.scale.pageAlignHorizontally = true
 		this.scale.pageAlignVertically = true
 		this.scale.refresh()
