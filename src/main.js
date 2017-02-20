@@ -12,7 +12,7 @@ var level_number=0
 screen_first = function(){
 	Phaser.Sprite.call(this,game,w2,200,'title')
 	this.anchor.setTo(.5,.5)
-	this.button_restart=game.add.button(w2,h2+400,'button_menu',this.next_level,this)
+	this.button_restart=game.add.button(w2,h2+400,'button_menu',this.next_menu,this)
 	this.button_restart.anchor.setTo(.5,.5)
 	this.button_next=game.add.button(w2,h2,'button_play',this.next_level,this)
 	this.button_next.anchor.setTo(.5,.5)
@@ -28,7 +28,11 @@ screen_first.prototype = Object.create(Phaser.Sprite.prototype)
 screen_first.prototype.constructor = screen_first
 
 screen_first.prototype.next_level = function() {
-	this.game.state.start("game_state");
+	this.game.state.start("level"+level_number);
+	console.log('next-level')
+}
+screen_first.prototype.next_menu = function() {
+	this.game.state.start("levsel");
 	console.log('next-level')
 }
 
@@ -141,7 +145,7 @@ this._levelNumber=level_number+1
 //var randstars = this.game.rnd.integerInRange(1, 3);
 var randstars = this.star.frame
 //this._stars = this.game.add.bitmapText(160, 200, 'fo', 'You get '+randstars+' stars!', 48);
-
+console.log("this._levelNumber",this._levelNumber);
 // set nr of stars for this level
 PLAYER_DATA[this._levelNumber-1] = randstars;
 console.log(PLAYER_DATA);
@@ -410,14 +414,14 @@ var bootstate= {
 		this.load.image("loading_back","assets/loading_back.png"); 
 	},
 	create: function(){
-		this.stage.backgroundColor = '#1a1a1a'
 
-		this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+		this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
 		//this.game.width=window.innerWidth
 		//this.game.height=window.innerHeight
 		this.scale.pageAlignHorizontally = true
 		this.scale.pageAlignVertically = true
 		this.scale.refresh()
+		this.game.stage.backgroundColor='#1a1a1a'
 		this.state.start("preload");
 	}
 }
@@ -458,7 +462,7 @@ var preloadstate = {
 		this.game.load.bitmapFont('lucky','fonts/font_ab.png', 'fonts/font_ab.fnt');
 	},
 	create: function(){
-		this.stage.backgroundColor = '#1a1a1a'
+		this.game.stage.backgroundColor = '#1a1a1a'
 		this.game.state.start("game_first_screen");
 		//this.game.state.start("game_state");
 	}
@@ -466,17 +470,38 @@ var preloadstate = {
 
 var game_first_screen = {
 	create: function(){
-		this.stage.backgroundColor = '#1a1a1a'
+		this.game.stage.backgroundColor = '#1a1a1a'
 		this.title=new screen_first()
 		game.add.existing(this.title)
-		game.time.events.add( 6,() => game.state.start('levsel',levsel))
+		this.initProgressData()
+		//game.time.events.add( 6,() => game.state.start('levsel',levsel))
 		//game.time.events.add( 5000,() => game.state.start('game_state',game_state))
 	},
+
+		initProgressData: function() {
+
+			// array might be undefined at first time start up
+			if (!PLAYER_DATA) {
+				// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
+				var str = window.localStorage.getItem('mygame_progress');
+
+				// error checking, localstorage might not exist yet at first time start up
+				try {
+					PLAYER_DATA = JSON.parse(str);
+				} catch(e){
+					PLAYER_DATA = []; //error in the above string(in this case,yes)!
+				};
+				// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
+				if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
+					PLAYER_DATA = [];
+				};
+			};
+		},
 }
 
 var level0 = {
 	create: function(){
-		this.stage.backgroundColor = '#1a1a1a'
+		this.game.stage.backgroundColor = '#1a1a1a'
 		level_number=0
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
@@ -538,7 +563,7 @@ var level0 = {
 }
 var level1 = {
 	create: function(){
-		this.stage.backgroundColor = '#1a1a1a'
+		this.game.stage.backgroundColor = '#1a1a1a'
 		level_number=1
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
@@ -597,7 +622,7 @@ var level1 = {
 }
 var level2 = {
 	create: function(){
-		this.stage.backgroundColor = '#1a1a1a'
+		this.game.stage.backgroundColor = '#1a1a1a'
 		level_number=2
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
@@ -658,7 +683,7 @@ var level2 = {
 }
 var game_state = {
 	create: function(){
-		this.stage.backgroundColor = '#1a1a1a'
+		this.game.stage.backgroundColor = '#1a1a1a'
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
 		//this.stage.backgroundColor = "0xf4eeee"
@@ -718,7 +743,7 @@ var game_state = {
 
 var menu_level_select = {
 	create: function(){
-		this.stage.backgroundColor = '#1a1a1a'
+		this.game.stage.backgroundColor = '#1a1a1a'
 		this.row=5
 		this.line=6
 		this.button={}
