@@ -420,7 +420,7 @@ var bootstate= {
 		//this.game.height=window.innerHeight
 		this.scale.pageAlignHorizontally = true
 		this.scale.pageAlignVertically = true
-		this.scale.refresh()
+		//this.scale.refresh()
 		this.game.stage.backgroundColor='#1a1a1a'
 		this.state.start("preload");
 	}
