@@ -116,6 +116,7 @@ character = function(){
 	this.star.visible=false
 	this.star.scale.setTo(0,0)
 	this._levelNumber = 1;
+	this.count_dead=0
 this.anim_cible()
 }
 character.prototype = Object.create(Phaser.Sprite.prototype)
@@ -182,15 +183,12 @@ character.prototype.launch_with_mouse=function(){
 			this.player[this.count].body.velocity.y=-800
 			this.life.text=3-(this.count+1)
 			if(this.count==2){
-				//game.time.events.add( 2000,this.show_button_restart,this )
-	this.life.text='' 
-				this.flag_show_video=false
-				game.time.events.add( 2000,this.show_button_restart_level,this )
-				game.time.events.add( 2000,this.show_button_video,this )
+				this.life.text='' 
 			}
 		}
 	}
 }
+
 
 character.prototype.launch=function(){
 	if(this.flag_level_complete==false && this.flag_spacekey==false){
@@ -221,6 +219,7 @@ character.prototype.explode_cible=function(){
 character.prototype.explode=function(posx,posy,n){
 	if(this.player[n].flag_cant_explode){
 		this.audio_pop()
+		this.on_explode(n)
 		this.player[n].flag_cant_explode=false
 		this.player[n].visible=false
 		this.particle = game.add.emitter(posx,posy,200)
@@ -235,8 +234,26 @@ character.prototype.explode=function(posx,posy,n){
 		this.particle.on=false
 		this.particle.start(true,3900,null,20)
 		this.player[n].y=5000
-
 	}
+	
+}
+
+character.prototype.on_explode=function(n){
+	this.count_dead=this.count_dead+1
+	for (var i = 0; i < 3; i++) {
+		if(this.count_dead==3){
+			console.log('this.count_dead',this.count_dead)
+			this.decide_if_show_button_restart_level()
+		}	
+	}
+}
+
+
+character.prototype.decide_if_show_button_restart_level = function() {
+	console.log('decide')
+				this.flag_show_video=false
+				game.time.events.add( 2000,this.show_button_restart_level,this )
+				game.time.events.add( 2000,this.show_button_video,this )
 }
 
 character.prototype.land=function(n,flag){
@@ -405,7 +422,6 @@ weapon.prototype.explode_bullet=function(b){
 				this.particle.start(true,9900,null,20);}})
 	}
 }
-
 
 var bootstate= {
 	preload: function(){
