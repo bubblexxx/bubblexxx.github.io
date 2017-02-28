@@ -351,6 +351,7 @@ character.prototype.update=function(){
 		this.launch()
 	}
 }
+//weapon
 
 weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 	this.special_color=special_color
@@ -406,7 +407,6 @@ weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_wi
 
 weapon.prototype = Object.create(Phaser.Sprite.prototype)
 weapon.prototype.constructor = weapon
-//
 weapon.prototype.update = function(){
 	if(this._flag==false){
 		this.weapon.fire()	
