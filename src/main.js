@@ -77,7 +77,8 @@ character = function(){
 
 	this.anchor.setTo(.5,.5)
 	this.flag_level_complete=false
-	this.flag_show_video=true
+	//this.flag_show_video=true
+	this.flag_hide_enemies=false
 	this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 	this.flag_spacekey=true
 	this.enableBody=true
@@ -96,6 +97,7 @@ character = function(){
 	this.life = game.add.bitmapText(w2,1800,'fo','3',120)
 	this.life.anchor.setTo(.5,.5)
 	//this.life.tint=0x000000
+	this.sound_launch=game.add.audio('launch')
 	this.sound_pop=game.add.audio('pop_minder')
 	this.button_restart=game.add.button(w2,h2,'restart',this.restart_level,this)
 	this.button_restart.anchor.setTo(.5,.5)
@@ -117,7 +119,7 @@ character = function(){
 	this.star.scale.setTo(0,0)
 	this._levelNumber = 1;
 	this.count_dead=0
-this.anim_cible()
+	this.anim_cible()
 }
 character.prototype = Object.create(Phaser.Sprite.prototype)
 character.prototype.constructor = character
@@ -125,41 +127,44 @@ character.prototype.constructor = character
 character.prototype.audio_pop = function() {
 	this.sound_pop.play()
 }
+character.prototype.audio_launch = function() {
+	this.sound_launch.play()
+}
 
 character.prototype.anim_cible = function() {
 	this.tween6 = game.add.tween(this.cible_shadow.scale).to({x:3.0,y:3.0},750,Phaser.Easing.Linear.None,true,0,-1)
 	this.tween7 = game.add.tween(this.cible_shadow).to({alpha:0.01},750,Phaser.Easing.Exponential.In,true,0,-1)
-this.tween6.onComplete.add(function(){this.cible_shadow.scale.setTo(0,0)},this)	
-this.tween7.onComplete.add(function(){this.cible_shadow.alpha=0},this)	
+	this.tween6.onComplete.add(function(){this.cible_shadow.scale.setTo(0,0)},this)	
+	this.tween7.onComplete.add(function(){this.cible_shadow.alpha=0},this)	
 }
 
 character.prototype.show_star = function(frame) {
-this.star.visible=true	
-		this.tween5 = game.add.tween(this.star.scale).to({x:1,y:1},800,Phaser.Easing.Linear.None,true,600)
+	this.star.visible=true	
+	this.tween5 = game.add.tween(this.star.scale).to({x:1,y:1},800,Phaser.Easing.Linear.None,true,600)
 	//this.tween5.yoyo(200,true)
-		
+
 }
 
 character.prototype.wins=function(){
-this._levelNumber=level_number+1
-// just testing, award random nr of stars
-//var randstars = this.game.rnd.integerInRange(1, 3);
-var randstars = this.star.frame
-//this._stars = this.game.add.bitmapText(160, 200, 'fo', 'You get '+randstars+' stars!', 48);
-console.log("this._levelNumber",this._levelNumber);
-// set nr of stars for this level
-PLAYER_DATA[this._levelNumber-1] = randstars;
-console.log(PLAYER_DATA);
-// unlock next level
-if (this._levelNumber < PLAYER_DATA.length) {
-	if (PLAYER_DATA[this._levelNumber] < 0) { // currently locked (=-1)
-		PLAYER_DATA[this._levelNumber] = 0; // set unlocked, 0 stars
-	}
-};
+	this._levelNumber=level_number+1
+	// just testing, award random nr of stars
+	//var randstars = this.game.rnd.integerInRange(1, 3);
+	var randstars = this.star.frame
+	//this._stars = this.game.add.bitmapText(160, 200, 'fo', 'You get '+randstars+' stars!', 48);
+	console.log("this._levelNumber",this._levelNumber);
+	// set nr of stars for this level
+	PLAYER_DATA[this._levelNumber-1] = randstars;
+	console.log(PLAYER_DATA);
+	// unlock next level
+	if (this._levelNumber < PLAYER_DATA.length) {
+		if (PLAYER_DATA[this._levelNumber] < 0) { // currently locked (=-1)
+			PLAYER_DATA[this._levelNumber] = 0; // set unlocked, 0 stars
+		}
+	};
 
-// and write to local storage
-window.localStorage.setItem('mygame_progress', JSON.stringify(PLAYER_DATA));
-	}
+	// and write to local storage
+	window.localStorage.setItem('mygame_progress', JSON.stringify(PLAYER_DATA));
+}
 character.prototype.restart_level = function() {
 	this.next_niveau=level_number
 	this.game.state.start('level'+this.next_niveau,true,false);
@@ -181,6 +186,7 @@ character.prototype.launch_with_mouse=function(){
 			console.log(this.count);
 			this.player[this.count].visible=true
 			this.player[this.count].body.velocity.y=-800
+			this.audio_launch()
 			this.life.text=3-(this.count+1)
 			if(this.count==2){
 				this.life.text='' 
@@ -235,7 +241,7 @@ character.prototype.explode=function(posx,posy,n){
 		this.particle.start(true,3900,null,20)
 		this.player[n].y=5000
 	}
-	
+
 }
 
 character.prototype.on_explode=function(n){
@@ -251,9 +257,10 @@ character.prototype.on_explode=function(n){
 
 character.prototype.decide_if_show_button_restart_level = function() {
 	console.log('decide')
-				this.flag_show_video=false
-				game.time.events.add( 2000,this.show_button_restart_level,this )
-				game.time.events.add( 2000,this.show_button_video,this )
+	//this.flag_show_video=false
+	game.time.events.add( 2000,this.show_button_restart_level,this )
+	game.time.events.add( 2000,this.show_button_video,this )
+	this.flag_hide_enemies=true
 }
 
 character.prototype.land=function(n,flag){
@@ -270,38 +277,41 @@ character.prototype.land=function(n,flag){
 }
 
 character.prototype.calculate_star = function() {
-		switch(this.count){
-			case 0:
-				this.star.frame=3
-				break
-			case 1:
-				this.star.frame=2
-				break
-			case 2:
-				this.star.frame=1
-			case 3:
-				this.star.frame=0
-				break
-				}
-		//PLAYER_DATA[this._levelNumber-1] = this.star.frame;
+	switch(this.count){
+		case 0:
+			this.star.frame=3
+			break
+		case 1:
+			this.star.frame=2
+			break
+		case 2:
+			this.star.frame=1
+		case 3:
+			this.star.frame=0
+			break
+	}
+	//PLAYER_DATA[this._levelNumber-1] = this.star.frame;
 
 
-		//// unlock next level
-		//if (this._levelNumber < PLAYER_DATA.length) {
-		//	if (PLAYER_DATA[this._levelNumber] < 0) { // currently locked (=-1)
-		//		PLAYER_DATA[this._levelNumber] = 0; // set unlocked, 0 stars
-		//	}
-		//};
+	//// unlock next level
+	//if (this._levelNumber < PLAYER_DATA.length) {
+	//	if (PLAYER_DATA[this._levelNumber] < 0) { // currently locked (=-1)
+	//		PLAYER_DATA[this._levelNumber] = 0; // set unlocked, 0 stars
+	//	}
+	//};
 
-		//// and write to local storage
-		//window.localStorage.setItem('mygame_progress', JSON.stringify(PLAYER_DATA));
+	//// and write to local storage
+	//window.localStorage.setItem('mygame_progress', JSON.stringify(PLAYER_DATA));
 }
 
 
 character.prototype.scale_x = function(n){
 	this.tween1=game.add.tween(this.player[n].scale).to({x:4.5,y:4.5},500,Phaser.Easing.Bounce.Out,true,0)
+	this.tween1.onComplete.add(this.explode_cible,this)
 	this.show_button_restart_level_complete()
-	this.explode_cible()
+	game.time.events.add( 300,this.audio_pop,this )
+
+	//this.explode_cible()
 	this.calculate_star()
 	this.show_star()
 	this.wins()
@@ -310,7 +320,7 @@ character.prototype.show_button_restart_level_complete = function() {
 	if(this.flag_show_button){
 		this.flag_show_button=false
 		this.show_button_restart_level()
-	this.show_button_next_level()
+		this.show_button_next_level()
 	}
 }
 
@@ -320,15 +330,15 @@ character.prototype.show_button_next_level = function() {
 }
 
 character.prototype.show_button_restart_level=function(){
-		this.flag_show_button=false
+	this.flag_show_button=false
 	this.button_restart.visible=true
 	this.tween2=game.add.tween(this.button_restart.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
 }
 
 character.prototype.show_button_video = function() {
 	if(this.flag_level_complete==false){
-	this.button_video.visible=true
-	this.tween4=game.add.tween(this.button_video.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
+		this.button_video.visible=true
+		this.tween4=game.add.tween(this.button_video.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
 	}	
 }
 
@@ -342,7 +352,9 @@ character.prototype.update=function(){
 	}
 }
 
-weapon = function(posx,posy,speed,frequency,angular,_flag){
+weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+	this.special_color=special_color
+	this.kill_with_world=kill_with_world
 	this.posx=posx
 	this.posy=posy
 	this.flag_explode=false
@@ -350,15 +362,30 @@ weapon = function(posx,posy,speed,frequency,angular,_flag){
 	this.angular=angular
 	this.frequency=frequency
 	this._flag=_flag
+	this.variance=variance
 	this.sound_pop=game.add.audio('pop')
-
+	this._flag=true
+	this.delay=delay
 	//canon
 	Phaser.Sprite.call(this,game,this.posx,this.posy,'canon')
 	this.anchor.setTo(.5,.5)
 	this.angle=this.angular
 	game.physics.arcade.enable(this);
+	if(this.special_color=="vrai"){
+		this.weapon=game.add.weapon(9,'bullet_color')
+	}else{
 	this.weapon=game.add.weapon(9,'bullet')	
-	this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+	}
+
+
+	if(this.kill_with_world=="vrai"){
+		for (var i = 0; i <  9; i++) {
+			this.weapon.bulletCollideWorldBounds=true
+			this.weapon.bullets.children[i].body.bounce.setTo(1,1)
+		}
+	}else{
+		this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+	}
 	//  Because our bullet is drawn facing up, we need to offset its rotation:
 	this.weapon.bulletAngleOffset = 0;
 
@@ -369,16 +396,17 @@ weapon = function(posx,posy,speed,frequency,angular,_flag){
 	this.weapon.fireRate = this.frequency ;
 
 	//  Add a variance to the bullet angle by +- this value
-	this.weapon.bulletAngleVariance = 0;
+	this.weapon.bulletAngleVariance = this.variance;
 
 	//  Tell the Weapon to track the 'player' Sprite, offset by 14px horizontally, 0 vertically
 	this.weapon.trackSprite(this,0,0,true);
+	game.time.events.add( this.delay,function(){this._flag=false},this )
 }
 
 
 weapon.prototype = Object.create(Phaser.Sprite.prototype)
 weapon.prototype.constructor = weapon
-
+//
 weapon.prototype.update = function(){
 	if(this._flag==false){
 		this.weapon.fire()	
@@ -389,8 +417,6 @@ weapon.prototype.transition = function() {
 	this.tween_characteristic = game.add.tween(this.canon).to({x:posx,y:posy},time,Phaser.Easing.Linear.None,true,delay)
 }
 
-
-
 weapon.prototype.kill = function() {
 	console.log('touch')	
 }
@@ -399,27 +425,45 @@ weapon.prototype.audio_pop = function() {
 	this.sound_pop.play()
 }
 
-weapon.prototype.explode_bullet=function(b){
+weapon.prototype.explode_bullet=function(){
 	if(this.flag_explode==false){
 		this.flag_explode=true
-		this.visible=false
-		this.weapon.bullets.visible=false
 		this.audio_pop()
-		this.weapon.bullets.forEach(function(item){
-			if(item.alive){	
-				this.particle = game.add.emitter(item.x,item.y,85)
-				item.visible=false
-				item.body.enable=false
-				this.particle.makeParticles("particle_bullet")
-				this.particle.minParticleSpeed.setTo(-300,-300)
-				this.particle.maxParticleSpeed.setTo(800,800)
-				this.particle.setAlpha(.8, .6)
-				this.particle.minParticleScale = .2
-				this.particle.maxParticleScale = .5
-				this.particle.minRotation = 0
-				this.particle.maxRotation = 0
-				this.particle.on=false
-				this.particle.start(true,9900,null,20);}})
+		if(this.special_color=="vrai"){
+			this.weapon.bullets.forEach(function(item){
+				if(item.alive){	
+					this.particle = game.add.emitter(item.x,item.y,85)
+					this.particle.makeParticles("particle_bullet_color")
+					this.particle.minParticleSpeed.setTo(-300,-300)
+					this.particle.maxParticleSpeed.setTo(800,800)
+					this.particle.setAlpha(.8, .6)
+					this.particle.minParticleScale = .2
+					this.particle.maxParticleScale = .5
+					this.particle.minRotation = 0
+					this.particle.maxRotation = 0
+					this.particle.on=false
+					this.particle.start(true,9000,null,20)
+				}})
+		}else{
+			this.weapon.bullets.forEach(function(item){
+				if(item.alive){	
+					this.particle = game.add.emitter(item.x,item.y,85)
+					this.particle.makeParticles("particle_bullet")
+					this.particle.minParticleSpeed.setTo(-300,-300)
+					this.particle.maxParticleSpeed.setTo(800,800)
+					this.particle.setAlpha(.8, .6)
+					this.particle.minParticleScale = .2
+					this.particle.maxParticleScale = .5
+					this.particle.minRotation = 0
+					this.particle.maxRotation = 0
+					this.particle.on=false
+					this.particle.start(true,9000,null,20)
+				}})
+		
+		
+		
+		
+		}
 	}
 }
 
@@ -453,6 +497,7 @@ var preloadstate = {
 		//audio_move
 		this.game.load.audio("pop_minder","sounds/pop_minder.ogg");
 		this.game.load.audio("pop","sounds/pop.ogg");
+		this.game.load.audio("launch","sounds/launch.ogg");
 		//images
 		this.game.load.image("title","assets/title.png");
 		this.game.load.spritesheet('star','assets/star.png', 400, 100);
@@ -466,7 +511,9 @@ var preloadstate = {
 		this.game.load.image("next","assets/next.png");
 		this.game.load.image("canon","assets/canon.png");
 		this.game.load.image("cible","assets/cible.png");
+		this.game.load.image("bullet_color","assets/bullet_color.png");
 		this.game.load.image("bullet","assets/bullet.png");
+		this.game.load.image("particle_bullet_color","assets/particle_bullet_color.png");
 		this.game.load.image("particle_bullet","assets/particle_bullet.png");
 		this.game.load.image("rect","assets/rect.png");
 		this.game.load.image("button","assets/button.png");
@@ -494,76 +541,71 @@ var game_first_screen = {
 		//game.time.events.add( 5000,() => game.state.start('game_state',game_state))
 	},
 
-		initProgressData: function() {
+	initProgressData: function() {
 
-			// array might be undefined at first time start up
-			if (!PLAYER_DATA) {
-				// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
-				var str = window.localStorage.getItem('mygame_progress');
+		// array might be undefined at first time start up
+		if (!PLAYER_DATA) {
+			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
+			var str = window.localStorage.getItem('mygame_progress');
 
-				// error checking, localstorage might not exist yet at first time start up
-				try {
-					PLAYER_DATA = JSON.parse(str);
-				} catch(e){
-					PLAYER_DATA = []; //error in the above string(in this case,yes)!
-				};
-				// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
-				if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
-					PLAYER_DATA = [];
-				};
+			// error checking, localstorage might not exist yet at first time start up
+			try {
+				PLAYER_DATA = JSON.parse(str);
+			} catch(e){
+				PLAYER_DATA = []; //error in the above string(in this case,yes)!
 			};
-		},
+			// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
+			if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
+				PLAYER_DATA = [];
+			};
+		};
+	},
 }
 
 var level0 = {
 	create: function(){
-		this.game.stage.backgroundColor = '#1a1a1a'
 		level_number=0
 		this.flag_level_complete=false
-		game.physics.startSystem(Phaser.Physics.ARCADE)
-		//this.stage.backgroundColor = "0xf4eeee"
-		//this.stage.backgroundColor = "0x1a1a1a"
-		this.background=game.add.sprite(0,0,'background')
-		this.background.inputEnabled=true
+
 		this.hero = new character() 
+		game.add.existing(this.hero)
 
 		this.canon=[]
-		this.canon[0]=new weapon(0,1400,880,4000,0,this.hero.flag_level_complete) 
-		this.canon[1]=new weapon (w+150,100,8000,990,135,this.hero.flag_level_complete)
+		//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+		this.canon[0]=new weapon(300,0,1000,280,500,0,0,this.hero.flag_level_complete,"vrai","vrai") 
+		this.canon[1]=new weapon(0,w-200,1400,400,990,20,180,this.hero.flag_level_complete,"faux","faux")
 
-		this.tween_characteristic = game.add.tween(this.canon[0]).to({y:0},1200,Phaser.Easing.Linear.None,true,0,-1)
-		this.tween_characteristic.yoyo(900,true)
 		for (var i = 0; i < this.canon.length; i++){
 			game.add.existing(this.canon[i])
 		}
-		game.add.existing(this.hero)
 		return level_number
 	},
+
 	update:function(){
-		if(this.hero.flag_show_button==false){
-			for (var i = 0; i < this.canon.length; i++){
-				this.canon[i].visible=false
-				this.canon[i].weapon.bullets.visible=false
-			}
-		}
+		game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
 		if(this.hero.flag_level_complete){
-			for (var i = 0; i < 3; i++){
-				for (var j = 0; j < this.canon.length; j++){
-					this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
+			this.hero.flag_level_complete=false
+			game.time.events.add( 1100,this.hide_weapon,this )
+		}
+		if(this.hero.flag_hide_enemies){
+			this.hero.flag_hide_enemies=false
+			game.time.events.add( 200,this.hide_weapon,this )
+		}
+		for (var i = 0; i < 3; i++){
+			for (var j = 0; j < this.canon.length; j++){
+				game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
+				if(this.canon[j].special_color=="vrai"){
+				game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],this.hide_weapon,null,this)
+				}else{
+				game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+				
 				}
 			}
 		}
-
-		for (var i = 0; i < 3; i++){
-			for (var j = 0; j < this.canon.length; j++){
-				game.physics.arcade.collide(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-				game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-			}
-		}
 		game.input.onTap.add(onTap,this);
+
 		function onTap(pointer, doubleTap) {
 			if(this.hero.flag_level_complete==false){
-
 				if (doubleTap)
 				{
 					console.log("value");
@@ -575,6 +617,18 @@ var level0 = {
 				}
 			}
 		}
+	},
+	touch_between_enemies:function(){
+		console.log("touch");
+	},
+	hide_weapon:function(){
+		console.log('hide')
+		for (var j = 0; j < this.canon.length; j++){
+			this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
+			this.canon[j].visible=false
+			this.canon[j].weapon.bullets.visible=false
+		}
+
 	},
 }
 var level1 = {
@@ -583,15 +637,16 @@ var level1 = {
 		level_number=1
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
-		//this.stage.backgroundColor = "0xf4eeee"
-		//this.stage.backgroundColor = "0x1a1a1a"
 		this.background=game.add.sprite(0,0,'background')
 		this.background.inputEnabled=true
 		this.hero = new character() 
 
 		this.canon=[]
-		this.canon[0]=new weapon(0,1400,880,500,0,this.hero.flag_level_complete) 
+		this.canon[0]=new weapon(0,1400,280,1000,0,this.hero.flag_level_complete) 
+		this.canon[1]=new weapon (w+150,100,1000,990,135,this.hero.flag_level_complete)
 
+		this.tween_characteristic = game.add.tween(this.canon[0]).to({y:0},1200,Phaser.Easing.Linear.None,true,0,-1)
+		this.tween_characteristic.yoyo(900,true)
 		for (var i = 0; i < this.canon.length; i++){
 			game.add.existing(this.canon[i])
 		}
@@ -599,27 +654,19 @@ var level1 = {
 		return level_number
 	},
 	update:function(){
-		if(this.hero.flag_show_button==false){
-			for (var i = 0; i < this.canon.length; i++){
-				this.canon[i].visible=false
-				this.canon[i].weapon.bullets.visible=false
-			}
-		}
 		if(this.hero.flag_level_complete){
-			for (var i = 0; i < 3; i++){
-				for (var j = 0; j < this.canon.length; j++){
-					this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
-				}
-			}
+			this.hero.flag_level_complete=false
+			game.time.events.add( 1100,this.hide_weapon,this )
 		}
 
 		for (var i = 0; i < 3; i++){
 			for (var j = 0; j < this.canon.length; j++){
-				game.physics.arcade.collide(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-				game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+				game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
+				game.physics.arcade.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
 			}
 		}
 		game.input.onTap.add(onTap,this);
+
 		function onTap(pointer, doubleTap) {
 			if(this.hero.flag_level_complete==false){
 
@@ -634,6 +681,15 @@ var level1 = {
 				}
 			}
 		}
+	},
+	hide_weapon:function(){
+		console.log('hide')
+		for (var j = 0; j < this.canon.length; j++){
+			this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
+			this.canon[j].visible=false
+			this.canon[j].weapon.bullets.visible=false
+		}
+
 	},
 }
 var level2 = {
@@ -642,74 +698,13 @@ var level2 = {
 		level_number=2
 		this.flag_level_complete=false
 		game.physics.startSystem(Phaser.Physics.ARCADE)
-		//this.stage.backgroundColor = "0xf4eeee"
 		this.background=game.add.sprite(0,0,'background')
 		this.background.inputEnabled=true
 		this.hero = new character() 
 
 		this.canon=[]
-		this.canon[0]=new weapon(0,1400,180,1500,0,this.hero.flag_level_complete) 
-		this.canon[1]=new weapon(0,1200,290,1500,0,this.hero.flag_level_complete) 
-		this.canon[2]=new weapon(0,1000,550,1500,0,this.hero.flag_level_complete) 
-		this.canon[3]=new weapon(0,800,1080,1500,0,this.hero.flag_level_complete) 
-
-		for (var i = 0; i < this.canon.length; i++){
-			game.add.existing(this.canon[i])
-		}
-		game.add.existing(this.hero)
-		return level_number
-	},
-	update:function(){
-		if(this.hero.flag_show_button==false){
-			for (var i = 0; i < this.canon.length; i++){
-				this.canon[i].visible=false
-				this.canon[i].weapon.bullets.visible=false
-			}
-		}
-		if(this.hero.flag_level_complete){
-			for (var i = 0; i < 3; i++){
-				for (var j = 0; j < this.canon.length; j++){
-					this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
-				}
-			}
-		}
-
-		for (var i = 0; i < 3; i++){
-			for (var j = 0; j < this.canon.length; j++){
-				game.physics.arcade.collide(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-				game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-			}
-		}
-		game.input.onTap.add(onTap,this);
-		function onTap(pointer, doubleTap) {
-			if(this.hero.flag_level_complete==false){
-
-				if (doubleTap)
-				{
-					console.log("value");
-				}
-				else
-				{
-					this.hero.flag_spacekey=false
-					this.hero.launch_with_mouse()
-				}
-			}
-		}
-	},
-}
-var game_state = {
-	create: function(){
-		this.game.stage.backgroundColor = '#1a1a1a'
-		this.flag_level_complete=false
-		game.physics.startSystem(Phaser.Physics.ARCADE)
-		//this.stage.backgroundColor = "0xf4eeee"
-		this.background=game.add.sprite(0,0,'background')
-		this.background.inputEnabled=true
-		this.hero = new character() 
-
-		this.canon=[]
-		this.canon[0]=new weapon(0,1400,180,3000,0,this.hero.flag_level_complete) 
-		this.canon[1]=new weapon (w+150,100,8000,990,135,this.hero.flag_level_complete)
+		this.canon[0]=new weapon(0,1400,280,1000,0,this.hero.flag_level_complete) 
+		this.canon[1]=new weapon (w+150,100,1000,990,135,this.hero.flag_level_complete)
 
 		this.tween_characteristic = game.add.tween(this.canon[0]).to({y:0},1200,Phaser.Easing.Linear.None,true,0,-1)
 		this.tween_characteristic.yoyo(900,true)
@@ -717,29 +712,22 @@ var game_state = {
 			game.add.existing(this.canon[i])
 		}
 		game.add.existing(this.hero)
+		return level_number
 	},
 	update:function(){
-		if(this.hero.flag_show_button==false){
-			for (var i = 0; i < this.canon.length; i++){
-				this.canon[i].visible=false
-				this.canon[i].weapon.bullets.visible=false
-			}
-		}
 		if(this.hero.flag_level_complete){
-			for (var i = 0; i < 3; i++){
-				for (var j = 0; j < this.canon.length; j++){
-					this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
-				}
-			}
+			this.hero.flag_level_complete=false
+			game.time.events.add( 1100,this.hide_weapon,this )
 		}
 
 		for (var i = 0; i < 3; i++){
 			for (var j = 0; j < this.canon.length; j++){
-				game.physics.arcade.collide(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-				game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+				game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
+				game.physics.arcade.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
 			}
 		}
 		game.input.onTap.add(onTap,this);
+
 		function onTap(pointer, doubleTap) {
 			if(this.hero.flag_level_complete==false){
 
@@ -754,6 +742,137 @@ var game_state = {
 				}
 			}
 		}
+	},
+	hide_weapon:function(){
+		console.log('hide')
+		for (var j = 0; j < this.canon.length; j++){
+			this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
+			this.canon[j].visible=false
+			this.canon[j].weapon.bullets.visible=false
+		}
+
+	},
+}
+var level3 = {
+	create: function(){
+		this.game.stage.backgroundColor = '#1a1a1a'
+		level_number=3
+		this.flag_level_complete=false
+		game.physics.startSystem(Phaser.Physics.ARCADE)
+		this.background=game.add.sprite(0,0,'background')
+		this.background.inputEnabled=true
+		this.hero = new character() 
+
+		this.canon=[]
+		this.canon[0]=new weapon(0,1400,280,1000,0,this.hero.flag_level_complete) 
+		this.canon[1]=new weapon (w+150,100,1000,990,135,this.hero.flag_level_complete)
+
+		this.tween_characteristic = game.add.tween(this.canon[0]).to({y:0},1200,Phaser.Easing.Linear.None,true,0,-1)
+		this.tween_characteristic.yoyo(900,true)
+		for (var i = 0; i < this.canon.length; i++){
+			game.add.existing(this.canon[i])
+		}
+		game.add.existing(this.hero)
+		return level_number
+	},
+	update:function(){
+		if(this.hero.flag_level_complete){
+			this.hero.flag_level_complete=false
+			game.time.events.add( 1100,this.hide_weapon,this )
+		}
+
+		for (var i = 0; i < 3; i++){
+			for (var j = 0; j < this.canon.length; j++){
+				game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
+				game.physics.arcade.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+			}
+		}
+		game.input.onTap.add(onTap,this);
+
+		function onTap(pointer, doubleTap) {
+			if(this.hero.flag_level_complete==false){
+
+				if (doubleTap)
+				{
+					console.log("value");
+				}
+				else
+				{
+					this.hero.flag_spacekey=false
+					this.hero.launch_with_mouse()
+				}
+			}
+		}
+	},
+	hide_weapon:function(){
+		console.log('hide')
+		for (var j = 0; j < this.canon.length; j++){
+			this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
+			this.canon[j].visible=false
+			this.canon[j].weapon.bullets.visible=false
+		}
+
+	},
+}
+var level4 = {
+	create: function(){
+		this.game.stage.backgroundColor = '#1a1a1a'
+		level_number=4
+		this.flag_level_complete=false
+		game.physics.startSystem(Phaser.Physics.ARCADE)
+		this.background=game.add.sprite(0,0,'background')
+		this.background.inputEnabled=true
+		this.hero = new character() 
+
+		this.canon=[]
+		this.canon[0]=new weapon(0,1400,280,1000,0,this.hero.flag_level_complete) 
+		this.canon[1]=new weapon (w+150,100,1000,990,135,this.hero.flag_level_complete)
+
+		this.tween_characteristic = game.add.tween(this.canon[0]).to({y:0},1200,Phaser.Easing.Linear.None,true,0,-1)
+		this.tween_characteristic.yoyo(900,true)
+		for (var i = 0; i < this.canon.length; i++){
+			game.add.existing(this.canon[i])
+		}
+		game.add.existing(this.hero)
+		return level_number
+	},
+	update:function(){
+		if(this.hero.flag_level_complete){
+			this.hero.flag_level_complete=false
+			game.time.events.add( 1100,this.hide_weapon,this )
+		}
+
+		for (var i = 0; i < 3; i++){
+			for (var j = 0; j < this.canon.length; j++){
+				game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
+				game.physics.arcade.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+			}
+		}
+		game.input.onTap.add(onTap,this);
+
+		function onTap(pointer, doubleTap) {
+			if(this.hero.flag_level_complete==false){
+
+				if (doubleTap)
+				{
+					console.log("value");
+				}
+				else
+				{
+					this.hero.flag_spacekey=false
+					this.hero.launch_with_mouse()
+				}
+			}
+		}
+	},
+	hide_weapon:function(){
+		console.log('hide')
+		for (var j = 0; j < this.canon.length; j++){
+			this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
+			this.canon[j].visible=false
+			this.canon[j].weapon.bullets.visible=false
+		}
+
 	},
 }
 
@@ -773,209 +892,209 @@ var menu_level_select = {
 
 var levsel={
 	// define needed variables for mygame.LevelSelect
-		preload: function() {
-			this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
-			this.game.load.bitmapFont('fo','fonts/font.png', 'fonts/font.fnt');
-			//this.game.load.bitmapFont('font72', 'font72.png', 'font72.xml'); // created with http://kvazars.com/littera/
+	preload: function() {
+		this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
+		this.game.load.bitmapFont('fo','fonts/font.png', 'fonts/font.fnt');
+		//this.game.load.bitmapFont('font72', 'font72.png', 'font72.xml'); // created with http://kvazars.com/littera/
 
-			this.initProgressData();
-		},
+		this.initProgressData();
+	},
 
-		create: function() {
-			this.holdicons = [];
-			this.game.stage.backgroundColor = '#1a1a1a'
-;
-			this.game.add.sprite(0,0,'background')
-			this.text=game.add.bitmapText(640,200,'fo','SELECT A LEVEL!',100);
-			this.text.anchor.setTo(.5,.5)
-			this.createLevelIcons();
-			this.animateLevelIcons();
-		},
+	create: function() {
+		this.holdicons = [];
+		this.game.stage.backgroundColor = '#1a1a1a'
+		;
+		this.game.add.sprite(0,0,'background')
+		this.text=game.add.bitmapText(640,200,'fo','SELECT A LEVEL!',100);
+		this.text.anchor.setTo(.5,.5)
+		this.createLevelIcons();
+		this.animateLevelIcons();
+	},
 
-		update: function() {
-			// nothing to do but wait until player selects a level
-		},
+	update: function() {
+		// nothing to do but wait until player selects a level
+	},
 
-		render: function() {
-			// display some debug info..?
-		},
+	render: function() {
+		// display some debug info..?
+	},
 
-		initProgressData: function() {
+	initProgressData: function() {
 
-			// array might be undefined at first time start up
-			if (!PLAYER_DATA) {
-				// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
-				var str = window.localStorage.getItem('mygame_progress');
+		// array might be undefined at first time start up
+		if (!PLAYER_DATA) {
+			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
+			var str = window.localStorage.getItem('mygame_progress');
 
-				// error checking, localstorage might not exist yet at first time start up
-				try {
-					PLAYER_DATA = JSON.parse(str);
-				} catch(e){
-					PLAYER_DATA = []; //error in the above string(in this case,yes)!
-				};
-				// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
-				if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
-					PLAYER_DATA = [];
-				};
+			// error checking, localstorage might not exist yet at first time start up
+			try {
+				PLAYER_DATA = JSON.parse(str);
+			} catch(e){
+				PLAYER_DATA = []; //error in the above string(in this case,yes)!
 			};
-		},
+			// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
+			if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
+				PLAYER_DATA = [];
+			};
+		};
+	},
 
-		createLevelIcons: function() {
-			var levelnr = 0;
+	createLevelIcons: function() {
+		var levelnr = 0;
 
-			for (var y=0; y < 5; y++) {
-				for (var x=0; x < 4; x++) {
-					// next level
-					levelnr = levelnr + 1;
+		for (var y=0; y < 5; y++) {
+			for (var x=0; x < 4; x++) {
+				// next level
+				levelnr = levelnr + 1;
 
-					// check if array not yet initialised
-					if (typeof PLAYER_DATA[levelnr-1] !== 'number') {
-						// value is null or undefined, i.e. array not defined or too short between app upgrades with more levels
-						if (levelnr == 1) {
-							PLAYER_DATA[levelnr-1] = 0; // level 1 should never be locked
-						} else {
-							PLAYER_DATA[levelnr-1] = -1;
-						};
+				// check if array not yet initialised
+				if (typeof PLAYER_DATA[levelnr-1] !== 'number') {
+					// value is null or undefined, i.e. array not defined or too short between app upgrades with more levels
+					if (levelnr == 1) {
+						PLAYER_DATA[levelnr-1] = 0; // level 1 should never be locked
+					} else {
+						PLAYER_DATA[levelnr-1] = -1;
 					};
-
-					// player progress info for this level
-					var playdata = PLAYER_DATA[levelnr-1];
-console.log("playdata",playdata);
-					// decide which icon
-					var isLocked = true; // locked
-					var stars = 0; // no stars
-
-					// check if level is unlocked
-					if (playdata > -1) {
-						isLocked = false; // unlocked
-						if (playdata < 4) {stars = playdata;}; // 0..3 stars
-					};
-
-					// calculate position on screen
-					var xpos = 60 + (x*300);
-					var ypos = 320 + (y*300);
-
-					// create icon
-					this.holdicons[levelnr-1] = this.createLevelIcon(xpos, ypos, levelnr, isLocked, stars);
-					var backicon = this.holdicons[levelnr-1].getAt(0);
-
-					// keep level nr, used in onclick method
-					backicon.health = levelnr;
-
-					// input handler
-					backicon.inputEnabled = true;
-					backicon.events.onInputDown.add(this.onSpriteDown, this);
 				};
+
+				// player progress info for this level
+				var playdata = PLAYER_DATA[levelnr-1];
+				console.log("playdata",playdata);
+				// decide which icon
+				var isLocked = true; // locked
+				var stars = 0; // no stars
+
+				// check if level is unlocked
+				if (playdata > -1) {
+					isLocked = false; // unlocked
+					if (playdata < 4) {stars = playdata;}; // 0..3 stars
+				};
+
+				// calculate position on screen
+				var xpos = 60 + (x*300);
+				var ypos = 320 + (y*300);
+
+				// create icon
+				this.holdicons[levelnr-1] = this.createLevelIcon(xpos, ypos, levelnr, isLocked, stars);
+				var backicon = this.holdicons[levelnr-1].getAt(0);
+
+				// keep level nr, used in onclick method
+				backicon.health = levelnr;
+
+				// input handler
+				backicon.inputEnabled = true;
+				backicon.events.onInputDown.add(this.onSpriteDown, this);
 			};
-		},
+		};
+	},
 
-		// -------------------------------------
-		// Add level icon buttons
-		// -------------------------------------
-		createLevelIcon: function(xpos, ypos, levelnr, isLocked, stars) {
+	// -------------------------------------
+	// Add level icon buttons
+	// -------------------------------------
+	createLevelIcon: function(xpos, ypos, levelnr, isLocked, stars) {
 
-			// create new group
-			var IconGroup = this.game.add.group();
-			IconGroup.x = xpos;
-			IconGroup.y = ypos;
+		// create new group
+		var IconGroup = this.game.add.group();
+		IconGroup.x = xpos;
+		IconGroup.y = ypos;
 
-			// keep original position, for restoring after certain tweens
-			IconGroup.xOrg = xpos;
-			IconGroup.yOrg = ypos;
+		// keep original position, for restoring after certain tweens
+		IconGroup.xOrg = xpos;
+		IconGroup.yOrg = ypos;
 
-			// determine background frame
-			var frame = 0;
-			if (isLocked == false) {frame = 1};
+		// determine background frame
+		var frame = 0;
+		if (isLocked == false) {frame = 1};
 
-			// add background
-			var icon1 = this.game.add.sprite(0, 0, 'levelselecticons', frame);
-			IconGroup.add(icon1);
+		// add background
+		var icon1 = this.game.add.sprite(0, 0, 'levelselecticons', frame);
+		IconGroup.add(icon1);
 
-			// add stars, if needed
-			if (isLocked == false) {
-				var txt = this.game.add.bitmapText(137, 147, 'fo', ''+levelnr, 100);
-				txt.anchor.setTo(.5,.5)
-				var icon2 = this.game.add.sprite(0, 0, 'levelselecticons', (2+stars));
+		// add stars, if needed
+		if (isLocked == false) {
+			var txt = this.game.add.bitmapText(137, 147, 'fo', ''+levelnr, 100);
+			txt.anchor.setTo(.5,.5)
+			var icon2 = this.game.add.sprite(0, 0, 'levelselecticons', (2+stars));
 
-				IconGroup.add(icon2);
-				IconGroup.add(txt);
-			}else{
-				var txt_locked = this.game.add.bitmapText(137, 147, 'fo', ''+levelnr, 100);
-				txt_locked.anchor.setTo(.5,.5)
-				txt_locked.tint=0x9a136b
-				IconGroup.add(txt_locked);
+			IconGroup.add(icon2);
+			IconGroup.add(txt);
+		}else{
+			var txt_locked = this.game.add.bitmapText(137, 147, 'fo', ''+levelnr, 100);
+			txt_locked.anchor.setTo(.5,.5)
+			txt_locked.tint=0x9a136b
+			IconGroup.add(txt_locked);
 
-			};
+		};
 
-			return IconGroup;
-		},
+		return IconGroup;
+	},
 
-		onSpriteDown: function(sprite, pointer) {
+	onSpriteDown: function(sprite, pointer) {
 
-			// retrieve the iconlevel
-			var levelnr = sprite.health;
+		// retrieve the iconlevel
+		var levelnr = sprite.health;
 
-			if (PLAYER_DATA[levelnr-1] < 0) {
-				// indicate it's locked by shaking left/right
-				var IconGroup = this.holdicons[levelnr-1];
-				var xpos = IconGroup.xOrg;
+		if (PLAYER_DATA[levelnr-1] < 0) {
+			// indicate it's locked by shaking left/right
+			var IconGroup = this.holdicons[levelnr-1];
+			var xpos = IconGroup.xOrg;
 
-				var tween = this.game.add.tween(IconGroup)
-					.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos+4 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos-3 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos+2 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
-					.start();
-			} else {
-				// simulate button press animation to indicate selection
-				var IconGroup = this.holdicons[levelnr-1];
-				var tween = this.game.add.tween(IconGroup.scale)
-					.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
-					.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
-					.start();
+			var tween = this.game.add.tween(IconGroup)
+				.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos+4 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos-3 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos+2 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
+				.start();
+		} else {
+			// simulate button press animation to indicate selection
+			var IconGroup = this.holdicons[levelnr-1];
+			var tween = this.game.add.tween(IconGroup.scale)
+				.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
+				.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
+				.start();
 
-				// it's a little tricky to pass selected levelnr to callback function, but this works:
-				this.onLevelSelected(levelnr-1)
-				//tween._lastChild.onComplete.add(function(){this.onLevelSelected(sprite.health);}, this);
-			};
-		},
+			// it's a little tricky to pass selected levelnr to callback function, but this works:
+			this.onLevelSelected(levelnr-1)
+			//tween._lastChild.onComplete.add(function(){this.onLevelSelected(sprite.health);}, this);
+		};
+	},
 
-		animateLevelIcons: function() {
+	animateLevelIcons: function() {
 
-			// slide all icons into screen
-			for (var i=0; i < this.holdicons.length; i++) {
-				// get variables
-				var IconGroup = this.holdicons[i];
-				IconGroup.y = IconGroup.y + 600;
-				var y = IconGroup.y;
+		// slide all icons into screen
+		for (var i=0; i < this.holdicons.length; i++) {
+			// get variables
+			var IconGroup = this.holdicons[i];
+			IconGroup.y = IconGroup.y + 600;
+			var y = IconGroup.y;
 
-				// tween animation
-				this.game.add.tween(IconGroup).to( {y: y-600}, 500, Phaser.Easing.Back.Out, true, (i*40));
-			};
-		},
+			// tween animation
+			this.game.add.tween(IconGroup).to( {y: y-600}, 500, Phaser.Easing.Back.Out, true, (i*40));
+		};
+	},
 
-		onLevelSelected: function(levelnr) {
-			console.log(levelnr,'rr');
-			this.number_level=levelnr
-			// pass levelnr variable to 'Game' state
-			//this.game.state.states['game']._levelNumber = levelnr;
-			//this.game.state.states['game']._levelNumber = levelnr;
-			//this.game.state.states('game_state',game_state)
-			//this.game.state.start('level0')
-			this.game.state.start('level'+this.number_level,true,false)
+	onLevelSelected: function(levelnr) {
+		console.log(levelnr,'rr');
+		this.number_level=levelnr
+		// pass levelnr variable to 'Game' state
+		//this.game.state.states['game']._levelNumber = levelnr;
+		//this.game.state.states['game']._levelNumber = levelnr;
+		//this.game.state.states('game_state',game_state)
+		//this.game.state.start('level0')
+		this.game.state.start('level'+this.number_level,true,false)
 
-			//this.state.start('game');
-		},
-	};
+		//this.state.start('game');
+	},
+};
 
 
-	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
-	game.state.add('boot',bootstate)
-	game.state.add('preload',preloadstate)
-	game.state.add('game_first_screen',game_first_screen)
-	//game.state.add('game_state',game_state)
+game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
+game.state.add('boot',bootstate)
+game.state.add('preload',preloadstate)
+game.state.add('game_first_screen',game_first_screen)
+//game.state.add('game_state',game_state)
 //for (var i = 0; i < 1; i++) {
 //game.state.add('level'+i,level+i)
 //game.state.add('level'+i,level+i)
@@ -983,8 +1102,9 @@ console.log("playdata",playdata);
 game.state.add('level0',level0)
 game.state.add('level1',level1)
 game.state.add('level2',level2)
+game.state.add('level3',level3)
 
-	game.state.add('menu_level_select',menu_level_select)
-	game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
-	game.state.start('boot',bootstate)
+game.state.add('menu_level_select',menu_level_select)
+game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
+game.state.start('boot',bootstate)
 
