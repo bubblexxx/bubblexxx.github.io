@@ -8,6 +8,26 @@ var w=1280
 var h2=h*.5
 var w2=640
 var level_number=0
+
+//ADS
+
+var bannerStatus;
+var interstitialStatus;
+
+var banner;
+var interstitial;
+var demoPosition;
+
+var backgroundTexture;
+var button1Texture;
+var button2Texture;
+
+    var adService;
+    var container;
+
+
+
+
 //var level={}
 screen_first = function(){
 	Phaser.Sprite.call(this,game,w2,200,'title')
@@ -483,7 +503,9 @@ var bootstate= {
 		//this.scale.refresh()
 		this.game.stage.backgroundColor='#1a1a1a'
 		this.state.start("preload");
-	}
+	},
+		
+
 }
 
 var preloadstate = {
@@ -559,6 +581,69 @@ var game_first_screen = {
 				PLAYER_DATA = [];
 			};
 		};
+	},
+
+	createBanner:function() {
+
+		banner = adService.createBanner();
+
+		banner.on("load", function(){
+			console.log("Banner loaded " + banner.width, banner.height);
+		});
+
+		banner.on("fail", function(){
+			console.log("Banner failed to load");
+		});
+
+		banner.on("show", function(){
+			console.log("Banner shown a modal content");
+		});
+
+		banner.on("dismiss", function(){
+			console.log("Banner dismissed the modal content");
+		});
+	},
+
+	showProviderSelector:function() {
+		if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
+			alert('Cocoon AdMob plugin not installed');
+			return;
+		}
+
+		// nécessaire 
+		adService = Cocoon.Ad.AdMob;
+		adService.configure({
+			ios: {
+				banner:"ca-app-pub-7686972479101507/8873903476",
+				interstitial:"ca-app-pub-7686972479101507/8873903476",
+			},
+			android: {
+				banner:"ca-app-pub-7686972479101507/4443703872",
+				interstitial:"ca-app-pub-7686972479101507/4443703872"
+			}
+		});
+		this.showControls();
+
+	},
+
+	showControls:function() {
+		// voir nécessaire
+		if (adService) {
+			this.createBanner();
+		}
+
+
+		banner.setLayout(demoPosition);
+		//load banner
+		banner.load();
+
+		//show banner
+		game.time.events.add( 5000,banner.show)
+		demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
+		//banner.show();
+		//hide banner
+		//banner.hide();
+		//position de la bannière pub
 	},
 }
 
