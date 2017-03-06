@@ -638,7 +638,7 @@ var game_first_screen = {
 		banner.load();
 
 		//show banner
-		game.time.events.add( 5000,banner.show)
+		game.time.events.add( 15000,banner.show)
 		demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
 		//banner.show();
 		//hide banner
