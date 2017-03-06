@@ -606,10 +606,10 @@ var game_first_screen = {
 	},
 
 	showProviderSelector:function() {
-		if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
-			alert('Cocoon AdMob plugin not installed');
-			return;
-		}
+		//if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
+			//alert('Cocoon AdMob plugin not installed');
+			//return;
+		//}
 
 		// nécessaire 
 		adService = Cocoon.Ad.AdMob;
