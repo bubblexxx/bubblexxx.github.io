@@ -629,9 +629,9 @@ var game_first_screen = {
 
 	showControls:function() {
 		// voir nécessaire
-		//if (adService) {
+		if (adService) {
 			this.createBanner();
-		//}
+		}
 
 
 		banner.setLayout(demoPosition);
@@ -639,7 +639,7 @@ var game_first_screen = {
 		banner.load();
 
 		//show banner
-		game.time.events.add( 15000,banner.show)
+		game.time.events.add( 19000,banner.show)
 		demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
 		//banner.show();
 		//hide banner
