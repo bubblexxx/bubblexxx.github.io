@@ -561,6 +561,7 @@ var game_first_screen = {
 		this.initProgressData()
 		//game.time.events.add( 6,() => game.state.start('levsel',levsel))
 		//game.time.events.add( 5000,() => game.state.start('game_state',game_state))
+		this.showProviderSelector()
 	},
 
 	initProgressData: function() {
@@ -584,7 +585,7 @@ var game_first_screen = {
 	},
 
 	createBanner:function() {
-
+		console.log('createBanner')
 		banner = adService.createBanner();
 
 		banner.on("load", function(){
@@ -628,9 +629,9 @@ var game_first_screen = {
 
 	showControls:function() {
 		// voir nécessaire
-		if (adService) {
+		//if (adService) {
 			this.createBanner();
-		}
+		//}
 
 
 		banner.setLayout(demoPosition);
