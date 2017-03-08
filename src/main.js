@@ -22,8 +22,8 @@ var backgroundTexture;
 var button1Texture;
 var button2Texture;
 
-    var adService;
-    var container;
+var adService;
+var container;
 
 
 
@@ -487,6 +487,26 @@ weapon.prototype.explode_bullet=function(){
 	}
 }
 
+var init_cordova={
+
+	preload: function(){
+
+		if (window.cordova) {
+			document.addEventListener("deviceready", this.showProviderSelector,this);
+		}
+		else {
+			window.onload = this.showProviderSelector;
+		}
+	},
+
+	create: function(){
+		this.state.start("bootstate");
+	
+	},
+
+}
+
+
 var bootstate= {
 	preload: function(){
 		console.log("%cStarting minimalistic game", "color:white; background:red");
@@ -561,12 +581,7 @@ var game_first_screen = {
 		this.initProgressData()
 		//game.time.events.add( 6,() => game.state.start('levsel',levsel))
 		//game.time.events.add( 5000,() => game.state.start('game_state',game_state))
-		if (window.cordova) {
-			document.addEventListener("deviceready", this.showProviderSelector);
-		}
-		else {
-			window.onload = this.showProviderSelector;
-		}
+		this.showProviderSelector()
 	},
 
 	initProgressData: function() {
@@ -611,10 +626,10 @@ var game_first_screen = {
 	},
 
 	showProviderSelector:function() {
-		//if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
-			//alert('Cocoon AdMob plugin not installed');
-			//return;
-		//}
+		if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
+			alert('Cocoon AdMob plugin not installed');
+			return;
+		}
 
 		// nécessaire 
 		adService = Cocoon.Ad.AdMob;
@@ -635,6 +650,7 @@ var game_first_screen = {
 	showControls:function() {
 		// voir nécessaire
 		if (adService) {
+			console.log("createBanner");
 			this.createBanner();
 		}
 
@@ -644,14 +660,15 @@ var game_first_screen = {
 		banner.load();
 
 		//show banner
-		game.time.events.add( 15000,banner.show)
+		banner.show()
+		//game.time.events.add( 15000,banner.show)
 		demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
 		//banner.show();
 		//hide banner
 		//banner.hide();
 		//position de la bannière pub
 	},
-
+}
 
 var level0 = {
 	create: function(){
@@ -1182,6 +1199,7 @@ var levsel={
 
 
 game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
+game.state.add('init_cordova',init_cordova)
 game.state.add('boot',bootstate)
 game.state.add('preload',preloadstate)
 game.state.add('game_first_screen',game_first_screen)
@@ -1197,5 +1215,5 @@ game.state.add('level3',level3)
 
 game.state.add('menu_level_select',menu_level_select)
 game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
-game.state.start('boot',bootstate)
+game.state.start('init_cordova',init_cordova)
 
