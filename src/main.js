@@ -115,7 +115,7 @@ character = function(){
 	} 
 	this.score = game.add.bitmapText(w2,300,'fo','',100)
 	this.score.anchor.setTo(.5,.5)
-	this.life = game.add.bitmapText(w2,1800,'fo','3',120)
+	this.life = game.add.bitmapText(w2,1700,'fo','3',120)
 	this.life.anchor.setTo(.5,.5)
 	//this.life.tint=0x000000
 	this.sound_launch=game.add.audio('launch')
