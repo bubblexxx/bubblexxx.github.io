@@ -491,16 +491,15 @@ var init_cordova={
 
 	preload: function(){
 
-		if (window.cordova) {
-			document.addEventListener("deviceready", this.showProviderSelector,this);
-		}
-		else {
-			window.onload = this.showProviderSelector;
-		}
 	},
 
 	create: function(){
-		this.state.start("bootstate");
+		if (window.cordova) {
+			document.addEventListener("deviceready", this.state.start("boot"));
+		}
+		else {
+			window.onload = this.state.start("boot");
+		}
 	
 	},
 
