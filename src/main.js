@@ -1,3 +1,4 @@
+function main(){
 var PLAYER_DATA = null // just declare as global variable for now
 var ratio_device=window.screen.width/window.screen.height
 var h=1920
@@ -487,23 +488,6 @@ weapon.prototype.explode_bullet=function(){
 	}
 }
 
-var init_cordova={
-
-	preload: function(){
-
-	},
-
-	create: function(){
-		if (window.cordova) {
-			document.addEventListener("deviceready", this.state.start("boot"));
-		}
-		else {
-			window.onload = this.state.start("boot");
-		}
-	
-	},
-
-}
 
 
 var bootstate= {
@@ -1198,7 +1182,6 @@ var levsel={
 
 
 game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
-game.state.add('init_cordova',init_cordova)
 game.state.add('boot',bootstate)
 game.state.add('preload',preloadstate)
 game.state.add('game_first_screen',game_first_screen)
@@ -1214,5 +1197,7 @@ game.state.add('level3',level3)
 
 game.state.add('menu_level_select',menu_level_select)
 game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
-game.state.start('init_cordova',init_cordova)
+game.state.start('boot',bootstate)
+}
+document.addEventListener('deviceready',main,false)
 
