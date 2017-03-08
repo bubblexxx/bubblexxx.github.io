@@ -26,7 +26,7 @@ var button2Texture;
 var adService;
 var container;
 
-
+console.log("update")
 
 
 //var level={}
@@ -644,7 +644,6 @@ var game_first_screen = {
 		//show banner
 		banner.show()
                 demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
-
 		banner.setLayout(demoPosition);
 		//game.time.events.add( 15000,banner.show)
 		//banner.show();
