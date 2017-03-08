@@ -637,7 +637,7 @@ var game_first_screen = {
 			this.createBanner();
 		}
 
-		demoPosition = Cocoon.Ad.BannerLayout.TOP_CENTER;
+                demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
 
 		banner.setLayout(demoPosition);
 		//load banner
