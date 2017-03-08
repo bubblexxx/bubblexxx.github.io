@@ -561,7 +561,12 @@ var game_first_screen = {
 		this.initProgressData()
 		//game.time.events.add( 6,() => game.state.start('levsel',levsel))
 		//game.time.events.add( 5000,() => game.state.start('game_state',game_state))
-		this.showProviderSelector()
+		if (window.cordova) {
+			document.addEventListener("deviceready", this.showProviderSelector);
+		}
+		else {
+			window.onload = this.showProviderSelector;
+		}
 	},
 
 	initProgressData: function() {
@@ -639,14 +644,14 @@ var game_first_screen = {
 		banner.load();
 
 		//show banner
-		game.time.events.add( 19000,banner.show)
+		game.time.events.add( 15000,banner.show)
 		demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
 		//banner.show();
 		//hide banner
 		//banner.hide();
 		//position de la bannière pub
 	},
-}
+
 
 var level0 = {
 	create: function(){
