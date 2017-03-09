@@ -81,7 +81,7 @@ screen_first.prototype.show_button = function() {
 
 }
 
-character = function(){
+character = function(obj){
 	Phaser.Sprite.call(this,game,w2,h+500,'rect')
 	this.flag_mouse=false
 	this.flag_show_button=true
@@ -128,7 +128,7 @@ character = function(){
 	this.button_next.anchor.setTo(.5,.5)
 	this.button_next.scale.setTo(0,0)
 	this.button_next.visible=false
-	this.button_video=game.add.button(w2,h2+400,'button_video',this.next_level_with_video,this)
+	this.button_video=game.add.button(w2,h2+400,'button_video',() => this.next_level_with_video(obj),this)
 	this.button_video.anchor.setTo(.5,.5)
 	this.button_video.scale.setTo(0,0)
 	this.button_video.visible=false
@@ -198,11 +198,11 @@ this.game.state.start('level'+this.next_niveau,true,false);
 	console.log('next-level')
 }
 
-character.prototype.next_level_with_video = function() {
+character.prototype.next_level_with_video = function(obj) {
 	this.next_niveau=level_number+1
 	//this.game.state.start('level'+this.next_niveau,true,false);
 	console.log('next-level')
-	interstitial.show();
+	obj.show();
 }
 character.prototype.launch_with_mouse=function(){
 	if(this.flag_level_complete==false && this.flag_mouse==false){
@@ -691,7 +691,7 @@ var level0 = {
 		level_number=0
 		this.flag_level_complete=false
 
-		this.hero = new character() 
+		this.hero = new character(interstitial) 
 		game.add.existing(this.hero)
 
 		this.canon=[]
