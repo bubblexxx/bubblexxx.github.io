@@ -128,7 +128,7 @@ character = function(){
 	this.button_next.anchor.setTo(.5,.5)
 	this.button_next.scale.setTo(0,0)
 	this.button_next.visible=false
-	this.button_video=game.add.button(w2,h2+400,'button_video',this.next_level,this)
+	this.button_video=game.add.button(w2,h2+400,'button_video',this.next_level_with_video,this)
 	this.button_video.anchor.setTo(.5,.5)
 	this.button_video.scale.setTo(0,0)
 	this.button_video.visible=false
@@ -194,8 +194,15 @@ character.prototype.restart_level = function() {
 
 character.prototype.next_level = function() {
 	this.next_niveau=level_number+1
-	this.game.state.start('level'+this.next_niveau,true,false);
+this.game.state.start('level'+this.next_niveau,true,false);
 	console.log('next-level')
+}
+
+character.prototype.next_level_with_video = function() {
+	this.next_niveau=level_number+1
+	//this.game.state.start('level'+this.next_niveau,true,false);
+	console.log('next-level')
+	interstitial.show();
 }
 character.prototype.launch_with_mouse=function(){
 	if(this.flag_level_complete==false && this.flag_mouse==false){
@@ -1035,6 +1042,29 @@ var levsel={
 	createLevelIcons: function() {
 		var levelnr = 0;
 
+		function createInterstitial() {
+
+			interstitial = adService.createInterstitial();
+
+			interstitial.on("load", function(){
+				console.log("Interstitial loaded");
+				interstitialStatus.text = "Interstitial loaded";
+			});
+			interstitial.on("fail", function(){
+				console.log("Interstitial failed");
+				interstitialStatus.text = "Interstitial failed";
+			});
+			interstitial.on("show", function(){
+				console.log("Interstitial shown");
+				interstitialStatus.text = "Interstitial shown";
+			});
+			interstitial.on("dismiss", function(){
+				console.log("Interstitial dismissed");
+				interstitialStatus.text = "Interstitial dismissed";
+			});
+		}
+            interstitial.load();
+
 		for (var y=0; y < 5; y++) {
 			for (var x=0; x < 4; x++) {
 				// next level
@@ -1201,5 +1231,6 @@ game.state.add('menu_level_select',menu_level_select)
 game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
 game.state.start('boot',bootstate)
 }
+//main()
 document.addEventListener('deviceready',main,false)
 
