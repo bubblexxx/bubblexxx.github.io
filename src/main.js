@@ -664,6 +664,30 @@ var game_first_screen = {
 
 var level0 = {
 	create: function(){
+
+		function createInterstitial() {
+
+			interstitial = adService.createInterstitial();
+
+			interstitial.on("load", function(){
+				console.log("Interstitial loaded");
+				interstitialStatus.text = "Interstitial loaded";
+			});
+			interstitial.on("fail", function(){
+				console.log("Interstitial failed");
+				interstitialStatus.text = "Interstitial failed";
+			});
+			interstitial.on("show", function(){
+				console.log("Interstitial shown");
+				interstitialStatus.text = "Interstitial shown";
+			});
+			interstitial.on("dismiss", function(){
+				console.log("Interstitial dismissed");
+				interstitialStatus.text = "Interstitial dismissed";
+			});
+		}
+		interstitial.load();
+
 		level_number=0
 		this.flag_level_complete=false
 
@@ -1042,28 +1066,6 @@ var levsel={
 	createLevelIcons: function() {
 		var levelnr = 0;
 
-		function createInterstitial() {
-
-			interstitial = adService.createInterstitial();
-
-			interstitial.on("load", function(){
-				console.log("Interstitial loaded");
-				interstitialStatus.text = "Interstitial loaded";
-			});
-			interstitial.on("fail", function(){
-				console.log("Interstitial failed");
-				interstitialStatus.text = "Interstitial failed";
-			});
-			interstitial.on("show", function(){
-				console.log("Interstitial shown");
-				interstitialStatus.text = "Interstitial shown";
-			});
-			interstitial.on("dismiss", function(){
-				console.log("Interstitial dismissed");
-				interstitialStatus.text = "Interstitial dismissed";
-			});
-		}
-            interstitial.load();
 
 		for (var y=0; y < 5; y++) {
 			for (var x=0; x < 4; x++) {
