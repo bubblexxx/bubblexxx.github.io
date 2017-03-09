@@ -695,6 +695,11 @@ function main(){
 			});
 			interstitial.on("dismiss", function(){
 				console.log("Interstitial dismissed");
+				alert("dismiss")
+			});
+			interstitial.on("click", function(){
+				console.log("Interstitial dismissed");
+				alert("click")
 			});
 		},
 		create: function(){
