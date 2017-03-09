@@ -663,42 +663,41 @@ var game_first_screen = {
 }
 
 var level0 = {
+	createInterstitial:function() {
+
+		adService = Cocoon.Ad.AdMob;
+		adService.configure({
+			ios: {
+				banner:"ca-app-pub-7686972479101507/8873903476",
+				interstitial:"ca-app-pub-7686972479101507/8873903476",
+			},
+			android: {
+				banner:"ca-app-pub-7686972479101507/4443703872",
+				interstitial:"ca-app-pub-7686972479101507/4443703872"
+			}
+		});
+
+		interstitial = adService.createInterstitial();
+
+		interstitial.on("load", function(){
+			console.log("Interstitial loaded");
+			interstitialStatus.text = "Interstitial loaded";
+		});
+		interstitial.on("fail", function(){
+			console.log("Interstitial failed");
+			interstitialStatus.text = "Interstitial failed";
+		});
+		interstitial.on("show", function(){
+			console.log("Interstitial shown");
+			interstitialStatus.text = "Interstitial shown";
+		});
+		interstitial.on("dismiss", function(){
+			console.log("Interstitial dismissed");
+			interstitialStatus.text = "Interstitial dismissed";
+		});
+	},
 	create: function(){
 
-
-		createInterstitial:function() {
-
-			adService = Cocoon.Ad.AdMob;
-			adService.configure({
-				ios: {
-					banner:"ca-app-pub-7686972479101507/8873903476",
-					interstitial:"ca-app-pub-7686972479101507/8873903476",
-				},
-				android: {
-					banner:"ca-app-pub-7686972479101507/4443703872",
-					interstitial:"ca-app-pub-7686972479101507/4443703872"
-				}
-			});
-
-			interstitial = adService.createInterstitial();
-
-			interstitial.on("load", function(){
-				console.log("Interstitial loaded");
-				interstitialStatus.text = "Interstitial loaded";
-			});
-			interstitial.on("fail", function(){
-				console.log("Interstitial failed");
-				interstitialStatus.text = "Interstitial failed";
-			});
-			interstitial.on("show", function(){
-				console.log("Interstitial shown");
-				interstitialStatus.text = "Interstitial shown";
-			});
-			interstitial.on("dismiss", function(){
-				console.log("Interstitial dismissed");
-				interstitialStatus.text = "Interstitial dismissed";
-			});
-		}
 		this.createInterstitial()
 		interstitial.load();
 
