@@ -665,7 +665,20 @@ var game_first_screen = {
 var level0 = {
 	create: function(){
 
-		function createInterstitial() {
+
+		createInterstitial:function() {
+
+			adService = Cocoon.Ad.AdMob;
+			adService.configure({
+				ios: {
+					banner:"ca-app-pub-7686972479101507/8873903476",
+					interstitial:"ca-app-pub-7686972479101507/8873903476",
+				},
+				android: {
+					banner:"ca-app-pub-7686972479101507/4443703872",
+					interstitial:"ca-app-pub-7686972479101507/4443703872"
+				}
+			});
 
 			interstitial = adService.createInterstitial();
 
@@ -686,6 +699,7 @@ var level0 = {
 				interstitialStatus.text = "Interstitial dismissed";
 			});
 		}
+		this.createInterstitial()
 		interstitial.load();
 
 		level_number=0
