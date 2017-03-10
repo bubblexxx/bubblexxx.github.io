@@ -500,6 +500,57 @@ function main(){
 		}
 	}
 
+	var createBanner= function(){
+
+		if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
+			alert('Cocoon AdMob plugin not installed');
+			return;
+		}
+		// nécessaire 
+		adService = Cocoon.Ad.AdMob;
+		adService.configure({
+			ios: {
+					banner:"ca-app-pub-7686972479101507/8873903476",
+					interstitial:"ca-app-pub-7686972479101507/8873903476",
+				},
+				android: {
+					banner:"ca-app-pub-7686972479101507/4443703872",
+					interstitial:"ca-app-pub-7686972479101507/4443703872"
+				}
+			});
+
+
+		console.log('createBanner')
+		banner = adService.createBanner();
+
+		banner.on("load", function(){
+			console.log("Banner loaded " + banner.width, banner.height);
+			});
+
+		banner.on("fail", function(){
+			console.log("Banner failed to load");
+			});
+
+		banner.on("show", function(){
+			console.log("Banner shown a modal content");
+			});
+
+		banner.on("dismiss", function(){
+			console.log("Banner dismissed the modal content");
+			});
+
+		//load banner
+		banner.load();
+
+		//show banner
+		banner.show()
+		demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
+			banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
+		game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
+	}
+
+
+
 	var createInterstitial=function() {
 
 		adService = Cocoon.Ad.AdMob;
@@ -613,6 +664,7 @@ function main(){
 			//game.time.events.add( 6,() => game.state.start('levsel',levsel))
 			//game.time.events.add( 5000,() => game.state.start('game_state',game_state))
 			this.showProviderSelector()
+			createBanner()
 		},
 
 		initProgressData: function() {
@@ -635,72 +687,6 @@ function main(){
 			};
 		},
 
-		createBanner:function() {
-			console.log('createBanner')
-			banner = adService.createBanner();
-
-			banner.on("load", function(){
-				console.log("Banner loaded " + banner.width, banner.height);
-			});
-
-			banner.on("fail", function(){
-				console.log("Banner failed to load");
-			});
-
-			banner.on("show", function(){
-				console.log("Banner shown a modal content");
-			});
-
-			banner.on("dismiss", function(){
-				console.log("Banner dismissed the modal content");
-			});
-		},
-
-		showProviderSelector:function() {
-			if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
-				alert('Cocoon AdMob plugin not installed');
-				return;
-			}
-
-			// nécessaire 
-			adService = Cocoon.Ad.AdMob;
-			adService.configure({
-				ios: {
-					banner:"ca-app-pub-7686972479101507/8873903476",
-					interstitial:"ca-app-pub-7686972479101507/8873903476",
-				},
-				android: {
-					banner:"ca-app-pub-7686972479101507/4443703872",
-					interstitial:"ca-app-pub-7686972479101507/4443703872"
-				}
-			});
-			this.showControls();
-
-		},
-
-		showControls:function() {
-			// voir nécessaire
-			if (adService) {
-				console.log("createBanner");
-				this.createBanner();
-			}
-
-			//load banner
-			banner.load();
-
-
-			//show banner
-			banner.show()
-			demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
-			banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
-			game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
-
-			//game.time.events.add( 15000,banner.show)
-			//banner.show();
-			//hide banner
-			//banner.hide();
-			//position de la bannière pub
-		},
 	}
 
 	var level0 = {
