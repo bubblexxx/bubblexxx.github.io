@@ -500,7 +500,40 @@ function main(){
 		}
 	}
 
+	var createInterstitial=function() {
 
+		adService = Cocoon.Ad.AdMob;
+		adService.configure({
+			ios: {
+				banner:"ca-app-pub-7686972479101507/8873903476",
+				interstitial:"ca-app-pub-7686972479101507/8873903476",
+			},
+			android: {
+				banner:"ca-app-pub-7686972479101507/4443703872",
+				interstitial:"ca-app-pub-7686972479101507/4443703872"
+			}
+		});
+
+		interstitial = adService.createInterstitial();
+
+		interstitial.on("load", function(){
+			console.log("Interstitial loaded");
+		});
+		interstitial.on("fail", function(){
+			console.log("Interstitial failed");
+		});
+		interstitial.on("show", function(){
+			console.log("Interstitial shown");
+		});
+		interstitial.on("dismiss", function(){
+			console.log("Interstitial dismissed");
+			alert("dismiss")
+		});
+		interstitial.on("click", function(){
+			console.log("Interstitial dismissed");
+			alert("click")
+		});
+	}
 
 	var bootstate= {
 		preload: function(){
@@ -509,7 +542,7 @@ function main(){
 			this.load.image("loading_back","assets/loading_back.png"); 
 		},
 		create: function(){
-
+myfunc()
 			this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
 			//this.game.width=window.innerWidth
 			//this.game.height=window.innerHeight
@@ -567,6 +600,9 @@ function main(){
 			//this.game.state.start("game_state");
 		}
 	}
+
+
+
 
 	var game_first_screen = {
 		create: function(){
@@ -668,43 +704,9 @@ function main(){
 	}
 
 	var level0 = {
-		createInterstitial:function() {
-
-			adService = Cocoon.Ad.AdMob;
-			adService.configure({
-				ios: {
-					banner:"ca-app-pub-7686972479101507/8873903476",
-					interstitial:"ca-app-pub-7686972479101507/8873903476",
-				},
-				android: {
-					banner:"ca-app-pub-7686972479101507/4443703872",
-					interstitial:"ca-app-pub-7686972479101507/4443703872"
-				}
-			});
-
-			interstitial = adService.createInterstitial();
-
-			interstitial.on("load", function(){
-				console.log("Interstitial loaded");
-			});
-			interstitial.on("fail", function(){
-				console.log("Interstitial failed");
-			});
-			interstitial.on("show", function(){
-				console.log("Interstitial shown");
-			});
-			interstitial.on("dismiss", function(){
-				console.log("Interstitial dismissed");
-				alert("dismiss")
-			});
-			interstitial.on("click", function(){
-				console.log("Interstitial dismissed");
-				alert("click")
-			});
-		},
 		create: function(){
 
-			this.createInterstitial()
+			createInterstitial()
 			interstitial.load();
 
 			level_number=0
