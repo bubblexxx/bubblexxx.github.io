@@ -545,7 +545,7 @@ function main(){
 		//show banner
 		banner.show()
 		demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
-			banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
+		banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
 		game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
 	}
 
@@ -663,7 +663,6 @@ function main(){
 			this.initProgressData()
 			//game.time.events.add( 6,() => game.state.start('levsel',levsel))
 			//game.time.events.add( 5000,() => game.state.start('game_state',game_state))
-			this.showProviderSelector()
 			createBanner()
 		},
 
@@ -760,43 +759,49 @@ function main(){
 	}
 	var level1 = {
 		create: function(){
-			this.game.stage.backgroundColor = '#1a1a1a'
+			createInterstitial()
 			level_number=1
 			this.flag_level_complete=false
-			game.physics.startSystem(Phaser.Physics.ARCADE)
-			this.background=game.add.sprite(0,0,'background')
-			this.background.inputEnabled=true
-			this.hero = new character() 
+
+			this.hero = new character(interstitial) 
+			game.add.existing(this.hero)
 
 			this.canon=[]
-			this.canon[0]=new weapon(0,1400,280,1000,0,this.hero.flag_level_complete) 
-			this.canon[1]=new weapon (w+150,100,1000,990,135,this.hero.flag_level_complete)
+			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+			this.canon[0]=new weapon(300,0,1200,100,500,0,0,this.hero.flag_level_complete,"vrai","vrai") 
+			this.canon[1]=new weapon(0,w-200,1400,400,990,0,180,this.hero.flag_level_complete,"faux","faux")
 
-			this.tween_characteristic = game.add.tween(this.canon[0]).to({y:0},1200,Phaser.Easing.Linear.None,true,0,-1)
-			this.tween_characteristic.yoyo(900,true)
 			for (var i = 0; i < this.canon.length; i++){
 				game.add.existing(this.canon[i])
 			}
-			game.add.existing(this.hero)
 			return level_number
 		},
+
 		update:function(){
+			game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
 			if(this.hero.flag_level_complete){
 				this.hero.flag_level_complete=false
 				game.time.events.add( 1100,this.hide_weapon,this )
 			}
-
+			if(this.hero.flag_hide_enemies){
+				this.hero.flag_hide_enemies=false
+				game.time.events.add( 200,this.hide_weapon,this )
+			}
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < this.canon.length; j++){
 					game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-					game.physics.arcade.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+					if(this.canon[j].special_color=="vrai"){
+						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],this.hide_weapon,null,this)
+					}else{
+						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+
+					}
 				}
 			}
 			game.input.onTap.add(onTap,this);
 
 			function onTap(pointer, doubleTap) {
 				if(this.hero.flag_level_complete==false){
-
 					if (doubleTap)
 					{
 						console.log("value");
@@ -808,6 +813,9 @@ function main(){
 					}
 				}
 			}
+		},
+		touch_between_enemies:function(){
+			console.log("touch");
 		},
 		hide_weapon:function(){
 			console.log('hide')
