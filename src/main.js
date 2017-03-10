@@ -686,15 +686,11 @@ function main(){
 				};
 			};
 		},
-
 	}
 
 	var level0 = {
 		create: function(){
-
 			createInterstitial()
-			//interstitial.load();
-
 			level_number=0
 			this.flag_level_complete=false
 
@@ -703,8 +699,8 @@ function main(){
 
 			this.canon=[]
 			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			this.canon[0]=new weapon(300,0,3000,100,500,0,0,this.hero.flag_level_complete,"vrai","vrai") 
-			this.canon[1]=new weapon(0,w-200,1400,100,990,0,180,this.hero.flag_level_complete,"faux","faux")
+			this.canon[0]=new weapon(300,0,1200,100,500,0,0,this.hero.flag_level_complete,"vrai","vrai") 
+			this.canon[1]=new weapon(0,w-200,1400,400,990,0,180,this.hero.flag_level_complete,"faux","faux")
 
 			for (var i = 0; i < this.canon.length; i++){
 				game.add.existing(this.canon[i])
