@@ -543,7 +543,6 @@ function main(){
 			this.load.image("loading_back","assets/loading_back.png"); 
 		},
 		create: function(){
-myfunc()
 			this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
 			//this.game.width=window.innerWidth
 			//this.game.height=window.innerHeight
