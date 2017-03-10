@@ -582,6 +582,7 @@ function main(){
 		});
 		interstitial.on("click", function(){
 			console.log("Interstitial dismissed");
+			this.state.start("level1");
 			alert("click")
 		});
 		interstitial.load()
