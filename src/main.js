@@ -60,7 +60,7 @@ function main(){
 	screen_first.prototype.explosion = function() {
 		this._x=game.rnd.integerInRange(0,w)
 		this._y=game.rnd.integerInRange(0,h)
-		this.particle = game.add.emitter(this._x,this._y,200)
+		this.particle = game.add.emitter(this._x,this._y,8)
 		this.particle.makeParticles("rect")
 		this.particle.minParticleSpeed.setTo(-600,-600)
 		this.particle.maxParticleSpeed.setTo(800,800)
@@ -242,7 +242,7 @@ function main(){
 		}
 	}
 	character.prototype.explode_cible=function(){
-		this.particle = game.add.emitter(this.cible.x,this.cible.y,200)
+		this.particle = game.add.emitter(this.cible.x,this.cible.y,8)
 		this.particle.makeParticles("rect")
 		this.particle.minParticleSpeed.setTo(-600,-600)
 		this.particle.maxParticleSpeed.setTo(800,800)
@@ -261,7 +261,7 @@ function main(){
 			this.on_explode(n)
 			this.player[n].flag_cant_explode=false
 			this.player[n].visible=false
-			this.particle = game.add.emitter(posx,posy,200)
+			this.particle = game.add.emitter(posx,posy,8)
 			this.particle.makeParticles("rect")
 			this.particle.minParticleSpeed.setTo(-600,-600)
 			this.particle.maxParticleSpeed.setTo(800,800)
@@ -465,7 +465,7 @@ function main(){
 			if(this.special_color=="vrai"){
 				this.weapon.bullets.forEach(function(item){
 					if(item.alive){	
-						this.particle = game.add.emitter(item.x,item.y,85)
+						this.particle = game.add.emitter(item.x,item.y,8)
 						this.particle.makeParticles("particle_bullet_color")
 						this.particle.minParticleSpeed.setTo(-300,-300)
 						this.particle.maxParticleSpeed.setTo(800,800)
@@ -480,7 +480,7 @@ function main(){
 			}else{
 				this.weapon.bullets.forEach(function(item){
 					if(item.alive){	
-						this.particle = game.add.emitter(item.x,item.y,85)
+						this.particle = game.add.emitter(item.x,item.y,8)
 						this.particle.makeParticles("particle_bullet")
 						this.particle.minParticleSpeed.setTo(-300,-300)
 						this.particle.maxParticleSpeed.setTo(800,800)
