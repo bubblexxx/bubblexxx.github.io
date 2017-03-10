@@ -533,6 +533,7 @@ function main(){
 			console.log("Interstitial dismissed");
 			alert("click")
 		});
+		interstitial.load()
 	}
 
 	var bootstate= {
@@ -707,7 +708,7 @@ myfunc()
 		create: function(){
 
 			createInterstitial()
-			interstitial.load();
+			//interstitial.load();
 
 			level_number=0
 			this.flag_level_complete=false
