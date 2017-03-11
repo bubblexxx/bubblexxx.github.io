@@ -581,9 +581,9 @@ function main(){
 			alert("dismiss")
 		});
 		interstitial.on("click", function(){
-			console.log("Interstitial dismissed");
-			this.state.start("level1");
 			alert("click")
+			console.log("Interstitial dismissed");
+			this.game.state.start("level1");
 		});
 		interstitial.load()
 	}
