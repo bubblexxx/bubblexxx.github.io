@@ -384,11 +384,33 @@ function main(){
 			this.launch()
 		}
 	}
-	//weapon
+
+	//laser
+	laser = function(delay,posx,posy,speed){
+		this.delay=delay
+		this.posx=posx
+		this.posy=posy
+		this.speed=speed
+		Phaser.Sprite.call(this,game,this.posx,this.posy,'neon')
+		this.anchor.x=0.1
+		this.anchor.y=.5
+		game.physics.arcade.enable(this);
+		this.body.immovable=true
+		this.axe=game.add.sprite(posx,posy,'axe')
+		this.axe.anchor.set(.5)
+	}
+
+	laser.prototype = Object.create(Phaser.Sprite.prototype)
+	laser.prototype.constructor = laser
+
+	laser.prototype.update = function() {
+		this.body.rotation += this.speed
+	}
 
 	weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 		this.special_color=special_color
 		this.kill_with_world=kill_with_world
+		this.delay=delay
 		this.posx=posx
 		this.posy=posy
 		this.flag_explode=false
@@ -399,7 +421,6 @@ function main(){
 		this.variance=variance
 		this.sound_pop=game.add.audio('pop')
 		this._flag=true
-		this.delay=delay
 		//canon
 		Phaser.Sprite.call(this,game,this.posx,this.posy,'canon')
 		this.anchor.setTo(.5,.5)
@@ -499,8 +520,12 @@ function main(){
 			}
 		}
 	}
-
 	var createBanner= function(){
+	}
+	var createInterstitial=function(){
+	}
+
+	var createBanner2= function(){
 
 		if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
 			alert('Cocoon AdMob plugin not installed');
@@ -551,7 +576,7 @@ function main(){
 
 
 
-	var createInterstitial=function() {
+	var createInterstitial2=function() {
 
 		adService = Cocoon.Ad.AdMob;
 		adService.configure({
@@ -578,12 +603,14 @@ function main(){
 		});
 		interstitial.on("dismiss", function(){
 			console.log("Interstitial dismissed");
-			alert("dismiss")
 		});
+
 		interstitial.on("click", function(){
 			alert("click")
 			console.log("Interstitial dismissed");
-			this.game.state.start("level1");
+			if(level_number < 19){
+				this.game.state.start("level"+level_number+1);
+			}
 		});
 		interstitial.load()
 	}
@@ -621,6 +648,8 @@ function main(){
 			this.game.load.audio("pop","sounds/pop.ogg");
 			this.game.load.audio("launch","sounds/launch.ogg");
 			//images
+			this.game.load.image("axe","assets/axe.png");
+			this.game.load.image("neon","assets/neon.png");
 			this.game.load.image("title","assets/title.png");
 			this.game.load.spritesheet('star','assets/star.png', 400, 100);
 			this.game.load.image("levelselecticons","assets/levelselecticons.png");
@@ -696,14 +725,18 @@ function main(){
 
 			this.hero = new character(interstitial) 
 			game.add.existing(this.hero)
-
+this.neon=[]
+			this.neon[0]=new laser(0,w2-390,h2,6)
 			this.canon=[]
 			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			this.canon[0]=new weapon(300,0,1200,100,500,0,0,this.hero.flag_level_complete,"vrai","vrai") 
-			this.canon[1]=new weapon(0,w-200,1400,400,990,0,180,this.hero.flag_level_complete,"faux","faux")
-
+			this.canon[0]=new weapon(8000,0,1200,400,2500,0,0,this.hero.flag_level_complete,"vrai","vrai") 
+			this.canon[1]=new weapon(800,w-200,1400,700,2990,0,180,this.hero.flag_level_complete,"faux","faux")
+			//laser = function(delay,posx,posy,speed){
 			for (var i = 0; i < this.canon.length; i++){
 				game.add.existing(this.canon[i])
+			}
+			for (var i = 0; i < this.neon.length; i++){
+				game.add.existing(this.neon[i])
 			}
 			return level_number
 		},
@@ -717,6 +750,10 @@ function main(){
 			if(this.hero.flag_hide_enemies){
 				this.hero.flag_hide_enemies=false
 				game.time.events.add( 200,this.hide_weapon,this )
+			}
+			for (var i = 0; i < 3; i++){
+				for (var j = 0; j < this.neon.length; j++){
+					game.physics.arcade.collide(this.neon[j].body,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))				}
 			}
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < this.canon.length; j++){
@@ -1245,6 +1282,6 @@ function main(){
 	game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
 	game.state.start('boot',bootstate)
 }
-//main()
-document.addEventListener('deviceready',main,false)
+main()
+//document.addEventListener('deviceready',main,false)
 
