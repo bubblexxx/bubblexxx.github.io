@@ -82,6 +82,8 @@ function main(){
 	}
 
 	character = function(obj){
+		game.physics.startSystem(Phaser.Physics.P2JS);
+		game.world.setBounds(-1000,-1000,40000,40000)
 		Phaser.Sprite.call(this,game,w2,h+500,'rect')
 		this.flag_mouse=false
 		this.flag_show_button=true
@@ -92,7 +94,8 @@ function main(){
 		//cible
 		this.cible=game.add.sprite(w2,300,'cible')
 		this.cible.anchor.setTo(.5,.5)
-		game.physics.arcade.enable(this.cible,Phaser.Physics.ARCADE)
+		game.physics.p2.enable(this.cible)
+		this.cible.body.static=true
 		this.cible.scale.setTo(1.5,1.5)
 
 
@@ -107,11 +110,18 @@ function main(){
 		this.count=-1
 		this.player={}
 		for (var i = 0; i < 3; i++){
-			this.player[i]=game.add.sprite(w2,1980,'rect')	
-			game.physics.arcade.enable(this.player[i],Phaser.Physics.ARCADE)
+			//this.player[i]=game.add.sprite(w2,1980+i*800,'rect')	
+			this.player[i]=game.add.sprite(w2,1980+i*500,'rect')	
+			this.player[i].number=i
+			game.physics.p2.enable(this.player[i])
+			//this.player[i].body.collideWorldBounds = false
+			this.player[i].body.setCircle(20)
+			//this.player[i].body.static=true
+			this.player[i].body.debug=true
 			this.player[i].anchor.setTo(.5,.5)
-			this.player[i].enableBody=true
+			//this.player[i].enableBody=true
 			this.player[i].flag_cant_explode=true
+
 		} 
 		this.score = game.add.bitmapText(w2,300,'fo','',100)
 		this.score.anchor.setTo(.5,.5)
@@ -255,13 +265,33 @@ function main(){
 		this.particle.start(true,3900,null,20)
 
 	}
-	character.prototype.explode=function(posx,posy,n){
-		if(this.player[n].flag_cant_explode){
+//character.prototype.explode=function(n){
+	character.prototype.explode=function(body1,body2){
+//		console.log("expldeon")
+//		if(this.player[n].flag_cant_explode){
+//			this.player[n].flag_cant_explode=false
+//			console.log(n)
+//			this.audio_pop()
+//			this.on_explode(n)
+//			this.player[n].visible=false
+//			this.particle = game.add.emitter(this.player[n].body.x,this.player[n].body.y,8)
+//			this.particle.makeParticles("rect")
+//			this.particle.minParticleSpeed.setTo(-600,-600)
+//			this.particle.maxParticleSpeed.setTo(800,800)
+//			this.particle.setAlpha(.8, .6)
+//			this.particle.minParticleScale = .2
+//			this.particle.maxParticleScale = .5
+//			this.particle.minRotation = 0
+//			this.particle.maxRotation = 0
+//			this.particle.on=false
+//			this.particle.start(true,3900,null,20)
+//			this.player[n].y=5000
+		if(body2.sprite.flag_cant_explode){
 			this.audio_pop()
-			this.on_explode(n)
-			this.player[n].flag_cant_explode=false
-			this.player[n].visible=false
-			this.particle = game.add.emitter(posx,posy,8)
+			this.on_explode(body2.sprite.number)
+			body2.sprite.flag_cant_explode=false
+			body2.sprite.visible=false
+			this.particle = game.add.emitter(body2.x,body2.y,8)
 			this.particle.makeParticles("rect")
 			this.particle.minParticleSpeed.setTo(-600,-600)
 			this.particle.maxParticleSpeed.setTo(800,800)
@@ -272,7 +302,7 @@ function main(){
 			this.particle.maxRotation = 0
 			this.particle.on=false
 			this.particle.start(true,3900,null,20)
-			this.player[n].y=5000
+			body2.sprite.y=5000
 		}
 
 	}
@@ -296,17 +326,28 @@ function main(){
 		this.flag_hide_enemies=true
 	}
 
-	character.prototype.land=function(n,flag){
+	//character.prototype.land=function(n,flag){
+	//	this.flag_level_complete=true
+	//	flag=true
+	//	this.cible.body.enable=false
+	//	for (var i = 0; i < 3; i++){
+	//		this.player[i].body.enable=false
+	//	} 
+
+	//	this.player[n].body.enable=false
+	//	this.tween0=game.add.tween(this.player[n]).to({x:w2,y:300},500,Phaser.Easing.Linear.None,true,0)
+	//	this.tween0.onComplete.add(() => this.scale_x(n),this)	
+	//}
+	character.prototype.land=function(body1,body2){
 		this.flag_level_complete=true
-		flag=true
 		this.cible.body.enable=false
 		for (var i = 0; i < 3; i++){
 			this.player[i].body.enable=false
 		} 
 
-		this.player[n].body.enable=false
-		this.tween0=game.add.tween(this.player[n]).to({x:w2,y:300},500,Phaser.Easing.Linear.None,true,0)
-		this.tween0.onComplete.add(() => this.scale_x(n),this)	
+		body2.enable=false
+		this.tween0=game.add.tween(body2.sprite).to({x:w2,y:300},500,Phaser.Easing.Linear.None,true,0)
+		this.tween0.onComplete.add(() => this.scale_x(body2.sprite),this)	
 	}
 
 	character.prototype.calculate_star = function() {
@@ -338,8 +379,19 @@ function main(){
 	}
 
 
-	character.prototype.scale_x = function(n){
-		this.tween1=game.add.tween(this.player[n].scale).to({x:4.5,y:4.5},500,Phaser.Easing.Bounce.Out,true,0)
+	//character.prototype.scale_x = function(n){
+	//	this.tween1=game.add.tween(this.player[n].scale).to({x:4.5,y:4.5},500,Phaser.Easing.Bounce.Out,true,0)
+	//	this.tween1.onComplete.add(this.explode_cible,this)
+	//	this.show_button_restart_level_complete()
+	//	game.time.events.add( 300,this.audio_pop,this )
+
+	//	//this.explode_cible()
+	//	this.calculate_star()
+	//	this.show_star()
+	//	this.wins()
+	//}
+	character.prototype.scale_x = function(obj){
+		this.tween1=game.add.tween(obj.scale).to({x:4.5,y:4.5},500,Phaser.Easing.Bounce.Out,true,0)
 		this.tween1.onComplete.add(this.explode_cible,this)
 		this.show_button_restart_level_complete()
 		game.time.events.add( 300,this.audio_pop,this )
@@ -394,10 +446,13 @@ function main(){
 		Phaser.Sprite.call(this,game,this.posx,this.posy,'neon')
 		this.anchor.x=0.1
 		this.anchor.y=.5
-		game.physics.arcade.enable(this);
-		this.body.immovable=true
-		this.axe=game.add.sprite(posx,posy,'axe')
-		this.axe.anchor.set(.5)
+		this.point=game.add.sprite(posx,posy,'axe')
+		this.point.anchor.set(.5)
+		game.physics.startSystem(Phaser.Physics.P2JS);
+		game.physics.p2.enable([this,this.point],true);
+		this.point.body.static=true
+		console.log("createRevolutionConstraint");
+		game.physics.p2.createRevoluteConstraint(this, [ 0,0 ], this.point, [ 0,0 ])
 	}
 
 	laser.prototype = Object.create(Phaser.Sprite.prototype)
@@ -425,7 +480,8 @@ function main(){
 		Phaser.Sprite.call(this,game,this.posx,this.posy,'canon')
 		this.anchor.setTo(.5,.5)
 		this.angle=this.angular
-		game.physics.arcade.enable(this);
+		game.physics.p2.enable(this);
+		this.body.static=true
 		if(this.special_color=="vrai"){
 			this.weapon=game.add.weapon(9,'bullet_color')
 		}else{
@@ -535,14 +591,14 @@ function main(){
 		adService = Cocoon.Ad.AdMob;
 		adService.configure({
 			ios: {
-					banner:"ca-app-pub-7686972479101507/8873903476",
-					interstitial:"ca-app-pub-7686972479101507/8873903476",
-				},
-				android: {
-					banner:"ca-app-pub-7686972479101507/4443703872",
-					interstitial:"ca-app-pub-7686972479101507/4443703872"
-				}
-			});
+				banner:"ca-app-pub-7686972479101507/8873903476",
+				interstitial:"ca-app-pub-7686972479101507/8873903476",
+			},
+			android: {
+				banner:"ca-app-pub-7686972479101507/4443703872",
+				interstitial:"ca-app-pub-7686972479101507/4443703872"
+			}
+		});
 
 
 		console.log('createBanner')
@@ -550,19 +606,19 @@ function main(){
 
 		banner.on("load", function(){
 			console.log("Banner loaded " + banner.width, banner.height);
-			});
+		});
 
 		banner.on("fail", function(){
 			console.log("Banner failed to load");
-			});
+		});
 
 		banner.on("show", function(){
 			console.log("Banner shown a modal content");
-			});
+		});
 
 		banner.on("dismiss", function(){
 			console.log("Banner dismissed the modal content");
-			});
+		});
 
 		//load banner
 		banner.load();
@@ -719,30 +775,45 @@ function main(){
 
 	var level0 = {
 		create: function(){
+			console.log("level0");
+			//game.world.setBounds(-1000,-1000,40000,40000)
 			createInterstitial()
 			level_number=0
 			this.flag_level_complete=false
 
 			this.hero = new character(interstitial) 
 			game.add.existing(this.hero)
-this.neon=[]
-			this.neon[0]=new laser(0,w2-390,h2,6)
+
+			//laser = function(delay,posx,posy,speed){
+			this.neon=[]
+			this.neon[0]=new laser(0,w2-590,h2-400,100)
 			this.canon=[]
 			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			this.canon[0]=new weapon(8000,0,1200,400,2500,0,0,this.hero.flag_level_complete,"vrai","vrai") 
-			this.canon[1]=new weapon(800,w-200,1400,700,2990,0,180,this.hero.flag_level_complete,"faux","faux")
-			//laser = function(delay,posx,posy,speed){
+			this.canon[0]=new weapon(80,0,1200,400,100,0,0,this.hero.flag_level_complete,"vrai","vrai") 
+			this.canon[1]=new weapon(80,w-200,400,900,990,0,0,this.hero.flag_level_complete,"faux","faux")
 			for (var i = 0; i < this.canon.length; i++){
 				game.add.existing(this.canon[i])
 			}
 			for (var i = 0; i < this.neon.length; i++){
-				game.add.existing(this.neon[i])
+			game.add.existing(this.neon[i])
+			}
+			//TODO:comment
+			//this.canon[0].weapon.bullets.onbeginContact.add(this.touch_between_enemies,this)
+			for (var i = 0; i < 3; i++){
+				for (var j = 0; j < this.neon.length; j++){
+					//TODO:comment
+					game.physics.p2.setImpactEvents(true)
+					this.hero.cible.body.createBodyCallback(this.hero.player[i],this.hero.land,this.hero)
+					this.neon[j].body.createBodyCallback(this.hero.player[i],this.hero.explode,this.hero)
+				}
+					console.log("test90");
 			}
 			return level_number
 		},
 
 		update:function(){
-			game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
+			//TODO:comment
+			//game.physics.p2.onbeginContact(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
 			if(this.hero.flag_level_complete){
 				this.hero.flag_level_complete=false
 				game.time.events.add( 1100,this.hide_weapon,this )
@@ -753,38 +824,43 @@ this.neon=[]
 			}
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < this.neon.length; j++){
-					game.physics.arcade.collide(this.neon[j].body,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))				}
-			}
-			for (var i = 0; i < 3; i++){
-				for (var j = 0; j < this.canon.length; j++){
-					game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-					if(this.canon[j].special_color=="vrai"){
-						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],this.hide_weapon,null,this)
-					}else{
-						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+				}
+				for (var i = 0; i < 3; i++){
+					for (var j = 0; j < this.canon.length; j++){
+						//TODO:comment
+						if(this.canon[j].special_color=="vrai"){
+							//TODO:comment
+							//game.physics.p2.collide(this.canon[j].weapon.bullets,this.hero.player[i],this.hide_weapon,null,this)
+						}else{
+							//TODO:comment
+							//game.physics.p2.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
 
+						}
 					}
 				}
-			}
-			game.input.onTap.add(onTap,this);
+				game.input.onTap.add(onTap,this);
 
-			function onTap(pointer, doubleTap) {
-				if(this.hero.flag_level_complete==false){
-					if (doubleTap)
-					{
-						console.log("value");
-					}
-					else
-					{
-						this.hero.flag_spacekey=false
-						this.hero.launch_with_mouse()
+				function onTap(pointer, doubleTap) {
+					if(this.hero.flag_level_complete==false){
+						if (doubleTap)
+						{
+							console.log("value");
+						}
+						else
+						{
+							this.hero.flag_spacekey=false
+							this.hero.launch_with_mouse()
+						}
 					}
 				}
 			}
 		},
+
+
 		touch_between_enemies:function(){
 			console.log("touch");
 		},
+
 		hide_weapon:function(){
 			console.log('hide')
 			for (var j = 0; j < this.canon.length; j++){
@@ -793,6 +869,10 @@ this.neon=[]
 				this.canon[j].weapon.bullets.visible=false
 			}
 
+		},
+
+		render:function(){
+			game.debug.body(this.hero.player[1])
 		},
 	}
 	var level1 = {
@@ -816,7 +896,7 @@ this.neon=[]
 		},
 
 		update:function(){
-			game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
+			game.physics.p2.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
 			if(this.hero.flag_level_complete){
 				this.hero.flag_level_complete=false
 				game.time.events.add( 1100,this.hide_weapon,this )
@@ -827,11 +907,11 @@ this.neon=[]
 			}
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < this.canon.length; j++){
-					game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
+					game.physics.p2.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
 					if(this.canon[j].special_color=="vrai"){
-						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],this.hide_weapon,null,this)
+						game.physics.p2.collide(this.canon[j].weapon.bullets,this.hero.player[i],this.hide_weapon,null,this)
 					}else{
-						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+						game.physics.p2.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
 
 					}
 				}
@@ -870,7 +950,7 @@ this.neon=[]
 			this.game.stage.backgroundColor = '#1a1a1a'
 			level_number=2
 			this.flag_level_complete=false
-			game.physics.startSystem(Phaser.Physics.ARCADE)
+			game.physics.startSystem(Phaser.Physics.P2JS)
 			this.background=game.add.sprite(0,0,'background')
 			this.background.inputEnabled=true
 			this.hero = new character() 
@@ -895,8 +975,8 @@ this.neon=[]
 
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < this.canon.length; j++){
-					game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-					game.physics.arcade.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+					game.physics.p2.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
+					game.physics.p2.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
 				}
 			}
 			game.input.onTap.add(onTap,this);
@@ -931,7 +1011,7 @@ this.neon=[]
 			this.game.stage.backgroundColor = '#1a1a1a'
 			level_number=3
 			this.flag_level_complete=false
-			game.physics.startSystem(Phaser.Physics.ARCADE)
+			game.physics.startSystem(Phaser.Physics.P2JS)
 			this.background=game.add.sprite(0,0,'background')
 			this.background.inputEnabled=true
 			this.hero = new character() 
@@ -956,8 +1036,8 @@ this.neon=[]
 
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < this.canon.length; j++){
-					game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-					game.physics.arcade.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+					game.physics.p2.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
+					game.physics.p2.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
 				}
 			}
 			game.input.onTap.add(onTap,this);
@@ -992,7 +1072,7 @@ this.neon=[]
 			this.game.stage.backgroundColor = '#1a1a1a'
 			level_number=4
 			this.flag_level_complete=false
-			game.physics.startSystem(Phaser.Physics.ARCADE)
+			game.physics.startSystem(Phaser.Physics.P2JS)
 			this.background=game.add.sprite(0,0,'background')
 			this.background.inputEnabled=true
 			this.hero = new character() 
@@ -1017,8 +1097,8 @@ this.neon=[]
 
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < this.canon.length; j++){
-					game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-					game.physics.arcade.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+					game.physics.p2.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
+					game.physics.p2.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
 				}
 			}
 			game.input.onTap.add(onTap,this);
@@ -1264,6 +1344,7 @@ this.neon=[]
 	};
 
 
+	//game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 	game.state.add('boot',bootstate)
 	game.state.add('preload',preloadstate)
