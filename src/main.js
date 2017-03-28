@@ -3,6 +3,7 @@ function main(){
 	var ratio_device=window.screen.width/window.screen.height
 	var h=1920
 	var w=1280
+	var time_hide=300
 	//this._levelNumber = 1;
 	//var clearWorld=true
 	//var clearCache=false
@@ -93,6 +94,7 @@ function main(){
 		this.cible=game.add.sprite(w2,300,'cible')
 		this.cible.anchor.setTo(.5,.5)
 		game.physics.arcade.enable(this.cible,Phaser.Physics.ARCADE)
+		this.cible.body.immovable=true
 		this.cible.scale.setTo(1.5,1.5)
 
 
@@ -287,7 +289,6 @@ function main(){
 		}
 	}
 
-
 	character.prototype.decide_if_show_button_restart_level = function() {
 		console.log('decide')
 		//this.flag_show_video=false
@@ -296,15 +297,15 @@ function main(){
 		this.flag_hide_enemies=true
 	}
 
-	character.prototype.land=function(n,flag){
+	character.prototype.land=function(n){
+		console.log("land");
 		this.flag_level_complete=true
-		flag=true
-		this.cible.body.enable=false
+		//flag=true
 		for (var i = 0; i < 3; i++){
-			this.player[i].body.enable=false
+			//this.player[i].body.enable=false
 		} 
-
-		this.player[n].body.enable=false
+		this.cible.body.enable=false
+		//this.player[n].body.enable=false
 		this.tween0=game.add.tween(this.player[n]).to({x:w2,y:300},500,Phaser.Easing.Linear.None,true,0)
 		this.tween0.onComplete.add(() => this.scale_x(n),this)	
 	}
@@ -385,8 +386,7 @@ function main(){
 		}
 	}
 	//asteroid
-	asteroid = function(delay,posx,posy,speed,radius){
-		this.delay=delay
+	asteroid = function(posx,posy,speed,radius){
 		this.radius=radius
 		this.posx=posx
 		this.posy=posy
@@ -402,13 +402,20 @@ function main(){
 	asteroid.prototype.constructor = asteroid
 
 	asteroid.prototype.update = function() {
-	var period = game.time.now * this.speed;
-        this.x = this.posx + Math.cos(period) * this.radius;
-        this.y = this.posy + Math.sin(period) * this.radius;	
+		var period = game.time.now * this.speed;
+		this.x = this.posx + Math.cos(period) * this.radius;
+		this.y = this.posy + Math.sin(period) * this.radius;	
+	}
+
+	asteroid.prototype.hide = function() {
+		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.Out,true,0)
 	}
 
 	//pulsar
-	pulsar = function(time,posx,posy,speed){
+	pulsar = function(delay,time,posx,posy,speed,scale_factor){
+		this.scale_factor=scale_factor
+		console.log('this.scale_factor',this.scale_factor)
+		this.delay=delay
 		this.time=time
 		this.posx=posx
 		this.posy=posy
@@ -425,12 +432,20 @@ function main(){
 	pulsar.prototype.constructor = pulsar
 
 	pulsar.prototype.tweens = function() {
-		this.tween0=game.add.tween(this.scale).to({x:2,y:2},this.time,Phaser.Easing.Linear.None,true,0,-1)
+		this.tween0=game.add.tween(this.scale).to({x:this.scale_factor,y:this.scale_factor},this.time,Phaser.Easing.Linear.None,true,this.delay,-1)
 		this.tween0.yoyo(true,this.speed)		
 	}
 
-	//laser
-	laser = function(delay,posx,posy,speed){
+	pulsar.prototype.hide = function() {
+		this.tween0.pause()
+		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.Out,true,0)
+	}
+
+
+
+
+	//neon
+	neon = function(delay,posx,posy,speed){
 		this.delay=delay
 		this.posx=posx
 		this.posy=posy
@@ -443,12 +458,16 @@ function main(){
 		this.tweens()
 	}
 
-	laser.prototype = Object.create(Phaser.Sprite.prototype)
-	laser.prototype.constructor = laser
+	neon.prototype = Object.create(Phaser.Sprite.prototype)
+	neon.prototype.constructor = neon
 
-	laser.prototype.tweens = function() {
-		this.tween0=game.add.tween(this).to({x:this.posx+300},this.time,Phaser.Easing.Linear.None,true,0,-1)
+	neon.prototype.tweens = function() {
+		this.tween0=game.add.tween(this).to({x:this.posx+300},this.time,Phaser.Easing.Linear.None,true,this.delay,-1)
 		this.tween0.yoyo(true,this.speed)		
+	}
+
+	neon.prototype.hide = function() {
+		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.Out,true,0)
 	}
 
 	weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
@@ -579,14 +598,14 @@ function main(){
 		adService = Cocoon.Ad.AdMob;
 		adService.configure({
 			ios: {
-					banner:"ca-app-pub-7686972479101507/8873903476",
-					interstitial:"ca-app-pub-7686972479101507/8873903476",
-				},
-				android: {
-					banner:"ca-app-pub-7686972479101507/4443703872",
-					interstitial:"ca-app-pub-7686972479101507/4443703872"
-				}
-			});
+				banner:"ca-app-pub-7686972479101507/8873903476",
+				interstitial:"ca-app-pub-7686972479101507/8873903476",
+			},
+			android: {
+				banner:"ca-app-pub-7686972479101507/4443703872",
+				interstitial:"ca-app-pub-7686972479101507/4443703872"
+			}
+		});
 
 
 		console.log('createBanner')
@@ -594,19 +613,19 @@ function main(){
 
 		banner.on("load", function(){
 			console.log("Banner loaded " + banner.width, banner.height);
-			});
+		});
 
 		banner.on("fail", function(){
 			console.log("Banner failed to load");
-			});
+		});
 
 		banner.on("show", function(){
 			console.log("Banner shown a modal content");
-			});
+		});
 
 		banner.on("dismiss", function(){
 			console.log("Banner dismissed the modal content");
-			});
+		});
 
 		//load banner
 		banner.load();
@@ -766,52 +785,90 @@ function main(){
 			createInterstitial()
 			level_number=0
 			this.flag_level_complete=false
-
+			this.flag_hide=true
 			this.hero = new character(interstitial) 
 			game.add.existing(this.hero)
-this.neon=[]
-			this.pulsare=new pulsar(200,100,100,50)
-			game.add.existing(this.pulsare)
-			this.asteroide=new asteroid(0,400,400,.05,200)
-			game.add.existing(this.asteroide)
-			this.neon[0]=new laser(0,w2-390,h2,6)
+
 			this.canon=[]
+			this.neon=[]
+			this.pulsar=[]
+			this.asteroid=[]
 			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 			this.canon[0]=new weapon(8000,0,1200,400,2500,0,0,this.hero.flag_level_complete,"vrai","vrai") 
 			this.canon[1]=new weapon(800,w-200,1400,700,2990,0,180,this.hero.flag_level_complete,"faux","faux")
-			//laser = function(delay,posx,posy,speed){
+
+			//asteroid = function(posx,posy,speed,radius){
+			this.asteroid[0]=new asteroid(200,800,.01,200)
+
+			//neon = function(delay,posx,posy,speed){
+			this.neon[0]=new neon(0,0-390,h2,6)
+
+			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
+			this.pulsar[0]=new pulsar(400,300,200,100,400,4)
+
+
 			for (var i = 0; i < this.canon.length; i++){
 				game.add.existing(this.canon[i])
 			}
 			for (var i = 0; i < this.neon.length; i++){
 				game.add.existing(this.neon[i])
 			}
+
+			for (var i = 0; i < this.pulsar.length; i++){
+				game.add.existing(this.pulsar[i])
+			}
+			for (var i = 0; i < this.asteroid.length; i++){
+				game.add.existing(this.asteroid[i])
+			}
 			return level_number
 		},
 
 		update:function(){
-			game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
-			if(this.hero.flag_level_complete){
-				this.hero.flag_level_complete=false
+			for (var j = 0; j < 3; j++){
+				game.physics.arcade.collide(this.hero.cible,this.hero.player[j],() => this.hero.land(j))
+			}
+
+			if (this.hero.flag_level_complete && this.flag_hide){
+				this.flag_hide=false
 				game.time.events.add( 1100,this.hide_weapon,this )
-			}
-			if(this.hero.flag_hide_enemies){
-				this.hero.flag_hide_enemies=false
-				game.time.events.add( 200,this.hide_weapon,this )
-			}
-			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < this.neon.length; j++){
-					game.physics.arcade.collide(this.neon[j].body,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))				}
+					this.neon[j].hide()
+				}
+				for (var j = 0; j < this.pulsar.length; j++){
+					this.pulsar[j].hide()
+
+				}
+				for (var j = 0; j < this.asteroid.length; j++){
+					this.asteroid[j].hide()
+				}
 			}
+
+			game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
+			//if(this.hero.flag_hide_enemies){
+			//this.hero.flag_hide_enemies=false
+			//game.time.events.add( 200,this.hide_weapon,this )
+			//}
+
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < this.canon.length; j++){
-					game.physics.arcade.collide(this.asteroide,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-
-					game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
 					if(this.canon[j].special_color=="vrai"){
 						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],this.hide_weapon,null,this)
 					}else{
 						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+					}
+				}
+
+				for (var i = 0; i < 3; i++){
+					for (var j = 0; j < this.neon.length; j++){
+						game.physics.arcade.collide(this.neon[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+
+					}
+					for (var j = 0; j < this.pulsar.length; j++){
+						game.physics.arcade.collide(this.pulsar[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+
+					}
+					for (var j = 0; j < this.asteroid.length; j++){
+						game.physics.arcade.collide(this.asteroid[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
 
 					}
 				}
@@ -846,9 +903,20 @@ this.neon=[]
 		},
 
 		render:function(){
-			game.debug.body(this.pulsare)
-			game.debug.body(this.neon)
-			game.debug.body(this.asteroide)
+		//	game.debug.body(this.hero.cible_shadow)
+		//	game.debug.body(this.hero.cible)
+		//	for (var i = 0; i < 3; i++){
+		//		game.debug.body(this.hero.player[i])
+		//	}
+		//	for (var i = 0; i < this.neon.length; i++){
+		//		game.debug.body(this.neon[i])
+		//	}
+		//	for (var i = 0; i < this.pulsar.length; i++){
+		//		game.debug.body(this.pulsar[i])
+		//	}
+		//	for (var i = 0; i < this.asteroid.length; i++){
+		//		game.debug.body(this.asteroid[i])
+		//	}
 		},
 
 
