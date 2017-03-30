@@ -3,7 +3,7 @@ function main(){
 	var ratio_device=window.screen.width/window.screen.height
 	var h=1920
 	var w=1280
-	var time_hide=300
+	var time_hide=500
 	//this._levelNumber = 1;
 	//var clearWorld=true
 	//var clearCache=false
@@ -121,6 +121,7 @@ function main(){
 		this.life.anchor.setTo(.5,.5)
 		//this.life.tint=0x000000
 		this.sound_launch=game.add.audio('launch')
+		this.sound_star=game.add.audio('coin')
 		this.sound_pop=game.add.audio('pop_minder')
 		this.button_restart=game.add.button(w2,h2,'restart',this.restart_level,this)
 		this.button_restart.anchor.setTo(.5,.5)
@@ -147,6 +148,9 @@ function main(){
 	character.prototype = Object.create(Phaser.Sprite.prototype)
 	character.prototype.constructor = character
 
+	character.prototype.audio_star = function() {
+		this.sound_star.play()
+	}
 	character.prototype.audio_pop = function() {
 		this.sound_pop.play()
 	}
@@ -316,11 +320,14 @@ function main(){
 				this.star.frame=3
 				break
 			case 1:
+				this.audio_star()
 				this.star.frame=2
 				break
 			case 2:
+				this.audio_star()
 				this.star.frame=1
 			case 3:
+				this.audio_star()
 				this.star.frame=0
 				break
 		}
@@ -391,24 +398,43 @@ function main(){
 		this.posx=posx
 		this.posy=posy
 		this.speed=speed
+		this.flag=true
 		Phaser.Sprite.call(this,game,this.posx,this.posy,'axe')
 		this.anchor.x=.5
 		this.anchor.y=.5
 		game.physics.arcade.enable(this);
 		this.body.immovable=true
+		this.particle = game.add.emitter(this.x, this.y-25, 8)
+		this.particle.makeParticles("particle_bullet_color")
+		this.particle.setXSpeed(0,0)
+		this.particle.setYSpeed(0,0)
+		this.particle.minParticleAlpha=.3
+		this.particle.minParticleScale = .1
+		this.particle.maxParticleScale = .7
+		this.particle.minRotation = 0
+		this.particle.maxRotation = 0
+		this.particle.on=true
+		this.particle.start(true,200,20)
+
 	}
 
 	asteroid.prototype = Object.create(Phaser.Sprite.prototype)
 	asteroid.prototype.constructor = asteroid
 
 	asteroid.prototype.update = function() {
+		if(this.flag){
 		var period = game.time.now * this.speed;
 		this.x = this.posx + Math.cos(period) * this.radius;
 		this.y = this.posy + Math.sin(period) * this.radius;	
+		this.particle.x=this.x
+		this.particle.y=this.y
+		}
 	}
 
 	asteroid.prototype.hide = function() {
-		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.Out,true,0)
+		this.flag=false
+		this.particle.on=false
+		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 	}
 
 	//pulsar
@@ -420,9 +446,10 @@ function main(){
 		this.posx=posx
 		this.posy=posy
 		this.speed=speed
-		Phaser.Sprite.call(this,game,this.posx,this.posy,'axe')
+		Phaser.Sprite.call(this,game,this.posx,this.posy,'pulsar')
 		this.anchor.x=0.5
 		this.anchor.y=.5
+		this.scale.setTo(0,0)
 		game.physics.arcade.enable(this);
 		this.body.immovable=true
 		this.tweens()
@@ -438,7 +465,7 @@ function main(){
 
 	pulsar.prototype.hide = function() {
 		this.tween0.pause()
-		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.Out,true,0)
+		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 	}
 
 
@@ -467,7 +494,7 @@ function main(){
 	}
 
 	neon.prototype.hide = function() {
-		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.Out,true,0)
+		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 	}
 
 	weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
@@ -707,10 +734,12 @@ function main(){
 			loadingBar.anchor.setTo(0.5,0.5);
 			this.load.setPreloadSprite(loadingBar);
 			//audio_move
+			this.game.load.audio("coin","sounds/coin.ogg");
 			this.game.load.audio("pop_minder","sounds/pop_minder.ogg");
 			this.game.load.audio("pop","sounds/pop.ogg");
 			this.game.load.audio("launch","sounds/launch.ogg");
 			//images
+			this.game.load.image("pulsar","assets/pulsar.png");
 			this.game.load.image("axe","assets/axe.png");
 			this.game.load.image("neon","assets/neon.png");
 			this.game.load.image("title","assets/title.png");
@@ -798,13 +827,13 @@ function main(){
 			this.canon[1]=new weapon(800,w-200,1400,700,2990,0,180,this.hero.flag_level_complete,"faux","faux")
 
 			//asteroid = function(posx,posy,speed,radius){
-			this.asteroid[0]=new asteroid(200,800,.01,200)
+			this.asteroid[0]=new asteroid(w2-200,900,.01,200)
 
 			//neon = function(delay,posx,posy,speed){
-			this.neon[0]=new neon(0,0-390,h2,6)
+			this.neon[0]=new neon(0,w2,h2+200,6)
 
 			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
-			this.pulsar[0]=new pulsar(400,300,200,100,400,4)
+			this.pulsar[0]=new pulsar(100,500,w2+200,800,400,4)
 
 
 			for (var i = 0; i < this.canon.length; i++){
@@ -830,24 +859,14 @@ function main(){
 
 			if (this.hero.flag_level_complete && this.flag_hide){
 				this.flag_hide=false
-				game.time.events.add( 1100,this.hide_weapon,this )
-				for (var j = 0; j < this.neon.length; j++){
-					this.neon[j].hide()
-				}
-				for (var j = 0; j < this.pulsar.length; j++){
-					this.pulsar[j].hide()
-
-				}
-				for (var j = 0; j < this.asteroid.length; j++){
-					this.asteroid[j].hide()
-				}
+				game.time.events.add( 900,this.hide_weapon,this )
 			}
 
 			game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
-			//if(this.hero.flag_hide_enemies){
-			//this.hero.flag_hide_enemies=false
-			//game.time.events.add( 200,this.hide_weapon,this )
-			//}
+			if(this.hero.flag_hide_enemies){
+			this.hero.flag_hide_enemies=false
+			game.time.events.add( 500,this.hide_weapon,this )
+			}
 
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < this.canon.length; j++){
@@ -898,6 +917,16 @@ function main(){
 				this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
 				this.canon[j].visible=false
 				this.canon[j].weapon.bullets.visible=false
+			}
+			for (var j = 0; j < this.neon.length; j++){
+				this.neon[j].hide()
+			}
+			for (var j = 0; j < this.pulsar.length; j++){
+				this.pulsar[j].hide()
+
+			}
+			for (var j = 0; j < this.asteroid.length; j++){
+				this.asteroid[j].hide()
 			}
 
 		},
