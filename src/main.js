@@ -827,13 +827,13 @@ function main(){
 			this.canon[1]=new weapon(800,w-200,1400,700,2990,0,180,this.hero.flag_level_complete,"faux","faux")
 
 			//asteroid = function(posx,posy,speed,radius){
-			this.asteroid[0]=new asteroid(w2-200,900,.01,200)
+			this.asteroid[0]=new asteroid(w2-400,900,.001,200)
 
 			//neon = function(delay,posx,posy,speed){
-			this.neon[0]=new neon(0,w2,h2+200,6)
+			this.neon[0]=new neon(0,w2,h2+200,9)
 
 			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
-			this.pulsar[0]=new pulsar(100,500,w2+200,800,400,4)
+			this.pulsar[0]=new pulsar(100,500,200,800,900,4)
 
 
 			for (var i = 0; i < this.canon.length; i++){
