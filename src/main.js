@@ -1,16 +1,14 @@
+//todo : body enbale false lorsque touché un projectile violet
 function main(){
 	var PLAYER_DATA = null // just declare as global variable for now
 	var ratio_device=window.screen.width/window.screen.height
 	var h=1920
 	var w=1280
 	var time_hide=500
-	//this._levelNumber = 1;
-	//var clearWorld=true
-	//var clearCache=false
 	var h2=h*.5
 	var w2=640
 	var level_number=0
-
+	var debug_mode=false
 	//ADS
 
 	var bannerStatus;
@@ -26,9 +24,6 @@ function main(){
 
 	var adService;
 	var container;
-
-	console.log("update")
-
 
 	//var level={}
 	screen_first = function(){
@@ -72,14 +67,13 @@ function main(){
 		this.particle.maxRotation = 0
 		this.particle.on=false
 		this.particle.start(true,3900,null,20)
-
 	}
+
 	screen_first.prototype.show_button = function() {
 		this.button_restart.visible=true
 		this.button_next.visible=true
 		this.tween2=game.add.tween(this.button_restart.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
 		this.tween3=game.add.tween(this.button_next.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
-
 	}
 
 	character = function(obj){
@@ -96,16 +90,11 @@ function main(){
 		game.physics.arcade.enable(this.cible,Phaser.Physics.ARCADE)
 		this.cible.body.immovable=true
 		this.cible.scale.setTo(1.5,1.5)
-
-
 		this.anchor.setTo(.5,.5)
 		this.flag_level_complete=false
-		//this.flag_show_video=true
 		this.flag_hide_enemies=false
 		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		this.flag_spacekey=true
-		this.enableBody=true
-		//game.time.events.add( 2250,this.launch,this )
 		this.count=-1
 		this.player={}
 		for (var i = 0; i < 3; i++){
@@ -113,13 +102,13 @@ function main(){
 			game.physics.arcade.enable(this.player[i],Phaser.Physics.ARCADE)
 			this.player[i].anchor.setTo(.5,.5)
 			this.player[i].enableBody=true
+			this.player[i].flag_check=true
 			this.player[i].flag_cant_explode=true
 		} 
 		this.score = game.add.bitmapText(w2,300,'fo','',100)
 		this.score.anchor.setTo(.5,.5)
 		this.life = game.add.bitmapText(w2,1550,'fo','3',120)
 		this.life.anchor.setTo(.5,.5)
-		//this.life.tint=0x000000
 		this.sound_launch=game.add.audio('launch')
 		this.sound_star=game.add.audio('coin')
 		this.sound_pop=game.add.audio('pop_minder')
@@ -135,7 +124,6 @@ function main(){
 		this.button_video.anchor.setTo(.5,.5)
 		this.button_video.scale.setTo(0,0)
 		this.button_video.visible=false
-		//this.frame=0
 		this.star= this.game.add.sprite(w2, h2-320, 'star', 0);
 		this.star.anchor.setTo(.5,.5)
 		this.star.frame=2
@@ -145,15 +133,36 @@ function main(){
 		this.count_dead=0
 		this.anim_cible()
 	}
+
 	character.prototype = Object.create(Phaser.Sprite.prototype)
 	character.prototype.constructor = character
 
 	character.prototype.audio_star = function() {
 		this.sound_star.play()
 	}
+
 	character.prototype.audio_pop = function() {
 		this.sound_pop.play()
 	}
+
+	character.prototype.checkicharacterisloossomewhere = function(n) {
+		if(this.player[n].flag_check)
+			this.player[n].flag_check=false
+		game.time.events.add( 6000,() => this.checkicharacterisloossomewhere2(n),this )
+	}
+
+	character.prototype.checkicharacterisloossomewhere2 = function(n) {
+		if(this.flag_level_complete==false){
+			console.log("checkicharacterisloossomewhere");
+			this.explode(w2,0,n)	
+			this.life.text=3-(this.count+1)
+			console.log("this.life.text",this.life.text);
+			if(this.count==2){
+				this.life.text='' 
+			}
+		}
+	}
+
 	character.prototype.audio_launch = function() {
 		this.sound_launch.play()
 	}
@@ -165,11 +174,11 @@ function main(){
 		this.tween7.onComplete.add(function(){this.cible_shadow.alpha=0},this)	
 	}
 
-	character.prototype.show_star = function(frame) {
+	character.prototype.show_star = function() {
 		this.star.visible=true	
+		console.log(this.star.frame,"this.star.frame");
 		this.tween5 = game.add.tween(this.star.scale).to({x:1,y:1},800,Phaser.Easing.Linear.None,true,600)
-		//this.tween5.yoyo(200,true)
-
+		this.tween5.onComplete.add(this.audio_star,this)
 	}
 
 	character.prototype.wins=function(){
@@ -188,7 +197,6 @@ function main(){
 				PLAYER_DATA[this._levelNumber] = 0; // set unlocked, 0 stars
 			}
 		};
-
 		// and write to local storage
 		window.localStorage.setItem('mygame_progress', JSON.stringify(PLAYER_DATA));
 	}
@@ -206,7 +214,6 @@ function main(){
 
 	character.prototype.next_level_with_video = function(obj) {
 		this.next_niveau=level_number+1
-		//this.game.state.start('level'+this.next_niveau,true,false);
 		console.log('next-level')
 		obj.show();
 		obj.on("dismiss", function(){
@@ -215,38 +222,55 @@ function main(){
 		})
 
 	}
+
 	character.prototype.launch_with_mouse=function(){
 		if(this.flag_level_complete==false && this.flag_mouse==false){
 			this.flag_mouse=true
-			game.time.events.add( 500,function(){this.flag_mouse=false},this )
-
+			game.time.events.add( 400,function(){this.flag_mouse=false},this )
 			this.count=this.count+1
-			if(this.count <= 2){
-				console.log(this.count);
-				this.player[this.count].visible=true
-				this.player[this.count].body.velocity.y=-800
-				this.audio_launch()
-				this.life.text=3-(this.count+1)
-				if(this.count==2){
+			console.log("this.count in launch",this.count,this.life.text,"this.life.text");
+			switch(this.count){
+				case 0:
+					this.life.text=2 
+					this.audio_launch()
+					this.checkicharacterisloossomewhere(this.count)
+					this.player[this.count].visible=true
+					this.player[this.count].body.velocity.y=-800
+					break
+				case 1:
+					this.life.text=1 
+					this.audio_launch()
+					this.checkicharacterisloossomewhere(this.count)
+					this.player[this.count].visible=true
+					this.player[this.count].body.velocity.y=-800
+					break
+				case 2:
 					this.life.text='' 
-				}
+					this.audio_launch()
+					this.checkicharacterisloossomewhere(this.count)
+					this.player[this.count].visible=true
+					this.player[this.count].body.velocity.y=-800
+					break
+				default:
+					this.life.text='' 
+					break
 			}
 		}
 	}
-
 
 	character.prototype.launch=function(){
 		if(this.flag_level_complete==false && this.flag_spacekey==false){
 			game.time.events.add( 500,function(){this.flag_spacekey=true;console.log('couco',this.flag_spacekey)},this )
-
 			this.count=this.count+1
 			if(this.count <= 2){
-				console.log(this.count);
+				console.log(this.count,"this.count");
 				this.player[this.count].visible=true
 				this.player[this.count].body.velocity.y=-800
+				this.checkicharacterisloossomewhere(this.count)
 			}
 		}
 	}
+
 	character.prototype.explode_cible=function(){
 		this.particle = game.add.emitter(this.cible.x,this.cible.y,8)
 		this.particle.makeParticles("rect")
@@ -259,8 +283,8 @@ function main(){
 		this.particle.maxRotation = 0
 		this.particle.on=false
 		this.particle.start(true,3900,null,20)
-
 	}
+
 	character.prototype.explode=function(posx,posy,n){
 		if(this.player[n].flag_cant_explode){
 			this.audio_pop()
@@ -278,9 +302,8 @@ function main(){
 			this.particle.maxRotation = 0
 			this.particle.on=false
 			this.particle.start(true,3900,null,20)
-			this.player[n].y=5000
+			this.player[n].body.enable=false
 		}
-
 	}
 
 	character.prototype.on_explode=function(n){
@@ -295,7 +318,6 @@ function main(){
 
 	character.prototype.decide_if_show_button_restart_level = function() {
 		console.log('decide')
-		//this.flag_show_video=false
 		game.time.events.add( 2000,this.show_button_restart_level,this )
 		game.time.events.add( 2000,this.show_button_video,this )
 		this.flag_hide_enemies=true
@@ -304,59 +326,43 @@ function main(){
 	character.prototype.land=function(n){
 		console.log("land");
 		this.flag_level_complete=true
-		//flag=true
-		for (var i = 0; i < 3; i++){
-			//this.player[i].body.enable=false
-		} 
 		this.cible.body.enable=false
-		//this.player[n].body.enable=false
+		this.player[n].body.enable=false
 		this.tween0=game.add.tween(this.player[n]).to({x:w2,y:300},500,Phaser.Easing.Linear.None,true,0)
 		this.tween0.onComplete.add(() => this.scale_x(n),this)	
 	}
 
 	character.prototype.calculate_star = function() {
+		console.log(this.count,"calculate_star")
 		switch(this.count){
 			case 0:
 				this.star.frame=3
 				break
 			case 1:
-				this.audio_star()
 				this.star.frame=2
 				break
 			case 2:
-				this.audio_star()
 				this.star.frame=1
+				console.log("this.star.frame in calculate_star",this.star.frame,this.count);
+				break
 			case 3:
-				this.audio_star()
 				this.star.frame=0
 				break
+			default:
+				break
 		}
-		//PLAYER_DATA[this._levelNumber-1] = this.star.frame;
-
-
-		//// unlock next level
-		//if (this._levelNumber < PLAYER_DATA.length) {
-		//	if (PLAYER_DATA[this._levelNumber] < 0) { // currently locked (=-1)
-		//		PLAYER_DATA[this._levelNumber] = 0; // set unlocked, 0 stars
-		//	}
-		//};
-
-		//// and write to local storage
-		//window.localStorage.setItem('mygame_progress', JSON.stringify(PLAYER_DATA));
 	}
-
 
 	character.prototype.scale_x = function(n){
 		this.tween1=game.add.tween(this.player[n].scale).to({x:4.5,y:4.5},500,Phaser.Easing.Bounce.Out,true,0)
 		this.tween1.onComplete.add(this.explode_cible,this)
 		this.show_button_restart_level_complete()
 		game.time.events.add( 300,this.audio_pop,this )
-
-		//this.explode_cible()
 		this.calculate_star()
 		this.show_star()
 		this.wins()
 	}
+
 	character.prototype.show_button_restart_level_complete = function() {
 		if(this.flag_show_button){
 			this.flag_show_button=false
@@ -383,8 +389,6 @@ function main(){
 		}	
 	}
 
-
-
 	character.prototype.update=function(){
 		if (this.spaceKey.isDown && this.flag_spacekey)
 		{
@@ -392,7 +396,7 @@ function main(){
 			this.launch()
 		}
 	}
-	//asteroid
+
 	asteroid = function(posx,posy,speed,radius){
 		this.radius=radius
 		this.posx=posx
@@ -414,7 +418,7 @@ function main(){
 		this.particle.minRotation = 0
 		this.particle.maxRotation = 0
 		this.particle.on=true
-		this.particle.start(true,200,20)
+		this.particle.start(true,500,20)
 
 	}
 
@@ -423,11 +427,11 @@ function main(){
 
 	asteroid.prototype.update = function() {
 		if(this.flag){
-		var period = game.time.now * this.speed;
-		this.x = this.posx + Math.cos(period) * this.radius;
-		this.y = this.posy + Math.sin(period) * this.radius;	
-		this.particle.x=this.x
-		this.particle.y=this.y
+			var period = game.time.now * this.speed;
+			this.x = this.posx + Math.cos(period) * this.radius;
+			this.y = this.posy + Math.sin(period) * this.radius;	
+			this.particle.x=this.x
+			this.particle.y=this.y
 		}
 	}
 
@@ -437,7 +441,6 @@ function main(){
 		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 	}
 
-	//pulsar
 	pulsar = function(delay,time,posx,posy,speed,scale_factor){
 		this.scale_factor=scale_factor
 		console.log('this.scale_factor',this.scale_factor)
@@ -468,10 +471,6 @@ function main(){
 		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 	}
 
-
-
-
-	//neon
 	neon = function(delay,posx,posy,speed){
 		this.delay=delay
 		this.posx=posx
@@ -522,7 +521,6 @@ function main(){
 			this.weapon=game.add.weapon(9,'bullet')	
 		}
 
-
 		if(this.kill_with_world=="vrai"){
 			for (var i = 0; i <  9; i++) {
 				this.weapon.bulletCollideWorldBounds=true
@@ -548,7 +546,6 @@ function main(){
 		game.time.events.add( this.delay,function(){this._flag=false},this )
 	}
 
-
 	weapon.prototype = Object.create(Phaser.Sprite.prototype)
 	weapon.prototype.constructor = weapon
 	weapon.prototype.update = function(){
@@ -562,7 +559,7 @@ function main(){
 	}
 
 	weapon.prototype.kill = function() {
-		console.log('touch')	
+		console.log('kill')	
 	}
 
 	weapon.prototype.audio_pop = function() {
@@ -603,15 +600,13 @@ function main(){
 						this.particle.on=false
 						this.particle.start(true,9000,null,20)
 					}})
-
-
-
-
 			}
 		}
 	}
+
 	var createBanner= function(){
 	}
+
 	var createInterstitial=function(){
 	}
 
@@ -633,7 +628,6 @@ function main(){
 				interstitial:"ca-app-pub-7686972479101507/4443703872"
 			}
 		});
-
 
 		console.log('createBanner')
 		banner = adService.createBanner();
@@ -663,8 +657,6 @@ function main(){
 		banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
 		game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
 	}
-
-
 
 	var createInterstitial2=function() {
 
@@ -713,16 +705,11 @@ function main(){
 		},
 		create: function(){
 			this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
-			//this.game.width=window.innerWidth
-			//this.game.height=window.innerHeight
 			this.scale.pageAlignHorizontally = true
 			this.scale.pageAlignVertically = true
-			//this.scale.refresh()
 			this.game.stage.backgroundColor='#1a1a1a'
 			this.state.start("preload");
 		},
-
-
 	}
 
 	var preloadstate = {
@@ -770,12 +757,8 @@ function main(){
 		create: function(){
 			this.game.stage.backgroundColor = '#1a1a1a'
 			this.game.state.start("game_first_screen");
-			//this.game.state.start("game_state");
 		}
 	}
-
-
-
 
 	var game_first_screen = {
 		create: function(){
@@ -783,8 +766,6 @@ function main(){
 			this.title=new screen_first()
 			game.add.existing(this.title)
 			this.initProgressData()
-			//game.time.events.add( 6,() => game.state.start('levsel',levsel))
-			//game.time.events.add( 5000,() => game.state.start('game_state',game_state))
 			createBanner()
 		},
 
@@ -823,31 +804,40 @@ function main(){
 			this.pulsar=[]
 			this.asteroid=[]
 			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			this.canon[0]=new weapon(8000,0,1200,400,2500,0,0,this.hero.flag_level_complete,"vrai","vrai") 
-			this.canon[1]=new weapon(800,w-200,1400,700,2990,0,180,this.hero.flag_level_complete,"faux","faux")
+			this.canon[0]=new weapon(100,0,1200,400,900,0,0,this.hero.flag_level_complete,"faux","vrai") 
+			this.canon[1]=new weapon(800,w-200,800,900,2990,0,180,this.hero.flag_level_complete,"vrai","faux")
 
 			//asteroid = function(posx,posy,speed,radius){
-			this.asteroid[0]=new asteroid(w2-400,900,.001,200)
+			this.asteroid[0]=new asteroid(w2-150,900,.008,100)
 
 			//neon = function(delay,posx,posy,speed){
-			this.neon[0]=new neon(0,w2,h2+200,9)
+			this.neon[0]=new neon(0,w2-200,h2+100,.1)
 
 			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
-			this.pulsar[0]=new pulsar(100,500,200,800,900,4)
+			this.pulsar[0]=new pulsar(100,500,w2+200,800,900,2)
 
-
-			for (var i = 0; i < this.canon.length; i++){
-				game.add.existing(this.canon[i])
-			}
-			for (var i = 0; i < this.neon.length; i++){
-				game.add.existing(this.neon[i])
+			if(this.canon[0]){
+				for (var i = 0; i < this.canon.length; i++){
+					game.add.existing(this.canon[i])
+				}
 			}
 
-			for (var i = 0; i < this.pulsar.length; i++){
-				game.add.existing(this.pulsar[i])
+			if(this.neon[0]){
+				for (var i = 0; i < this.neon.length; i++){
+					game.add.existing(this.neon[i])
+				}
 			}
-			for (var i = 0; i < this.asteroid.length; i++){
-				game.add.existing(this.asteroid[i])
+
+			if(this.pulsar[0]){
+				for (var i = 0; i < this.pulsar.length; i++){
+					game.add.existing(this.pulsar[i])
+				}
+			}
+
+			if(this.asteroid[0]){
+				for (var i = 0; i < this.asteroid.length; i++){
+					game.add.existing(this.asteroid[i])
+				}
 			}
 			return level_number
 		},
@@ -862,10 +852,187 @@ function main(){
 				game.time.events.add( 900,this.hide_weapon,this )
 			}
 
-			game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
+			//game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
+
 			if(this.hero.flag_hide_enemies){
-			this.hero.flag_hide_enemies=false
-			game.time.events.add( 500,this.hide_weapon,this )
+				this.hero.flag_hide_enemies=false
+				game.time.events.add( 500,this.hide_weapon,this )
+			}
+			if(this.canon[0]){
+				for (var i = 0; i < 3; i++){
+					for (var j = 0; j < this.canon.length; j++){
+						if(this.canon[j].special_color=="vrai"){
+							game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],this.hide_weapon,null,this)
+						}else{
+							game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+						}
+					}
+				}
+			}
+			if(this.neon[0]){
+				for (var i = 0; i < 3; i++){
+					for (var j = 0; j < this.neon.length; j++){
+						game.physics.arcade.collide(this.neon[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+					}
+				}
+			}
+			if(this.pulsar[0]){
+				for (var i = 0; i < 3; i++){
+					for (var j = 0; j < this.pulsar.length; j++){
+						game.physics.arcade.collide(this.pulsar[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+					}
+				}
+			}
+
+			if(this.asteroid[0]){
+				for (var i = 0; i < 3; i++){
+					for (var j = 0; j < this.asteroid.length; j++){
+						game.physics.arcade.collide(this.asteroid[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+					}
+				}
+			}
+
+			game.input.onTap.add(onTap,this);
+
+			function onTap(pointer, doubleTap) {
+				if(this.hero.flag_level_complete==false){
+					if (doubleTap)
+					{
+						console.log("value");
+					}
+					else
+					{
+						this.hero.flag_spacekey=false
+						this.hero.launch_with_mouse()
+					}
+				}
+			}
+		},
+		touch_between_enemies:function(){
+			console.log("touch");
+		},
+		hide_weapon:function(){
+			console.log('hide')
+			if(this.canon[0]){
+				for (var j = 0; j < this.canon.length; j++){
+					this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
+					this.canon[j].visible=false
+					this.canon[j].weapon.bullets.visible=false
+				}
+			}
+			if(this.neon[0]){
+				for (var j = 0; j < this.neon.length; j++){
+					this.neon[j].hide()
+					this.neon[j].body.enable=false
+				}
+			}
+
+			if(this.pulsar[0]){
+				for (var j = 0; j < this.pulsar.length; j++){
+					this.pulsar[j].hide()
+					this.pulsar[j].body.enable=false
+				}
+			}
+
+			if(this.asteroid[0]){
+				for (var j = 0; j < this.asteroid.length; j++){
+					this.asteroid[j].hide()
+					this.asteroid[j].body.enable=false
+				}
+			}
+		},
+
+		render:function(){
+			if(debug_mode){
+				game.debug.body(this.hero.cible_shadow)
+				game.debug.body(this.hero.cible)
+				for (var i = 0; i < 3; i++){
+					game.debug.body(this.hero.player[i])
+				}
+				if(this.neon[0]){
+					for (var i = 0; i < this.neon.length; i++){
+						game.debug.body(this.neon[i])
+					}
+				}
+
+				if(this.pulsar[0]){
+					for (var i = 0; i < this.pulsar.length; i++){
+						game.debug.body(this.pulsar[i])
+					}
+				}
+
+				if(this.asteroid[0]){
+					for (var i = 0; i < this.asteroid.length; i++){
+						game.debug.body(this.asteroid[i])
+					}
+				}
+
+				if(this.asteroid[0]){
+					for (var i = 0; i < this.canon.length; i++){
+						this.canon[i].weapon.bullets.forEach(function(item){
+							game.debug.body(item)	
+						})
+					}
+				}
+			}
+		},
+	}
+	var level1 = {
+		create: function(){
+			createInterstitial()
+			level_number=1
+			this.flag_level_complete=false
+			this.flag_hide=true
+			this.hero = new character(interstitial) 
+			game.add.existing(this.hero)
+
+			this.canon=[]
+			this.neon=[]
+			this.pulsar=[]
+			this.asteroid=[]
+			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+			this.canon[0]=new weapon(800,w-200,1400,10,2990,0,180,this.hero.flag_level_complete,"vrai","faux")
+
+			//asteroid = function(posx,posy,speed,radius){
+			//this.asteroid[0]=new asteroid(w2-150,900,.008,100)
+
+			//neon = function(delay,posx,posy,speed){
+			//this.neon[0]=new neon(0,w2-200,h2+100,.1)
+
+			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
+			//this.pulsar[0]=new pulsar(100,500,w2+200,800,900,2)
+
+			for (var i = 0; i < this.canon.length; i++){
+				game.add.existing(this.canon[i])
+			}
+			//for (var i = 0; i < this.neon.length; i++){
+			//game.add.existing(this.neon[i])
+			//}
+
+			//for (var i = 0; i < this.pulsar.length; i++){
+			//	game.add.existing(this.pulsar[i])
+			//}
+			//for (var i = 0; i < this.asteroid.length; i++){
+			//	game.add.existing(this.asteroid[i])
+			//}
+			return level_number
+		},
+
+		update:function(){
+			for (var j = 0; j < 3; j++){
+				game.physics.arcade.collide(this.hero.cible,this.hero.player[j],() => this.hero.land(j))
+			}
+
+			if (this.hero.flag_level_complete && this.flag_hide){
+				this.flag_hide=false
+				game.time.events.add( 900,this.hide_weapon,this )
+			}
+
+			//game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
+
+			if(this.hero.flag_hide_enemies){
+				this.hero.flag_hide_enemies=false
+				game.time.events.add( 500,this.hide_weapon,this )
 			}
 
 			for (var i = 0; i < 3; i++){
@@ -876,22 +1043,19 @@ function main(){
 						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
 					}
 				}
-
-				for (var i = 0; i < 3; i++){
-					for (var j = 0; j < this.neon.length; j++){
-						game.physics.arcade.collide(this.neon[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-
-					}
-					for (var j = 0; j < this.pulsar.length; j++){
-						game.physics.arcade.collide(this.pulsar[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-
-					}
-					for (var j = 0; j < this.asteroid.length; j++){
-						game.physics.arcade.collide(this.asteroid[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-
-					}
+			}
+			for (var i = 0; i < 3; i++){
+				for (var j = 0; j < this.neon.length; j++){
+					game.physics.arcade.collide(this.neon[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+				}
+				for (var j = 0; j < this.pulsar.length; j++){
+					game.physics.arcade.collide(this.pulsar[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
+				}
+				for (var j = 0; j < this.asteroid.length; j++){
+					game.physics.arcade.collide(this.asteroid[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
 				}
 			}
+
 			game.input.onTap.add(onTap,this);
 
 			function onTap(pointer, doubleTap) {
@@ -920,105 +1084,38 @@ function main(){
 			}
 			for (var j = 0; j < this.neon.length; j++){
 				this.neon[j].hide()
+				this.neon[j].body.enable=false
 			}
 			for (var j = 0; j < this.pulsar.length; j++){
 				this.pulsar[j].hide()
-
+				this.pulsar[j].body.enable=false
 			}
 			for (var j = 0; j < this.asteroid.length; j++){
 				this.asteroid[j].hide()
+				this.asteroid[j].body.enable=false
 			}
-
 		},
 
 		render:function(){
-		//	game.debug.body(this.hero.cible_shadow)
-		//	game.debug.body(this.hero.cible)
-		//	for (var i = 0; i < 3; i++){
-		//		game.debug.body(this.hero.player[i])
-		//	}
-		//	for (var i = 0; i < this.neon.length; i++){
-		//		game.debug.body(this.neon[i])
-		//	}
-		//	for (var i = 0; i < this.pulsar.length; i++){
-		//		game.debug.body(this.pulsar[i])
-		//	}
-		//	for (var i = 0; i < this.asteroid.length; i++){
-		//		game.debug.body(this.asteroid[i])
-		//	}
-		},
-
-
-
-	}
-	var level1 = {
-		create: function(){
-			createInterstitial()
-			level_number=1
-			this.flag_level_complete=false
-
-			this.hero = new character(interstitial) 
-			game.add.existing(this.hero)
-
-			this.canon=[]
-			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			this.canon[0]=new weapon(300,0,1200,100,500,0,0,this.hero.flag_level_complete,"vrai","vrai") 
-			this.canon[1]=new weapon(0,w-200,1400,400,990,0,180,this.hero.flag_level_complete,"faux","faux")
-
-			for (var i = 0; i < this.canon.length; i++){
-				game.add.existing(this.canon[i])
-			}
-			return level_number
-		},
-
-		update:function(){
-			game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
-			if(this.hero.flag_level_complete){
-				this.hero.flag_level_complete=false
-				game.time.events.add( 1100,this.hide_weapon,this )
-			}
-			if(this.hero.flag_hide_enemies){
-				this.hero.flag_hide_enemies=false
-				game.time.events.add( 200,this.hide_weapon,this )
-			}
+			game.debug.body(this.hero.cible_shadow)
+			game.debug.body(this.hero.cible)
 			for (var i = 0; i < 3; i++){
-				for (var j = 0; j < this.canon.length; j++){
-					game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-					if(this.canon[j].special_color=="vrai"){
-						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],this.hide_weapon,null,this)
-					}else{
-						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-
-					}
-				}
+				game.debug.body(this.hero.player[i])
 			}
-			game.input.onTap.add(onTap,this);
-
-			function onTap(pointer, doubleTap) {
-				if(this.hero.flag_level_complete==false){
-					if (doubleTap)
-					{
-						console.log("value");
-					}
-					else
-					{
-						this.hero.flag_spacekey=false
-						this.hero.launch_with_mouse()
-					}
-				}
+			for (var i = 0; i < this.neon.length; i++){
+				game.debug.body(this.neon[i])
 			}
-		},
-		touch_between_enemies:function(){
-			console.log("touch");
-		},
-		hide_weapon:function(){
-			console.log('hide')
-			for (var j = 0; j < this.canon.length; j++){
-				this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
-				this.canon[j].visible=false
-				this.canon[j].weapon.bullets.visible=false
+			for (var i = 0; i < this.pulsar.length; i++){
+				game.debug.body(this.pulsar[i])
 			}
-
+			for (var i = 0; i < this.asteroid.length; i++){
+				game.debug.body(this.asteroid[i])
+			}
+			for (var i = 0; i < this.canon.length; i++){
+				this.canon[i].weapon.bullets.forEach(function(item){
+					game.debug.body(item)	
+				})
+			}
 		},
 	}
 	var level2 = {
