@@ -1,5 +1,9 @@
 //todo : body enbale false lorsque touché un projectile violet
 function main(){
+	this.some_value=4
+	var some_fun=function(){
+		console.log(this.some_value,"this.some_value")	
+	}
 	var PLAYER_DATA = null // just declare as global variable for now
 	var ratio_device=window.screen.width/window.screen.height
 	var h=1920
@@ -8,9 +12,16 @@ function main(){
 	var h2=h*.5
 	var w2=640
 	var level_number=0
-	var debug_mode=false
-	//ADS
+	var debug_mode=true
 
+	var canon=[]
+	var pulsar=[]
+	var asteroid=[]
+	var neon=[]
+	var hero
+	var flag_level_complete=false
+	var flag_hide=true
+	//ADS
 	var bannerStatus;
 	var interstitialStatus;
 
@@ -397,7 +408,7 @@ function main(){
 		}
 	}
 
-	asteroid = function(posx,posy,speed,radius){
+	_asteroid = function(posx,posy,speed,radius){
 		this.radius=radius
 		this.posx=posx
 		this.posy=posy
@@ -422,10 +433,10 @@ function main(){
 
 	}
 
-	asteroid.prototype = Object.create(Phaser.Sprite.prototype)
-	asteroid.prototype.constructor = asteroid
+	_asteroid.prototype = Object.create(Phaser.Sprite.prototype)
+	_asteroid.prototype.constructor = _asteroid
 
-	asteroid.prototype.update = function() {
+	_asteroid.prototype.update = function() {
 		if(this.flag){
 			var period = game.time.now * this.speed;
 			this.x = this.posx + Math.cos(period) * this.radius;
@@ -435,13 +446,13 @@ function main(){
 		}
 	}
 
-	asteroid.prototype.hide = function() {
+	_asteroid.prototype.hide = function() {
 		this.flag=false
 		this.particle.on=false
 		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 	}
 
-	pulsar = function(delay,time,posx,posy,speed,scale_factor){
+	_pulsar = function(delay,time,posx,posy,speed,scale_factor){
 		this.scale_factor=scale_factor
 		console.log('this.scale_factor',this.scale_factor)
 		this.delay=delay
@@ -458,20 +469,20 @@ function main(){
 		this.tweens()
 	}
 
-	pulsar.prototype = Object.create(Phaser.Sprite.prototype)
-	pulsar.prototype.constructor = pulsar
+	_pulsar.prototype = Object.create(Phaser.Sprite.prototype)
+	_pulsar.prototype.constructor = _pulsar
 
-	pulsar.prototype.tweens = function() {
+	_pulsar.prototype.tweens = function() {
 		this.tween0=game.add.tween(this.scale).to({x:this.scale_factor,y:this.scale_factor},this.time,Phaser.Easing.Linear.None,true,this.delay,-1)
 		this.tween0.yoyo(true,this.speed)		
 	}
 
-	pulsar.prototype.hide = function() {
+	_pulsar.prototype.hide = function() {
 		this.tween0.pause()
 		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 	}
 
-	neon = function(delay,posx,posy,speed){
+	_neon = function(delay,posx,posy,speed){
 		this.delay=delay
 		this.posx=posx
 		this.posy=posy
@@ -484,19 +495,19 @@ function main(){
 		this.tweens()
 	}
 
-	neon.prototype = Object.create(Phaser.Sprite.prototype)
-	neon.prototype.constructor = neon
+	_neon.prototype = Object.create(Phaser.Sprite.prototype)
+	_neon.prototype.constructor = _neon
 
-	neon.prototype.tweens = function() {
+	_neon.prototype.tweens = function() {
 		this.tween0=game.add.tween(this).to({x:this.posx+300},this.time,Phaser.Easing.Linear.None,true,this.delay,-1)
 		this.tween0.yoyo(true,this.speed)		
 	}
 
-	neon.prototype.hide = function() {
+	_neon.prototype.hide = function() {
 		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 	}
 
-	weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+	_weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 		this.special_color=special_color
 		this.kill_with_world=kill_with_world
 		this.delay=delay
@@ -546,27 +557,27 @@ function main(){
 		game.time.events.add( this.delay,function(){this._flag=false},this )
 	}
 
-	weapon.prototype = Object.create(Phaser.Sprite.prototype)
-	weapon.prototype.constructor = weapon
-	weapon.prototype.update = function(){
+	_weapon.prototype = Object.create(Phaser.Sprite.prototype)
+	_weapon.prototype.constructor = _weapon
+	_weapon.prototype.update = function(){
 		if(this._flag==false){
 			this.weapon.fire()	
 		}
 	}
 
-	weapon.prototype.transition = function() {
+	_weapon.prototype.transition = function() {
 		this.tween_characteristic = game.add.tween(this.canon).to({x:posx,y:posy},time,Phaser.Easing.Linear.None,true,delay)
 	}
 
-	weapon.prototype.kill = function() {
+	_weapon.prototype.kill = function() {
 		console.log('kill')	
 	}
 
-	weapon.prototype.audio_pop = function() {
+	_weapon.prototype.audio_pop = function() {
 		this.sound_pop.play()
 	}
 
-	weapon.prototype.explode_bullet=function(){
+	_weapon.prototype.explode_bullet=function(){
 		if(this.flag_explode==false){
 			this.flag_explode=true
 			this.audio_pop()
@@ -794,526 +805,39 @@ function main(){
 		create: function(){
 			createInterstitial()
 			level_number=0
-			this.flag_level_complete=false
-			this.flag_hide=true
-			this.hero = new character(interstitial) 
-			game.add.existing(this.hero)
+			hero = new character(interstitial) 
 
-			this.canon=[]
-			this.neon=[]
-			this.pulsar=[]
-			this.asteroid=[]
 			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			this.canon[0]=new weapon(100,0,1200,400,900,0,0,this.hero.flag_level_complete,"faux","vrai") 
-			this.canon[1]=new weapon(800,w-200,800,900,2990,0,180,this.hero.flag_level_complete,"vrai","faux")
+			canon[0]=new _weapon(100,0,1200,400,900,0,0,hero.flag_level_complete,"faux","vrai") 
+			canon[1]=new _weapon(800,w-200,800,900,2990,0,180,hero.flag_level_complete,"vrai","faux")
+			//this.canon[0]=new weapon(100,0,1200,400,900,0,0,this.hero.flag_level_complete,"faux","vrai") 
+			//this.canon[1]=new weapon(800,w-200,800,900,2990,0,180,this.hero.flag_level_complete,"vrai","faux")
 
 			//asteroid = function(posx,posy,speed,radius){
-			this.asteroid[0]=new asteroid(w2-150,900,.008,100)
-
-			//neon = function(delay,posx,posy,speed){
-			this.neon[0]=new neon(0,w2-200,h2+100,.1)
-
-			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
-			this.pulsar[0]=new pulsar(100,500,w2+200,800,900,2)
-
-			if(this.canon[0]){
-				for (var i = 0; i < this.canon.length; i++){
-					game.add.existing(this.canon[i])
-				}
-			}
-
-			if(this.neon[0]){
-				for (var i = 0; i < this.neon.length; i++){
-					game.add.existing(this.neon[i])
-				}
-			}
-
-			if(this.pulsar[0]){
-				for (var i = 0; i < this.pulsar.length; i++){
-					game.add.existing(this.pulsar[i])
-				}
-			}
-
-			if(this.asteroid[0]){
-				for (var i = 0; i < this.asteroid.length; i++){
-					game.add.existing(this.asteroid[i])
-				}
-			}
-			return level_number
-		},
-
-		update:function(){
-			for (var j = 0; j < 3; j++){
-				game.physics.arcade.collide(this.hero.cible,this.hero.player[j],() => this.hero.land(j))
-			}
-
-			if (this.hero.flag_level_complete && this.flag_hide){
-				this.flag_hide=false
-				game.time.events.add( 900,this.hide_weapon,this )
-			}
-
-			//game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
-
-			if(this.hero.flag_hide_enemies){
-				this.hero.flag_hide_enemies=false
-				game.time.events.add( 500,this.hide_weapon,this )
-			}
-			if(this.canon[0]){
-				for (var i = 0; i < 3; i++){
-					for (var j = 0; j < this.canon.length; j++){
-						if(this.canon[j].special_color=="vrai"){
-							game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],this.hide_weapon,null,this)
-						}else{
-							game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-						}
-					}
-				}
-			}
-			if(this.neon[0]){
-				for (var i = 0; i < 3; i++){
-					for (var j = 0; j < this.neon.length; j++){
-						game.physics.arcade.collide(this.neon[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-					}
-				}
-			}
-			if(this.pulsar[0]){
-				for (var i = 0; i < 3; i++){
-					for (var j = 0; j < this.pulsar.length; j++){
-						game.physics.arcade.collide(this.pulsar[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-					}
-				}
-			}
-
-			if(this.asteroid[0]){
-				for (var i = 0; i < 3; i++){
-					for (var j = 0; j < this.asteroid.length; j++){
-						game.physics.arcade.collide(this.asteroid[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-					}
-				}
-			}
-
-			game.input.onTap.add(onTap,this);
-
-			function onTap(pointer, doubleTap) {
-				if(this.hero.flag_level_complete==false){
-					if (doubleTap)
-					{
-						console.log("value");
-					}
-					else
-					{
-						this.hero.flag_spacekey=false
-						this.hero.launch_with_mouse()
-					}
-				}
-			}
-		},
-		touch_between_enemies:function(){
-			console.log("touch");
-		},
-		hide_weapon:function(){
-			console.log('hide')
-			if(this.canon[0]){
-				for (var j = 0; j < this.canon.length; j++){
-					this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
-					this.canon[j].visible=false
-					this.canon[j].weapon.bullets.visible=false
-				}
-			}
-			if(this.neon[0]){
-				for (var j = 0; j < this.neon.length; j++){
-					this.neon[j].hide()
-					this.neon[j].body.enable=false
-				}
-			}
-
-			if(this.pulsar[0]){
-				for (var j = 0; j < this.pulsar.length; j++){
-					this.pulsar[j].hide()
-					this.pulsar[j].body.enable=false
-				}
-			}
-
-			if(this.asteroid[0]){
-				for (var j = 0; j < this.asteroid.length; j++){
-					this.asteroid[j].hide()
-					this.asteroid[j].body.enable=false
-				}
-			}
-		},
-
-		render:function(){
-			if(debug_mode){
-				game.debug.body(this.hero.cible_shadow)
-				game.debug.body(this.hero.cible)
-				for (var i = 0; i < 3; i++){
-					game.debug.body(this.hero.player[i])
-				}
-				if(this.neon[0]){
-					for (var i = 0; i < this.neon.length; i++){
-						game.debug.body(this.neon[i])
-					}
-				}
-
-				if(this.pulsar[0]){
-					for (var i = 0; i < this.pulsar.length; i++){
-						game.debug.body(this.pulsar[i])
-					}
-				}
-
-				if(this.asteroid[0]){
-					for (var i = 0; i < this.asteroid.length; i++){
-						game.debug.body(this.asteroid[i])
-					}
-				}
-
-				if(this.asteroid[0]){
-					for (var i = 0; i < this.canon.length; i++){
-						this.canon[i].weapon.bullets.forEach(function(item){
-							game.debug.body(item)	
-						})
-					}
-				}
-			}
-		},
-	}
-	var level1 = {
-		create: function(){
-			createInterstitial()
-			level_number=1
-			this.flag_level_complete=false
-			this.flag_hide=true
-			this.hero = new character(interstitial) 
-			game.add.existing(this.hero)
-
-			this.canon=[]
-			this.neon=[]
-			this.pulsar=[]
-			this.asteroid=[]
-			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			this.canon[0]=new weapon(800,w-200,1400,10,2990,0,180,this.hero.flag_level_complete,"vrai","faux")
-
-			//asteroid = function(posx,posy,speed,radius){
-			//this.asteroid[0]=new asteroid(w2-150,900,.008,100)
+			//this.asteroid[0]=new _asteroid(w2-150,900,.008,100)
+			asteroid[0]=new _asteroid(w2-150,900,.008,100)
 
 			//neon = function(delay,posx,posy,speed){
 			//this.neon[0]=new neon(0,w2-200,h2+100,.1)
+			neon[0]=new _neon(0,w2-200,h2+100,.1)
 
 			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
 			//this.pulsar[0]=new pulsar(100,500,w2+200,800,900,2)
+			pulsar[0]=new _pulsar(100,500,w2+200,800,900,2)
 
-			for (var i = 0; i < this.canon.length; i++){
-				game.add.existing(this.canon[i])
-			}
-			//for (var i = 0; i < this.neon.length; i++){
-			//game.add.existing(this.neon[i])
-			//}
-
-			//for (var i = 0; i < this.pulsar.length; i++){
-			//	game.add.existing(this.pulsar[i])
-			//}
-			//for (var i = 0; i < this.asteroid.length; i++){
-			//	game.add.existing(this.asteroid[i])
-			//}
+			logic_add()
 			return level_number
 		},
 
 		update:function(){
-			for (var j = 0; j < 3; j++){
-				game.physics.arcade.collide(this.hero.cible,this.hero.player[j],() => this.hero.land(j))
-			}
-
-			if (this.hero.flag_level_complete && this.flag_hide){
-				this.flag_hide=false
-				game.time.events.add( 900,this.hide_weapon,this )
-			}
-
-			//game.physics.arcade.collide(this.canon[0].weapon.bullets,this.canon[1].weapon.bullets,this.touch_between_enemies,null,this)
-
-			if(this.hero.flag_hide_enemies){
-				this.hero.flag_hide_enemies=false
-				game.time.events.add( 500,this.hide_weapon,this )
-			}
-
-			for (var i = 0; i < 3; i++){
-				for (var j = 0; j < this.canon.length; j++){
-					if(this.canon[j].special_color=="vrai"){
-						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],this.hide_weapon,null,this)
-					}else{
-						game.physics.arcade.collide(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-					}
-				}
-			}
-			for (var i = 0; i < 3; i++){
-				for (var j = 0; j < this.neon.length; j++){
-					game.physics.arcade.collide(this.neon[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-				}
-				for (var j = 0; j < this.pulsar.length; j++){
-					game.physics.arcade.collide(this.pulsar[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-				}
-				for (var j = 0; j < this.asteroid.length; j++){
-					game.physics.arcade.collide(this.asteroid[j],this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-				}
-			}
-
-			game.input.onTap.add(onTap,this);
-
-			function onTap(pointer, doubleTap) {
-				if(this.hero.flag_level_complete==false){
-					if (doubleTap)
-					{
-						console.log("value");
-					}
-					else
-					{
-						this.hero.flag_spacekey=false
-						this.hero.launch_with_mouse()
-					}
-				}
-			}
-		},
-		touch_between_enemies:function(){
-			console.log("touch");
-		},
-		hide_weapon:function(){
-			console.log('hide')
-			for (var j = 0; j < this.canon.length; j++){
-				this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
-				this.canon[j].visible=false
-				this.canon[j].weapon.bullets.visible=false
-			}
-			for (var j = 0; j < this.neon.length; j++){
-				this.neon[j].hide()
-				this.neon[j].body.enable=false
-			}
-			for (var j = 0; j < this.pulsar.length; j++){
-				this.pulsar[j].hide()
-				this.pulsar[j].body.enable=false
-			}
-			for (var j = 0; j < this.asteroid.length; j++){
-				this.asteroid[j].hide()
-				this.asteroid[j].body.enable=false
-			}
+			logic_update()
 		},
 
 		render:function(){
-			game.debug.body(this.hero.cible_shadow)
-			game.debug.body(this.hero.cible)
-			for (var i = 0; i < 3; i++){
-				game.debug.body(this.hero.player[i])
-			}
-			for (var i = 0; i < this.neon.length; i++){
-				game.debug.body(this.neon[i])
-			}
-			for (var i = 0; i < this.pulsar.length; i++){
-				game.debug.body(this.pulsar[i])
-			}
-			for (var i = 0; i < this.asteroid.length; i++){
-				game.debug.body(this.asteroid[i])
-			}
-			for (var i = 0; i < this.canon.length; i++){
-				this.canon[i].weapon.bullets.forEach(function(item){
-					game.debug.body(item)	
-				})
-			}
+			logic_render()
 		},
 	}
-	var level2 = {
-		create: function(){
-			this.game.stage.backgroundColor = '#1a1a1a'
-			level_number=2
-			this.flag_level_complete=false
-			game.physics.startSystem(Phaser.Physics.ARCADE)
-			this.background=game.add.sprite(0,0,'background')
-			this.background.inputEnabled=true
-			this.hero = new character() 
-
-			this.canon=[]
-			this.canon[0]=new weapon(0,1400,280,1000,0,this.hero.flag_level_complete) 
-			this.canon[1]=new weapon (w+150,100,1000,990,135,this.hero.flag_level_complete)
-
-			this.tween_characteristic = game.add.tween(this.canon[0]).to({y:0},1200,Phaser.Easing.Linear.None,true,0,-1)
-			this.tween_characteristic.yoyo(900,true)
-			for (var i = 0; i < this.canon.length; i++){
-				game.add.existing(this.canon[i])
-			}
-			game.add.existing(this.hero)
-			return level_number
-		},
-		update:function(){
-			if(this.hero.flag_level_complete){
-				this.hero.flag_level_complete=false
-				game.time.events.add( 1100,this.hide_weapon,this )
-			}
-
-			for (var i = 0; i < 3; i++){
-				for (var j = 0; j < this.canon.length; j++){
-					game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-					game.physics.arcade.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-				}
-			}
-			game.input.onTap.add(onTap,this);
-
-			function onTap(pointer, doubleTap) {
-				if(this.hero.flag_level_complete==false){
-
-					if (doubleTap)
-					{
-						console.log("value");
-					}
-					else
-					{
-						this.hero.flag_spacekey=false
-						this.hero.launch_with_mouse()
-					}
-				}
-			}
-		},
-		hide_weapon:function(){
-			console.log('hide')
-			for (var j = 0; j < this.canon.length; j++){
-				this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
-				this.canon[j].visible=false
-				this.canon[j].weapon.bullets.visible=false
-			}
-
-		},
-	}
-	var level3 = {
-		create: function(){
-			this.game.stage.backgroundColor = '#1a1a1a'
-			level_number=3
-			this.flag_level_complete=false
-			game.physics.startSystem(Phaser.Physics.ARCADE)
-			this.background=game.add.sprite(0,0,'background')
-			this.background.inputEnabled=true
-			this.hero = new character() 
-
-			this.canon=[]
-			this.canon[0]=new weapon(0,1400,280,1000,0,this.hero.flag_level_complete) 
-			this.canon[1]=new weapon (w+150,100,1000,990,135,this.hero.flag_level_complete)
-
-			this.tween_characteristic = game.add.tween(this.canon[0]).to({y:0},1200,Phaser.Easing.Linear.None,true,0,-1)
-			this.tween_characteristic.yoyo(900,true)
-			for (var i = 0; i < this.canon.length; i++){
-				game.add.existing(this.canon[i])
-			}
-			game.add.existing(this.hero)
-			return level_number
-		},
-		update:function(){
-			if(this.hero.flag_level_complete){
-				this.hero.flag_level_complete=false
-				game.time.events.add( 1100,this.hide_weapon,this )
-			}
-
-			for (var i = 0; i < 3; i++){
-				for (var j = 0; j < this.canon.length; j++){
-					game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-					game.physics.arcade.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-				}
-			}
-			game.input.onTap.add(onTap,this);
-
-			function onTap(pointer, doubleTap) {
-				if(this.hero.flag_level_complete==false){
-
-					if (doubleTap)
-					{
-						console.log("value");
-					}
-					else
-					{
-						this.hero.flag_spacekey=false
-						this.hero.launch_with_mouse()
-					}
-				}
-			}
-		},
-		hide_weapon:function(){
-			console.log('hide')
-			for (var j = 0; j < this.canon.length; j++){
-				this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
-				this.canon[j].visible=false
-				this.canon[j].weapon.bullets.visible=false
-			}
-
-		},
-	}
-	var level4 = {
-		create: function(){
-			this.game.stage.backgroundColor = '#1a1a1a'
-			level_number=4
-			this.flag_level_complete=false
-			game.physics.startSystem(Phaser.Physics.ARCADE)
-			this.background=game.add.sprite(0,0,'background')
-			this.background.inputEnabled=true
-			this.hero = new character() 
-
-			this.canon=[]
-			this.canon[0]=new weapon(0,1400,280,1000,0,this.hero.flag_level_complete) 
-			this.canon[1]=new weapon (w+150,100,1000,990,135,this.hero.flag_level_complete)
-
-			this.tween_characteristic = game.add.tween(this.canon[0]).to({y:0},1200,Phaser.Easing.Linear.None,true,0,-1)
-			this.tween_characteristic.yoyo(900,true)
-			for (var i = 0; i < this.canon.length; i++){
-				game.add.existing(this.canon[i])
-			}
-			game.add.existing(this.hero)
-			return level_number
-		},
-		update:function(){
-			if(this.hero.flag_level_complete){
-				this.hero.flag_level_complete=false
-				game.time.events.add( 1100,this.hide_weapon,this )
-			}
-
-			for (var i = 0; i < 3; i++){
-				for (var j = 0; j < this.canon.length; j++){
-					game.physics.arcade.overlap(this.hero.cible,this.hero.player[i],() => this.hero.land(i))
-					game.physics.arcade.overlap(this.canon[j].weapon.bullets,this.hero.player[i],() => this.hero.explode(this.hero.player[i].body.x,this.hero.player[i].body.y,i))
-				}
-			}
-			game.input.onTap.add(onTap,this);
-
-			function onTap(pointer, doubleTap) {
-				if(this.hero.flag_level_complete==false){
-
-					if (doubleTap)
-					{
-						console.log("value");
-					}
-					else
-					{
-						this.hero.flag_spacekey=false
-						this.hero.launch_with_mouse()
-					}
-				}
-			}
-		},
-		hide_weapon:function(){
-			console.log('hide')
-			for (var j = 0; j < this.canon.length; j++){
-				this.canon[j].explode_bullet(this.canon[j].weapon.bullets)
-				this.canon[j].visible=false
-				this.canon[j].weapon.bullets.visible=false
-			}
-
-		},
-	}
-
-	var menu_level_select = {
-		create: function(){
-			this.game.stage.backgroundColor = '#1a1a1a'
-			this.row=5
-			this.line=6
-			this.button={}
-			this.interspace=200
-			this.espacement_x=(w-(this.row-2)*this.interspace)*.5
-			this.espacement_y=(h-(this.line-1)*this.interspace)*.5
-		},
-		update:function(){
-		},
+	var level1 = {
 	}
 
 	var levsel={
@@ -1515,8 +1039,176 @@ function main(){
 			//this.state.start('game');
 		},
 	};
+	var logic_add=function(){
+		game.add.existing(hero)
+		if(canon[0]){
+			for (var i = 0; i < canon.length; i++){
+				game.add.existing(canon[i])
+			}
+		}
+		if(neon[0]){
+			console.log("value");
+			for (var i = 0; i < neon.length; i++){
+				game.add.existing(neon[i])
+			}
+		}
 
+		if(pulsar[0]){
+			for (var i = 0; i < pulsar.length; i++){
+				game.add.existing(pulsar[i])
+			}
+		}
 
+		if(asteroid[0]){
+			for (var i = 0; i < asteroid.length; i++){
+				game.add.existing(asteroid[i])
+			}
+		}
+	}
+
+	var logic_update=function(){
+		for (var j = 0; j < 3; j++){
+			game.physics.arcade.collide(hero.cible,hero.player[j],() => hero.land(j))
+		}
+
+		if (hero.flag_level_complete && flag_hide){
+			flag_hide=false
+			game.time.events.add( 900,hide_weapon,this )
+		}
+
+		if(canon[1]){
+		game.physics.arcade.collide(canon[0].weapon.bullets,canon[1].weapon.bullets,touch_between_enemies,null,this)
+		}
+
+		if(canon[2]){
+		game.physics.arcade.collide(canon[0].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
+		game.physics.arcade.collide(canon[1].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
+		}
+
+		if(hero.flag_hide_enemies){
+		hero.flag_hide_enemies=false
+			game.time.events.add( 500,hide_weapon,this )
+		}
+		if(canon[0]){
+			for (var i = 0; i < 3; i++){
+				for (var j = 0; j < canon.length; j++){
+					if(canon[j].special_color=="vrai"){
+						game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],hide_weapon,null,this)
+					}else{
+						game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
+					}
+				}
+			}
+		}
+		if(neon[0]){
+			for (var i = 0; i < 3; i++){
+				for (var j = 0; j < neon.length; j++){
+					game.physics.arcade.collide(neon[j],hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
+				}
+			}
+		}
+		if(pulsar[0]){
+			for (var i = 0; i < 3; i++){
+				for (var j = 0; j < pulsar.length; j++){
+					game.physics.arcade.collide(pulsar[j],hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
+				}
+			}
+		}
+
+		if(asteroid[0]){
+			for (var i = 0; i < 3; i++){
+				for (var j = 0; j < asteroid.length; j++){
+					game.physics.arcade.collide(asteroid[j],hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
+				}
+			}
+		}
+
+		game.input.onTap.add(onTap,this);
+
+		function onTap(pointer, doubleTap) {
+			if(hero.flag_level_complete==false){
+				if (doubleTap)
+				{
+					console.log("value");
+				}
+				else
+				{
+					hero.flag_spacekey=false
+					hero.launch_with_mouse()
+				}
+			}
+		}
+	}
+
+	var touch_between_enemies=function(){
+			console.log("touch");
+	
+	}
+	var hide_weapon=function(){
+			console.log('hide')
+			if(canon[0]){
+				for (var j = 0; j < canon.length; j++){
+					canon[j].explode_bullet(canon[j].weapon.bullets)
+					canon[j].visible=false
+					canon[j].weapon.bullets.visible=false
+				}
+			}
+			if(neon[0]){
+				for (var j = 0; j < neon.length; j++){
+					neon[j].hide()
+					neon[j].body.enable=false
+				}
+			}
+
+			if(pulsar[0]){
+				for (var j = 0; j < pulsar.length; j++){
+					pulsar[j].hide()
+					pulsar[j].body.enable=false
+				}
+			}
+
+			if(asteroid[0]){
+				for (var j = 0; j < asteroid.length; j++){
+					asteroid[j].hide()
+					asteroid[j].body.enable=false
+				}
+			}
+	
+	}
+	var logic_render=function(){
+		if(debug_mode){
+			game.debug.body(hero.cible_shadow)
+			game.debug.body(hero.cible)
+			for (var i = 0; i < 3; i++){
+				game.debug.body(hero.player[i])
+			}
+			if(neon[0]){
+				for (var i = 0; i < neon.length; i++){
+					game.debug.body(neon[i])
+				}
+			}
+
+			if(pulsar[0]){
+				for (var i = 0; i < pulsar.length; i++){
+					game.debug.body(pulsar[i])
+				}
+			}
+
+			if(asteroid[0]){
+				for (var i = 0; i < asteroid.length; i++){
+					game.debug.body(asteroid[i])
+				}
+			}
+
+			if(asteroid[0]){
+				for (var i = 0; i < canon.length; i++){
+					canon[i].weapon.bullets.forEach(function(item){
+						game.debug.body(item)	
+					})
+				}
+			}
+		}
+	}
 	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 	game.state.add('boot',bootstate)
 	game.state.add('preload',preloadstate)
@@ -1528,10 +1220,7 @@ function main(){
 	//}
 	game.state.add('level0',level0)
 	game.state.add('level1',level1)
-	game.state.add('level2',level2)
-	game.state.add('level3',level3)
-
-	game.state.add('menu_level_select',menu_level_select)
+	//game.state.add('menu_level_select',menu_level_select)
 	game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
 	game.state.start('boot',bootstate)
 }
