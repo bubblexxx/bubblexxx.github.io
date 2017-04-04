@@ -12,7 +12,8 @@ function main(){
 	var h2=h*.5
 	var w2=640
 	var level_number=0
-	var debug_mode=true
+	var debug_mode=false
+	var debug_position=true
 
 	var canon=[]
 	var pulsar=[]
@@ -95,6 +96,8 @@ function main(){
 		this.cible_shadow.anchor.setTo(.5,.5)
 		this.cible_shadow.scale.setTo(1.5,1.5)
 		this.cible_shadow.alpha=.2
+		this.grid=game.add.sprite(0,0,'grid')
+		this.grid.visible=true
 		//cible
 		this.cible=game.add.sprite(w2,300,'cible')
 		this.cible.anchor.setTo(.5,.5)
@@ -414,11 +417,23 @@ function main(){
 		this.posy=posy
 		this.speed=speed
 		this.flag=true
-		Phaser.Sprite.call(this,game,this.posx,this.posy,'axe')
+		Phaser.Sprite.call(this,game,this.posx,this.posy,'particle_bullet_color')
 		this.anchor.x=.5
 		this.anchor.y=.5
-		game.physics.arcade.enable(this);
-		this.body.immovable=true
+		this.axe=game.add.sprite(this.posx,this.posy,'axe')
+		this.axe.anchor.setTo(.5,.5)
+		if(debug_position){
+			this.visible=true
+		}else{
+			this.visible=false
+		}
+		this.inputEnabled=true
+		this.input.enableDrag(true)
+		this.events.onDragStop.add(logic_position,this)
+		this.events.onDragStart.add(show_grid_on_logic_position,this)
+		this.input.enableSnap(40,40,true,true)
+		game.physics.arcade.enable(this.axe);
+		this.axe.body.immovable=true
 		this.particle = game.add.emitter(this.x, this.y-25, 8)
 		this.particle.makeParticles("particle_bullet_color")
 		this.particle.setXSpeed(0,0)
@@ -439,17 +454,17 @@ function main(){
 	_asteroid.prototype.update = function() {
 		if(this.flag){
 			var period = game.time.now * this.speed;
-			this.x = this.posx + Math.cos(period) * this.radius;
-			this.y = this.posy + Math.sin(period) * this.radius;	
-			this.particle.x=this.x
-			this.particle.y=this.y
+			this.axe.x = this.x + Math.cos(period) * this.radius;
+			this.axe.y = this.y + Math.sin(period) * this.radius;	
+			this.particle.x=this.axe.x
+			this.particle.y=this.axe.y
 		}
 	}
 
 	_asteroid.prototype.hide = function() {
 		this.flag=false
 		this.particle.on=false
-		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
+		this.tweenh=game.add.tween(this.axe.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 	}
 
 	_pulsar = function(delay,time,posx,posy,speed,scale_factor){
@@ -464,6 +479,11 @@ function main(){
 		this.anchor.x=0.5
 		this.anchor.y=.5
 		this.scale.setTo(0,0)
+		this.inputEnabled=true
+		this.input.enableDrag(true)
+		this.events.onDragStop.add(logic_position,this)
+		this.events.onDragStart.add(show_grid_on_logic_position,this)
+		this.input.enableSnap(40,40,true,true)
 		game.physics.arcade.enable(this);
 		this.body.immovable=true
 		this.tweens()
@@ -490,6 +510,11 @@ function main(){
 		Phaser.Sprite.call(this,game,this.posx,this.posy,'neon')
 		this.anchor.x=0.1
 		this.anchor.y=.5
+		this.inputEnabled=true
+		this.input.enableDrag(true)
+		this.events.onDragStop.add(logic_position,this)
+		this.events.onDragStart.add(show_grid_on_logic_position,this)
+		this.input.enableSnap(40,40,true,true)
 		game.physics.arcade.enable(this);
 		this.body.immovable=true
 		this.tweens()
@@ -525,6 +550,12 @@ function main(){
 		Phaser.Sprite.call(this,game,this.posx,this.posy,'canon')
 		this.anchor.setTo(.5,.5)
 		this.angle=this.angular
+		this.inputEnabled=true
+		this.input.enableDrag(true)
+		this.events.onDragStop.add(logic_position,this)
+		this.events.onDragStart.add(show_grid_on_logic_position,this)
+		this.input.enableSnap(40,40,true,true)
+
 		game.physics.arcade.enable(this);
 		if(this.special_color=="vrai"){
 			this.weapon=game.add.weapon(9,'bullet_color')
@@ -718,6 +749,7 @@ function main(){
 			this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
 			this.scale.pageAlignHorizontally = true
 			this.scale.pageAlignVertically = true
+			this.scale.refresh()
 			this.game.stage.backgroundColor='#1a1a1a'
 			this.state.start("preload");
 		},
@@ -737,6 +769,7 @@ function main(){
 			this.game.load.audio("pop","sounds/pop.ogg");
 			this.game.load.audio("launch","sounds/launch.ogg");
 			//images
+			this.game.load.image("grid","assets/grid.png");
 			this.game.load.image("pulsar","assets/pulsar.png");
 			this.game.load.image("axe","assets/axe.png");
 			this.game.load.image("neon","assets/neon.png");
@@ -810,19 +843,14 @@ function main(){
 			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 			canon[0]=new _weapon(100,0,1200,400,900,0,0,hero.flag_level_complete,"faux","vrai") 
 			canon[1]=new _weapon(800,w-200,800,900,2990,0,180,hero.flag_level_complete,"vrai","faux")
-			//this.canon[0]=new weapon(100,0,1200,400,900,0,0,this.hero.flag_level_complete,"faux","vrai") 
-			//this.canon[1]=new weapon(800,w-200,800,900,2990,0,180,this.hero.flag_level_complete,"vrai","faux")
 
 			//asteroid = function(posx,posy,speed,radius){
-			//this.asteroid[0]=new _asteroid(w2-150,900,.008,100)
 			asteroid[0]=new _asteroid(w2-150,900,.008,100)
 
 			//neon = function(delay,posx,posy,speed){
-			//this.neon[0]=new neon(0,w2-200,h2+100,.1)
 			neon[0]=new _neon(0,w2-200,h2+100,.1)
 
 			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
-			//this.pulsar[0]=new pulsar(100,500,w2+200,800,900,2)
 			pulsar[0]=new _pulsar(100,500,w2+200,800,900,2)
 
 			logic_add()
@@ -1067,6 +1095,7 @@ function main(){
 	}
 
 	var logic_update=function(){
+		//debug_position && logic_position()
 		for (var j = 0; j < 3; j++){
 			game.physics.arcade.collide(hero.cible,hero.player[j],() => hero.land(j))
 		}
@@ -1118,7 +1147,7 @@ function main(){
 		if(asteroid[0]){
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < asteroid.length; j++){
-					game.physics.arcade.collide(asteroid[j],hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
+					game.physics.arcade.collide(asteroid[j].axe,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
 				}
 			}
 		}
@@ -1170,11 +1199,42 @@ function main(){
 			if(asteroid[0]){
 				for (var j = 0; j < asteroid.length; j++){
 					asteroid[j].hide()
-					asteroid[j].body.enable=false
+					asteroid[j].axe.body.enable=false
 				}
 			}
 	
 	}
+	var show_grid_on_logic_position=function(){
+		hero.grid.visible=true	
+	}
+
+	var logic_position=function(){
+		if (debug_position){
+			hero.grid.visible=false	
+			console.log("level_number",level_number)
+			if(canon[0]){
+				for (var j = 0; j < canon.length; j++){
+					console.log("canon"+j+".x",canon[j].x,"canon"+j+".y",canon[j].y)
+				}
+			}
+			if(asteroid[0]){
+				for (var j = 0; j < asteroid.length; j++){
+					console.log("asteroid"+j+".x",asteroid[j].x,"asteroid"+j+".y",asteroid[j].y)
+				}
+			}
+			if(pulsar[0]){
+				for (var j = 0; j < pulsar.length; j++){
+					console.log("pulsar"+j+".x",pulsar[j].x,"pulsar"+j+".y",pulsar[j].y)
+				}
+			}
+			if(neon[0]){
+				for (var j = 0; j < neon.length; j++){
+					console.log("neon"+j+".x",neon[j].x,"neon"+j+".y",neon[j].y)
+				}
+			}
+		}
+	}
+
 	var logic_render=function(){
 		if(debug_mode){
 			game.debug.body(hero.cible_shadow)
