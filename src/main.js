@@ -500,6 +500,7 @@ function main(){
 	_pulsar.prototype.hide = function() {
 		this.tween0.pause()
 		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
+		this.tweenh.onComplete.add(function(){this.visible=false},this)
 	}
 
 	_neon = function(delay,posx,posy,speed){
@@ -563,7 +564,7 @@ function main(){
 			this.weapon=game.add.weapon(9,'bullet')	
 		}
 
-		if(this.kill_with_world=="vrai"){
+		if(this.kill_with_world=="faux"){
 			for (var i = 0; i <  9; i++) {
 				this.weapon.bulletCollideWorldBounds=true
 				this.weapon.bullets.children[i].body.bounce.setTo(1,1)
@@ -836,36 +837,52 @@ function main(){
 
 	var level0 = {
 		create: function(){
-			createInterstitial()
 			level_number=0
+			createInterstitial()
 			hero = new character(interstitial) 
-
 			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 			canon[0]=new _weapon(100,0,1200,400,900,0,0,hero.flag_level_complete,"faux","vrai") 
 			canon[1]=new _weapon(800,w-200,800,900,2990,0,180,hero.flag_level_complete,"vrai","faux")
-
 			//asteroid = function(posx,posy,speed,radius){
 			asteroid[0]=new _asteroid(w2-150,900,.008,100)
-
 			//neon = function(delay,posx,posy,speed){
 			neon[0]=new _neon(0,w2-200,h2+100,.1)
-
 			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
 			pulsar[0]=new _pulsar(100,500,w2+200,800,900,2)
-
 			logic_add()
 			return level_number
 		},
-
 		update:function(){
 			logic_update()
 		},
-
 		render:function(){
 			logic_render()
 		},
 	}
 	var level1 = {
+		create: function(){
+			flag_hide=true
+			level_number=1
+			createInterstitial()
+			hero = new character(interstitial) 
+			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+			canon[0]=new _weapon(100,0,1200,400,900,0,0,hero.flag_level_complete,"vrai","faux") 
+			console.log("neon[0]",neon[0]);
+			//asteroid = function(posx,posy,speed,radius){
+			//asteroid[0]=new _asteroid(w2-150,900,.008,100)
+			//neon = function(delay,posx,posy,speed){
+			//neon[0]=new _neon(0,w2-200,h2+100,.1)
+			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
+			//pulsar[0]=new _pulsar(100,500,w2+200,800,900,2)
+			logic_add()
+			return level_number
+		},
+		update:function(){
+			logic_update()
+		},
+		render:function(){
+			logic_render()
+		},
 	}
 
 	var levsel={
@@ -1175,31 +1192,36 @@ function main(){
 	}
 	var hide_weapon=function(){
 			console.log('hide')
-			if(canon[0]){
+			if(canon[0].visible){
 				for (var j = 0; j < canon.length; j++){
 					canon[j].explode_bullet(canon[j].weapon.bullets)
 					canon[j].visible=false
 					canon[j].weapon.bullets.visible=false
+					canon[j].destroy()
 				}
 			}
-			if(neon[0]){
+			if(neon[0].visible){
 				for (var j = 0; j < neon.length; j++){
 					neon[j].hide()
 					neon[j].body.enable=false
+					neon[j].destroy()
 				}
 			}
 
-			if(pulsar[0]){
+			if(pulsar[0].visible){
 				for (var j = 0; j < pulsar.length; j++){
 					pulsar[j].hide()
 					pulsar[j].body.enable=false
+					pulsar[j].destroy()
 				}
 			}
 
-			if(asteroid[0]){
+			if(asteroid[0].visible){
 				for (var j = 0; j < asteroid.length; j++){
 					asteroid[j].hide()
 					asteroid[j].axe.body.enable=false
+					asteroid[j].visible=false
+					asteroid[j].destroy()
 				}
 			}
 	
