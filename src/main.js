@@ -1,9 +1,7 @@
 //todo : body enbale false lorsque touché un projectile violet
 function main(){
 	this.some_value=4
-	var some_fun=function(){
-		console.log(this.some_value,"this.some_value")	
-	}
+	var gui
 	var PLAYER_DATA = null // just declare as global variable for now
 	var ratio_device=window.screen.width/window.screen.height
 	var h=1920
@@ -470,6 +468,7 @@ function main(){
 	_pulsar = function(delay,time,posx,posy,speed,scale_factor){
 		this.scale_factor=scale_factor
 		console.log('this.scale_factor',this.scale_factor)
+		this.name="pulsar"
 		this.delay=delay
 		this.time=time
 		this.posx=posx
@@ -496,7 +495,16 @@ function main(){
 		this.tween0=game.add.tween(this.scale).to({x:this.scale_factor,y:this.scale_factor},this.time,Phaser.Easing.Linear.None,true,this.delay,-1)
 		this.tween0.yoyo(true,this.speed)		
 	}
+	_pulsar.prototype.fire = function() {
+//game.tween.remove(this.tween0)	
+		this.tween0.onComplete.add(this.fire2,this)
+	}
+	_pulsar.prototype.fire2 = function() {
+//game.tween.remove(this.tween0)	
 
+		this.tween0=game.add.tween(this.scale).to({x:this.scale_factor,y:this.scale_factor},this.time,Phaser.Easing.Linear.None,true,this.delay,-1)
+		//this.tween0.yoyo(true,this.speed)		
+	}
 	_pulsar.prototype.hide = function() {
 		this.tween0.pause()
 		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
@@ -537,6 +545,7 @@ function main(){
 		this.special_color=special_color
 		this.kill_with_world=kill_with_world
 		this.delay=delay
+		this.name="canon"
 		this.posx=posx
 		this.posy=posy
 		this.flag_explode=false
@@ -603,6 +612,16 @@ function main(){
 
 	_weapon.prototype.kill = function() {
 		console.log('kill')	
+	}
+	_weapon.prototype.fire = function() {
+		this._flag=true
+		this.weapon.fireRate = this.frequency ;
+		this.weapon.bulletSpeed = this.speed;
+		this.angle=this.angular
+		this.weapon.bulletAngleVariance = this.variance;
+		game.time.events.add( 10,function(){this._flag=false},this )
+		
+		//this.weapon.fire()
 	}
 
 	_weapon.prototype.audio_pop = function() {
@@ -841,14 +860,15 @@ function main(){
 			createInterstitial()
 			hero = new character(interstitial) 
 			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			canon[0]=new _weapon(100,0,1200,400,900,0,0,hero.flag_level_complete,"faux","vrai") 
-			canon[1]=new _weapon(800,w-200,800,900,2990,0,180,hero.flag_level_complete,"vrai","faux")
+			canon[0]=new _weapon(800,w-200,800,900,90,0,180,hero.flag_level_complete,"vrai","faux")
+			canon[1]=new _weapon(100,0,1200,400,900,0,0,hero.flag_level_complete,"faux","vrai") 
 			//asteroid = function(posx,posy,speed,radius){
 			asteroid[0]=new _asteroid(w2-150,900,.008,100)
 			//neon = function(delay,posx,posy,speed){
 			neon[0]=new _neon(0,w2-200,h2+100,.1)
 			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
 			pulsar[0]=new _pulsar(100,500,w2+200,800,900,2)
+			logic_gui()
 			logic_add()
 			return level_number
 		},
@@ -1256,6 +1276,21 @@ function main(){
 			}
 		}
 	}
+	var logic_gui=function(){
+		if(debug_position){
+			gui=new dat.GUI()
+			gui.add(canon[0],'name')
+			gui.add(canon[0],'fire')
+			gui.add(canon[0],'speed',0,5000)
+			gui.add(canon[0],'frequency',0,5000)
+			gui.add(canon[0],'angular',0,5000)
+			gui.add(canon[0],'variance',0,5000)
+			gui.add(pulsar[0],'name')
+			gui.add(pulsar[0],'fire')
+			gui.add(pulsar[0],'speed',0,5000)
+
+		}
+	}
 
 	var logic_render=function(){
 		if(debug_mode){
@@ -1282,7 +1317,7 @@ function main(){
 				}
 			}
 
-			if(asteroid[0]){
+			if(canon[0]){
 				for (var i = 0; i < canon.length; i++){
 					canon[i].weapon.bullets.forEach(function(item){
 						game.debug.body(item)	
