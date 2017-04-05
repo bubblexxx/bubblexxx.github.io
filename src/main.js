@@ -410,6 +410,7 @@ function main(){
 	}
 
 	_asteroid = function(posx,posy,speed,radius){
+		this.name="asteroid"
 		this.radius=radius
 		this.posx=posx
 		this.posy=posy
@@ -496,15 +497,13 @@ function main(){
 		this.tween0.yoyo(true,this.speed)		
 	}
 	_pulsar.prototype.fire = function() {
-//game.tween.remove(this.tween0)	
-		this.tween0.onComplete.add(this.fire2,this)
-	}
-	_pulsar.prototype.fire2 = function() {
-//game.tween.remove(this.tween0)	
-
+		game.tweens.remove(this.tween0)	
+		console.log("remove");
+		this.scale.setTo(0,0)
 		this.tween0=game.add.tween(this.scale).to({x:this.scale_factor,y:this.scale_factor},this.time,Phaser.Easing.Linear.None,true,this.delay,-1)
-		//this.tween0.yoyo(true,this.speed)		
+		this.tween0.yoyo(true,this.speed)		
 	}
+
 	_pulsar.prototype.hide = function() {
 		this.tween0.pause()
 		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
@@ -512,6 +511,7 @@ function main(){
 	}
 
 	_neon = function(delay,posx,posy,speed){
+		this.name="neon"
 		this.delay=delay
 		this.posx=posx
 		this.posy=posy
@@ -532,8 +532,18 @@ function main(){
 	_neon.prototype = Object.create(Phaser.Sprite.prototype)
 	_neon.prototype.constructor = _neon
 
+
 	_neon.prototype.tweens = function() {
-		this.tween0=game.add.tween(this).to({x:this.posx+300},this.time,Phaser.Easing.Linear.None,true,this.delay,-1)
+		this.tween0=game.add.tween(this).to({x:this.posx+300},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1)
+		this.tween0.yoyo(true,this.speed)		
+	}
+
+	_neon.prototype.fire = function() {
+		game.tweens.remove(this.tween0)	
+		console.log("remove");
+		this.x=this.posx
+		this.y=this.posy
+		this.tween0=game.add.tween(this).to({x:this.posx+300},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1)
 		this.tween0.yoyo(true,this.speed)		
 	}
 
@@ -1279,16 +1289,29 @@ function main(){
 	var logic_gui=function(){
 		if(debug_position){
 			gui=new dat.GUI()
+			if(canon[0].visible){
 			gui.add(canon[0],'name')
 			gui.add(canon[0],'fire')
 			gui.add(canon[0],'speed',0,5000)
 			gui.add(canon[0],'frequency',0,5000)
 			gui.add(canon[0],'angular',0,5000)
 			gui.add(canon[0],'variance',0,5000)
+			}
+			if(pulsar[0].visible){
 			gui.add(pulsar[0],'name')
 			gui.add(pulsar[0],'fire')
 			gui.add(pulsar[0],'speed',0,5000)
-
+			}
+			if(asteroid[0].visible){
+			gui.add(asteroid[0],'name')
+			gui.add(asteroid[0],'radius',0,500)
+			gui.add(asteroid[0],'speed',0,10)
+			}
+			if(neon[0].visible){
+			gui.add(neon[0],'name')
+			gui.add(neon[0],'fire')
+			gui.add(neon[0],'speed',0,1000)
+			}
 		}
 	}
 
