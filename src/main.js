@@ -95,7 +95,7 @@ function main(){
 		this.cible_shadow.scale.setTo(1.5,1.5)
 		this.cible_shadow.alpha=.2
 		this.grid=game.add.sprite(0,0,'grid')
-		this.grid.visible=true
+		this.grid.visible=false
 		//cible
 		this.cible=game.add.sprite(w2,300,'cible')
 		this.cible.anchor.setTo(.5,.5)
@@ -216,6 +216,7 @@ function main(){
 		this.next_niveau=level_number
 		this.game.state.start('level'+this.next_niveau,true,false);
 		console.log('restart-level')
+		gui.destroy()
 	}
 
 	character.prototype.next_level = function() {
@@ -871,13 +872,13 @@ function main(){
 			hero = new character(interstitial) 
 			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 			canon[0]=new _weapon(800,w-200,800,900,90,0,180,hero.flag_level_complete,"vrai","faux")
-			canon[1]=new _weapon(100,0,1200,400,900,0,0,hero.flag_level_complete,"faux","vrai") 
+			canon[1]=new _weapon(100,0,1200,400,900,0,0,hero.flag_level_complete,"vrai","faux") 
 			//asteroid = function(posx,posy,speed,radius){
-			asteroid[0]=new _asteroid(w2-150,900,.008,100)
+			asteroid[0]=new _asteroid(240,900,.008,100)
 			//neon = function(delay,posx,posy,speed){
-			neon[0]=new _neon(0,w2-200,h2+100,.1)
+			neon[0]=new _neon(0,240,h2+100,300)
 			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
-			pulsar[0]=new _pulsar(100,500,w2+200,800,900,2)
+			pulsar[0]=new _pulsar(100,500,240,600,900,2)
 			logic_gui()
 			logic_add()
 			return level_number
@@ -1294,23 +1295,23 @@ function main(){
 			gui.add(canon[0],'fire')
 			gui.add(canon[0],'speed',0,5000)
 			gui.add(canon[0],'frequency',0,5000)
-			gui.add(canon[0],'angular',0,5000)
-			gui.add(canon[0],'variance',0,5000)
+			gui.add(canon[0],'angular',0,360)
+			gui.add(canon[0],'variance',0,1000)
 			}
 			if(pulsar[0].visible){
 			gui.add(pulsar[0],'name')
 			gui.add(pulsar[0],'fire')
-			gui.add(pulsar[0],'speed',0,5000)
+			gui.add(pulsar[0],'speed',300,2000)
 			}
 			if(asteroid[0].visible){
 			gui.add(asteroid[0],'name')
-			gui.add(asteroid[0],'radius',0,500)
-			gui.add(asteroid[0],'speed',0,10)
+			gui.add(asteroid[0],'radius',100,500)
+			gui.add(asteroid[0],'speed',0,5)
 			}
 			if(neon[0].visible){
 			gui.add(neon[0],'name')
 			gui.add(neon[0],'fire')
-			gui.add(neon[0],'speed',0,1000)
+			gui.add(neon[0],'speed',250,1000)
 			}
 		}
 	}
