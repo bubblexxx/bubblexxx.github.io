@@ -41,6 +41,17 @@ for (var i = 0; i < 20 ; i++) {
 	var adService;
 	var container;
 
+	var email=JSON.stringify(localStorage);
+
+	var send_data_mail=function () {
+		console.log(email)
+		//var link = 'mailto:espace3d@gmail.com?subject=bubblex+level_number '
+			//+document.getElementById('email')
+			//+'&body='+document.getElementById('email');
+		//window.location.href = link;
+	}
+	//send_data_mail()
+
 	//var level={}
 	screen_first = function(){
 		Phaser.Sprite.call(this,game,w2,200,'title')
@@ -130,6 +141,13 @@ for (var i = 0; i < 20 ; i++) {
 		this.sound_launch=game.add.audio('launch')
 		this.sound_star=game.add.audio('coin')
 		this.sound_pop=game.add.audio('pop_minder')
+		//TODO:publish
+		
+		this.button_publish=game.add.button(w2,h2+800,'publish',send_data_mail,this)
+		this.button_publish.anchor.setTo(.5,.5)
+		this.button_publish.scale.setTo(0,0)
+		this.button_publish.visible=true
+
 		this.button_restart=game.add.button(w2,h2,'restart',this.restart_level,this)
 		this.button_restart.anchor.setTo(.5,.5)
 		this.button_restart.scale.setTo(0,0)
@@ -328,6 +346,9 @@ for (var i = 0; i < 20 ; i++) {
 		this.count_dead=this.count_dead+1
 		for (var i = 0; i < 3; i++) {
 			if(this.count_dead==3){
+				//TODO:voir si on peut le mettre ici
+				
+hero.flag_level_complete=true
 				console.log('this.count_dead',this.count_dead)
 				this.decide_if_show_button_restart_level()
 			}	
@@ -379,6 +400,7 @@ for (var i = 0; i < 20 ; i++) {
 		this.calculate_star()
 		this.show_star()
 		this.wins()
+		this.show_button_publish()
 	}
 
 	character.prototype.show_button_restart_level_complete = function() {
@@ -392,6 +414,12 @@ for (var i = 0; i < 20 ; i++) {
 	character.prototype.show_button_next_level = function() {
 		this.button_next.visible=true
 		this.tween3=game.add.tween(this.button_next.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
+	}
+
+	character.prototype.show_button_publish=function(){
+		//this.flag_show_button=false
+		this.button_publish.visible=true
+		this.tween2=game.add.tween(this.button_publish.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
 	}
 
 	character.prototype.show_button_restart_level=function(){
@@ -559,7 +587,7 @@ for (var i = 0; i < 20 ; i++) {
 		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 	}
 
-	_weapon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+	_canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 		this.number=number
 		this.special_color=special_color
 		this.kill_with_world=kill_with_world
@@ -617,22 +645,22 @@ for (var i = 0; i < 20 ; i++) {
 		game.time.events.add( this.delay,function(){this._flag=false},this )
 	}
 
-	_weapon.prototype = Object.create(Phaser.Sprite.prototype)
-	_weapon.prototype.constructor = _weapon
-	_weapon.prototype.update = function(){
+	_canon.prototype = Object.create(Phaser.Sprite.prototype)
+	_canon.prototype.constructor = _canon
+	_canon.prototype.update = function(){
 		if(this._flag==false){
 			this.weapon.fire()	
 		}
 	}
 
-	_weapon.prototype.transition = function() {
+	_canon.prototype.transition = function() {
 		this.tween_characteristic = game.add.tween(this.canon).to({x:posx,y:posy},time,Phaser.Easing.Linear.None,true,delay)
 	}
 
-	_weapon.prototype.kill = function() {
+	_canon.prototype.kill = function() {
 		console.log('kill')	
 	}
-	_weapon.prototype.fire = function() {
+	_canon.prototype.fire = function() {
 		this._flag=true
 		this.weapon.fireRate = this.frequency ;
 		this.weapon.bulletSpeed = this.speed;
@@ -643,11 +671,11 @@ for (var i = 0; i < 20 ; i++) {
 		//this.weapon.fire()
 	}
 
-	_weapon.prototype.audio_pop = function() {
+	_canon.prototype.audio_pop = function() {
 		this.sound_pop.play()
 	}
 
-	_weapon.prototype.explode_bullet=function(){
+	_canon.prototype.explode_bullet=function(){
 		if(this.flag_explode==false){
 			this.flag_explode=true
 			this.audio_pop()
@@ -808,6 +836,7 @@ for (var i = 0; i < 20 ; i++) {
 			this.game.load.audio("pop","sounds/pop.ogg");
 			this.game.load.audio("launch","sounds/launch.ogg");
 			//images
+			this.game.load.image("publish","assets/publish.png");
 			this.game.load.image("grid","assets/grid.png");
 			this.game.load.image("pulsar","assets/pulsar.png");
 			this.game.load.image("axe","assets/axe.png");
@@ -876,30 +905,27 @@ for (var i = 0; i < 20 ; i++) {
 
 	var level0 = {
 		create: function(){
-	function send() {
-		console.log('msg-seznd')
-		var link = 'mailto:email@example.com?subject=Message from '
-			+document.getElementById('email')
-			+'&body='+document.getElementById('email');
-		window.location.href = link;
-	}
-	send()
 			level_number=0
 			createInterstitial()
-			//check_storage(this.create_object)
+
 			this.create_object=function(){
-			hero = new character(interstitial) 
-			//weapon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			canon[0]=new _weapon(0,800,w-200,800,900,90,0,180,hero.flag_level_complete,"vrai","faux")
-			canon[1]=new _weapon(1,100,0,1200,400,900,0,0,hero.flag_level_complete,"vrai","faux") 
-			//asteroid = function(posx,posy,speed,radius){
-			asteroid[0]=new _asteroid(240,900,.008,100)
-			//neon = function(delay,posx,posy,speed){
-			neon[0]=new _neon(0,240,h2+100,300)
-			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
-			pulsar[0]=new _pulsar(100,500,240,600,900,2)
+				hero = new character(interstitial) 
+				//weapon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+				canon[0]=new _canon(0,800,w-200,800,900,90,0,180,hero.flag_level_complete,"vrai","faux")
+				canon[1]=new _canon(1,100,0,1200,400,900,0,0,hero.flag_level_complete,"vrai","faux") 
+				//asteroid = function(posx,posy,speed,radius){
+				//asteroid[0]=new _asteroid(240,900,.008,100)
+				//neon = function(delay,posx,posy,speed){
+				//neon[0]=new _neon(0,240,h2+100,300)
+				//pulsar = function(delay,time,posx,posy,speed,scale_factor){
+				//pulsar[0]=new _pulsar(100,500,240,600,900,2)
 			}
-			check_storage(this.create_object)
+			//canon,asteroid,neon,pulsar
+			//weapon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+			//asteroid = function(posx,posy,speed,radius){
+			//neon = function(delay,posx,posy,speed){
+			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
+			check_storage(this.create_object,2,0,0,0)
 			//this.create_object()
 			//logic_gui()
 			logic_add()
@@ -919,7 +945,7 @@ for (var i = 0; i < 20 ; i++) {
 			createInterstitial()
 			hero = new character(interstitial) 
 			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			canon[0]=new _weapon(100,0,1200,400,900,0,0,hero.flag_level_complete,"vrai","faux") 
+			canon[0]=new _canon(100,0,1200,400,900,0,0,hero.flag_level_complete,"vrai","faux") 
 			console.log("neon[0]",neon[0]);
 			//asteroid = function(posx,posy,speed,radius){
 			//asteroid[0]=new _asteroid(w2-150,900,.008,100)
@@ -1228,7 +1254,6 @@ for (var i = 0; i < 20 ; i++) {
 			if(hero.flag_level_complete==false){
 				if (doubleTap)
 				{
-					console.log("value");
 				}
 				else
 				{
@@ -1245,7 +1270,7 @@ for (var i = 0; i < 20 ; i++) {
 	}
 	var hide_weapon=function(){
 			console.log('hide')
-			if(canon[0].visible){
+			if(canon[0]){
 				for (var j = 0; j < canon.length; j++){
 					canon[j].explode_bullet(canon[j].weapon.bullets)
 					canon[j].visible=false
@@ -1253,7 +1278,7 @@ for (var i = 0; i < 20 ; i++) {
 					canon[j].destroy()
 				}
 			}
-			if(neon[0].visible){
+			if(neon[0]){
 				for (var j = 0; j < neon.length; j++){
 					neon[j].hide()
 					neon[j].body.enable=false
@@ -1261,7 +1286,7 @@ for (var i = 0; i < 20 ; i++) {
 				}
 			}
 
-			if(pulsar[0].visible){
+			if(pulsar[0]){
 				for (var j = 0; j < pulsar.length; j++){
 					pulsar[j].hide()
 					pulsar[j].body.enable=false
@@ -1269,7 +1294,7 @@ for (var i = 0; i < 20 ; i++) {
 				}
 			}
 
-			if(asteroid[0].visible){
+			if(asteroid[0]){
 				for (var j = 0; j < asteroid.length; j++){
 					asteroid[j].hide()
 					asteroid[j].axe.body.enable=false
@@ -1297,14 +1322,17 @@ for (var i = 0; i < 20 ; i++) {
 					guit.frequency=gui.add(sprite,'frequency',0,5000)
 					guit.frequency.onChange(function(value) {
 						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
 					})
 					guit.angular=gui.add(sprite,'angular',0,360)
 					guit.angular.onChange(function(value) {
 						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
 					})
 					guit.variance=gui.add(sprite,'variance',0,1000)
 					guit.variance.onChange(function(value) {
 						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
 					})
 						
 					break
@@ -1314,6 +1342,7 @@ for (var i = 0; i < 20 ; i++) {
 					guit.speed=gui.add(sprite,'speed',300,3000)
 					guit.speed.onChange(function(value) {
 						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
 					})
 					break;
 				case "asteroid":
@@ -1328,6 +1357,7 @@ for (var i = 0; i < 20 ; i++) {
 					guit.speed=gui.add(sprite,'speed',300,3000)
 					guit.speed.onChange(function(value) {
 						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
 					})
 					break;
 				default:
@@ -1336,80 +1366,63 @@ for (var i = 0; i < 20 ; i++) {
 		}
 	}
 
-	var check_storage=function(_create_object){
-		//'canon_local'+level_number=[]
-		//level_number=2
-
-		_create_object()	
-		//console.log('canon_local'+level_number)
-		//for (var i = 0; i < 2; i++){
-			//'canon'+level_number+i=0
-			//console.log('canon'+level_number+i)
-		//}
-	//}
-
-		//_weapon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-		//for (var i = 0; i < canon.length; i++){
-		      //canon_local+level_number[i]="sometihi"	
-		      //console.log(canon_local+level_number[i])	
-		      //can.level_number+i= JSON.parse(localStorage.getItem('_canon_local'+level_number+i))
-		      //if(can.level_number+i){
-		      	//hero = new character(interstitial) 
-		      	//canon[0]=new _weapon(0,800,this.canon_local+_level_num+i.x,this.canon_local+_level_num+i.y,900,90,0,180,hero.flag_level_complete,"vrai","faux")
-		      //}else{
-		      	//_create_object()	
-		      //}
-		//}
-	}
+	var c=[]
+	var a=[]
+	var n=[]
+	var p=[]
 
 	var logic_position=function(sprite){
 		if (debug_position){
+			console.log("retablissement des paramètres")
 			hero.grid.visible=false	
-			console.log("level_number",level_number)
+			var _table=null
+			var _name_json=null
 			switch(sprite.name){
-				case "canon":
-					
-					var val='canon'+sprite.number
-					console.log(val)
-					level_json[level_number].val = {
-						name:sprite.name,
-						frequency: sprite.frequency,
-						x: sprite.x,
-						y:sprite.y,
-					};
-					console.log(level_json[0].val)
-					localStorage.setItem('_canon_local'+level_number+sprite.number, JSON.stringify(canon_local[sprite.number]))
-					var proj=JSON.parse( localStorage.getItem( '_canon_local'+level_number+sprite.number ) ) 
-					console.log(proj.y,"proj.y")
-				default:
-					break;
+				case 'canon':
+					console.log('msg')
+					_table=c
+					_name_json='canon'
+					break
 			}
+			console.log('sprite.number',sprite.number)
+			console.log('sprite.angular',sprite.angular)
+			var num=sprite.number
+			_table[num] = {
+				number:sprite.number,
+				delay:sprite.delay,
+				x:sprite.x,
+				y:sprite.y,
+				speed:sprite.speed,
+				frequency:sprite.frequency,
+				variance:sprite.variance,
+				angular:sprite.angular,
+				_flag:sprite._flag,
+				kill_with_world_special:sprite.kill_with_world_special,
+				special_color:sprite.special_color,
+			};
+
+			localStorage.setItem(_name_json+num+'lev0', JSON.stringify(_table[num]));
+
 		}
+	}
 
-
-
-
-
-
-
-		if(canon[0]){
-			for (var j = 0; j < canon.length; j++){
-				console.log("canon"+j+".x",canon[j].x,"canon"+j+".y",canon[j].y)
-			}
-		}
-		if(asteroid[0]){
-			for (var j = 0; j < asteroid.length; j++){
-				console.log("asteroid"+j+".x",asteroid[j].x,"asteroid"+j+".y",asteroid[j].y)
-			}
-		}
-		if(pulsar[0]){
-			for (var j = 0; j < pulsar.length; j++){
-				console.log("pulsar"+j+".x",pulsar[j].x,"pulsar"+j+".y",pulsar[j].y)
-			}
-		}
-		if(neon[0]){
-			for (var j = 0; j < neon.length; j++){
-				console.log("neon"+j+".x",neon[j].x,"neon"+j+".y",neon[j].y)
+	var check_storage=function(_create_object,num_canon,num_asteroid,num_neon,num_pulsar){
+		//canon,asteroid,neon,pulsar
+		//weapon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+		//asteroid = function(posx,posy,speed,radius){
+		//neon = function(delay,posx,posy,speed){
+		//pulsar = function(delay,time,posx,posy,speed,scale_factor){
+		//check_storage(this.create_object,2,1,1,1)
+		if (num_canon==1){
+			c[0] = JSON.parse( localStorage.getItem( 'canon'+0+'lev'+level_number ) ) ;
+		}else{
+			for(var i=0;i<num_canon;i++){
+				c[i] = JSON.parse( localStorage.getItem( 'canon'+i+'lev'+level_number ) ) ;
+				if(c[i]){
+					hero = new character(interstitial) 
+					canon[i]=new _canon(c[i].number,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,hero.flag_level_complete,c[i].kill_with_world,c[i].special_color)
+				}
+				!c[0] && _create_object()
 			}
 		}
 	}
