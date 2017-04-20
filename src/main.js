@@ -1413,18 +1413,16 @@ hero.flag_level_complete=true
 		//neon = function(delay,posx,posy,speed){
 		//pulsar = function(delay,time,posx,posy,speed,scale_factor){
 		//check_storage(this.create_object,2,1,1,1)
-		if (num_canon==1){
-			c[0] = JSON.parse( localStorage.getItem( 'canon'+0+'lev'+level_number ) ) ;
-		}else{
+		hero = new character(interstitial) 
+		for(var i=0;i<num_canon;i++){
+			c[i] = JSON.parse( localStorage.getItem( 'canon'+i+'lev'+level_number ) ) ;
+		}
+		if(c[0]){
 			for(var i=0;i<num_canon;i++){
-				c[i] = JSON.parse( localStorage.getItem( 'canon'+i+'lev'+level_number ) ) ;
-				if(c[i]){
-					hero = new character(interstitial) 
-					canon[i]=new _canon(c[i].number,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,hero.flag_level_complete,c[i].kill_with_world,c[i].special_color)
-				}
-				!c[0] && _create_object()
+				canon[i]=new _canon(c[i].number,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,hero.flag_level_complete,c[i].kill_with_world,c[i].special_color)
 			}
 		}
+		!c[0] && _create_object()
 	}
 
 	var logic_render=function(){
