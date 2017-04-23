@@ -1384,10 +1384,10 @@ hero.flag_level_complete=true
 					_name_json='canon'
 					break
 			}
-			console.log('sprite.number',sprite.number)
+			//console.log('sprite.number',sprite.number)
 			console.log('sprite.angular',sprite.angular)
-			var num=sprite.number
-			_table[num] = {
+			//var sprite.number=sprite.number
+			_table[sprite.number] = {
 				number:sprite.number,
 				delay:sprite.delay,
 				x:sprite.x,
@@ -1401,7 +1401,7 @@ hero.flag_level_complete=true
 				special_color:sprite.special_color,
 			};
 
-			localStorage.setItem(_name_json+num+'lev0', JSON.stringify(_table[num]));
+			localStorage.setItem(_name_json+sprite.number+'lev0', JSON.stringify(_table[sprite.number]));
 
 		}
 	}
@@ -1419,6 +1419,7 @@ hero.flag_level_complete=true
 		}
 		if(c[0]){
 			for(var i=0;i<num_canon;i++){
+	//_canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 				canon[i]=new _canon(c[i].number,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,hero.flag_level_complete,c[i].kill_with_world,c[i].special_color)
 			}
 		}
