@@ -348,7 +348,7 @@ for (var i = 0; i < 20 ; i++) {
 			if(this.count_dead==3){
 				//TODO:voir si on peut le mettre ici
 				
-hero.flag_level_complete=true
+//hero.flag_level_complete=true
 				console.log('this.count_dead',this.count_dead)
 				this.decide_if_show_button_restart_level()
 			}	
@@ -643,13 +643,17 @@ hero.flag_level_complete=true
 		//  Tell the Weapon to track the 'player' Sprite, offset by 14px horizontally, 0 vertically
 		this.weapon.trackSprite(this,0,0,true);
 		game.time.events.add( this.delay,function(){this._flag=false},this )
+		//this.table=[100,-100]
+		//this.u=0
 	}
 
 	_canon.prototype = Object.create(Phaser.Sprite.prototype)
 	_canon.prototype.constructor = _canon
 	_canon.prototype.update = function(){
 		if(this._flag==false){
+			//this.u=1-this.u
 			this.weapon.fire()	
+			//this.x=this.x+this.table[this.u]
 		}
 	}
 
@@ -905,6 +909,7 @@ hero.flag_level_complete=true
 
 	var level0 = {
 		create: function(){
+			flag_hide=true
 			level_number=0
 			createInterstitial()
 
