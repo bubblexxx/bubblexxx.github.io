@@ -166,10 +166,10 @@ for (var i = 0; i < 20 ; i++) {
 
 	character.prototype.send_data_mail = function() {
 			console.log(email,'send_data_mail')
-			//var link = 'mailto:espace3d@gmail.com?subject=bubblex+level_number '
-			//+document.getElementById('email')
-			//+'&body='+document.getElementById('email');
-			//window.location.href = link;
+			var link = 'mailto:espace3d@gmail.com?subject=bubblex+level_number '
+			+document.getElementById('email')
+			+'&body='+document.getElementById('email');
+			window.location.href = link;
 		
 		//send_data_mail()
 		
