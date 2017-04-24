@@ -43,14 +43,6 @@ for (var i = 0; i < 20 ; i++) {
 
 	var email=JSON.stringify(localStorage);
 
-	var send_data_mail=function () {
-		console.log(email)
-		//var link = 'mailto:espace3d@gmail.com?subject=bubblex+level_number '
-			//+document.getElementById('email')
-			//+'&body='+document.getElementById('email');
-		//window.location.href = link;
-	}
-	//send_data_mail()
 
 	//var level={}
 	screen_first = function(){
@@ -142,8 +134,7 @@ for (var i = 0; i < 20 ; i++) {
 		this.sound_star=game.add.audio('coin')
 		this.sound_pop=game.add.audio('pop_minder')
 		//TODO:publish
-		
-		this.button_publish=game.add.button(w2,h2+800,'publish',send_data_mail,this)
+		this.button_publish=game.add.button(w2,h2+800,'publish',this.send_data_mail,this)
 		this.button_publish.anchor.setTo(.5,.5)
 		this.button_publish.scale.setTo(0,0)
 		this.button_publish.visible=true
@@ -169,9 +160,20 @@ for (var i = 0; i < 20 ; i++) {
 		this.count_dead=0
 		this.anim_cible()
 	}
-
+	
 	character.prototype = Object.create(Phaser.Sprite.prototype)
 	character.prototype.constructor = character
+
+	character.prototype.send_data_mail = function() {
+			console.log(email,'send_data_mail')
+			//var link = 'mailto:espace3d@gmail.com?subject=bubblex+level_number '
+			//+document.getElementById('email')
+			//+'&body='+document.getElementById('email');
+			//window.location.href = link;
+		
+		//send_data_mail()
+		
+	}
 
 	character.prototype.audio_star = function() {
 		this.sound_star.play()
@@ -1425,7 +1427,7 @@ for (var i = 0; i < 20 ; i++) {
 		if(c[0]){
 			for(var i=0;i<num_canon;i++){
 	//_canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-				canon[i]=new _canon(c[i].number,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,hero.flag_level_complete,c[i].kill_with_world,c[i].special_color)
+				canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,hero.flag_level_complete,c[i].kill_with_world,c[i].special_color)
 			}
 		}
 		!c[0] && _create_object()
