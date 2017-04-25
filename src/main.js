@@ -165,14 +165,17 @@ for (var i = 0; i < 20 ; i++) {
 	character.prototype.constructor = character
 
 	character.prototype.send_data_mail = function() {
-			console.log(email,'send_data_mail')
-			var link = 'mailto:espace3d@gmail.com?subject=bubblex+level_number '
-			+document.getElementById('email').value
+		console.log(email,'send_data_mail')
+		var SubjectVariable='bubblex'+level_number
+		var EmailVairable='espace3d@gmail.com'
+		//var link = 'mailto:espace3d@gmail.com?subject=bubblex+level_number '
+		window.location='mailto:+EmailVairable+?subject=+SubjectVariable+&body=+email'
+		//+document.getElementById('email').value
 			//+'&body='+document.getElementById('email');
-			window.location.href = link;
-		
+			//window.location.href = link;
+
 		//send_data_mail()
-		
+
 	}
 
 	character.prototype.audio_star = function() {
