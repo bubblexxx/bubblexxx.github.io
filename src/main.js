@@ -168,12 +168,13 @@ for (var i = 0; i < 20 ; i++) {
 		console.log(email,'send_data_mail')
 		var SubjectVariable='bubblex'+level_number
 		var EmailVairable='espace3d@gmail.com'
+
 		//var link = 'mailto:espace3d@gmail.com?subject=bubblex+level_number '
-		window.location='mailto:+EmailVairable?subject=+SubjectVariable&body=+email'
+		//window.location='mailto:+EmailVairable?subject=+SubjectVariable&body=+email'
 		//+document.getElementById('email').value
 			//+'&body='+document.getElementById('email');
 			//window.location.href = link;
-
+window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+email
 		//send_data_mail()
 
 	}
