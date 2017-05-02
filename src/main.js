@@ -1,5 +1,11 @@
 
-//;todo : body enbale false lorsque touché un projectile violet
+//TODO
+//body enbale false lorsque touché un projectile violet
+//si canon = 1 dans check storage 
+//explode dalle neon asteroid pulsar
+//changer couleur particle d'asteroid
+//detecter si gsm ou ordi et régler admob et cordova en fonction
+
 function main(){
 	console.log('her')
 	this.some_value=4
@@ -1729,6 +1735,25 @@ function main(){
 	game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
 	game.state.start('boot',bootstate)
 }
-main()
+//main()
+var detectmob=function() { 
+	if( navigator.userAgent.match(/Android/i)
+		|| navigator.userAgent.match(/webOS/i)
+		|| navigator.userAgent.match(/iPhone/i)
+		|| navigator.userAgent.match(/iPad/i)
+		|| navigator.userAgent.match(/iPod/i)
+			|| navigator.userAgent.match(/BlackBerry/i)
+		|| navigator.userAgent.match(/Windows Phone/i)
+	){
+		document.addEventListener('deviceready',main,false)
+			return true;
+		}
+	else {
+		console.log('not mobile')
+		main()
+			return false;
+	}
+}
+detectmob()
 //document.addEventListener('deviceready',main,false)
 
