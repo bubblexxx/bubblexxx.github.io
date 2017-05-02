@@ -171,7 +171,8 @@ function main(){
 		var SubjectVariable='bubblex'+current_level
 		var EmailVariable='espace3d@gmail.com'
 		window.location='mailto:'+EmailVariable+'?subject='+SubjectVariable+'&body='+email
-
+		this.tween_publish=game.add.tween(this.button_publish.scale).to({x:0,y:0},500,Phaser.Easing.Bounce.Out,true,300)
+		this.tween_publish.onComplete.add(function(){this.button_publish.visible=false},this)
 		//var link = 'mailto:espace3d@gmail.com?subject=bubblex+level_number '
 		//window.location='mailto:+EmailVairable?subject=+SubjectVariable&body=+email'
 		//+document.getElementById('email').value
@@ -643,7 +644,8 @@ function main(){
 	_neon.prototype.fire = function() {
 		game.tweens.remove(this.tween0)	
 		console.log("remove");
-		this.axe_neon.x=this.posx
+		//this.axe_neon.x=this.posx
+		this.axe_neon.x=this.x
 		this.axe_neon.y=this.posy
 		this.posx_in_tween=this.posx_in_tween
 		this.tween0=game.add.tween(this.axe_neon).to({x:this.posx+this.posx_in_tween},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1)
@@ -1009,29 +1011,27 @@ function main(){
 
 			this.create_neon=function(){
 				//neon = function(number,delay,posx,posy,speed,posx_in_tween){
-				neon[0]=new _neon(0,0,240,h2+100,300,3)
+				//neon[0]=new _neon(0,0,240,h2+100,300,3)
 				//neon[1]=new _neon(1,0,240,h2+500,300)
 			}
 
 			this.create_pulsar=function(){
 				//pulsar = function(number,delay,time,posx,posy,speed,scale_factor){
-				pulsar[0]=new _pulsar(0,100,500,240,600,900,2)
-				pulsar[1]=new _pulsar(1,200,200,240,600,900,2)
+				//pulsar[0]=new _pulsar(0,100,500,240,600,900,2)
+				//pulsar[1]=new _pulsar(1,200,200,240,600,900,2)
 			}
 
 			this.create_dalle=function(){
 				//_dalle = function(number,delay,posx,posy,speed){
 				dalle[0]=new _dalle(0,0,300,440,9000)
+				dalle[1]=new _dalle(1,0,500,640,9000)
 			}
 
 
 
 			hero = new character(interstitial) 
 
-			check_storage(this.create_canon,this.create_asteroid,this.create_neon,this.create_pulsar,2,0,1,2)
-			//TODO:comment
-			
-			this.create_dalle()
+			check_storage(this.create_canon,this.create_asteroid,this.create_neon,this.create_pulsar,this.create_dalle,2,0,0,0,2)
 			//logic_gui()
 			logic_add()
 			return level_number
@@ -1419,6 +1419,13 @@ function main(){
 				asteroid[j].destroy()
 			}
 		}
+		if(dalle[0]){
+			for (var j = 0; j < dalle.length; j++){
+				dalle[j].hide()
+				dalle[j].body.enable=false
+				dalle[j].destroy()
+			}
+		}
 
 	}
 
@@ -1483,6 +1490,15 @@ function main(){
 						logic_position(sprite)
 					})
 					break;
+				case "dalle":
+					var guit={}
+					gui.add(sprite,'name')
+					guit.speed=gui.add(sprite,'speed',300,3000)
+					guit.speed.onChange(function(value) {
+						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
+					})
+					break;
 				default:
 					break;
 			}
@@ -1493,6 +1509,7 @@ function main(){
 	var a=[]
 	var n=[]
 	var p=[]
+	var d=[]
 
 	var logic_position=function(sprite){
 		if (debug_position){
@@ -1560,6 +1577,16 @@ function main(){
 						scale_factor:sprite.scale_factor,
 					};
 					break
+				case 'dalle':
+					_table=d
+					_name_json='dalle'
+					_table[sprite.number] = {
+						delay:sprite.delay,
+						x:sprite.x,
+						y:sprite.y,
+						speed:sprite.speed,
+					};
+					break
 
 			}
 
@@ -1568,10 +1595,17 @@ function main(){
 		}
 	}
 
-	var check_storage=function(_create_canon,_create_asteroid,_create_neon,_create_pulsar,num_canon,num_asteroid,num_neon,num_pulsar){
+	var check_storage=function(_create_canon,_create_asteroid,_create_neon,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_neon,num_pulsar,num_dalle){
 
 		for(var i=0;i<num_canon;i++){
+				try {
 			c[i] = JSON.parse( localStorage.getItem( 'canon'+i+'lev'+level_number ) ) ;
+				} catch(e){
+					c[i]=[]
+				};
+			//if (Object.prototype.toString.call( c[i] ) !== '[object Array]' ) {
+				//c[i] = [];
+			//};
 		}
 		if(c[0]){
 			for(var i=0;i<num_canon;i++){
@@ -1583,7 +1617,11 @@ function main(){
 		}
 		///////////////////////////////////////////////////////////////////////////////////////////
 		for(var i=0;i<num_asteroid;i++){
+				try {
 			a[i] = JSON.parse( localStorage.getItem( 'asteroid'+i+'lev'+level_number ) ) ;
+				} catch(e){
+					a[i]=[]
+				};
 		}
 		if(a[0]){
 			for(var i=0;i<num_asteroid;i++){
@@ -1595,7 +1633,11 @@ function main(){
 		}
 		///////////////////////////////////////////////////////////////////////////////////////////
 		for(var i=0;i<num_neon;i++){
+				try {
 			n[i] = JSON.parse( localStorage.getItem( 'neon'+i+'lev'+level_number ) ) ;
+				} catch(e){
+					n[i]=[]
+				};
 		}
 		if(n[0]){
 			for(var i=0;i<num_neon;i++){
@@ -1607,7 +1649,11 @@ function main(){
 		}
 		///////////////////////////////////////////////////////////////////////////////////////////
 		for(var i=0;i<num_pulsar;i++){
+				try {
 			p[i] = JSON.parse( localStorage.getItem( 'pulsar'+i+'lev'+level_number ) ) ;
+				} catch(e){
+					p[i]=[]
+				};
 		}
 		if(p[0]){
 			for(var i=0;i<num_pulsar;i++){
@@ -1616,6 +1662,21 @@ function main(){
 			}
 		}else{
 			_create_pulsar()
+		}
+		for(var i=0;i<num_dalle;i++){
+				try {
+			d[i] = JSON.parse( localStorage.getItem( 'dalle'+i+'lev'+level_number ) ) ;
+				} catch(e){
+					d[i]=[]
+				};
+		}
+		if(d[0]){
+			for(var i=0;i<num_dalle;i++){
+				//neon = function(number,delay,posx,posy,speed){
+				dalle[i]=new _dalle(i,d[i].delay,d[i].x,d[i].y,d[i].speed)
+			}
+		}else{
+			_create_dalle()
 		}
 	}
 
