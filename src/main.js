@@ -805,9 +805,106 @@ function main(){
 	}
 
 	var createBanner= function(){
+		if( navigator.userAgent.match(/Android/i)
+			|| navigator.userAgent.match(/webOS/i)
+			|| navigator.userAgent.match(/iPhone/i)
+			|| navigator.userAgent.match(/iPad/i)
+			|| navigator.userAgent.match(/iPod/i)
+			|| navigator.userAgent.match(/BlackBerry/i)
+			|| navigator.userAgent.match(/Windows Phone/i)
+		){
+			if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
+				alert('Cocoon AdMob plugin not installed');
+				return;
+			}
+			// nécessaire 
+			adService = Cocoon.Ad.AdMob;
+			adService.configure({
+				ios: {
+					banner:"ca-app-pub-7686972479101507/8873903476",
+					interstitial:"ca-app-pub-7686972479101507/8873903476",
+				},
+				android: {
+					banner:"ca-app-pub-7686972479101507/4443703872",
+					interstitial:"ca-app-pub-7686972479101507/4443703872"
+				}
+			});
+
+			console.log('createBanner')
+			banner = adService.createBanner();
+
+			banner.on("load", function(){
+				console.log("Banner loaded " + banner.width, banner.height);
+			});
+
+			banner.on("fail", function(){
+				console.log("Banner failed to load");
+			});
+
+			banner.on("show", function(){
+				console.log("Banner shown a modal content");
+			});
+
+			banner.on("dismiss", function(){
+				console.log("Banner dismissed the modal content");
+			});
+
+			//load banner
+			banner.load();
+
+			//show banner
+			banner.show()
+			demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
+			banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
+			game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
+		}
 	}
 
 	var createInterstitial=function(){
+		if( navigator.userAgent.match(/Android/i)
+			|| navigator.userAgent.match(/webOS/i)
+			|| navigator.userAgent.match(/iPhone/i)
+			|| navigator.userAgent.match(/iPad/i)
+			|| navigator.userAgent.match(/iPod/i)
+			|| navigator.userAgent.match(/BlackBerry/i)
+			|| navigator.userAgent.match(/Windows Phone/i)
+		){
+			adService = Cocoon.Ad.AdMob;
+			adService.configure({
+				ios: {
+					banner:"ca-app-pub-7686972479101507/8873903476",
+					interstitial:"ca-app-pub-7686972479101507/8873903476",
+				},
+				android: {
+					banner:"ca-app-pub-7686972479101507/4443703872",
+					interstitial:"ca-app-pub-7686972479101507/4443703872"
+				}
+			});
+
+			interstitial = adService.createInterstitial();
+
+			interstitial.on("load", function(){
+				console.log("Interstitial loaded");
+			});
+			interstitial.on("fail", function(){
+				console.log("Interstitial failed");
+			});
+			interstitial.on("show", function(){
+				console.log("Interstitial shown");
+			});
+			interstitial.on("dismiss", function(){
+				console.log("Interstitial dismissed");
+			});
+
+			interstitial.on("click", function(){
+				alert("click")
+				console.log("Interstitial dismissed");
+				if(level_number < 19){
+					this.game.state.start("level"+level_number+1);
+				}
+			});
+			interstitial.load()
+		}
 	}
 
 	var createBanner2= function(){
