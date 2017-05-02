@@ -1,8 +1,10 @@
-//todo : body enbale false lorsque touché un projectile violet
+
+//;todo : body enbale false lorsque touché un projectile violet
 function main(){
+	console.log('her')
 	this.some_value=4
 	var gui
-	var PLAYER_DATA = null // just declare as global variable for now
+	var PLAYER_DATA = null 
 	var ratio_device=window.screen.width/window.screen.height
 	var h=1920
 	var w=1280
@@ -13,16 +15,17 @@ function main(){
 	var debug_mode=false
 	var debug_position=true
 	var level_json={}
-for (var i = 0; i < 20 ; i++) {
-	var val=100
-	//level_json.push(val)
-}
-	//level_json=[0,{can0:"jhon"}]
+	for (var i = 0; i < 20 ; i++) {
+		var val=100
+		//level_json.push(val)
+	}
+	//
 	//console.log(level_json[0].val,"le")
 	var canon=[]
 	var pulsar=[]
 	var asteroid=[]
 	var neon=[]
+	var dalle=[]
 	var hero
 	var flag_level_complete=false
 	var flag_hide=true
@@ -33,7 +36,6 @@ for (var i = 0; i < 20 ; i++) {
 	var banner;
 	var interstitial;
 	var demoPosition;
-
 	var backgroundTexture;
 	var button1Texture;
 	var button2Texture;
@@ -42,7 +44,6 @@ for (var i = 0; i < 20 ; i++) {
 	var container;
 
 	var email=JSON.stringify(localStorage);
-
 
 	//var level={}
 	screen_first = function(){
@@ -160,25 +161,25 @@ for (var i = 0; i < 20 ; i++) {
 		this.count_dead=0
 		this.anim_cible()
 	}
-	
+
 	character.prototype = Object.create(Phaser.Sprite.prototype)
 	character.prototype.constructor = character
 
-	character.prototype.send_data_mail = function() {
-		console.log(email,'send_data_mail')
-		var SubjectVariable='bubblex'+level_number
-		var EmailVairable='espace3d@gmail.com'
+	character.prototype.send_data_mail = function(){
+		//
+		var current_level=level_number+1
+		var SubjectVariable='bubblex'+current_level
+		var EmailVariable='espace3d@gmail.com'
+		window.location='mailto:'+EmailVariable+'?subject='+SubjectVariable+'&body='+email
 
 		//var link = 'mailto:espace3d@gmail.com?subject=bubblex+level_number '
 		//window.location='mailto:+EmailVairable?subject=+SubjectVariable&body=+email'
 		//+document.getElementById('email').value
-			//+'&body='+document.getElementById('email');
-			//window.location.href = link;
-window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+email
-		//send_data_mail()
+		//+'&body='+document.getElementById('email');
+		//window.location.href = link;
 
 	}
-
+	//
 	character.prototype.audio_star = function() {
 		this.sound_star.play()
 	}
@@ -353,8 +354,8 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 		for (var i = 0; i < 3; i++) {
 			if(this.count_dead==3){
 				//TODO:voir si on peut le mettre ici
-				
-//hero.flag_level_complete=true
+
+				//hero.flag_level_complete=true
 				console.log('this.count_dead',this.count_dead)
 				this.decide_if_show_button_restart_level()
 			}	
@@ -449,7 +450,8 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 		}
 	}
 
-	_asteroid = function(posx,posy,speed,radius){
+	_asteroid = function(number,posx,posy,speed,radius){
+		this.number=number
 		this.name="asteroid"
 		this.radius=radius
 		this.posx=posx
@@ -506,9 +508,10 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 		this.tweenh=game.add.tween(this.axe.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 	}
 
-	_pulsar = function(delay,time,posx,posy,speed,scale_factor){
+	_pulsar = function(number,delay,time,posx,posy,speed,scale_factor){
 		this.scale_factor=scale_factor
 		console.log('this.scale_factor',this.scale_factor)
+		this.number=number
 		this.name="pulsar"
 		this.delay=delay
 		this.time=time
@@ -532,6 +535,7 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 	_pulsar.prototype = Object.create(Phaser.Sprite.prototype)
 	_pulsar.prototype.constructor = _pulsar
 
+	
 	_pulsar.prototype.tweens = function() {
 		this.tween0=game.add.tween(this.scale).to({x:this.scale_factor,y:this.scale_factor},this.time,Phaser.Easing.Linear.None,true,this.delay,-1)
 		this.tween0.yoyo(true,this.speed)		
@@ -549,26 +553,78 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 		this.tweenh.onComplete.add(function(){this.visible=false},this)
 	}
+	_dalle = function(number,delay,posx,posy,speed){
+		this.number=number
+		this.name="dalle"
+		this.delay=delay
+		this.posx=posx
+		this.posy=posy
+		this.speed=speed
+		Phaser.Sprite.call(this,game,this.posx,this.posy,'axe_neon')
+		this.anchor.x=.5
+		this.anchor.y=.5
+		this.alpha=0
+		this.inputEnabled=true
+		this.input.enableDrag(true)
+		this.input.enableSnap(40,40,true,true)
+		this.events.onDragStop.add(logic_position,this)
+		this.events.onDragStart.add(show_grid_on_logic_position,this)
+		game.physics.arcade.enable(this);
+		this.body.immovable=true
+		this.tweens()
+		console.log('tweendalle')
+	}
 
-	_neon = function(delay,posx,posy,speed){
+	_dalle.prototype = Object.create(Phaser.Sprite.prototype)
+	_dalle.prototype.constructor = _dalle
+
+
+	_dalle.prototype.tweens = function() {
+		this.tween0=game.add.tween(this).to({alpha:1},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1)
+		this.tween0.yoyo(true,this.speed)		
+	}
+
+	_dalle.prototype.update = function() {
+		if(this.alpha > .7){
+			this.body.enable=true	
+		}else{
+			this.body.enable=false	
+		}
+	}
+
+	_dalle.prototype.fire = function() {
+		game.tweens.remove(this.tween0)	
+		this.tween0=game.add.tween(this).to({alpha:1},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1)
+		this.tween0.yoyo(true,this.speed)		
+	}
+
+	_dalle.prototype.hide = function() {
+		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
+	}
+
+	_neon = function(number,delay,posx,posy,speed,posx_in_tween){
+		this.posx_in_tween=posx_in_tween
+		this.number=number
 		this.name="neon"
 		this.delay=delay
 		this.posx=posx
 		this.posy=posy
 		this.speed=speed
-		Phaser.Sprite.call(this,game,this.posx,this.posy,'neon')
-		this.anchor.x=0.1
+		Phaser.Sprite.call(this,game,this.posx,this.posy,'axe_neon')
+		this.anchor.x=.5
 		this.anchor.y=.5
+		this.axe_neon=game.add.sprite(this.x,this.y,'neon')
+		this.axe_neon.anchor.setTo(.5,.5)
 		this.inputEnabled=true
 		this.input.enableDrag(true)
+		this.input.enableSnap(40,40,true,true)
+		//this.axe_neon.name="neon"
 		this.events.onDragStop.add(logic_position,this)
 		this.events.onDragStart.add(show_grid_on_logic_position,this)
-		this.input.enableSnap(40,40,true,true)
-		game.physics.arcade.enable(this);
-		this.body.immovable=true
+		game.physics.arcade.enable(this.axe_neon);
+		this.axe_neon.body.immovable=true
 		this.tweens()
-		//this.axe=game.add.sprite(this.posx,this.posy,'neon_axe')
-
+		console.log(this.posx_in_tween)
 	}
 
 	_neon.prototype = Object.create(Phaser.Sprite.prototype)
@@ -576,21 +632,27 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 
 
 	_neon.prototype.tweens = function() {
-		this.tween0=game.add.tween(this).to({x:this.posx+300},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1)
+		this.tween0=game.add.tween(this.axe_neon).to({x:this.posx+this.posx_in_tween},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1)
 		this.tween0.yoyo(true,this.speed)		
+	}
+
+	_neon.prototype.update = function() {
+		this.axe_neon.y=this.y
 	}
 
 	_neon.prototype.fire = function() {
 		game.tweens.remove(this.tween0)	
 		console.log("remove");
-		this.x=this.posx
-		this.y=this.posy
-		this.tween0=game.add.tween(this).to({x:this.posx+300},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1)
+		this.axe_neon.x=this.posx
+		this.axe_neon.y=this.posy
+		this.posx_in_tween=this.posx_in_tween
+		this.tween0=game.add.tween(this.axe_neon).to({x:this.posx+this.posx_in_tween},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1)
 		this.tween0.yoyo(true,this.speed)		
 	}
 
 	_neon.prototype.hide = function() {
 		this.tweenh=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
+		this.tweeni=game.add.tween(this.axe_neon.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0)
 	}
 
 	_canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
@@ -610,6 +672,8 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 		this.sound_pop=game.add.audio('pop')
 		this._flag=true
 		//canon
+		//Phaser.Sprite.call(this,game,this.posx,this.posy,'canon_mainbody')
+		//
 		Phaser.Sprite.call(this,game,this.posx,this.posy,'canon')
 		this.anchor.setTo(.5,.5)
 		this.angle=this.angular
@@ -618,6 +682,8 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 		this.events.onDragStop.add(logic_position,this)
 		this.events.onDragStart.add(show_grid_on_logic_position,this)
 		this.input.enableSnap(40,40,true,true)
+
+
 
 		game.physics.arcade.enable(this);
 		if(this.special_color=="vrai"){
@@ -651,6 +717,7 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 		game.time.events.add( this.delay,function(){this._flag=false},this )
 		//this.table=[100,-100]
 		//this.u=0
+			//this.scale_mainbody()
 	}
 
 	_canon.prototype = Object.create(Phaser.Sprite.prototype)
@@ -677,8 +744,14 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 		this.angle=this.angular
 		this.weapon.bulletAngleVariance = this.variance;
 		game.time.events.add( 10,function(){this._flag=false},this )
-		
-		//this.weapon.fire()
+			//this.tween_0.pause()
+			//this.scale_mainbody()
+			//this.tween_0.resume()
+			//this.weapon.fire()
+	}
+	_canon.prototype.scale_mainbody = function() {
+		this.tween_0 = game.add.tween(this.mainbody.scale).to({x:.7,y:.7},this.frequency*.2,Phaser.Easing.Linear.None,true,0,-1)
+			this.tween_0.yoyo(true,this.frequency*.2)	
 	}
 
 	_canon.prototype.audio_pop = function() {
@@ -846,11 +919,11 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 			this.game.load.audio("pop","sounds/pop.ogg");
 			this.game.load.audio("launch","sounds/launch.ogg");
 			//images
+			this.game.load.image("axe_neon","assets/axe_neon.png");
 			this.game.load.image("publish","assets/publish.png");
 			this.game.load.image("grid","assets/grid.png");
 			this.game.load.image("pulsar","assets/pulsar.png");
 			this.game.load.image("axe","assets/axe.png");
-			this.game.load.image("neon_axe","assets/neon_axe.png");
 			this.game.load.image("neon","assets/neon.png");
 			this.game.load.image("title","assets/title.png");
 			this.game.load.spritesheet('star','assets/star.png', 400, 100);
@@ -871,13 +944,17 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 			this.game.load.image("rect","assets/rect.png");
 			this.game.load.image("button","assets/button.png");
 			this.game.load.image("background","assets/background.png");
+			
+			
 			//font bitmapFont
 			this.game.load.bitmapFont('lucky_yellow','fonts/font_ab_yellow.png', 'fonts/font_ab.fnt');
 			this.game.load.bitmapFont('lucky_red','fonts/font_ab_red.png', 'fonts/font_ab.fnt');
 			this.game.load.bitmapFont('fo','fonts/font.png', 'fonts/font.fnt');
 			this.game.load.bitmapFont('lucky','fonts/font_ab.png', 'fonts/font_ab.fnt');
 		},
+		
 		create: function(){
+			//
 			this.game.stage.backgroundColor = '#1a1a1a'
 			this.game.state.start("game_first_screen");
 		}
@@ -919,25 +996,42 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 			level_number=0
 			createInterstitial()
 
-			this.create_object=function(){
-				hero = new character(interstitial) 
-				//weapon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+			this.create_canon=function(){
+				//canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 				canon[0]=new _canon(0,800,w-200,800,900,90,0,180,hero.flag_level_complete,"vrai","faux")
 				canon[1]=new _canon(1,100,0,1200,400,900,0,0,hero.flag_level_complete,"vrai","faux") 
-				//asteroid = function(posx,posy,speed,radius){
-				//asteroid[0]=new _asteroid(240,900,.008,100)
-				//neon = function(delay,posx,posy,speed){
-				//neon[0]=new _neon(0,240,h2+100,300)
-				//pulsar = function(delay,time,posx,posy,speed,scale_factor){
-				//pulsar[0]=new _pulsar(100,500,240,600,900,2)
 			}
-			//canon,asteroid,neon,pulsar
-			//weapon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			//asteroid = function(posx,posy,speed,radius){
-			//neon = function(delay,posx,posy,speed){
-			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
-			check_storage(this.create_object,2,0,0,0)
-			//this.create_object()
+			this.create_asteroid=function(){
+				//asteroid = function(number,posx,posy,speed,radius){
+				//asteroid[0]=new _asteroid(0,240,900,.008,100)
+				//asteroid[1]=new _asteroid(1,240,500,.008,100)
+			}
+
+			this.create_neon=function(){
+				//neon = function(number,delay,posx,posy,speed,posx_in_tween){
+				neon[0]=new _neon(0,0,240,h2+100,300,3)
+				//neon[1]=new _neon(1,0,240,h2+500,300)
+			}
+
+			this.create_pulsar=function(){
+				//pulsar = function(number,delay,time,posx,posy,speed,scale_factor){
+				pulsar[0]=new _pulsar(0,100,500,240,600,900,2)
+				pulsar[1]=new _pulsar(1,200,200,240,600,900,2)
+			}
+
+			this.create_dalle=function(){
+				//_dalle = function(number,delay,posx,posy,speed){
+				dalle[0]=new _dalle(0,0,300,440,9000)
+			}
+
+
+
+			hero = new character(interstitial) 
+
+			check_storage(this.create_canon,this.create_asteroid,this.create_neon,this.create_pulsar,2,0,1,2)
+			//TODO:comment
+			
+			this.create_dalle()
 			//logic_gui()
 			logic_add()
 			return level_number
@@ -1199,6 +1293,11 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 				game.add.existing(asteroid[i])
 			}
 		}
+		if(dalle[0]){
+			for (var i = 0; i < dalle.length; i++){
+				game.add.existing(dalle[i])
+			}
+		}
 	}
 
 	var logic_update=function(){
@@ -1213,16 +1312,16 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 		}
 
 		if(canon[1]){
-		game.physics.arcade.collide(canon[0].weapon.bullets,canon[1].weapon.bullets,touch_between_enemies,null,this)
+			game.physics.arcade.collide(canon[0].weapon.bullets,canon[1].weapon.bullets,touch_between_enemies,null,this)
 		}
 
 		if(canon[2]){
-		game.physics.arcade.collide(canon[0].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
-		game.physics.arcade.collide(canon[1].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
+			game.physics.arcade.collide(canon[0].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
+			game.physics.arcade.collide(canon[1].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
 		}
 
 		if(hero.flag_hide_enemies){
-		hero.flag_hide_enemies=false
+			hero.flag_hide_enemies=false
 			game.time.events.add( 500,hide_weapon,this )
 		}
 		if(canon[0]){
@@ -1239,7 +1338,7 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 		if(neon[0]){
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < neon.length; j++){
-					game.physics.arcade.collide(neon[j],hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
+					game.physics.arcade.collide(neon[j].axe_neon,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
 				}
 			}
 		}
@@ -1255,6 +1354,13 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < asteroid.length; j++){
 					game.physics.arcade.collide(asteroid[j].axe,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
+				}
+			}
+		}
+		if(dalle[0]){
+			for (var i = 0; i < 3; i++){
+				for (var j = 0; j < dalle.length; j++){
+					game.physics.arcade.collide(dalle[j],hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
 				}
 			}
 		}
@@ -1276,44 +1382,44 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 	}
 
 	var touch_between_enemies=function(){
-			console.log("touch");
-	
+		console.log("touch");
+
 	}
 	var hide_weapon=function(){
-			console.log('hide')
-			if(canon[0]){
-				for (var j = 0; j < canon.length; j++){
-					canon[j].explode_bullet(canon[j].weapon.bullets)
-					canon[j].visible=false
-					canon[j].weapon.bullets.visible=false
-					canon[j].destroy()
-				}
+		console.log('hide')
+		if(canon[0]){
+			for (var j = 0; j < canon.length; j++){
+				canon[j].explode_bullet(canon[j].weapon.bullets)
+				canon[j].visible=false
+				canon[j].weapon.bullets.visible=false
+				canon[j].destroy()
 			}
-			if(neon[0]){
-				for (var j = 0; j < neon.length; j++){
-					neon[j].hide()
-					neon[j].body.enable=false
-					neon[j].destroy()
-				}
+		}
+		if(neon[0]){
+			for (var j = 0; j < neon.length; j++){
+				neon[j].hide()
+				neon[j].axe_neon.body.enable=false
+				neon[j].destroy()
 			}
+		}
 
-			if(pulsar[0]){
-				for (var j = 0; j < pulsar.length; j++){
-					pulsar[j].hide()
-					pulsar[j].body.enable=false
-					pulsar[j].destroy()
-				}
+		if(pulsar[0]){
+			for (var j = 0; j < pulsar.length; j++){
+				pulsar[j].hide()
+				pulsar[j].body.enable=false
+				pulsar[j].destroy()
 			}
+		}
 
-			if(asteroid[0]){
-				for (var j = 0; j < asteroid.length; j++){
-					asteroid[j].hide()
-					asteroid[j].axe.body.enable=false
-					asteroid[j].visible=false
-					asteroid[j].destroy()
-				}
+		if(asteroid[0]){
+			for (var j = 0; j < asteroid.length; j++){
+				asteroid[j].hide()
+				asteroid[j].axe.body.enable=false
+				asteroid[j].visible=false
+				asteroid[j].destroy()
 			}
-	
+		}
+
 	}
 
 	var show_grid_on_logic_position=function(sprite){
@@ -1329,6 +1435,7 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 					guit.speed=gui.add(sprite,'speed',0,5000)
 					guit.speed.onChange(function(value) {
 						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
 					})
 					guit.frequency=gui.add(sprite,'frequency',0,5000)
 					guit.frequency.onChange(function(value) {
@@ -1345,7 +1452,7 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 						sprite.fire()// Fires on every change, drag, keypress, etc.
 						logic_position(sprite)
 					})
-						
+
 					break
 				case "pulsar":
 					var guit={}
@@ -1367,6 +1474,11 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 					gui.add(sprite,'name')
 					guit.speed=gui.add(sprite,'speed',300,3000)
 					guit.speed.onChange(function(value) {
+						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
+					})
+					guit.posx_in_tween=gui.add(sprite,'posx_in_tween',-800,800)
+					guit.posx_in_tween.onChange(function(value) {
 						sprite.fire()// Fires on every change, drag, keypress, etc.
 						logic_position(sprite)
 					})
@@ -1393,48 +1505,118 @@ window.location='mailto:'+EmailVairable+'?subject='+SubjectVariable+'&body='+ema
 					console.log('msg')
 					_table=c
 					_name_json='canon'
+					console.log('sprite.angular',sprite.angular)
+					//var sprite.number=sprite.number
+					_table[sprite.number] = {
+						number:sprite.number,
+						delay:sprite.delay,
+						x:sprite.x,
+						y:sprite.y,
+						speed:sprite.speed,
+						frequency:sprite.frequency,
+						variance:sprite.variance,
+						angular:sprite.angular,
+						_flag:sprite._flag,
+						kill_with_world_special:sprite.kill_with_world_special,
+						special_color:sprite.special_color,
+					};
 					break
+					//asteroid = function(posx,posy,speed,radius){
+				case 'asteroid':
+					_table=a
+					_name_json='asteroid'
+					_table[sprite.number] = {
+						x:sprite.x,
+						y:sprite.y,
+						speed:sprite.speed,
+						radius:sprite.radius,
+					};
+					break
+					//neon = function(delay,posx,posy,speed,posx_in_tween){
+				case 'neon':
+					_table=n
+					_name_json='neon'
+					_table[sprite.number] = {
+						delay:sprite.delay,
+						x:sprite.x,
+						y:sprite.y,
+						speed:sprite.speed,
+						posx_in_tween:sprite.posx_in_tween,
+					};
+					break
+						//
+					//pulsar = function(delay,time,posx,posy,speed,scale_factor){
+				case 'pulsar':
+					console.log('sprite.name',sprite.name)
+						console.log(sprite.x)
+					_table=p
+					_name_json='pulsar'
+					_table[sprite.number] = {
+						delay:sprite.delay,
+						time:sprite.time,
+						x:sprite.x,
+						y:sprite.y,
+						speed:sprite.speed,
+						scale_factor:sprite.scale_factor,
+					};
+					break
+
 			}
-			//console.log('sprite.number',sprite.number)
-			console.log('sprite.angular',sprite.angular)
-			//var sprite.number=sprite.number
-			_table[sprite.number] = {
-				number:sprite.number,
-				delay:sprite.delay,
-				x:sprite.x,
-				y:sprite.y,
-				speed:sprite.speed,
-				frequency:sprite.frequency,
-				variance:sprite.variance,
-				angular:sprite.angular,
-				_flag:sprite._flag,
-				kill_with_world_special:sprite.kill_with_world_special,
-				special_color:sprite.special_color,
-			};
 
 			localStorage.setItem(_name_json+sprite.number+'lev0', JSON.stringify(_table[sprite.number]));
 
 		}
 	}
 
-	var check_storage=function(_create_object,num_canon,num_asteroid,num_neon,num_pulsar){
-		//canon,asteroid,neon,pulsar
-		//weapon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-		//asteroid = function(posx,posy,speed,radius){
-		//neon = function(delay,posx,posy,speed){
-		//pulsar = function(delay,time,posx,posy,speed,scale_factor){
-		//check_storage(this.create_object,2,1,1,1)
-		hero = new character(interstitial) 
+	var check_storage=function(_create_canon,_create_asteroid,_create_neon,_create_pulsar,num_canon,num_asteroid,num_neon,num_pulsar){
+
 		for(var i=0;i<num_canon;i++){
 			c[i] = JSON.parse( localStorage.getItem( 'canon'+i+'lev'+level_number ) ) ;
 		}
 		if(c[0]){
 			for(var i=0;i<num_canon;i++){
-	//_canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+				//_canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 				canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,hero.flag_level_complete,c[i].kill_with_world,c[i].special_color)
 			}
+		}else{
+			_create_canon()
 		}
-		!c[0] && _create_object()
+		///////////////////////////////////////////////////////////////////////////////////////////
+		for(var i=0;i<num_asteroid;i++){
+			a[i] = JSON.parse( localStorage.getItem( 'asteroid'+i+'lev'+level_number ) ) ;
+		}
+		if(a[0]){
+			for(var i=0;i<num_asteroid;i++){
+				//asteroid = function(number,posx,posy,speed,radius){
+				asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius)
+			}
+		}else{
+			_create_asteroid()
+		}
+		///////////////////////////////////////////////////////////////////////////////////////////
+		for(var i=0;i<num_neon;i++){
+			n[i] = JSON.parse( localStorage.getItem( 'neon'+i+'lev'+level_number ) ) ;
+		}
+		if(n[0]){
+			for(var i=0;i<num_neon;i++){
+				//neon = function(number,delay,posx,posy,speed){
+				neon[i]=new _neon(i,n[i].delay,n[i].x,n[i].y,n[i].speed,n[i].posx_in_tween)
+			}
+		}else{
+			_create_neon()
+		}
+		///////////////////////////////////////////////////////////////////////////////////////////
+		for(var i=0;i<num_pulsar;i++){
+			p[i] = JSON.parse( localStorage.getItem( 'pulsar'+i+'lev'+level_number ) ) ;
+		}
+		if(p[0]){
+			for(var i=0;i<num_pulsar;i++){
+				//pulsar = function(number,delay,time,posx,posy,speed,scale_factor){
+				pulsar[i]=new _pulsar(i,p[i].delay,p[i].time,p[i].x,p[i].y,p[i].speed,p[i].scale_factor)
+			}
+		}else{
+			_create_pulsar()
+		}
 	}
 
 	var logic_render=function(){
