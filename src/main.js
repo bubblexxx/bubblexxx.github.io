@@ -881,7 +881,8 @@ function main(){
 				}
 			});
 
-			interstitial = adService.createInterstitial();
+			interstitial = adService.createRewardedVideo();
+			//interstitial = adService.createInterstitial();
 
 			interstitial.on("load", function(){
 				console.log("Interstitial loaded");
