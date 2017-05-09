@@ -1,5 +1,7 @@
 
 //TODO
+//1081 retablir createBanner
+//1110 retablir createInterstitial
 //body enbale false lorsque touché un projectile violet
 //si canon = 1 dans check storage 
 //explode dalle neon asteroid pulsar
@@ -1077,7 +1079,8 @@ function main(){
 			this.title=new screen_first()
 			game.add.existing(this.title)
 			this.initProgressData()
-			createBanner()
+
+			//createBanner()
 		},
 
 		initProgressData: function() {
@@ -1105,7 +1108,7 @@ function main(){
 		create: function(){
 			flag_hide=true
 			level_number=0
-			createInterstitial()
+			//createInterstitial()
 
 			this.create_canon=function(){
 				console.log("create_canoin");
