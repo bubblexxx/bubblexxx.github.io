@@ -7,15 +7,15 @@
 //explode dalle neon asteroid pulsar
 //changer couleur particle d'asteroid
 //detecter si gsm ou ordi et régler admob et cordova en fonction
+var canvas = document.createElement("canvas");
+canvas.screencanvas = true;
+canvas.width = window.innerWidth * window.devicePixelRatio;
+canvas.height = window.innerHeight * window.devicePixelRatio;
+var ctx = canvas.getContext("experimental-webgl");	
+	console.log('without_screen_canvas+')
 
 function main(){
 	
-//var canvas = document.createElement("canvas");
-//canvas.screencanvas = true;
-//canvas.width = window.innerWidth * window.devicePixelRatio;
-//canvas.height = window.innerHeight * window.devicePixelRatio;
-//var ctx = canvas.getContext("experimental-webgl");	
-	console.log('without_screen_canvas+')
 
 	this.some_value=4
 	var gui
