@@ -1846,7 +1846,9 @@ var ctx = canvas.getContext("experimental-webgl");	console.log('her')
 			}
 		}
 	}
-	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
+	//game = new Phaser.Game(640,960,Phaser.CANVAS,'game' )
+	//game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
+	game = new Phaser.Game(1280,1920,Phaser.AUTO,'game' )
 	game.state.add('boot',bootstate)
 	game.state.add('preload',preloadstate)
 	game.state.add('game_first_screen',game_first_screen)
