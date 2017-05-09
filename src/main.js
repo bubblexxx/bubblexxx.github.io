@@ -9,6 +9,12 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
+	var canvas = document.createElement("canvas");
+	canvas.screencanvas = true;
+	canvas.width = window.innerWidth * window.devicePixelRatio;
+	canvas.height = window.innerHeight * window.devicePixelRatio;
+	var ctx = canvas.getContext("experimental-webgl");	
+	console.log('with_screen_canvas+')
 	
 
 	this.some_value=4
@@ -1840,12 +1846,6 @@ function main(){
 			}
 		}
 	}
-	var canvas = document.createElement("canvas");
-	canvas.screencanvas = true;
-	canvas.width = window.innerWidth * window.devicePixelRatio;
-	canvas.height = window.innerHeight * window.devicePixelRatio;
-	var ctx = canvas.getContext("experimental-webgl");	
-	console.log('without_screen_canvas+')
 	//game = new Phaser.Game(640,960,Phaser.CANVAS,'game' )
 	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 	//game = new Phaser.Game(1280,1920,Phaser.AUTO,'game' )
