@@ -21,8 +21,10 @@ var ctx = canvas.getContext("experimental-webgl");	console.log('her')
 	var PLAYER_DATA 
 	//var PLAYER_DATA = null 
 	var ratio_device=window.screen.width/window.screen.height
-	var h=1920
-	var w=1280
+	//var h=1920
+	//var w=1280
+	var h=960
+	var w=640
 	var time_hide=500
 	var h2=h*.5
 	var w2=640
@@ -1843,8 +1845,8 @@ var ctx = canvas.getContext("experimental-webgl");	console.log('her')
 			}
 		}
 	}
-	//game = new Phaser.Game(640,960,Phaser.CANVAS,'game' )
-	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
+	game = new Phaser.Game(640,960,Phaser.CANVAS,'game' )
+	//game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 	//game = new Phaser.Game(1280,1920,Phaser.AUTO,'game' )
 	game.state.add('boot',bootstate)
 	game.state.add('preload',preloadstate)
