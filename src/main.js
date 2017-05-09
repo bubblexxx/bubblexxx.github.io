@@ -9,9 +9,6 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
-3
-4
-5
 	
 var canvas = document.createElement("canvas");
 canvas.screencanvas = true;
@@ -1802,7 +1799,7 @@ var ctx = canvas.getContext("experimental-webgl");	console.log('her')
 		}
 		for(var i=0;i<num_dalle;i++){
 			if (d[i]===null){
-				console.log(d[i])
+				//console.log(d[i])
 				_create_dalle()
 				break
 			}else{
@@ -1847,8 +1844,8 @@ var ctx = canvas.getContext("experimental-webgl");	console.log('her')
 		}
 	}
 	//game = new Phaser.Game(640,960,Phaser.CANVAS,'game' )
-	//game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
-	game = new Phaser.Game(1280,1920,Phaser.AUTO,'game' )
+	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
+	//game = new Phaser.Game(1280,1920,Phaser.AUTO,'game' )
 	game.state.add('boot',bootstate)
 	game.state.add('preload',preloadstate)
 	game.state.add('game_first_screen',game_first_screen)
