@@ -9,7 +9,16 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
-	console.log('her')
+3
+4
+5
+	
+var canvas = document.createElement("canvas");
+canvas.screencanvas = true;
+canvas.width = window.innerWidth * window.devicePixelRatio;
+canvas.height = window.innerHeight * window.devicePixelRatio;
+var ctx = canvas.getContext("experimental-webgl");	console.log('her')
+
 	this.some_value=4
 	var gui
 	var PLAYER_DATA 
