@@ -10,7 +10,8 @@ function main(){
 	console.log('her')
 	this.some_value=4
 	var gui
-	var PLAYER_DATA = null 
+	var PLAYER_DATA 
+	//var PLAYER_DATA = null 
 	var ratio_device=window.screen.width/window.screen.height
 	var h=1920
 	var w=1280
@@ -1625,8 +1626,10 @@ function main(){
 		if (debug_position){
 			console.log("retablissement des paramètres")
 			hero.grid.visible=false	
-			var _table=null
-			var _name_json=null
+			//var _table=null
+			//var _name_json=null
+			var _table
+			var _name_json
 			switch(sprite.name){
 				case 'canon':
 					console.log('msg')
