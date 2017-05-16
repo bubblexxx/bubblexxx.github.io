@@ -706,8 +706,6 @@ function main(){
 		this.events.onDragStart.add(show_grid_on_logic_position,this)
 		this.input.enableSnap(40,40,true,true)
 
-
-
 		game.physics.arcade.enable(this);
 		if(this.special_color=="vrai"){
 			this.weapon=game.add.weapon(9,'bullet_color')
@@ -1569,6 +1567,17 @@ function main(){
 					})
 					guit.frequency=gui.add(sprite,'frequency',0,5000)
 					guit.frequency.onChange(function(value) {
+						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
+					})
+					console.log(sprite.kill_with_world)
+					//guit.kill=gui.add(sprite,'kill_with_world')
+					//guit.kill.onChange(function(value) {
+						//sprite.fire()// Fires on every change, drag, keypress, etc.
+						//logic_position(sprite)
+					//})
+					guit.special_color=gui.add(sprite,'special_color')
+					guit.special_color.onChange(function(value) {
 						sprite.fire()// Fires on every change, drag, keypress, etc.
 						logic_position(sprite)
 					})
