@@ -1,5 +1,6 @@
 
 //TODO
+//hide_weapon ne se declenche pas toujours
 //1081 retablir createBanner
 //1110 retablir createInterstitial
 //body enbale false lorsque touché un projectile violet
@@ -9,12 +10,25 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
-	var canvas = document.createElement("canvas");
-	canvas.screencanvas = true;
-	canvas.width = window.innerWidth * window.devicePixelRatio;
-	canvas.height = window.innerHeight * window.devicePixelRatio;
-	var ctx = canvas.getContext("experimental-webgl");	
-	console.log('with_screen_canvas+')
+	var DEBUG = (function(){
+		var timestamp = function(){};
+		timestamp.toString = function(){
+			return "[DEBUG " + (new Date).toLocaleTimeString() + "]";    
+		};
+
+		return {
+			log: console.log.bind(console, '%s', timestamp)
+		}
+	})();
+
+	DEBUG.log("myapp");              
+
+	//var canvas = document.createElement("canvas");
+	//canvas.screencanvas = true;
+	//canvas.width = window.innerWidth * window.devicePixelRatio;
+	//canvas.height = window.innerHeight * window.devicePixelRatio;
+	//var ctx = canvas.getContext("experimental-webgl");	
+	//console.log('with_screen_canvas+')
 	
 
 	this.some_value=4
@@ -220,7 +234,7 @@ function main(){
 			this.explode(w2,0,n)	
 			this.life.text=3-(this.count+1)
 			console.log("this.life.text",this.life.text);
-			if(this.count==2){
+			if(this.count==2 | this.count==3){
 				this.life.text='' 
 			}
 		}
@@ -707,19 +721,19 @@ function main(){
 		this.input.enableSnap(40,40,true,true)
 
 		game.physics.arcade.enable(this);
-		if(this.special_color=="vrai"){
+		if(this.special_color){
 			this.weapon=game.add.weapon(9,'bullet_color')
 		}else{
 			this.weapon=game.add.weapon(9,'bullet')	
 		}
 
-		if(this.kill_with_world=="faux"){
+		if(this.kill_with_world){
+			this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+		}else{
 			for (var i = 0; i <  9; i++) {
 				this.weapon.bulletCollideWorldBounds=true
 				this.weapon.bullets.children[i].body.bounce.setTo(1,1)
 			}
-		}else{
-			this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
 		}
 		//  Because our bullet is drawn facing up, we need to offset its rotation:
 		this.weapon.bulletAngleOffset = 0;
@@ -783,7 +797,7 @@ function main(){
 		if(this.flag_explode==false){
 			this.flag_explode=true
 			this.audio_pop()
-			if(this.special_color=="vrai"){
+			if(this.special_color){
 				this.weapon.bullets.forEach(function(item){
 					if(item.alive){	
 						this.particle = game.add.emitter(item.x,item.y,8)
@@ -1121,8 +1135,9 @@ function main(){
 				console.log("create_canoin");
 				
 				//canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-				canon[0]=new _canon(0,800,w-200,800,900,90,0,180,hero.flag_level_complete,"vrai","faux")
-				canon[1]=new _canon(1,100,0,1200,400,900,0,0,hero.flag_level_complete,"vrai","faux") 
+				canon[0]=new _canon(0,800,w-200,800,900,90,0,180,hero.flag_level_complete,true,false)
+				console.log(canon[0].special_color,"special_color")
+				canon[1]=new _canon(1,100,0,1200,400,900,0,0,hero.flag_level_complete,false,true) 
 			}
 			this.create_asteroid=function(){
 				//asteroid = function(number,posx,posy,speed,radius){
@@ -1171,7 +1186,6 @@ function main(){
 			createInterstitial()
 			hero = new character(interstitial) 
 			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			canon[0]=new _canon(100,0,1200,400,900,0,0,hero.flag_level_complete,"vrai","faux") 
 			console.log("neon[0]",neon[0]);
 			//asteroid = function(posx,posy,speed,radius){
 			//asteroid[0]=new _asteroid(w2-150,900,.008,100)
@@ -1448,7 +1462,7 @@ function main(){
 		if(canon[0]){
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < canon.length; j++){
-					if(canon[j].special_color=="vrai"){
+					if(canon[j].special_color){
 						game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],hide_weapon,null,this)
 					}else{
 						game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
@@ -1507,6 +1521,8 @@ function main(){
 
 	}
 	var hide_weapon=function(){
+		if(flag_hide){
+			flag_hide = false
 		console.log('hide')
 		if(canon[0]){
 			for (var j = 0; j < canon.length; j++){
@@ -1548,6 +1564,7 @@ function main(){
 			}
 		}
 
+		}
 	}
 
 	var show_grid_on_logic_position=function(sprite){
@@ -1571,11 +1588,11 @@ function main(){
 						logic_position(sprite)
 					})
 					console.log(sprite.kill_with_world)
-					//guit.kill=gui.add(sprite,'kill_with_world')
-					//guit.kill.onChange(function(value) {
-						//sprite.fire()// Fires on every change, drag, keypress, etc.
-						//logic_position(sprite)
-					//})
+					guit.kill=gui.add(sprite,'kill_with_world')
+					guit.kill.onChange(function(value) {
+						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
+					})
 					guit.special_color=gui.add(sprite,'special_color')
 					guit.special_color.onChange(function(value) {
 						sprite.fire()// Fires on every change, drag, keypress, etc.
@@ -1668,7 +1685,7 @@ function main(){
 						variance:sprite.variance,
 						angular:sprite.angular,
 						_flag:sprite._flag,
-						kill_with_world_special:sprite.kill_with_world_special,
+						kill_with_world:sprite.kill_with_world,
 						special_color:sprite.special_color,
 					};
 					break
@@ -1891,6 +1908,6 @@ var detectmob=function() {
 			return false;
 	}
 }
-detectmob()
+//detectmob()
 //document.addEventListener('deviceready',main,false)
 
