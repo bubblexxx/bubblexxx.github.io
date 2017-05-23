@@ -1012,7 +1012,7 @@ function main(){
 					appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
 	}
 			});
-			interstitial = adService.createRewardedVideo(adUnit);
+			interstitial = adService.createRewardedVideo();
 			//interstitial = adService.createInterstitial();
 
 			interstitial.on("load", function(){
