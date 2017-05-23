@@ -1239,7 +1239,7 @@ function main(){
 		create: function(){
 			flag_hide=true
 			level_number=0
-			createInterstitial()
+			//createInterstitial()
 
 			this.create_canon=function(){
 				console.log("create_canoin");
