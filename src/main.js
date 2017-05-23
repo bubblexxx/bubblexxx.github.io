@@ -1000,8 +1000,7 @@ function main(){
 			|| navigator.userAgent.match(/BlackBerry/i)
 			|| navigator.userAgent.match(/Windows Phone/i)
 		){
-			adService = Cocoon.Ad.Chartboost;
-			adService.configure({
+			adService = Cocoon.Ad.Chartboost.configure({
 				ios: {
 					appId:"4ed254a3cb5015e47c000000",
 					appSignature:"91858cc162b56414ca47e63ce7a1b20105c70e65"
@@ -1011,7 +1010,7 @@ function main(){
 					appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
 	}
 			});
-			interstitial = Cocoon.Ad.Chartboost.createRewardedVideo(adUnit);
+			interstitial = adService.createRewardedVideo(adUnit);
 			//interstitial = adService.createInterstitial();
 
 			interstitial.on("load", function(){
@@ -1092,45 +1091,6 @@ function main(){
 		demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
 		banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
 		game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
-	}
-
-	var createInterstitial2=function() {
-
-		adService = Cocoon.Ad.AdMob;
-		adService.configure({
-			ios: {
-				banner:"ca-app-pub-7686972479101507/8873903476",
-				interstitial:"ca-app-pub-7686972479101507/8873903476",
-			},
-			android: {
-				banner:"ca-app-pub-7686972479101507/4443703872",
-				interstitial:"ca-app-pub-7686972479101507/4443703872"
-			}
-		});
-
-		interstitial = adService.createInterstitial();
-
-		interstitial.on("load", function(){
-			console.log("Interstitial loaded");
-		});
-		interstitial.on("fail", function(){
-			console.log("Interstitial failed");
-		});
-		interstitial.on("show", function(){
-			console.log("Interstitial shown");
-		});
-		interstitial.on("dismiss", function(){
-			console.log("Interstitial dismissed");
-		});
-
-		interstitial.on("click", function(){
-			alert("click")
-			console.log("Interstitial dismissed");
-			if(level_number < 19){
-				this.game.state.start("level"+level_number+1);
-			}
-		});
-		interstitial.load()
 	}
 
 	var bootstate= {
@@ -1239,7 +1199,7 @@ function main(){
 		create: function(){
 			flag_hide=true
 			level_number=0
-			//createInterstitial()
+			createInterstitial()
 
 			this.create_canon=function(){
 				console.log("create_canoin");
