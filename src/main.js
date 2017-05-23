@@ -91,8 +91,8 @@ function main(){
 		this.button_next.visible=false
 		game.time.events.loop( 500,this.explosion,this )
 		game.time.events.add( 200,this.show_button,this )
-
 	}
+
 	screen_first.prototype = Object.create(Phaser.Sprite.prototype)
 	screen_first.prototype.constructor = screen_first
 
@@ -831,6 +831,110 @@ function main(){
 		}
 	}
 
+	//var createBanner= function(){
+	//	if( navigator.userAgent.match(/Android/i)
+	//		|| navigator.userAgent.match(/webOS/i)
+	//		|| navigator.userAgent.match(/iPhone/i)
+	//		|| navigator.userAgent.match(/iPad/i)
+	//		|| navigator.userAgent.match(/iPod/i)
+	//		|| navigator.userAgent.match(/BlackBerry/i)
+	//		|| navigator.userAgent.match(/Windows Phone/i)
+	//	){
+	//		if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
+	//			alert('Cocoon AdMob plugin not installed');
+	//			return;
+	//		}
+	//		// nécessaire 
+	//		adService = Cocoon.Ad.AdMob;
+	//		adService.configure({
+	//			ios: {
+	//				banner:"ca-app-pub-7686972479101507/8873903476",
+	//				interstitial:"ca-app-pub-7686972479101507/8873903476",
+	//			},
+	//			android: {
+	//				banner:"ca-app-pub-7686972479101507/4443703872",
+	//				interstitial:"ca-app-pub-7686972479101507/4443703872"
+	//			}
+	//		});
+
+	//		console.log('createBanner')
+	//		banner = adService.createBanner();
+
+	//		banner.on("load", function(){
+	//			console.log("Banner loaded " + banner.width, banner.height);
+	//		});
+
+	//		banner.on("fail", function(){
+	//			console.log("Banner failed to load");
+	//		});
+
+	//		banner.on("show", function(){
+	//			console.log("Banner shown a modal content");
+	//		});
+
+	//		banner.on("dismiss", function(){
+	//			console.log("Banner dismissed the modal content");
+	//		});
+
+	//		//load banner
+	//		banner.load();
+
+	//		//show banner
+	//		banner.show()
+	//		demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
+	//		banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
+	//		game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
+	//	}
+	//}
+
+	//var createInterstitial=function(){
+	//	if( navigator.userAgent.match(/Android/i)
+	//		|| navigator.userAgent.match(/webOS/i)
+	//		|| navigator.userAgent.match(/iPhone/i)
+	//		|| navigator.userAgent.match(/iPad/i)
+	//		|| navigator.userAgent.match(/iPod/i)
+	//		|| navigator.userAgent.match(/BlackBerry/i)
+	//		|| navigator.userAgent.match(/Windows Phone/i)
+	//	){
+	//		adService = Cocoon.Ad.AdMob;
+	//		adService.configure({
+	//			ios: {
+	//				banner:"ca-app-pub-7686972479101507/8873903476",
+	//				interstitial:"ca-app-pub-7686972479101507/8873903476",
+	//			},
+	//			android: {
+	//				banner:"ca-app-pub-3940256099942544/5224354917",
+	//				//precedente banners qui marchait banner:"ca-app-pub-7686972479101507/4443703872",
+	//				interstitial:"ca-app-pub-7686972479101507/4443703872"
+	//			}
+	//		});
+
+	//		interstitial = adService.createRewardedVideo();
+	//		//interstitial = adService.createInterstitial();
+
+	//		interstitial.on("load", function(){
+	//			console.log("Interstitial loaded");
+	//		});
+	//		interstitial.on("fail", function(){
+	//			console.log("Interstitial failed");
+	//		});
+	//		interstitial.on("show", function(){
+	//			console.log("Interstitial shown");
+	//		});
+	//		interstitial.on("dismiss", function(){
+	//			console.log("Interstitial dismissed");
+	//		});
+
+	//		interstitial.on("click", function(){
+	//			alert("click")
+	//			console.log("Interstitial dismissed");
+	//			if(level_number < 19){
+	//				this.game.state.start("level"+level_number+1);
+	//			}
+	//		});
+	//		interstitial.load()
+	//	}
+	//}
 	var createBanner= function(){
 		if( navigator.userAgent.match(/Android/i)
 			|| navigator.userAgent.match(/webOS/i)
@@ -896,20 +1000,18 @@ function main(){
 			|| navigator.userAgent.match(/BlackBerry/i)
 			|| navigator.userAgent.match(/Windows Phone/i)
 		){
-			adService = Cocoon.Ad.AdMob;
+			adService = Cocoon.Ad.Chartboost;
 			adService.configure({
 				ios: {
-					banner:"ca-app-pub-7686972479101507/8873903476",
-					interstitial:"ca-app-pub-7686972479101507/8873903476",
+					appId:"4ed254a3cb5015e47c000000",
+					appSignature:"91858cc162b56414ca47e63ce7a1b20105c70e65"
 				},
 				android: {
-					banner:"ca-app-pub-3940256099942544/5224354917",
-					//precedente banners qui marchait banner:"ca-app-pub-7686972479101507/4443703872",
-					interstitial:"ca-app-pub-7686972479101507/4443703872"
-				}
+					appId:"50ae12d715ba47c00d01000c",
+					appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
+	}
 			});
-
-			interstitial = adService.createRewardedVideo();
+			interstitial = Cocoon.Ad.Chartboost.createRewardedVideo(adUnit);
 			//interstitial = adService.createInterstitial();
 
 			interstitial.on("load", function(){
@@ -932,6 +1034,14 @@ function main(){
 					this.game.state.start("level"+level_number+1);
 				}
 			});
+			interstitial.on("reward", function(){
+				alert("reward")
+				console.log("Interstitial dismissed");
+				if(level_number < 19){
+					this.game.state.start("level"+level_number+1);
+				}
+			});
+
 			interstitial.load()
 		}
 	}
@@ -1129,7 +1239,7 @@ function main(){
 		create: function(){
 			flag_hide=true
 			level_number=0
-			//createInterstitial()
+			createInterstitial()
 
 			this.create_canon=function(){
 				console.log("create_canoin");
