@@ -1000,7 +1000,9 @@ function main(){
 			|| navigator.userAgent.match(/BlackBerry/i)
 			|| navigator.userAgent.match(/Windows Phone/i)
 		){
-			adService = Cocoon.Ad.Chartboost.configure({
+			adService = Cocoon.Ad.Chartboost
+				
+			adService.configure({
 				ios: {
 					appId:"4ed254a3cb5015e47c000000",
 					appSignature:"91858cc162b56414ca47e63ce7a1b20105c70e65"
