@@ -232,15 +232,15 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1904"
-     inkscape:window-height="1042"
+     inkscape:window-width="1424"
+     inkscape:window-height="868"
      id="namedview4210"
      showgrid="false"
-     inkscape:zoom="0.31246662"
-     inkscape:cx="10381.304"
-     inkscape:cy="-1751.1944"
+     inkscape:zoom="1.7675781"
+     inkscape:cx="8021.3665"
+     inkscape:cy="-2752.5141"
      inkscape:window-x="0"
-     inkscape:window-y="22"
+     inkscape:window-y="16"
      inkscape:window-maximized="1"
      inkscape:current-layer="Layer_1" /><rect
      style="opacity:1;fill:#1a1a1a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -1192,7 +1192,7 @@
      inkscape:transform-center-y="0.11226511"
      transform="matrix(1.6160109,1.8789395,-1.8789395,1.6160109,3360.5994,-19619.235)" /><path
      sodipodi:type="star"
-     style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.82263017;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.82263017;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="path4397"
      sodipodi:sides="3"
      sodipodi:cx="8968.75"
@@ -1202,12 +1202,12 @@
      sodipodi:arg1="2.2937757"
      sodipodi:arg2="3.3409732"
      inkscape:flatsided="true"
-     inkscape:rounded="0"
+     inkscape:rounded="0.17"
      inkscape:randomized="0"
-     d="m 8957.0312,4719.0313 6.0763,-30.0707 23.0038,20.2975 z"
+     d="m 8957.0312,4719.0313 c -3.9106,-3.4506 1.1327,-28.4092 6.0763,-30.0707 4.9436,-1.6614 24.0367,15.1855 23.0038,20.2975 -1.033,5.112 -25.1694,13.2237 -29.0801,9.7732 z"
      inkscape:transform-center-x="-7.1871241"
      inkscape:transform-center-y="0.18697388"
-     transform="matrix(-2.6819434,3.1183015,3.1183015,2.6819434,14343.526,-36022.654)" /><g
+     transform="matrix(-2.6819434,3.1183015,3.1183015,2.6819434,14355.526,-36022.654)" /><g
      id="g4403"
      transform="translate(2.869343,-1.4927561)"><path
        sodipodi:type="star"
@@ -2985,4 +2985,45 @@
      width="304.03247"
      height="576.06152"
      x="10169.486"
-     y="1977.7566" /></svg>
+     y="1977.7566" /><image
+     y="3151.0547"
+     x="8106.4497"
+     id="image4625"
+     xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
+WXMAABVOAAAVTgGexs3BAAAAB3RJTUUH4QUYDA85nQb/JAAAAWZJREFUeNrt3btNA0EUQNG7fCLk
+BuiF0K1QFJXQBF3YCQkB0SYeEieIkRyw2Z7TwejN1dNEUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGxv2duBR6/D2P9zYd52dWfujBwEAgIBgYBA
+QCAgEBAICAQEAggEBAICAYGAQEAgIBAQCAgEBAIIBAQCAgGBgEBAICAQEAgIBBAICAQEAgLZ0KXy
+iQ4CmRvrNRIQyF/LZ7UaPQKZb5CP6svoEch8g7xXZ6NHIHNrdbJFEMjcS/VUfRs/tzzs8MzHGvfV
+YYffxCOQm55rWa7bc6QSBPLLo7HjDQICAYGAQEAgIBAQCAgEBAIIBAQCAgGBgEBAICAQEAgAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADABn4AaygV
+LTIr2AkAAAAASUVORK5CYII=
+"
+     preserveAspectRatio="none"
+     height="129.9639"
+     width="129.9639" /><g
+     id="g4636"
+     transform="translate(7.5874023,17.293945)"
+     inkscape:export-xdpi="135"
+     inkscape:export-ydpi="135"><rect
+       y="3215.1338"
+       x="7932.9771"
+       height="50"
+       width="50"
+       id="rect4628"
+       style="fill:#ff0066;fill-opacity:1;stroke:none" /><rect
+       y="3244.9426"
+       x="7934.3228"
+       height="14.709394"
+       width="47.522652"
+       id="rect4630"
+       style="fill:#ff4366;fill-opacity:1;stroke:none" /></g><rect
+     style="fill:#ff4366;fill-opacity:0;stroke:none"
+     id="rect4634"
+     width="200"
+     height="200"
+     x="7865.5645"
+     y="3157.4277"
+     rx="0.1"
+     inkscape:export-xdpi="135"
+     inkscape:export-ydpi="135" /></svg>

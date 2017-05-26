@@ -719,7 +719,10 @@ function main(){
 		this.events.onDragStop.add(logic_position,this)
 		this.events.onDragStart.add(show_grid_on_logic_position,this)
 		this.input.enableSnap(40,40,true,true)
-
+		this.animate_when_fire()
+		
+		game.time.events.loop( this.frequency,this.animate_when_fire,this )
+		//this.animate_when_fire()
 		game.physics.arcade.enable(this);
 		if(this.special_color){
 			this.weapon=game.add.weapon(9,'bullet_color')
@@ -760,10 +763,11 @@ function main(){
 	_canon.prototype.update = function(){
 		if(this._flag==false){
 			//this.u=1-this.u
-			this.weapon.fire()	
+			this.weapon.fire() 
 			//this.x=this.x+this.table[this.u]
 		}
 	}
+	
 
 	_canon.prototype.transition = function() {
 		this.tween_characteristic = game.add.tween(this.canon).to({x:posx,y:posy},time,Phaser.Easing.Linear.None,true,delay)
@@ -773,6 +777,7 @@ function main(){
 		console.log('kill')	
 	}
 	_canon.prototype.fire = function() {
+
 		this._flag=true
 		this.weapon.fireRate = this.frequency ;
 		this.weapon.bulletSpeed = this.speed;
@@ -784,9 +789,9 @@ function main(){
 			//this.tween_0.resume()
 			//this.weapon.fire()
 	}
-	_canon.prototype.scale_mainbody = function() {
-		this.tween_0 = game.add.tween(this.mainbody.scale).to({x:.7,y:.7},this.frequency*.2,Phaser.Easing.Linear.None,true,0,-1)
-			this.tween_0.yoyo(true,this.frequency*.2)	
+	_canon.prototype.animate_when_fire = function() {
+		this.tween_2 = game.add.tween(this.scale).to({x:1.4,y:1.2},30,Phaser.Easing.Linear.None,true,0)
+		this.tween_2.yoyo(30,true)
 	}
 
 	_canon.prototype.audio_pop = function() {
@@ -1209,9 +1214,9 @@ function main(){
 				console.log("create_canoin");
 				
 				//canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-				canon[0]=new _canon(0,800,w-200,800,900,90,0,180,hero.flag_level_complete,true,false)
+				canon[0]=new _canon(0,0,w-200,800,900,90,0,180,hero.flag_level_complete,true,false)
 				console.log(canon[0].special_color,"special_color")
-				canon[1]=new _canon(1,100,0,1200,400,900,0,0,hero.flag_level_complete,false,true) 
+				canon[1]=new _canon(1,0,0,1200,400,900,0,0,hero.flag_level_complete,false,true) 
 			}
 			this.create_asteroid=function(){
 				//asteroid = function(number,posx,posy,speed,radius){
