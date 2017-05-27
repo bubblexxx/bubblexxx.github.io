@@ -132,7 +132,7 @@ function main(){
 		Phaser.Sprite.call(this,game,w2,h+500,'rect')
 		this.flag_mouse=false
 		this.flag_show_button=true
-		this.cible_shadow=game.add.sprite(w2,300,'cible')
+		this.cible_shadow=game.add.sprite(w2,300,'cible_shadow')
 		this.cible_shadow.anchor.setTo(.5,.5)
 		this.cible_shadow.scale.setTo(1.5,1.5)
 		this.cible_shadow.alpha=.2
@@ -792,6 +792,21 @@ function main(){
 	_canon.prototype.animate_when_fire = function() {
 		this.tween_2 = game.add.tween(this.scale).to({x:1.4,y:1.2},30,Phaser.Easing.Linear.None,true,0)
 		this.tween_2.yoyo(30,true)
+		this.explosion()
+	}
+
+	_canon.prototype.explosion = function() {
+		this.particle = game.add.emitter(this.x,this.y,4)
+		this.particle.makeParticles("rect")
+		this.particle.minParticleSpeed.setTo(-600,-600)
+		this.particle.maxParticleSpeed.setTo(800,800)
+		this.particle.setAlpha(.8, .6)
+		this.particle.minParticleScale = .2
+		this.particle.maxParticleScale = .4
+		this.particle.minRotation = 0
+		this.particle.maxRotation = 0
+		this.particle.on=false
+		this.particle.start(true,230,null,20)
 	}
 
 	_canon.prototype.audio_pop = function() {
@@ -1132,6 +1147,7 @@ function main(){
 			this.game.load.audio("pop","sounds/pop.ogg");
 			this.game.load.audio("launch","sounds/launch.ogg");
 			//images
+			this.game.load.image("cible_shadow","assets/cible_shadow.png");
 			this.game.load.image("axe_neon","assets/axe_neon.png");
 			this.game.load.image("publish","assets/publish.png");
 			this.game.load.image("grid","assets/grid.png");
