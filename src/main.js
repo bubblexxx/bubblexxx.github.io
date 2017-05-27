@@ -796,17 +796,19 @@ function main(){
 	}
 
 	_canon.prototype.explosion = function() {
-		this.particle = game.add.emitter(this.x,this.y,4)
-		this.particle.makeParticles("rect")
-		this.particle.minParticleSpeed.setTo(-600,-600)
-		this.particle.maxParticleSpeed.setTo(800,800)
-		this.particle.setAlpha(.8, .6)
-		this.particle.minParticleScale = .2
-		this.particle.maxParticleScale = .4
-		this.particle.minRotation = 0
-		this.particle.maxRotation = 0
-		this.particle.on=false
-		this.particle.start(true,230,null,20)
+		if(this._flag){
+		this.particlex = game.add.emitter(this.x,this.y,4)
+		this.particlex.makeParticles("rect")
+		this.particlex.minParticleSpeed.setTo(-600,-600)
+		this.particlex.maxParticleSpeed.setTo(800,800)
+		this.particlex.setAlpha(.8, .6)
+		this.particlex.minParticleScale = .2
+		this.particlex.maxParticleScale = .4
+		this.particlex.minRotation = 0
+		this.particlex.maxRotation = 0
+		this.particlex.on=false
+		this.particlex.start(true,230,null,20)
+	}
 	}
 
 	_canon.prototype.audio_pop = function() {
@@ -1176,10 +1178,14 @@ function main(){
 			
 			
 			//font bitmapFont
-			this.game.load.bitmapFont('lucky_yellow','fonts/font_ab_yellow.png', 'fonts/font_ab.fnt');
-			this.game.load.bitmapFont('lucky_red','fonts/font_ab_red.png', 'fonts/font_ab.fnt');
-			this.game.load.bitmapFont('fo','fonts/font.png', 'fonts/font.fnt');
-			this.game.load.bitmapFont('lucky','fonts/font_ab.png', 'fonts/font_ab.fnt');
+			//this.game.load.bitmapFont('lucky_yellow','fonts/font_ab_yellow.png', 'fonts/font_ab.fnt');
+			//this.game.load.bitmapFont('lucky_red','fonts/font_ab_red.png', 'fonts/font_ab.fnt');
+			//this.game.load.bitmapFont('fo','fonts/font.png', 'fonts/font.fnt');
+			//this.game.load.bitmapFont('lucky','fonts/font_ab.png', 'fonts/font_ab.fnt');
+			//this.game.load.bitmapFont('lucky_yellow','fonts/gro.png', 'fonts/gro.fnt');
+			//this.game.load.bitmapFont('lucky_red','fonts/gro.png', 'fonts/gro.fnt');
+			this.game.load.bitmapFont('fo','fonts/gro.png', 'fonts/gro.fnt');
+			//this.game.load.bitmapFont('lucky','fonts/gro.png', 'fonts/gro.fnt');
 		},
 		
 		create: function(){
@@ -1254,8 +1260,8 @@ function main(){
 
 			this.create_dalle=function(){
 				//_dalle = function(number,delay,posx,posy,speed){
-				dalle[0]=new _dalle(0,0,300,440,9000)
-				dalle[1]=new _dalle(1,0,500,640,9000)
+				//dalle[0]=new _dalle(0,0,300,440,9000)
+				//dalle[1]=new _dalle(1,0,500,640,9000)
 			}
 
 
@@ -1624,6 +1630,7 @@ function main(){
 				canon[j].explode_bullet(canon[j].weapon.bullets)
 				canon[j].visible=false
 				canon[j].weapon.bullets.visible=false
+				canon[j].particlex.on=false
 				canon[j].destroy()
 			}
 		}
