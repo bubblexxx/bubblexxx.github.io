@@ -1012,6 +1012,61 @@ function main(){
 			game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
 		}
 	}
+	var chartboost_rewardvideo=function(){
+		Cocoon.Ad.Chartboost.configure({
+			ios: {
+				appId:"4ed254a3cb5015e47c000000",
+				appSignature:"91858cc162b56414ca47e63ce7a1b20105c70e65"
+			},
+			android: {
+				appId:"50ae12d715ba47c00d01000c",
+				appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
+			}
+
+		});	
+		var interstitial = Cocoon.Ad.Chartboost.createInterstitial("50d1909c17b147523700000e");
+		interstitial.on("load", function(){
+			console.log("Interstitial loaded");
+		});
+
+		interstitial.on("fail", function(){
+			console.log("Interstitial failed");
+		});
+
+		interstitial.on("show", function(){
+			console.log("Interstitial shown");
+		});
+
+		interstitial.on("dismiss", function(){
+			console.log("Interstitial dismissed");
+		});
+		interstitial.show()
+		var rewardedVideo = Cocoon.Ad.Chartboost.createRewardedVideo(adUnit);
+		rewardedVideo.on("load", function(){
+			console.log("Rewarded Video loaded");
+		});
+
+		rewardedVideo.on("fail", function(){
+			console.log("Rewarded Video failed");
+		});
+
+		rewardedVideo.on("show", function(){
+			console.log("Rewarded Video shown");
+		});
+
+		rewardedVideo.on("dismiss", function(){
+			console.log("Rewarded Video dismissed");
+		});
+
+		rewardedVideo.on("click", function(){
+			console.log("Rewarded Video clicked");
+		});
+
+		rewardedVideo.on("reward", function(){
+			console.log("Reward completed");
+		});
+		rewardedVideo.show()
+	}
 
 	var createInterstitial=function(){
 		if( navigator.userAgent.match(/Android/i)
@@ -1230,8 +1285,8 @@ function main(){
 		create: function(){
 			flag_hide=true
 			level_number=0
-			createInterstitial()
-
+			//createInterstitial()
+chartboost_rewardvideo()
 			this.create_canon=function(){
 				console.log("create_canoin");
 				
