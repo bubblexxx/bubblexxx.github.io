@@ -10,7 +10,7 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
-	alert("new")
+	alert("newshow")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -1029,6 +1029,7 @@ function main(){
 		this.rewardedVideo.load();
 		alert("load")
 		this.rewardedVideo.show(); 
+		alert("show")
 	}
 
 	var createInterstitial=function(){
