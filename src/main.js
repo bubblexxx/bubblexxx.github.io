@@ -1018,8 +1018,8 @@ function main(){
 		this.chartboostVideo = Cocoon.Ad.Chartboost;
 		this.chartboostVideo.configure({
 				android: {
-			appId:"50ae12d715ba47c00d01000c",
-			appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
+			appId:"592c6fe1f6cd45340e66049b",
+			appSignature:"befa2bd1770d105d58bedbea8057e6436893a3ec"
 				}
 		});
 		this.rewardedVideo=this.chartboostVideo.createRewardedVideo();
@@ -1197,14 +1197,7 @@ function main(){
 			
 			
 			//font bitmapFont
-			//this.game.load.bitmapFont('lucky_yellow','fonts/font_ab_yellow.png', 'fonts/font_ab.fnt');
-			//this.game.load.bitmapFont('lucky_red','fonts/font_ab_red.png', 'fonts/font_ab.fnt');
-			//this.game.load.bitmapFont('fo','fonts/font.png', 'fonts/font.fnt');
-			//this.game.load.bitmapFont('lucky','fonts/font_ab.png', 'fonts/font_ab.fnt');
-			//this.game.load.bitmapFont('lucky_yellow','fonts/gro.png', 'fonts/gro.fnt');
-			//this.game.load.bitmapFont('lucky_red','fonts/gro.png', 'fonts/gro.fnt');
 			this.game.load.bitmapFont('fo','fonts/gro.png', 'fonts/gro.fnt');
-			//this.game.load.bitmapFont('lucky','fonts/gro.png', 'fonts/gro.fnt');
 		},
 		
 		create: function(){
@@ -1221,7 +1214,7 @@ function main(){
 			game.add.existing(this.title)
 			this.initProgressData()
 //ICI ENLEVER
-			//createBanner()
+			createBanner()
 		},
 
 		initProgressData: function() {
@@ -1250,7 +1243,7 @@ function main(){
 			flag_hide=true
 			level_number=0
 			//createInterstitial()
-chartboost_rewardvideo()
+			chartboost_rewardvideo()
 			this.create_canon=function(){
 				console.log("create_canoin");
 				
