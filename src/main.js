@@ -1013,59 +1013,17 @@ function main(){
 		}
 	}
 	var chartboost_rewardvideo=function(){
-		Cocoon.Ad.Chartboost.configure({
-			ios: {
-				appId:"4ed254a3cb5015e47c000000",
-				appSignature:"91858cc162b56414ca47e63ce7a1b20105c70e65"
-			},
-			android: {
-				appId:"50ae12d715ba47c00d01000c",
-				appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
-			}
-
-		});	
-		var interstitial = Cocoon.Ad.Chartboost.createInterstitial("50d1909c17b147523700000e");
-		interstitial.on("load", function(){
-			console.log("Interstitial loaded");
+		this.chartboostVideo = Cocoon.Ad.Chartboost;
+		this.chartboostVideo.configure({
+			appId:"50ae12d715ba47c00d01000c",
+			appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
 		});
-
-		interstitial.on("fail", function(){
-			console.log("Interstitial failed");
+		this.rewardedVideo=this.chartboostVideo.createRewardedVideo();
+		this.rewardedVideo.on("reward", function(reward){
+			// give the player their reward here.
 		});
-
-		interstitial.on("show", function(){
-			console.log("Interstitial shown");
-		});
-
-		interstitial.on("dismiss", function(){
-			console.log("Interstitial dismissed");
-		});
-		interstitial.show()
-		var rewardedVideo = Cocoon.Ad.Chartboost.createRewardedVideo(adUnit);
-		rewardedVideo.on("load", function(){
-			console.log("Rewarded Video loaded");
-		});
-
-		rewardedVideo.on("fail", function(){
-			console.log("Rewarded Video failed");
-		});
-
-		rewardedVideo.on("show", function(){
-			console.log("Rewarded Video shown");
-		});
-
-		rewardedVideo.on("dismiss", function(){
-			console.log("Rewarded Video dismissed");
-		});
-
-		rewardedVideo.on("click", function(){
-			console.log("Rewarded Video clicked");
-		});
-
-		rewardedVideo.on("reward", function(){
-			console.log("Reward completed");
-		});
-		rewardedVideo.show()
+		this.rewardedVideo.load();
+		this.rewardedVideo.show(); 
 	}
 
 	var createInterstitial=function(){
