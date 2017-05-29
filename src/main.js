@@ -10,7 +10,7 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
-	alert("newshow")
+	alert("newshow2")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
