@@ -10,7 +10,7 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
-	alert("new")
+	alert("ne")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -1017,8 +1017,10 @@ function main(){
 		alert("charboost")
 		this.chartboostVideo = Cocoon.Ad.Chartboost;
 		this.chartboostVideo.configure({
+				android: {
 			appId:"50ae12d715ba47c00d01000c",
 			appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
+				}
 		});
 		this.rewardedVideo=this.chartboostVideo.createRewardedVideo();
 		this.rewardedVideo.on("reward", function(reward){
