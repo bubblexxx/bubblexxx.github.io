@@ -1014,6 +1014,7 @@ function main(){
 		}
 	}
 	var chartboost_rewardvideo=function(){
+		alert("charboost")
 		this.chartboostVideo = Cocoon.Ad.Chartboost;
 		this.chartboostVideo.configure({
 			appId:"50ae12d715ba47c00d01000c",
@@ -1024,6 +1025,7 @@ function main(){
 			// give the player their reward here.
 		});
 		this.rewardedVideo.load();
+		alert("load")
 		this.rewardedVideo.show(); 
 	}
 
