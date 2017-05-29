@@ -10,7 +10,7 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
-	alert("ne")
+	alert("new")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -1219,8 +1219,8 @@ function main(){
 			this.title=new screen_first()
 			game.add.existing(this.title)
 			this.initProgressData()
-
-			createBanner()
+//ICI ENLEVER
+			//createBanner()
 		},
 
 		initProgressData: function() {
