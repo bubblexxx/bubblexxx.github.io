@@ -10,7 +10,7 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
-	alert("newshow2")
+	alert("retirer adunit")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -1022,7 +1022,7 @@ function main(){
 			appSignature:"befa2bd1770d105d58bedbea8057e6436893a3ec"
 				}
 		});
-		this.rewardedVideo=this.chartboostVideo.createRewardedVideo(adunit);
+		this.rewardedVideo=this.chartboostVideo.createRewardedVideo();
 		this.rewardedVideo.on("reward", function(reward){
 			// give the player their reward here.
 		});
