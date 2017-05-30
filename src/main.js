@@ -1022,7 +1022,7 @@ function main(){
 			appSignature:"befa2bd1770d105d58bedbea8057e6436893a3ec"
 				}
 		});
-		this.rewardedVideo=this.chartboostVideo.createRewardedVideo();
+		this.rewardedVideo=this.chartboostVideo.createRewardedVideo(592c6fe1f6cd45340e66049b);
 		this.rewardedVideo.on("reward", function(reward){
 			// give the player their reward here.
 		});
