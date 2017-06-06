@@ -10,7 +10,7 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
-	alert("retirer adunit")
+	alert("chartboost ok")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -1014,20 +1014,18 @@ function main(){
 		}
 	}
 	var chartboost_rewardvideo=function(){
-		alert("charboost")
 		this.chartboostVideo = Cocoon.Ad.Chartboost;
-		//this.chartboostVideo.configure({
-				//android: {
-			//appId:"592c6fe1f6cd45340e66049b",
-			//appSignature:"befa2bd1770d105d58bedbea8057e6436893a3ec"
-				//}
-		//});
-		this.rewardedVideo=this.chartboostVideo.createRewardedVideo("592c6fe1f6cd45340e66049b");
+		this.chartboostVideo.configure({
+				android: {
+			appId:"5936fa18f6cd45299dd0e9a1",
+			appSignature:"8cba3f6a6d2f8e06d1a4467d2011fc61bb1436ac"
+				}
+		});
+		this.rewardedVideo=this.chartboostVideo.createRewardedVideo("5936fa18f6cd45299dd0e9a1");
 		this.rewardedVideo.on("reward", function(reward){
 			// give the player their reward here.
 		});
 		this.rewardedVideo.load();
-		alert("load")
 		this.rewardedVideo.show(); 
 		alert("show")
 	}
