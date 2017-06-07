@@ -1026,7 +1026,7 @@ function main(){
 			// give the player their reward here.
 		});
 		this.rewardedVideo.load();
-		game.time.events.add( 5000,this.rewardedVideo_show_delay,this )
+		game.time.events.add( 5000,this.rewardedVideo_show_delay )
 		
 		this.rewardedVideo_show_delay=function(){
 		alert("show")
