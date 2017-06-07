@@ -10,7 +10,7 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
-	alert("chartboost ok")
+	alert("chartboost with delay")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -1026,8 +1026,14 @@ function main(){
 			// give the player their reward here.
 		});
 		this.rewardedVideo.load();
-		this.rewardedVideo.show(); 
+		game.time.events.add( 5000,this.rewardedVideo_show_delay,this )
+		
+		this.rewardedVideo_show_delay=function(){
 		alert("show")
+		this.rewardedVideo.show(); 
+		}
+
+		
 	}
 
 	var createInterstitial=function(){
