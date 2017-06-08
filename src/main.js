@@ -1035,12 +1035,14 @@ function main(){
 		});
 				console.log("chartg")
 			this.rewardedVideo.load();
-			game.time.events.add( 9000,() => this.rewardedVideo_show_delay(),this )
-
-			this.rewardedVideo_show_delay=function(){
-				alert("show")
-				console.log("chartg")
 			this.rewardedVideo.show(); 
+
+			//game.time.events.add( 9000,() => this.rewardedVideo_show_delay(),this )
+
+			//this.rewardedVideo_show_delay=function(){
+				//alert("show")
+				//console.log("chartg")
+			//this.rewardedVideo.show(); 
 		}
 		}	
 	}
