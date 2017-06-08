@@ -10,7 +10,7 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
-	alert("chartboost with delay")
+	alert("chartboost")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -1014,6 +1014,14 @@ function main(){
 		}
 	}
 	var chartboost_rewardvideo=function(){
+		if( navigator.userAgent.match(/Android/i)
+			|| navigator.userAgent.match(/webOS/i)
+			|| navigator.userAgent.match(/iPhone/i)
+			|| navigator.userAgent.match(/iPad/i)
+			|| navigator.userAgent.match(/iPod/i)
+			|| navigator.userAgent.match(/BlackBerry/i)
+			|| navigator.userAgent.match(/Windows Phone/i)
+		){
 		this.chartboostVideo = Cocoon.Ad.Chartboost;
 		this.chartboostVideo.configure({
 				android: {
@@ -1026,15 +1034,15 @@ function main(){
 			// give the player their reward here.
 		});
 		this.rewardedVideo.load();
-		game.time.events.add( 5000,this.rewardedVideo_show_delay )
+		game.time.events.add( 5000,() => this.rewardedVideo_show_delay(),this )
 		
 		this.rewardedVideo_show_delay=function(){
 		alert("show")
 		this.rewardedVideo.show(); 
 		}
-
-		
+		}	
 	}
+
 
 	var createInterstitial=function(){
 		if( navigator.userAgent.match(/Android/i)
