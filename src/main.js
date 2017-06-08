@@ -10,7 +10,7 @@
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
-	alert("chartboost")
+	alert("chartgg")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -1033,12 +1033,13 @@ function main(){
 		this.rewardedVideo.on("reward", function(reward){
 			// give the player their reward here.
 		});
-		this.rewardedVideo.load();
-		game.time.events.add( 5000,() => this.rewardedVideo_show_delay(),this )
-		
-		this.rewardedVideo_show_delay=function(){
-		alert("show")
-		this.rewardedVideo.show(); 
+			this.rewardedVideo.load();
+			game.time.events.add( 9000,() => this.rewardedVideo_show_delay(),this )
+
+			this.rewardedVideo_show_delay=function(){
+				alert("show")
+				console.log("chartg")
+			this.rewardedVideo.show(); 
 		}
 		}	
 	}
