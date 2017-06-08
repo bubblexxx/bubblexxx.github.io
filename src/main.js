@@ -1033,6 +1033,7 @@ function main(){
 		this.rewardedVideo.on("reward", function(reward){
 			// give the player their reward here.
 		});
+				console.log("chartg")
 			this.rewardedVideo.load();
 			game.time.events.add( 9000,() => this.rewardedVideo_show_delay(),this )
 
