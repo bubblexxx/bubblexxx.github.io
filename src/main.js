@@ -1,4 +1,25 @@
 
+/*
+*************************************************************************
+ * 
+ * bubblexxxL
+ * __________________
+ * 
+ *  [2016] - [2017] Gregory Dailly  
+ *  All Rights Reserved.
+ * 
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Greogry Dailly and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Gregory Dailly
+ * and its suppliers and may be covered by Europe law and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Gregory Dailly - espace3d@gmail.com - 0032486/925736 
+ */
+
+
 //TODO
 //hide_weapon ne se declenche pas toujours
 //1081 retablir createBanner
@@ -8,6 +29,7 @@
 //explode dalle neon asteroid pulsar
 //changer couleur particle d'asteroid
 //detecter si gsm ou ordi et régler admob et cordova en fonction
+
 
 function main(){
 	alert("m")
@@ -23,24 +45,13 @@ function main(){
 	})();
 
 	DEBUG.log("myapp");              
-
-	//var canvas = document.createElement("canvas");
-	//canvas.screencanvas = true;
-	//canvas.width = window.innerWidth * window.devicePixelRatio;
-	//canvas.height = window.innerHeight * window.devicePixelRatio;
-	//var ctx = canvas.getContext("experimental-webgl");	
-	//console.log('with_screen_canvas+')
 	
-
 	this.some_value=4
 	var gui
 	var PLAYER_DATA 
-	//var PLAYER_DATA = null 
 	var ratio_device=window.screen.width/window.screen.height
 	var h=1920
 	var w=1280
-	//var h=960
-	//var w=640
 	var time_hide=500
 	var h2=h*.5
 	var w2=640
@@ -207,12 +218,6 @@ function main(){
 		window.location='mailto:'+EmailVariable+'?subject='+SubjectVariable+'&body='+email
 		this.tween_publish=game.add.tween(this.button_publish.scale).to({x:0,y:0},500,Phaser.Easing.Bounce.Out,true,300)
 		this.tween_publish.onComplete.add(function(){this.button_publish.visible=false},this)
-		//var link = 'mailto:espace3d@gmail.com?subject=bubblex+level_number '
-		//window.location='mailto:+EmailVairable?subject=+SubjectVariable&body=+email'
-		//+document.getElementById('email').value
-		//+'&body='+document.getElementById('email');
-		//window.location.href = link;
-
 	}
 	//
 	character.prototype.audio_star = function() {
@@ -655,7 +660,6 @@ function main(){
 		this.inputEnabled=true
 		this.input.enableDrag(true)
 		this.input.enableSnap(40,40,true,true)
-		//this.axe_neon.name="neon"
 		this.events.onDragStop.add(logic_position,this)
 		this.events.onDragStart.add(show_grid_on_logic_position,this)
 		game.physics.arcade.enable(this.axe_neon);
@@ -680,7 +684,6 @@ function main(){
 	_neon.prototype.fire = function() {
 		game.tweens.remove(this.tween0)	
 		console.log("remove");
-		//this.axe_neon.x=this.posx
 		this.axe_neon.x=this.x
 		this.axe_neon.y=this.posy
 		this.posx_in_tween=this.posx_in_tween
@@ -710,7 +713,6 @@ function main(){
 		this.sound_pop=game.add.audio('pop')
 		this._flag=true
 		//canon
-		//Phaser.Sprite.call(this,game,this.posx,this.posy,'canon_mainbody')
 		//
 		Phaser.Sprite.call(this,game,this.posx,this.posy,'canon')
 		this.anchor.setTo(.5,.5)
@@ -723,7 +725,6 @@ function main(){
 		this.animate_when_fire()
 		
 		game.time.events.loop( this.frequency,this.animate_when_fire,this )
-		//this.animate_when_fire()
 		game.physics.arcade.enable(this);
 		if(this.special_color){
 			this.weapon=game.add.weapon(9,'bullet_color')
@@ -1033,17 +1034,8 @@ function main(){
 		this.rewardedVideo.on("reward", function(reward){
 			// give the player their reward here.
 		});
-				console.log("chartg")
 			this.rewardedVideo.load();
 			this.rewardedVideo.show(); 
-
-			//game.time.events.add( 9000,() => this.rewardedVideo_show_delay(),this )
-
-			//this.rewardedVideo_show_delay=function(){
-				//alert("show")
-				//console.log("chartg")
-			//this.rewardedVideo.show(); 
-		//}
 		}	
 	}
 
@@ -2002,9 +1994,7 @@ function main(){
 			}
 		}
 	}
-	//game = new Phaser.Game(640,960,Phaser.CANVAS,'game' )
 	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
-	//game = new Phaser.Game(1280,1920,Phaser.AUTO,'game' )
 	game.state.add('boot',bootstate)
 	game.state.add('preload',preloadstate)
 	game.state.add('game_first_screen',game_first_screen)
