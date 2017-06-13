@@ -1026,8 +1026,8 @@ function main(){
 		this.chartboostVideo = Cocoon.Ad.Chartboost;
 		this.chartboostVideo.configure({
 				android: {
-			appId:"5936fa18f6cd45299dd0e9a1",
-			appSignature:"8cba3f6a6d2f8e06d1a4467d2011fc61bb1436ac"
+			appId:"593f9e2504b0160769416382",
+			appSignature:"41fd9a8fc8adea90df03e94772ffa7e5373afcc6"
 				}
 		});
 		this.rewardedVideo=this.chartboostVideo.createRewardedVideo("5936fa18f6cd45299dd0e9a1");
@@ -2029,5 +2029,5 @@ var detectmob=function() {
 	}
 }
 //detectmob()
-//document.addEventListener('deviceready',main,false)
+document.addEventListener('deviceready',main,false)
 
