@@ -1017,10 +1017,8 @@ function main(){
 	var chartboost_rewardvideo=function(){
 		this.chartboostVideo = Cocoon.Ad.Chartboost;
 		this.chartboostVideo.configure({
-			android: {
 				appId:"593f9e2504b0160769416382",
 				appSignature:"41fd9a8fc8adea90df03e94772ffa7e5373afcc6"
-			}
 		});
 		this.rewardedVideo=this.chartboostVideo.createRewardedVideo();
 		this.rewardedVideo.on("reward", function(reward){
