@@ -1015,28 +1015,20 @@ function main(){
 		}
 	}
 	var chartboost_rewardvideo=function(){
-		if( navigator.userAgent.match(/Android/i)
-			|| navigator.userAgent.match(/webOS/i)
-			|| navigator.userAgent.match(/iPhone/i)
-			|| navigator.userAgent.match(/iPad/i)
-			|| navigator.userAgent.match(/iPod/i)
-			|| navigator.userAgent.match(/BlackBerry/i)
-			|| navigator.userAgent.match(/Windows Phone/i)
-		){
 		this.chartboostVideo = Cocoon.Ad.Chartboost;
 		this.chartboostVideo.configure({
-				android: {
-			appId:"593f9e2504b0160769416382",
-			appSignature:"41fd9a8fc8adea90df03e94772ffa7e5373afcc6"
-				}
+			android: {
+				appId:"593f9e2504b0160769416382",
+				appSignature:"41fd9a8fc8adea90df03e94772ffa7e5373afcc6"
+			}
 		});
-		this.rewardedVideo=this.chartboostVideo.createRewardedVideo("5936fa18f6cd45299dd0e9a1");
+		this.rewardedVideo=this.chartboostVideo.createRewardedVideo();
 		this.rewardedVideo.on("reward", function(reward){
 			// give the player their reward here.
 		});
-			this.rewardedVideo.load();
-			this.rewardedVideo.show(); 
-		}	
+
+		this.rewardedVideo.load();
+		this.rewardedVideo.show(); 
 	}
 
 
@@ -2028,6 +2020,6 @@ var detectmob=function() {
 			return false;
 	}
 }
-//detectmob()
-document.addEventListener('deviceready',main,false)
+detectmob()
+//document.addEventListener('deviceready',main,false)
 
