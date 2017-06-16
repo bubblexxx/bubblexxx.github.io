@@ -32,7 +32,7 @@
 
 
 function main(){
-	alert("c'est parti mon kiki")
+	alert("other")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -1015,18 +1015,21 @@ function main(){
 		}
 	}
 	var chartboost_rewardvideo=function(){
-		this.chartboostVideo = Cocoon.Ad.Chartboost;
-		this.chartboostVideo.configure({
+		Cocoon.Ad.Chartboost.configure({
+			android:{
 				appId:"593f9e2504b0160769416382",
 				appSignature:"41fd9a8fc8adea90df03e94772ffa7e5373afcc6"
+			}
 		});
-		this.rewardedVideo=Cocoon.Ad.createRewardedVideo();
-		this.rewardedVideo.on("reward", function(reward){
+		this.rewardedVideo=Cocoon.Ad.createRewardedVideo("593f9e2504b0160769416382");
+		//this.rewardedVideo.on("reward", function(reward){
 			// give the player their reward here.
-		});
+		//});
 		alert("c'est parti")
+		console.log("parti")
 		this.rewardedVideo.on("load", function(){
 		this.rewardedVideo.show(); 
+		console.log("parti2")
 		});
 	}
 
