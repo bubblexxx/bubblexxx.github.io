@@ -32,7 +32,7 @@
 
 
 function main(){
-	alert("nnnn")
+	alert("onnn")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -1021,14 +1021,13 @@ function main(){
 				appSignature:"41fd9a8fc8adea90df03e94772ffa7e5373afcc6"
 			}
 		});
-		this.rewardedVideo=Cocoon.Ad.createRewardedVideo("bubblexxx_rewarded_video");
+		this.rewardedVideo=Cocoon.Ad.createRewardedVideo("593f9e2504b0160769416382");
 		//this.rewardedVideo.on("reward", function(reward){
 			// give the player their reward here.
 		//});
 		console.log("parti")
 		this.rewardedVideo.load()
 		this.rewardedVideo.on("load", function(){
-		alert("c'est parti")
 		this.rewardedVideo.show(); 
 		console.log("parti2")
 		});
