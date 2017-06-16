@@ -32,7 +32,7 @@
 
 
 function main(){
-	alert("m")
+	alert("c'est parti mon kiki")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -1020,13 +1020,14 @@ function main(){
 				appId:"593f9e2504b0160769416382",
 				appSignature:"41fd9a8fc8adea90df03e94772ffa7e5373afcc6"
 		});
-		this.rewardedVideo=this.chartboostVideo.createRewardedVideo();
+		this.rewardedVideo=Cocoon.Ad.createRewardedVideo();
 		this.rewardedVideo.on("reward", function(reward){
 			// give the player their reward here.
 		});
-
-		this.rewardedVideo.load();
+		alert("c'est parti")
+		this.rewardedVideo.on("load", function(){
 		this.rewardedVideo.show(); 
+		});
 	}
 
 
@@ -1212,7 +1213,7 @@ function main(){
 			game.add.existing(this.title)
 			this.initProgressData()
 //ICI ENLEVER
-			createBanner()
+			//createBanner()
 		},
 
 		initProgressData: function() {
