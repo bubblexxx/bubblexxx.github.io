@@ -1026,11 +1026,11 @@ function main(){
 			// give the player their reward here.
 		//});
 		console.log("parti")
-		this.rewardedVideo.load()
 		this.rewardedVideo.on("load", function(){
 		this.rewardedVideo.show(); 
 		console.log("parti2")
 		});
+		this.rewardedVideo.load()
 	}
 
 
