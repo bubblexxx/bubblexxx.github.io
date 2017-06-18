@@ -32,7 +32,7 @@
 
 
 function main(){
-	alert("onnn")
+	alert("play")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
