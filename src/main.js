@@ -21,6 +21,7 @@
 
 
 //TODO
+//lorsque button show restart ou video hide text
 //hide_weapon ne se declenche pas toujours
 //1081 retablir createBanner
 //1110 retablir createInterstitial
@@ -238,10 +239,21 @@ function main(){
 		if(this.flag_level_complete==false){
 			console.log("checkicharacterisloossomewhere");
 			this.explode(w2,0,n)	
-			this.life.text=3-(this.count+1)
-			console.log("this.life.text",this.life.text);
-			if(this.count==2 | this.count==3){
-				this.life.text='' 
+			this.count=this.count+1
+
+			switch(this.count){
+				case 0:
+					this.life.text=2 
+					break
+				case 1:
+					this.life.text=1 
+					break
+				case 2:
+					this.life.text='' 
+					break
+				default:
+					this.life.text='' 
+					break
 			}
 		}
 	}
@@ -453,15 +465,21 @@ function main(){
 		this.show_button_publish()
 	}
 
+	character.prototype.hide_life_text = function() {
+	this.life.visible=false	
+	}
+	
 	character.prototype.show_button_restart_level_complete = function() {
 		if(this.flag_show_button){
 			this.flag_show_button=false
 			this.show_button_restart_level()
 			this.show_button_next_level()
+			this.hide_life_text()
 		}
 	}
 
 	character.prototype.show_button_next_level = function() {
+			this.hide_life_text()
 		this.button_next.visible=true
 		this.tween3=game.add.tween(this.button_next.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
 	}
@@ -482,6 +500,7 @@ function main(){
 		if(this.flag_level_complete==false){
 			this.button_video.visible=true
 			this.tween4=game.add.tween(this.button_video.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
+			this.hide_life_text()
 		}	
 	}
 
@@ -1015,6 +1034,14 @@ function main(){
 		}
 	}
 	var chartboost_rewardvideo=function(){
+		if( navigator.userAgent.match(/Android/i)
+			|| navigator.userAgent.match(/webOS/i)
+			|| navigator.userAgent.match(/iPhone/i)
+			|| navigator.userAgent.match(/iPad/i)
+			|| navigator.userAgent.match(/iPod/i)
+			|| navigator.userAgent.match(/BlackBerry/i)
+			|| navigator.userAgent.match(/Windows Phone/i)
+		){
 		Cocoon.Ad.Chartboost.configure({
 			android:{
 				appId:"593f9e2504b0160769416382",
@@ -1025,12 +1052,21 @@ function main(){
 		//this.rewardedVideo.on("reward", function(reward){
 			// give the player their reward here.
 		//});
-		console.log("parti")
-		this.rewardedVideo.on("load", function(){
-		this.rewardedVideo.show(); 
-		console.log("parti2")
-		});
+			this.rewardVideo.on("load", function(){
+				console.log("Interstitial loaded");
+				this.rewardedVideo.show(); 
+			});
+			this.rewardVideo.on("fail", function(){
+				console.log("Interstitial failed");
+			});
+			this.rewardVideo.on("show", function(){
+				console.log("Interstitial shown");
+			});
+			this.rewardVideo.on("dismiss", function(){
+				console.log("Interstitial dismissed");
+			});
 		this.rewardedVideo.load()
+		}
 	}
 
 
