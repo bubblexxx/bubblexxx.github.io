@@ -9,7 +9,7 @@
  *  All Rights Reserved.
  * 
  * NOTICE:  All information contained herein is, and remains
- * the property of Greogry Dailly and its suppliers,
+ * the property of Gregory Dailly and its suppliers,
  * if any.  The intellectual and technical concepts contained
  * herein are proprietary to Gregory Dailly
  * and its suppliers and may be covered by Europe law and Foreign Patents,
@@ -17,6 +17,7 @@
  * Dissemination of this information or reproduction of this material
  * is strictly forbidden unless prior written permission is obtained
  * from Gregory Dailly - espace3d@gmail.com - 0032486/925736 
+ * rue de Brionsart 36a-5340 Gesves-Belgium
  */
 
 
