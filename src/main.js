@@ -2091,7 +2091,10 @@ var detectmob=function() {
 		return true;
 	}
 }
+//pour tester dans github décocher ceci
+main()
 
+//si c'est cocoon décocher ici
 //detectmob()
-document.addEventListener('deviceready',main,false)
+//document.addEventListener('deviceready',main,false)
 
