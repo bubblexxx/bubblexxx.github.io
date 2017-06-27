@@ -1324,7 +1324,6 @@ function main(){
 			}
 			this.create_asteroid=function(){
 				//asteroid = function(number,posx,posy,speed,radius){
-				alert("ici")
 				console.log("asteroid")
 				asteroid[0]=new _asteroid(100,240,900,.008,100)
 				asteroid[1]=new _asteroid(200,240,500,.008,100)
