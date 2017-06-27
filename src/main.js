@@ -1246,7 +1246,7 @@ function main(){
 			this.game.load.image("axe","assets/axe.png");
 			this.game.load.image("neon","assets/neon.png");
 			this.game.load.image("title","assets/title.png");
-			this.game.load.spritesheet('star','assets/star.png', 400, 100);
+			this.game.load.spritesheet('star','assets/star.png', 300, 100);
 			this.game.load.image("levelselecticons","assets/levelselecticons.png");
 			this.game.load.image("background","assets/background.png");
 			this.game.load.image("button_video","assets/button_video.png");
