@@ -1045,6 +1045,7 @@ function main(){
 		){
 			var appId;
 			var appSignature;
+			var videoreward;
 			//android
 			if (navigator.userAgent.match(/Android/i)) {
 				appId = "593f9e2504b0160769416382";
@@ -1054,48 +1055,48 @@ function main(){
 			else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)) {
 				alert("not configured on IOS")
 			}
-			window.chartboost.setUp(appId, appSignature);
+			videoreward.chartboost.setUp(appId, appSignature);
 
 			//
-			window.chartboost.onInterstitialAdPreloaded = function(location) {
+			videoreward.chartboost.onInterstitialAdPreloaded = function(location) {
 				alert('onInterstitialAdPreloaded: ' + location);
 			};
-			window.chartboost.onInterstitialAdLoaded = function(location) {
+			videoreward.chartboost.onInterstitialAdLoaded = function(location) {
 				alert('onInterstitialAdLoaded: ' + location);
 			};
-			window.chartboost.onInterstitialAdShown = function(location) {
+			videoreward.chartboost.onInterstitialAdShown = function(location) {
 				alert('onInterstitialAdShown: ' + location);
 			};
-			window.chartboost.onInterstitialAdHidden = function(location) {
+			videoreward.chartboost.onInterstitialAdHidden = function(location) {
 				alert('onInterstitialAdHidden: ' + location);
 			};
 			//
-			window.chartboost.onMoreAppsAdPreloaded = function(location) {
+			videoreward.chartboost.onMoreAppsAdPreloaded = function(location) {
 				alert('onMoreAppsAdPreloaded: ' + location);
 			};
-			window.chartboost.onMoreAppsAdLoaded = function(location) {
+			videoreward.chartboost.onMoreAppsAdLoaded = function(location) {
 				alert('onMoreAppsAdLoaded: ' + location);
 			};
-			window.chartboost.onMoreAppsAdShown = function(location) {
+			videoreward.chartboost.onMoreAppsAdShown = function(location) {
 				alert('onMoreAppsAdShown: ' + location);
 			};
-			window.chartboost.onMoreAppsAdHidden = function(location) {
+			videoreward.chartboost.onMoreAppsAdHidden = function(location) {
 				alert('onMoreAppsAdHidden: ' + location);
 			};
 			//
-			window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+			videoreward.chartboost.onRewardedVideoAdPreloaded = function(location) {
 				alert('onRewardedVideoAdPreloaded: ' + location);
 			};
-			window.chartboost.onRewardedVideoAdLoaded = function(location) {
+			videoreward.chartboost.onRewardedVideoAdLoaded = function(location) {
 				alert('onRewardedVideoAdLoaded: ' + location);
 			};
-			window.chartboost.onRewardedVideoAdShown = function(location) {
+			videoreward.chartboost.onRewardedVideoAdShown = function(location) {
 				alert('onRewardedVideoAdShown: ' + location);
 			};
-			window.chartboost.onRewardedVideoAdHidden = function(location) {
+			videoreward.chartboost.onRewardedVideoAdHidden = function(location) {
 				alert('onRewardedVideoAdHidden: ' + location);
 			};
-			window.chartboost.onRewardedVideoAdCompleted = function(location) {
+			videoreward.chartboost.onRewardedVideoAdCompleted = function(location) {
 				alert('onRewardedVideoAdCompleted: ' + location);
 			};
 		}
@@ -2072,7 +2073,7 @@ game.state.add('level1',level1)
 game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
 game.state.start('boot',bootstate)
 }
-//main()
+
 var detectmob=function() { 
 	if( navigator.userAgent.match(/Android/i)
 		|| navigator.userAgent.match(/webOS/i)
