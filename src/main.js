@@ -33,7 +33,7 @@
 
 
 function main(){
-	alert("play")
+	//alert("play")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -92,7 +92,7 @@ function main(){
 
 	//var level={}
 	screen_first = function(){
-		Phaser.Sprite.call(this,game,w2,200,'title')
+		Phaser.Sprite.call(this,game,w2,450,'title')
 		this.anchor.setTo(.5,.5)
 		this.button_restart=game.add.button(w2,h2+400,'button_menu',this.next_menu,this)
 		this.button_restart.anchor.setTo(.5,.5)
