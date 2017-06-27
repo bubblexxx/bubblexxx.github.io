@@ -21,7 +21,6 @@
 
 
 //TODO
-//lorsque button show restart ou video hide text
 //hide_weapon ne se declenche pas toujours
 //1081 retablir createBanner
 //1110 retablir createInterstitial
@@ -1252,7 +1251,7 @@ function main(){
 			game.add.existing(this.title)
 			this.initProgressData()
 //ICI ENLEVER
-			//createBanner()
+			createBanner()
 		},
 
 		initProgressData: function() {
@@ -1281,7 +1280,7 @@ function main(){
 			flag_hide=true
 			level_number=0
 			//createInterstitial()
-			chartboost_rewardvideo()
+			//chartboost_rewardvideo()
 			this.create_canon=function(){
 				console.log("create_canoin");
 				
@@ -1292,8 +1291,10 @@ function main(){
 			}
 			this.create_asteroid=function(){
 				//asteroid = function(number,posx,posy,speed,radius){
-				//asteroid[0]=new _asteroid(0,240,900,.008,100)
-				//asteroid[1]=new _asteroid(1,240,500,.008,100)
+				alert("ici")
+				console.log("asteroid")
+				asteroid[0]=new _asteroid(100,240,900,.008,100)
+				asteroid[1]=new _asteroid(200,240,500,.008,100)
 			}
 
 			this.create_neon=function(){
@@ -1318,8 +1319,7 @@ function main(){
 
 			hero = new character(interstitial) 
 
-			check_storage(this.create_canon,this.create_asteroid,this.create_neon,this.create_pulsar,this.create_dalle,2,0,0,0,2)
-			//logic_gui()
+			check_storage(this.create_canon,this.create_asteroid,this.create_neon,this.create_pulsar,this.create_dalle,2,1,0,0,2)
 			logic_add()
 			return level_number
 		},
@@ -1899,6 +1899,7 @@ function main(){
 	}
 
 	var check_storage=function(_create_canon,_create_asteroid,_create_neon,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_neon,num_pulsar,num_dalle){
+		console.log("asteroid")
 		for(var i=0;i<num_canon;i++){
 			try {
 				c[i] = JSON.parse( localStorage.getItem( 'canon'+i+'lev'+level_number ) ) ;
