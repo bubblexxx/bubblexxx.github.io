@@ -1,6 +1,6 @@
 
 /*
-*************************************************************************
+ *************************************************************************
  * 
  * bubblexxxL
  * __________________
@@ -32,7 +32,7 @@
 
 
 function main(){
-	//alert("play")
+	alert("play")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -45,7 +45,7 @@ function main(){
 	})();
 
 	DEBUG.log("myapp");              
-	
+
 	this.some_value=4
 	var gui
 	var PLAYER_DATA 
@@ -465,9 +465,9 @@ function main(){
 	}
 
 	character.prototype.hide_life_text = function() {
-	this.life.visible=false	
+		this.life.visible=false	
 	}
-	
+
 	character.prototype.show_button_restart_level_complete = function() {
 		if(this.flag_show_button){
 			this.flag_show_button=false
@@ -478,7 +478,7 @@ function main(){
 	}
 
 	character.prototype.show_button_next_level = function() {
-			this.hide_life_text()
+		this.hide_life_text()
 		this.button_next.visible=true
 		this.tween3=game.add.tween(this.button_next.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
 	}
@@ -596,7 +596,7 @@ function main(){
 	_pulsar.prototype = Object.create(Phaser.Sprite.prototype)
 	_pulsar.prototype.constructor = _pulsar
 
-	
+
 	_pulsar.prototype.tweens = function() {
 		this.tween0=game.add.tween(this.scale).to({x:this.scale_factor,y:this.scale_factor},this.time,Phaser.Easing.Linear.None,true,this.delay,-1)
 		this.tween0.yoyo(true,this.speed)		
@@ -741,7 +741,7 @@ function main(){
 		this.events.onDragStart.add(show_grid_on_logic_position,this)
 		this.input.enableSnap(40,40,true,true)
 		this.animate_when_fire()
-		
+
 		game.time.events.loop( this.frequency,this.animate_when_fire,this )
 		game.physics.arcade.enable(this);
 		if(this.special_color){
@@ -775,7 +775,7 @@ function main(){
 		game.time.events.add( this.delay,function(){this._flag=false},this )
 		//this.table=[100,-100]
 		//this.u=0
-			//this.scale_mainbody()
+		//this.scale_mainbody()
 	}
 
 	_canon.prototype = Object.create(Phaser.Sprite.prototype)
@@ -787,7 +787,7 @@ function main(){
 			//this.x=this.x+this.table[this.u]
 		}
 	}
-	
+
 
 	_canon.prototype.transition = function() {
 		this.tween_characteristic = game.add.tween(this.canon).to({x:posx,y:posy},time,Phaser.Easing.Linear.None,true,delay)
@@ -804,10 +804,10 @@ function main(){
 		this.angle=this.angular
 		this.weapon.bulletAngleVariance = this.variance;
 		game.time.events.add( 10,function(){this._flag=false},this )
-			//this.tween_0.pause()
-			//this.scale_mainbody()
-			//this.tween_0.resume()
-			//this.weapon.fire()
+		//this.tween_0.pause()
+		//this.scale_mainbody()
+		//this.tween_0.resume()
+		//this.weapon.fire()
 	}
 	_canon.prototype.animate_when_fire = function() {
 		this.tween_2 = game.add.tween(this.scale).to({x:1.4,y:1.2},30,Phaser.Easing.Linear.None,true,0)
@@ -817,18 +817,18 @@ function main(){
 
 	_canon.prototype.explosion = function() {
 		if(this._flag){
-		this.particlex = game.add.emitter(this.x,this.y,4)
-		this.particlex.makeParticles("rect")
-		this.particlex.minParticleSpeed.setTo(-600,-600)
-		this.particlex.maxParticleSpeed.setTo(800,800)
-		this.particlex.setAlpha(.8, .6)
-		this.particlex.minParticleScale = .2
-		this.particlex.maxParticleScale = .4
-		this.particlex.minRotation = 0
-		this.particlex.maxRotation = 0
-		this.particlex.on=false
-		this.particlex.start(true,230,null,20)
-	}
+			this.particlex = game.add.emitter(this.x,this.y,4)
+			this.particlex.makeParticles("rect")
+			this.particlex.minParticleSpeed.setTo(-600,-600)
+			this.particlex.maxParticleSpeed.setTo(800,800)
+			this.particlex.setAlpha(.8, .6)
+			this.particlex.minParticleScale = .2
+			this.particlex.maxParticleScale = .4
+			this.particlex.minRotation = 0
+			this.particlex.maxRotation = 0
+			this.particlex.on=false
+			this.particlex.start(true,230,null,20)
+		}
 	}
 
 	_canon.prototype.audio_pop = function() {
@@ -1032,6 +1032,7 @@ function main(){
 			game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
 		}
 	}
+
 	var chartboost_rewardvideo=function(){
 		if( navigator.userAgent.match(/Android/i)
 			|| navigator.userAgent.match(/webOS/i)
@@ -1041,33 +1042,63 @@ function main(){
 			|| navigator.userAgent.match(/BlackBerry/i)
 			|| navigator.userAgent.match(/Windows Phone/i)
 		){
-		Cocoon.Ad.Chartboost.configure({
-			android:{
-				appId:"593f9e2504b0160769416382",
-				appSignature:"41fd9a8fc8adea90df03e94772ffa7e5373afcc6"
+			var appId;
+			var appSignature;
+			//android
+			if (navigator.userAgent.match(/Android/i)) {
+				appId = "593f9e2504b0160769416382";
+				appSignature = "92e2de2fd7070327bdeb54c15a5295309c6fcd2d";
 			}
-		});
-		this.rewardedVideo=Cocoon.Ad.createRewardedVideo();
-		//this.rewardedVideo.on("reward", function(reward){
-			// give the player their reward here.
-		//});
-			this.rewardVideo.on("load", function(){
-				console.log("Interstitial loaded");
-				this.rewardedVideo.show(); 
-			});
-			this.rewardVideo.on("fail", function(){
-				console.log("Interstitial failed");
-			});
-			this.rewardVideo.on("show", function(){
-				console.log("Interstitial shown");
-			});
-			this.rewardVideo.on("dismiss", function(){
-				console.log("Interstitial dismissed");
-			});
-		this.rewardedVideo.load()
+			//ios
+			else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)) {
+				alert("not configured on IOS")
+			}
+			window.chartboost.setUp(appId, appSignature);
+
+			//
+			window.chartboost.onInterstitialAdPreloaded = function(location) {
+				alert('onInterstitialAdPreloaded: ' + location);
+			};
+			window.chartboost.onInterstitialAdLoaded = function(location) {
+				alert('onInterstitialAdLoaded: ' + location);
+			};
+			window.chartboost.onInterstitialAdShown = function(location) {
+				alert('onInterstitialAdShown: ' + location);
+			};
+			window.chartboost.onInterstitialAdHidden = function(location) {
+				alert('onInterstitialAdHidden: ' + location);
+			};
+			//
+			window.chartboost.onMoreAppsAdPreloaded = function(location) {
+				alert('onMoreAppsAdPreloaded: ' + location);
+			};
+			window.chartboost.onMoreAppsAdLoaded = function(location) {
+				alert('onMoreAppsAdLoaded: ' + location);
+			};
+			window.chartboost.onMoreAppsAdShown = function(location) {
+				alert('onMoreAppsAdShown: ' + location);
+			};
+			window.chartboost.onMoreAppsAdHidden = function(location) {
+				alert('onMoreAppsAdHidden: ' + location);
+			};
+			//
+			window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+				alert('onRewardedVideoAdPreloaded: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdLoaded = function(location) {
+				alert('onRewardedVideoAdLoaded: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdShown = function(location) {
+				alert('onRewardedVideoAdShown: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdHidden = function(location) {
+				alert('onRewardedVideoAdHidden: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdCompleted = function(location) {
+				alert('onRewardedVideoAdCompleted: ' + location);
+			};
 		}
 	}
-
 
 	var createInterstitial=function(){
 		if( navigator.userAgent.match(/Android/i)
@@ -1079,7 +1110,7 @@ function main(){
 			|| navigator.userAgent.match(/Windows Phone/i)
 		){
 			adService = Cocoon.Ad.Chartboost
-				
+
 			adService.configure({
 				ios: {
 					appId:"4ed254a3cb5015e47c000000",
@@ -1088,7 +1119,7 @@ function main(){
 				android: {
 					appId:"50ae12d715ba47c00d01000c",
 					appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
-	}
+				}
 			});
 			interstitial = adService.createRewardedVideo();
 			//interstitial = adService.createInterstitial();
@@ -1231,12 +1262,12 @@ function main(){
 			this.game.load.image("rect","assets/rect.png");
 			this.game.load.image("button","assets/button.png");
 			this.game.load.image("background","assets/background.png");
-			
-			
+
+
 			//font bitmapFont
 			this.game.load.bitmapFont('fo','fonts/gro.png', 'fonts/gro.fnt');
 		},
-		
+
 		create: function(){
 			//
 			this.game.stage.backgroundColor = '#1a1a1a'
@@ -1250,7 +1281,7 @@ function main(){
 			this.title=new screen_first()
 			game.add.existing(this.title)
 			this.initProgressData()
-//ICI ENLEVER
+			//ICI ENLEVER
 			createBanner()
 		},
 
@@ -1283,7 +1314,7 @@ function main(){
 			//chartboost_rewardvideo()
 			this.create_canon=function(){
 				console.log("create_canoin");
-				
+
 				//canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 				canon[0]=new _canon(0,0,w-200,800,900,90,0,180,hero.flag_level_complete,true,false)
 				console.log(canon[0].special_color,"special_color")
@@ -1674,47 +1705,47 @@ function main(){
 	var hide_weapon=function(){
 		if(flag_hide){
 			flag_hide = false
-		console.log('hide')
-		if(canon[0]){
-			for (var j = 0; j < canon.length; j++){
-				canon[j].explode_bullet(canon[j].weapon.bullets)
-				canon[j].visible=false
-				canon[j].weapon.bullets.visible=false
-				canon[j].particlex.on=false
-				canon[j].destroy()
+			console.log('hide')
+			if(canon[0]){
+				for (var j = 0; j < canon.length; j++){
+					canon[j].explode_bullet(canon[j].weapon.bullets)
+					canon[j].visible=false
+					canon[j].weapon.bullets.visible=false
+					canon[j].particlex.on=false
+					canon[j].destroy()
+				}
 			}
-		}
-		if(neon[0]){
-			for (var j = 0; j < neon.length; j++){
-				neon[j].hide()
-				neon[j].axe_neon.body.enable=false
-				neon[j].destroy()
+			if(neon[0]){
+				for (var j = 0; j < neon.length; j++){
+					neon[j].hide()
+					neon[j].axe_neon.body.enable=false
+					neon[j].destroy()
+				}
 			}
-		}
 
-		if(pulsar[0]){
-			for (var j = 0; j < pulsar.length; j++){
-				pulsar[j].hide()
-				pulsar[j].body.enable=false
-				pulsar[j].destroy()
+			if(pulsar[0]){
+				for (var j = 0; j < pulsar.length; j++){
+					pulsar[j].hide()
+					pulsar[j].body.enable=false
+					pulsar[j].destroy()
+				}
 			}
-		}
 
-		if(asteroid[0]){
-			for (var j = 0; j < asteroid.length; j++){
-				asteroid[j].hide()
-				asteroid[j].axe.body.enable=false
-				asteroid[j].visible=false
-				asteroid[j].destroy()
+			if(asteroid[0]){
+				for (var j = 0; j < asteroid.length; j++){
+					asteroid[j].hide()
+					asteroid[j].axe.body.enable=false
+					asteroid[j].visible=false
+					asteroid[j].destroy()
+				}
 			}
-		}
-		if(dalle[0]){
-			for (var j = 0; j < dalle.length; j++){
-				dalle[j].hide()
-				dalle[j].body.enable=false
-				dalle[j].destroy()
+			if(dalle[0]){
+				for (var j = 0; j < dalle.length; j++){
+					dalle[j].hide()
+					dalle[j].body.enable=false
+					dalle[j].destroy()
+				}
 			}
-		}
 
 		}
 	}
@@ -1864,11 +1895,11 @@ function main(){
 						posx_in_tween:sprite.posx_in_tween,
 					};
 					break
-						//
+					//
 					//pulsar = function(delay,time,posx,posy,speed,scale_factor){
 				case 'pulsar':
 					console.log('sprite.name',sprite.name)
-						console.log(sprite.x)
+					console.log(sprite.x)
 					_table=p
 					_name_json='pulsar'
 					_table[sprite.number] = {
@@ -2025,20 +2056,20 @@ function main(){
 			}
 		}
 	}
-	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
-	game.state.add('boot',bootstate)
-	game.state.add('preload',preloadstate)
-	game.state.add('game_first_screen',game_first_screen)
-	//game.state.add('game_state',game_state)
-	//for (var i = 0; i < 1; i++) {
-	//game.state.add('level'+i,level+i)
-	//game.state.add('level'+i,level+i)
-	//}
-	game.state.add('level0',level0)
-	game.state.add('level1',level1)
-	//game.state.add('menu_level_select',menu_level_select)
-	game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
-	game.state.start('boot',bootstate)
+game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
+game.state.add('boot',bootstate)
+game.state.add('preload',preloadstate)
+game.state.add('game_first_screen',game_first_screen)
+//game.state.add('game_state',game_state)
+//for (var i = 0; i < 1; i++) {
+//game.state.add('level'+i,level+i)
+//game.state.add('level'+i,level+i)
+//}
+game.state.add('level0',level0)
+game.state.add('level1',level1)
+//game.state.add('menu_level_select',menu_level_select)
+game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
+game.state.start('boot',bootstate)
 }
 //main()
 var detectmob=function() { 
@@ -2047,18 +2078,19 @@ var detectmob=function() {
 		|| navigator.userAgent.match(/iPhone/i)
 		|| navigator.userAgent.match(/iPad/i)
 		|| navigator.userAgent.match(/iPod/i)
-			|| navigator.userAgent.match(/BlackBerry/i)
+		|| navigator.userAgent.match(/BlackBerry/i)
 		|| navigator.userAgent.match(/Windows Phone/i)
 	){
 		document.addEventListener('deviceready',main,false)
-			return true;
-		}
+		return true;
+	}
 	else {
 		console.log('not mobile')
 		main()
-			return false;
+		return true;
 	}
 }
+
 detectmob()
 //document.addEventListener('deviceready',main,false)
 
