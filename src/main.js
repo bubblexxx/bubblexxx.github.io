@@ -2092,6 +2092,6 @@ var detectmob=function() {
 	}
 }
 
-detectmob()
-//document.addEventListener('deviceready',main,false)
+//detectmob()
+document.addEventListener('deviceready',main,false)
 
