@@ -22,6 +22,11 @@
 
 
 //TODO
+//normalement réglé
+//si dernier character et checkicharacterisloossomewhere les boutton restart et videos ne s'affiche pas
+
+//problem de flag hide true et false qui se déclenche ou pas
+
 //hide_weapon ne se declenche pas toujours
 //1081 retablir createBanner
 //1110 retablir createInterstitial
@@ -46,6 +51,8 @@ function main(){
 	})();
 
 	DEBUG.log("myapp");              
+	//chartboost_rewardvideo
+	var videoreward;
 
 	this.some_value=4
 	var gui
@@ -141,7 +148,7 @@ function main(){
 		this.tween3=game.add.tween(this.button_next.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
 	}
 
-	character = function(obj){
+	character = function(){
 		Phaser.Sprite.call(this,game,w2,h+500,'rect')
 		this.flag_mouse=false
 		this.flag_show_button=true
@@ -194,7 +201,8 @@ function main(){
 		this.button_next.anchor.setTo(.5,.5)
 		this.button_next.scale.setTo(0,0)
 		this.button_next.visible=false
-		this.button_video=game.add.button(w2,h2+400,'button_video',() => this.next_level_with_video(obj),this)
+		//this.button_video=game.add.button(w2,h2+400,'button_video',() => this.next_level_with_video(obj),this)
+		this.button_video=game.add.button(w2,h2+400,'button_video',() => this.next_level_with_video(),this)
 		this.button_video.anchor.setTo(.5,.5)
 		this.button_video.scale.setTo(0,0)
 		this.button_video.visible=false
@@ -206,6 +214,7 @@ function main(){
 		this._levelNumber = 1;
 		this.count_dead=0
 		this.anim_cible()
+		this.reward_video()
 	}
 
 	character.prototype = Object.create(Phaser.Sprite.prototype)
@@ -230,6 +239,7 @@ function main(){
 	}
 
 	character.prototype.checkicharacterisloossomewhere = function(n) {
+		console.log("checkicharacterisloossomewhere")
 		if(this.player[n].flag_check)
 			this.player[n].flag_check=false
 		game.time.events.add( 6000,() => this.checkicharacterisloossomewhere2(n),this )
@@ -237,26 +247,42 @@ function main(){
 
 	character.prototype.checkicharacterisloossomewhere2 = function(n) {
 		if(this.flag_level_complete==false){
-			console.log("checkicharacterisloossomewhere");
+			console.log("checkicharacterisloossomewhere2");
 			this.explode(w2,0,n)	
-			this.count=this.count+1
+		}
+	}
 
+	character.prototype.calculate_life_remaining= function(){
+		console.log("calculate_life_remaining")
+			this.count=this.count+1
 			switch(this.count){
 				case 0:
-					this.life.text=2 
+					this.life.text=3 
 					break
 				case 1:
-					this.life.text=1 
+					this.life.text=2 
 					break
 				case 2:
-					this.life.text='' 
+					this.life.text=2 
 					break
+				case 3:
+					this.life.text=1 
+					break
+				case 4:
+					this.life.text=1 
+					break
+				case 5:
+					this.life.text=''
+					break
+
 				default:
 					this.life.text='' 
 					break
 			}
-		}
+
 	}
+
+
 
 	character.prototype.audio_launch = function() {
 		this.sound_launch.play()
@@ -307,50 +333,200 @@ function main(){
 		console.log('next-level')
 	}
 
-	character.prototype.next_level_with_video = function(obj) {
+	character.prototype.reward_video=function(){
+
+
+
+		var appId = "4f7b433509b6025804000002";
+		var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
+		/*
+var appId;
+var appSignature;
+		//android
+if (navigator.userAgent.match(/Android/i)) {
+	appId = "4f7b433509b6025804000002";
+	appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
+}
+		//ios
+else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)) {
+	appId = "4f21c409cd1cb2fb7000001b";
+	appSignature = "92e2de2fd7070327bdeb54c15a5295309c6fcd2d";
+}
+*/
+		document.addEventListener("deviceready", function(){
+
+			var service_chartboost=
+			Cocoon.ad.chartboost.setUp(appId, appSignature);
+
+			//
+			window.chartboost.onInterstitialAdPreloaded = function(location) {
+				alert('onInterstitialAdPreloaded: ' + location);
+			};
+			window.chartboost.onInterstitialAdLoaded = function(location) {
+				alert('onInterstitialAdLoaded: ' + location);
+			};
+			window.chartboost.onInterstitialAdShown = function(location) {
+				alert('onInterstitialAdShown: ' + location);
+			};
+			window.chartboost.onInterstitialAdHidden = function(location) {
+				alert('onInterstitialAdHidden: ' + location);
+			};
+			//
+			window.chartboost.onMoreAppsAdPreloaded = function(location) {
+				alert('onMoreAppsAdPreloaded: ' + location);
+			};
+			window.chartboost.onMoreAppsAdLoaded = function(location) {
+				alert('onMoreAppsAdLoaded: ' + location);
+			};
+			window.chartboost.onMoreAppsAdShown = function(location) {
+				alert('onMoreAppsAdShown: ' + location);
+			};
+			window.chartboost.onMoreAppsAdHidden = function(location) {
+				alert('onMoreAppsAdHidden: ' + location);
+			};
+			//
+			window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+				alert('onRewardedVideoAdPreloaded: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdLoaded = function(location) {
+				alert('onRewardedVideoAdLoaded: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdShown = function(location) {
+				alert('onRewardedVideoAdShown: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdHidden = function(location) {
+				alert('onRewardedVideoAdHidden: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdCompleted = function(location) {
+				alert('onRewardedVideoAdCompleted: ' + location);
+			};
+		}, false);
+
+
+
+
+
+
+
+
+
+
+
+		//	if( navigator.userAgent.match(/Android/i)
+		//		|| navigator.userAgent.match(/webOS/i)
+		//		|| navigator.userAgent.match(/iPhone/i)
+		//		|| navigator.userAgent.match(/iPad/i)
+		//		|| navigator.userAgent.match(/iPod/i)
+		//		|| navigator.userAgent.match(/BlackBerry/i)
+		//		|| navigator.userAgent.match(/Windows Phone/i)
+		//	){
+		//		//android
+		//		if (navigator.userAgent.match(/Android/i)) {
+		//			this.appId = "593f9e2504b0160769416382";
+		//			this.appSignature = "92e2de2fd7070327bdeb54c15a5295309c6fcd2d";
+		//		}
+		//		//ios
+		//		else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)) {
+		//			alert("not configured on IOS")
+		//		}
+		//		this.chartboost.setUp(this.appId, this.appSignature);
+
+		//		//
+		//		this.chartboost.onInterstitialAdPreloaded = function(location) {
+		//			alert('onInterstitialAdPreloaded: ' + location);
+		//		};
+		//		this.chartboost.onInterstitialAdLoaded = function(location) {
+		//			alert('onInterstitialAdLoaded: ' + location);
+		//		};
+		//		this.chartboost.onInterstitialAdShown = function(location) {
+		//			alert('onInterstitialAdShown: ' + location);
+		//		};
+		//		this.chartboost.onInterstitialAdHidden = function(location) {
+		//			alert('onInterstitialAdHidden: ' + location);
+		//		};
+		//		//
+		//		this.chartboost.onMoreAppsAdPreloaded = function(location) {
+		//			alert('onMoreAppsAdPreloaded: ' + location);
+		//		};
+		//		this.chartboost.onMoreAppsAdLoaded = function(location) {
+		//			alert('onMoreAppsAdLoaded: ' + location);
+		//		};
+		//		this.chartboost.onMoreAppsAdShown = function(location) {
+		//			alert('onMoreAppsAdShown: ' + location);
+		//		};
+		//		this.chartboost.onMoreAppsAdHidden = function(location) {
+		//			alert('onMoreAppsAdHidden: ' + location);
+		//		};
+		//		//
+		//		this.chartboost.onRewardedVideoAdPreloaded = function(location) {
+		//			alert('onRewardedVideoAdPreloaded: ' + location);
+		//			this.game.state.start('level'+this.next_niveau,true,false);
+		//		};
+		//		this.chartboost.onRewardedVideoAdLoaded = function(location) {
+		//			alert('onRewardedVideoAdLoaded: ' + location);
+		//		};
+		//		this.chartboost.onRewardedVideoAdShown = function(location) {
+		//			alert('onRewardedVideoAdShown: ' + location);
+		//		};
+		//		this.chartboost.onRewardedVideoAdHidden = function(location) {
+		//			alert('onRewardedVideoAdHidden: ' + location);
+		//		};
+		//		this.chartboost.onRewardedVideoAdCompleted = function(location) {
+		//			alert('onRewardedVideoAdCompleted: ' + location);
+		//		};
+
+		//		this.chartboost.onInterstitialAdPreloaded('Default')
+		//		this.chartboost.onRewardedVideoAdPreloaded('Default')
+		//	}
+	}
+
+	character.prototype.next_level_with_video = function() {
 		this.next_niveau=level_number+1
 		console.log('next-level')
-		obj.show();
-		obj.on("dismiss", function(){
+		window.chartboost.onRewardedVideoAdShown('Default')
+		window.chartboost.onRewardedVideoAdCompleted=function(location){
+			alert('next level')
 			this.game.state.start('level'+this.next_niveau,true,false);
-			console.log("Interstitial dismissed");
-		})
-
+			console.log("video rewarded you could pass the level");
+		}
+		window.onRewardedVideoAdCompleted('Default');
 	}
 
 	character.prototype.launch_with_mouse=function(){
 		if(this.flag_level_complete==false && this.flag_mouse==false){
 			this.flag_mouse=true
 			game.time.events.add( 400,function(){this.flag_mouse=false},this )
-			this.count=this.count+1
-			console.log("this.count in launch",this.count,this.life.text,"this.life.text");
+			this.calculate_life_remaining()
 			switch(this.count){
 				case 0:
-					this.life.text=2 
 					this.audio_launch()
-					this.player[this.count].body.enable=true
-					this.checkicharacterisloossomewhere(this.count)
-					this.player[this.count].visible=true
-					this.player[this.count].body.velocity.y=-800
+					this.player[0].body.enable=true
+					this.checkicharacterisloossomewhere(0)
+					this.player[0].visible=true
+					this.player[0].body.velocity.y=-800
 					break
 				case 1:
-					this.life.text=1 
-					this.audio_launch()
-					this.player[this.count].body.enable=true
-					this.checkicharacterisloossomewhere(this.count)
-					this.player[this.count].visible=true
-					this.player[this.count].body.velocity.y=-800
 					break
 				case 2:
-					this.life.text='' 
 					this.audio_launch()
-					this.player[this.count].body.enable=true
-					this.checkicharacterisloossomewhere(this.count)
-					this.player[this.count].visible=true
-					this.player[this.count].body.velocity.y=-800
+					this.player[1].body.enable=true
+					this.checkicharacterisloossomewhere(1)
+					this.player[1].visible=true
+					this.player[1].body.velocity.y=-800
 					break
+				case 3:
+					break
+				case 4:
+					this.audio_launch()
+					this.player[2].body.enable=true
+					this.checkicharacterisloossomewhere(2)
+					this.player[2].visible=true
+					this.player[2].body.velocity.y=-800
+					break
+				case 5:
+					break
+
 				default:
-					this.life.text='' 
 					break
 			}
 		}
@@ -385,9 +561,10 @@ function main(){
 
 	character.prototype.explode=function(posx,posy,n){
 		if(this.player[n].flag_cant_explode){
-			this.audio_pop()
-			this.on_explode(n)
 			this.player[n].flag_cant_explode=false
+			this.calculate_life_remaining()
+			this.audio_pop()
+			this.on_explode()
 			this.player[n].visible=false
 			this.particle = game.add.emitter(posx,posy,8)
 			this.particle.makeParticles("rect")
@@ -404,24 +581,20 @@ function main(){
 		}
 	}
 
-	character.prototype.on_explode=function(n){
+	character.prototype.on_explode=function(){
 		this.count_dead=this.count_dead+1
-		for (var i = 0; i < 3; i++) {
-			if(this.count_dead==3){
-				//TODO:voir si on peut le mettre ici
-
-				//hero.flag_level_complete=true
-				console.log('this.count_dead',this.count_dead)
-				this.decide_if_show_button_restart_level()
-			}	
+		if(this.count_dead==3){
+			console.log('this.count_dead',this.count_dead)
+			this.decide_if_show_button_restart_level()
 		}
 	}
 
 	character.prototype.decide_if_show_button_restart_level = function() {
 		console.log('decide')
-		game.time.events.add( 2000,this.show_button_restart_level,this )
-		game.time.events.add( 2000,this.show_button_video,this )
 		this.flag_hide_enemies=true
+		game.time.events.add( 2000,this.show_button_restart_level,this )
+		//seulement si le flag level est complete lance show_button_video
+		game.time.events.add( 2000,this.show_button_video,this )
 	}
 
 	character.prototype.land=function(n){
@@ -440,14 +613,20 @@ function main(){
 				this.star.frame=3
 				break
 			case 1:
-				this.star.frame=2
+				this.star.frame=3
 				break
 			case 2:
-				this.star.frame=1
+				this.star.frame=2
 				console.log("this.star.frame in calculate_star",this.star.frame,this.count);
 				break
 			case 3:
-				this.star.frame=0
+				this.star.frame=2
+				break
+			case 4:
+				this.star.frame=1
+				break
+			case 5:
+				this.star.frame=1
 				break
 			default:
 				break
@@ -1034,73 +1213,6 @@ function main(){
 		}
 	}
 
-	var chartboost_rewardvideo=function(){
-		if( navigator.userAgent.match(/Android/i)
-			|| navigator.userAgent.match(/webOS/i)
-			|| navigator.userAgent.match(/iPhone/i)
-			|| navigator.userAgent.match(/iPad/i)
-			|| navigator.userAgent.match(/iPod/i)
-			|| navigator.userAgent.match(/BlackBerry/i)
-			|| navigator.userAgent.match(/Windows Phone/i)
-		){
-			var appId;
-			var appSignature;
-			var videoreward;
-			//android
-			if (navigator.userAgent.match(/Android/i)) {
-				appId = "593f9e2504b0160769416382";
-				appSignature = "92e2de2fd7070327bdeb54c15a5295309c6fcd2d";
-			}
-			//ios
-			else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)) {
-				alert("not configured on IOS")
-			}
-			videoreward.chartboost.setUp(appId, appSignature);
-
-			//
-			videoreward.chartboost.onInterstitialAdPreloaded = function(location) {
-				alert('onInterstitialAdPreloaded: ' + location);
-			};
-			videoreward.chartboost.onInterstitialAdLoaded = function(location) {
-				alert('onInterstitialAdLoaded: ' + location);
-			};
-			videoreward.chartboost.onInterstitialAdShown = function(location) {
-				alert('onInterstitialAdShown: ' + location);
-			};
-			videoreward.chartboost.onInterstitialAdHidden = function(location) {
-				alert('onInterstitialAdHidden: ' + location);
-			};
-			//
-			videoreward.chartboost.onMoreAppsAdPreloaded = function(location) {
-				alert('onMoreAppsAdPreloaded: ' + location);
-			};
-			videoreward.chartboost.onMoreAppsAdLoaded = function(location) {
-				alert('onMoreAppsAdLoaded: ' + location);
-			};
-			videoreward.chartboost.onMoreAppsAdShown = function(location) {
-				alert('onMoreAppsAdShown: ' + location);
-			};
-			videoreward.chartboost.onMoreAppsAdHidden = function(location) {
-				alert('onMoreAppsAdHidden: ' + location);
-			};
-			//
-			videoreward.chartboost.onRewardedVideoAdPreloaded = function(location) {
-				alert('onRewardedVideoAdPreloaded: ' + location);
-			};
-			videoreward.chartboost.onRewardedVideoAdLoaded = function(location) {
-				alert('onRewardedVideoAdLoaded: ' + location);
-			};
-			videoreward.chartboost.onRewardedVideoAdShown = function(location) {
-				alert('onRewardedVideoAdShown: ' + location);
-			};
-			videoreward.chartboost.onRewardedVideoAdHidden = function(location) {
-				alert('onRewardedVideoAdHidden: ' + location);
-			};
-			videoreward.chartboost.onRewardedVideoAdCompleted = function(location) {
-				alert('onRewardedVideoAdCompleted: ' + location);
-			};
-		}
-	}
 
 	var createInterstitial=function(){
 		if( navigator.userAgent.match(/Android/i)
@@ -1313,7 +1425,6 @@ function main(){
 			flag_hide=true
 			level_number=0
 			//createInterstitial()
-			//chartboost_rewardvideo()
 			this.create_canon=function(){
 				console.log("create_canoin");
 
@@ -1349,7 +1460,7 @@ function main(){
 
 
 
-			hero = new character(interstitial) 
+			hero = new character() 
 
 			check_storage(this.create_canon,this.create_asteroid,this.create_neon,this.create_pulsar,this.create_dalle,2,1,0,0,2)
 			logic_add()
@@ -1624,10 +1735,12 @@ function main(){
 			game.physics.arcade.collide(hero.cible,hero.player[j],() => hero.land(j))
 		}
 
-		if (hero.flag_level_complete && flag_hide){
-			flag_hide=false
-			game.time.events.add( 900,hide_weapon,this )
-		}
+		//si reussi niveau
+		console.log(hero.flag_level_complete,"hero_flag_level_complete")
+		hero.flag_level_complete && flag_hide && hero.flag_level_complete==false & console.log("ok") & game.time.events.add( 900,hide_weapon,this )
+
+		//si checkicharacterisloossomewhere
+		hero.flag_hide_enemies && flag_hide && hero.flag_hide_enemies==false & game.time.events.add( 500,hide_weapon,this )
 
 		if(canon[1]){
 			game.physics.arcade.collide(canon[0].weapon.bullets,canon[1].weapon.bullets,touch_between_enemies,null,this)
@@ -1638,10 +1751,6 @@ function main(){
 			game.physics.arcade.collide(canon[1].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
 		}
 
-		if(hero.flag_hide_enemies){
-			hero.flag_hide_enemies=false
-			game.time.events.add( 500,hide_weapon,this )
-		}
 		if(canon[0]){
 			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < canon.length; j++){
@@ -1705,6 +1814,7 @@ function main(){
 	}
 	var hide_weapon=function(){
 		if(flag_hide){
+			console.log("hide_weapon")
 			flag_hide = false
 			console.log('hide')
 			if(canon[0]){
@@ -2023,40 +2133,40 @@ function main(){
 		}
 	}
 
-	var logic_render=function(){
-		if(debug_mode){
-			game.debug.body(hero.cible_shadow)
-			game.debug.body(hero.cible)
-			for (var i = 0; i < 3; i++){
-				game.debug.body(hero.player[i])
+var logic_render=function(){
+	if(debug_mode){
+		game.debug.body(hero.cible_shadow)
+		game.debug.body(hero.cible)
+		for (var i = 0; i < 3; i++){
+			game.debug.body(hero.player[i])
+		}
+		if(neon[0]){
+			for (var i = 0; i < neon.length; i++){
+				game.debug.body(neon[i])
 			}
-			if(neon[0]){
-				for (var i = 0; i < neon.length; i++){
-					game.debug.body(neon[i])
-				}
-			}
+		}
 
-			if(pulsar[0]){
-				for (var i = 0; i < pulsar.length; i++){
-					game.debug.body(pulsar[i])
-				}
+		if(pulsar[0]){
+			for (var i = 0; i < pulsar.length; i++){
+				game.debug.body(pulsar[i])
 			}
+		}
 
-			if(asteroid[0]){
-				for (var i = 0; i < asteroid.length; i++){
-					game.debug.body(asteroid[i])
-				}
+		if(asteroid[0]){
+			for (var i = 0; i < asteroid.length; i++){
+				game.debug.body(asteroid[i])
 			}
+		}
 
-			if(canon[0]){
-				for (var i = 0; i < canon.length; i++){
-					canon[i].weapon.bullets.forEach(function(item){
-						game.debug.body(item)	
-					})
-				}
+		if(canon[0]){
+			for (var i = 0; i < canon.length; i++){
+				canon[i].weapon.bullets.forEach(function(item){
+					game.debug.body(item)	
+				})
 			}
 		}
 	}
+}
 game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 game.state.add('boot',bootstate)
 game.state.add('preload',preloadstate)
@@ -2092,9 +2202,9 @@ var detectmob=function() {
 	}
 }
 //pour tester dans github décocher ceci
-main()
+//main()
 
 //si c'est cocoon décocher ici
-//detectmob()
+detectmob()
 //document.addEventListener('deviceready',main,false)
 
