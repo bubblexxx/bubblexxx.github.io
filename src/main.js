@@ -132,7 +132,7 @@ function main(){
 		this.particle.makeParticles("rect")
 		this.particle.minParticleSpeed.setTo(-600,-600)
 		this.particle.maxParticleSpeed.setTo(800,800)
-		this.particle.setAlpha(.8, .6)
+		this.particle.setAlpha(.5, .2)
 		this.particle.minParticleScale = .2
 		this.particle.maxParticleScale = .5
 		this.particle.minRotation = 0
@@ -1331,7 +1331,7 @@ else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad
 			this.scale.pageAlignHorizontally = true
 			this.scale.pageAlignVertically = true
 			this.scale.refresh()
-			this.game.stage.backgroundColor='#1a1a1a'
+			this.game.stage.backgroundColor = '#0d1018'
 			this.state.start("preload");
 		},
 	}
@@ -1360,7 +1360,6 @@ else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad
 			this.game.load.image("title","assets/title.png");
 			this.game.load.spritesheet('star','assets/star.png', 300, 100);
 			this.game.load.image("levelselecticons","assets/levelselecticons.png");
-			this.game.load.image("background","assets/background.png");
 			this.game.load.image("button_video","assets/button_video.png");
 			this.game.load.image("button_menu","assets/button_menu.png");
 			this.game.load.image("button_play","assets/button_play.png");
@@ -1375,23 +1374,22 @@ else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad
 			this.game.load.image("particle_bullet","assets/particle_bullet.png");
 			this.game.load.image("rect","assets/rect.png");
 			this.game.load.image("button","assets/button.png");
-			this.game.load.image("background","assets/background.png");
 
 
 			//font bitmapFont
-			this.game.load.bitmapFont('fo','fonts/gro.png', 'fonts/gro.fnt');
+			this.game.load.bitmapFont('fo','fonts/font.png', 'fonts/font.fnt');
 		},
 
 		create: function(){
 			//
-			this.game.stage.backgroundColor = '#1a1a1a'
+			this.game.stage.backgroundColor = '#0d1018'
 			this.game.state.start("game_first_screen");
 		}
 	}
 
 	var game_first_screen = {
 		create: function(){
-			this.game.stage.backgroundColor = '#1a1a1a'
+			this.game.stage.backgroundColor = '#0d1018'
 			this.title=new screen_first()
 			game.add.existing(this.title)
 			this.initProgressData()
@@ -1510,9 +1508,8 @@ else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad
 
 		create: function() {
 			this.holdicons = [];
-			this.game.stage.backgroundColor = '#1a1a1a'
+			this.game.stage.backgroundColor = '#0d1018'
 			;
-			this.game.add.sprite(0,0,'background')
 			this.text=game.add.bitmapText(640,200,'fo','SELECT A LEVEL!',100);
 			this.text.anchor.setTo(.5,.5)
 			this.createLevelIcons();
