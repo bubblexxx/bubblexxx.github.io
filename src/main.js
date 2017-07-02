@@ -214,7 +214,7 @@ function main(){
 		this._levelNumber = 1;
 		this.count_dead=0
 		this.anim_cible()
-		this.reward_video()
+		//this.reward_video()
 	}
 
 	character.prototype = Object.create(Phaser.Sprite.prototype)
@@ -335,149 +335,56 @@ function main(){
 
 	character.prototype.reward_video=function(){
 
-
-
 		var appId = "4f7b433509b6025804000002";
 		var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
-		/*
-var appId;
-var appSignature;
-		//android
-if (navigator.userAgent.match(/Android/i)) {
-	appId = "4f7b433509b6025804000002";
-	appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
-}
-		//ios
-else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)) {
-	appId = "4f21c409cd1cb2fb7000001b";
-	appSignature = "92e2de2fd7070327bdeb54c15a5295309c6fcd2d";
-}
-*/
-		document.addEventListener("deviceready", function(){
+		window.chartboost.setUp(appId, appSignature);
 
-			var service_chartboost=
-			Cocoon.ad.chartboost.setUp(appId, appSignature);
+		//
+		window.chartboost.onInterstitialAdPreloaded = function(location) {
+			alert('onInterstitialAdPreloaded: ' + location);
+		};
+		window.chartboost.onInterstitialAdLoaded = function(location) {
+			alert('onInterstitialAdLoaded: ' + location);
+		};
+		window.chartboost.onInterstitialAdShown = function(location) {
+			alert('onInterstitialAdShown: ' + location);
+		};
+		window.chartboost.onInterstitialAdHidden = function(location) {
+			alert('onInterstitialAdHidden: ' + location);
+		};
+		//
+		window.chartboost.onMoreAppsAdPreloaded = function(location) {
+			alert('onMoreAppsAdPreloaded: ' + location);
+		};
+		window.chartboost.onMoreAppsAdLoaded = function(location) {
+			alert('onMoreAppsAdLoaded: ' + location);
+		};
+		window.chartboost.onMoreAppsAdShown = function(location) {
+			alert('onMoreAppsAdShown: ' + location);
+		};
+		window.chartboost.onMoreAppsAdHidden = function(location) {
+			alert('onMoreAppsAdHidden: ' + location);
+		};
+		//
+		window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+			alert('onRewardedVideoAdPreloaded: ' + location);
+		};
+		window.chartboost.onRewardedVideoAdLoaded = function(location) {
+			alert('onRewardedVideoAdLoaded: ' + location);
+		};
+		window.chartboost.onRewardedVideoAdShown = function(location) {
+			alert('onRewardedVideoAdShown: ' + location);
+		};
+		window.chartboost.onRewardedVideoAdHidden = function(location) {
+			alert('onRewardedVideoAdHidden: ' + location);
+		};
+		window.chartboost.onRewardedVideoAdCompleted = function(location) {
+			alert('onRewardedVideoAdCompleted: ' + location);
+		};
 
-			//
-			window.chartboost.onInterstitialAdPreloaded = function(location) {
-				alert('onInterstitialAdPreloaded: ' + location);
-			};
-			window.chartboost.onInterstitialAdLoaded = function(location) {
-				alert('onInterstitialAdLoaded: ' + location);
-			};
-			window.chartboost.onInterstitialAdShown = function(location) {
-				alert('onInterstitialAdShown: ' + location);
-			};
-			window.chartboost.onInterstitialAdHidden = function(location) {
-				alert('onInterstitialAdHidden: ' + location);
-			};
-			//
-			window.chartboost.onMoreAppsAdPreloaded = function(location) {
-				alert('onMoreAppsAdPreloaded: ' + location);
-			};
-			window.chartboost.onMoreAppsAdLoaded = function(location) {
-				alert('onMoreAppsAdLoaded: ' + location);
-			};
-			window.chartboost.onMoreAppsAdShown = function(location) {
-				alert('onMoreAppsAdShown: ' + location);
-			};
-			window.chartboost.onMoreAppsAdHidden = function(location) {
-				alert('onMoreAppsAdHidden: ' + location);
-			};
-			//
-			window.chartboost.onRewardedVideoAdPreloaded = function(location) {
-				alert('onRewardedVideoAdPreloaded: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdLoaded = function(location) {
-				alert('onRewardedVideoAdLoaded: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdShown = function(location) {
-				alert('onRewardedVideoAdShown: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdHidden = function(location) {
-				alert('onRewardedVideoAdHidden: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdCompleted = function(location) {
-				alert('onRewardedVideoAdCompleted: ' + location);
-			};
-		}, false);
+		window.chartboost.preloadRewardedVideoAd('Default')
+		window.chartboost.showRewardedVideoAd('Default')
 
-
-
-
-
-
-
-
-
-
-
-		//	if( navigator.userAgent.match(/Android/i)
-		//		|| navigator.userAgent.match(/webOS/i)
-		//		|| navigator.userAgent.match(/iPhone/i)
-		//		|| navigator.userAgent.match(/iPad/i)
-		//		|| navigator.userAgent.match(/iPod/i)
-		//		|| navigator.userAgent.match(/BlackBerry/i)
-		//		|| navigator.userAgent.match(/Windows Phone/i)
-		//	){
-		//		//android
-		//		if (navigator.userAgent.match(/Android/i)) {
-		//			this.appId = "593f9e2504b0160769416382";
-		//			this.appSignature = "92e2de2fd7070327bdeb54c15a5295309c6fcd2d";
-		//		}
-		//		//ios
-		//		else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)) {
-		//			alert("not configured on IOS")
-		//		}
-		//		this.chartboost.setUp(this.appId, this.appSignature);
-
-		//		//
-		//		this.chartboost.onInterstitialAdPreloaded = function(location) {
-		//			alert('onInterstitialAdPreloaded: ' + location);
-		//		};
-		//		this.chartboost.onInterstitialAdLoaded = function(location) {
-		//			alert('onInterstitialAdLoaded: ' + location);
-		//		};
-		//		this.chartboost.onInterstitialAdShown = function(location) {
-		//			alert('onInterstitialAdShown: ' + location);
-		//		};
-		//		this.chartboost.onInterstitialAdHidden = function(location) {
-		//			alert('onInterstitialAdHidden: ' + location);
-		//		};
-		//		//
-		//		this.chartboost.onMoreAppsAdPreloaded = function(location) {
-		//			alert('onMoreAppsAdPreloaded: ' + location);
-		//		};
-		//		this.chartboost.onMoreAppsAdLoaded = function(location) {
-		//			alert('onMoreAppsAdLoaded: ' + location);
-		//		};
-		//		this.chartboost.onMoreAppsAdShown = function(location) {
-		//			alert('onMoreAppsAdShown: ' + location);
-		//		};
-		//		this.chartboost.onMoreAppsAdHidden = function(location) {
-		//			alert('onMoreAppsAdHidden: ' + location);
-		//		};
-		//		//
-		//		this.chartboost.onRewardedVideoAdPreloaded = function(location) {
-		//			alert('onRewardedVideoAdPreloaded: ' + location);
-		//			this.game.state.start('level'+this.next_niveau,true,false);
-		//		};
-		//		this.chartboost.onRewardedVideoAdLoaded = function(location) {
-		//			alert('onRewardedVideoAdLoaded: ' + location);
-		//		};
-		//		this.chartboost.onRewardedVideoAdShown = function(location) {
-		//			alert('onRewardedVideoAdShown: ' + location);
-		//		};
-		//		this.chartboost.onRewardedVideoAdHidden = function(location) {
-		//			alert('onRewardedVideoAdHidden: ' + location);
-		//		};
-		//		this.chartboost.onRewardedVideoAdCompleted = function(location) {
-		//			alert('onRewardedVideoAdCompleted: ' + location);
-		//		};
-
-		//		this.chartboost.onInterstitialAdPreloaded('Default')
-		//		this.chartboost.onRewardedVideoAdPreloaded('Default')
-		//	}
 	}
 
 	character.prototype.next_level_with_video = function() {
@@ -1462,10 +1369,12 @@ else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad
 
 			check_storage(this.create_canon,this.create_asteroid,this.create_neon,this.create_pulsar,this.create_dalle,2,1,0,0,2)
 			logic_add()
+			logic_update()
+
 			return level_number
 		},
 		update:function(){
-			logic_update()
+			//logic_update()
 		},
 		render:function(){
 			logic_render()
@@ -1727,6 +1636,8 @@ else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad
 	}
 
 	var logic_update=function(){
+game.time.events.loop( 80,function(){ 
+
 		//debug_position && logic_position()
 		for (var j = 0; j < 3; j++){
 			game.physics.arcade.collide(hero.cible,hero.player[j],() => hero.land(j))
@@ -1803,6 +1714,7 @@ else if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad
 				}
 			}
 		}
+})
 	}
 
 	var touch_between_enemies=function(){
