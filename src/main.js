@@ -38,7 +38,7 @@
 
 
 function main(){
-	alert("play")
+	alert("down")
 	var DEBUG = (function(){
 		var timestamp = function(){};
 		timestamp.toString = function(){
@@ -1296,7 +1296,8 @@ function main(){
 
 	var game_first_screen = {
 		create: function(){
-			this.game.stage.backgroundColor = '#0d1018'
+			//this.game.stage.backgroundColor = '#0d1018'
+			this.game.stage.backgroundColor = '#000000'
 			this.title=new screen_first()
 			game.add.existing(this.title)
 			this.initProgressData()
@@ -1536,7 +1537,7 @@ function main(){
 			}else{
 				var txt_locked = this.game.add.bitmapText(137, 147, 'fo', ''+levelnr, 100);
 				txt_locked.anchor.setTo(.5,.5)
-				txt_locked.tint=0x9a136b
+				//txt_locked.tint=0x9a136b
 				IconGroup.add(txt_locked);
 
 			};
