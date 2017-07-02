@@ -1296,7 +1296,8 @@ function main(){
 
 	var game_first_screen = {
 		create: function(){
-			this.game.stage.backgroundColor = '#0d1018'
+			//this.game.stage.backgroundColor = '#0d1018'
+			this.game.stage.backgroundColor = '#000000'
 			this.title=new screen_first()
 			game.add.existing(this.title)
 			this.initProgressData()
