@@ -24,7 +24,7 @@
 //TODO
 //normalement réglé
 //si dernier character et checkicharacterisloossomewhere les boutton restart et videos ne s'affiche pas
-
+//problem avec charcater launch dans update
 //problem de flag hide true et false qui se déclenche ou pas
 
 //hide_weapon ne se declenche pas toujours
@@ -101,34 +101,52 @@ function main(){
 	screen_first = function(){
 		Phaser.Sprite.call(this,game,w2,450,'title')
 		this.anchor.setTo(.5,.5)
-		this.button_restart=game.add.button(w2,h2+400,'button_menu',this.next_menu,this)
-		this.button_restart.anchor.setTo(.5,.5)
+		this.button_menu=game.add.button(w2,h2+400,'button_menu',this.next_menu,this)
+		this.button_menu.anchor.setTo(.5,.5)
 		this.button_next=game.add.button(w2,h2,'button_play',this.next_level,this)
 		this.button_next.anchor.setTo(.5,.5)
-		this.button_restart.scale.setTo(0,0)
-		this.button_restart.visible=false
+		this.button_menu.scale.setTo(0,0)
+		this.button_menu.visible=false
 		this.button_next.scale.setTo(0,0)
 		this.button_next.visible=false
 		game.time.events.loop( 500,this.explosion,this )
 		game.time.events.add( 200,this.show_button,this )
+		this.sound_click=game.add.audio('click')
 	}
 
 	screen_first.prototype = Object.create(Phaser.Sprite.prototype)
 	screen_first.prototype.constructor = screen_first
 
-	screen_first.prototype.next_level = function() {
-		this.game.state.start("level"+level_number);
-		console.log('next-level')
+	screen_first.prototype.audio_click = function() {
+		console.log("click")
+		this.sound_click.play()
+		console.log("click")
 	}
+
+
+	screen_first.prototype.next_level = function() {
+		this.tween_scale_button_play = game.add.tween(this.button_next.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
+		this.audio_click()
+		this.tween_scale_button_play.onComplete.add(function(){
+			this.game.state.start("level"+level_number);
+			console.log('next-level')
+		},this)
+		}
+
 	screen_first.prototype.next_menu = function() {
+		this.tween_scale_button_menu = game.add.tween(this.button_menu.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
+		this.audio_click()
+		this.tween_scale_button_menu.onComplete.add(function(){
 		this.game.state.start("levsel");
+		this.audio_click()
 		console.log('next-level')
+		},this)
 	}
 
 	screen_first.prototype.explosion = function() {
 		this._x=game.rnd.integerInRange(0,w)
 		this._y=game.rnd.integerInRange(0,h)
-		this.particle = game.add.emitter(this._x,this._y,8)
+		this.particle = game.add.emitter(this._x,this._y,3)
 		this.particle.makeParticles("rect")
 		this.particle.minParticleSpeed.setTo(-600,-600)
 		this.particle.maxParticleSpeed.setTo(800,800)
@@ -142,9 +160,9 @@ function main(){
 	}
 
 	screen_first.prototype.show_button = function() {
-		this.button_restart.visible=true
+		this.button_menu.visible=true
 		this.button_next.visible=true
-		this.tween2=game.add.tween(this.button_restart.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
+		this.tween2=game.add.tween(this.button_menu.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
 		this.tween3=game.add.tween(this.button_next.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
 	}
 
@@ -298,7 +316,7 @@ function main(){
 	character.prototype.show_star = function() {
 		this.star.visible=true	
 		console.log(this.star.frame,"this.star.frame");
-		this.tween5 = game.add.tween(this.star.scale).to({x:1,y:1},800,Phaser.Easing.Linear.None,true,600)
+		this.tween5 = game.add.tween(this.star.scale).to({x:1,y:1},200,Phaser.Easing.Linear.None,true,1000)
 		this.tween5.onComplete.add(this.audio_star,this)
 	}
 
@@ -440,6 +458,7 @@ function main(){
 	}
 
 	character.prototype.launch=function(){
+			console.log("instace")
 		if(this.flag_level_complete==false && this.flag_spacekey==false){
 			game.time.events.add( 500,function(){this.flag_spacekey=true;console.log('couco',this.flag_spacekey)},this )
 			this.count=this.count+1
@@ -473,7 +492,7 @@ function main(){
 			this.audio_pop()
 			this.on_explode()
 			this.player[n].visible=false
-			this.particle = game.add.emitter(posx,posy,8)
+			this.particle = game.add.emitter(posx,posy,4)
 			this.particle.makeParticles("rect")
 			this.particle.minParticleSpeed.setTo(-600,-600)
 			this.particle.maxParticleSpeed.setTo(800,800)
@@ -591,11 +610,12 @@ function main(){
 	}
 
 	character.prototype.update=function(){
-		if (this.spaceKey.isDown && this.flag_spacekey)
-		{
-			this.flag_spacekey=false
-			this.launch()
-		}
+		//pour lancer avec le keyboard
+		//if (this.spaceKey.isDown && this.flag_spacekey)
+		//{
+			//this.flag_spacekey=false
+			//this.launch()
+		//}
 	}
 
 	_asteroid = function(number,posx,posy,speed,radius){
@@ -890,7 +910,7 @@ function main(){
 		this.weapon.bulletSpeed = this.speed;
 		this.angle=this.angular
 		this.weapon.bulletAngleVariance = this.variance;
-		game.time.events.add( 10,function(){this._flag=false},this )
+		//game.time.events.add( 10,function(){this._flag=false},this )
 		//this.tween_0.pause()
 		//this.scale_mainbody()
 		//this.tween_0.resume()
@@ -903,20 +923,21 @@ function main(){
 	}
 
 	_canon.prototype.explosion = function() {
-		if(this._flag){
+		//if(this._flag){
 			this.particlex = game.add.emitter(this.x,this.y,4)
-			this.particlex.makeParticles("rect")
+			this.particlex.makeParticles("particle_canon")
 			this.particlex.minParticleSpeed.setTo(-600,-600)
 			this.particlex.maxParticleSpeed.setTo(800,800)
 			this.particlex.setAlpha(.8, .6)
-			this.particlex.minParticleScale = .2
-			this.particlex.maxParticleScale = .4
+			this.particlex.minParticleScale = .7
+			this.particlex.maxParticleScale = .9
 			this.particlex.minRotation = 0
 			this.particlex.maxRotation = 0
 			this.particlex.on=false
-			this.particlex.start(true,230,null,20)
-		}
+			this.particlex.start(true,130,null,20)
+		//}
 	}
+	
 
 	_canon.prototype.audio_pop = function() {
 		this.sound_pop.play()
@@ -929,7 +950,7 @@ function main(){
 			if(this.special_color){
 				this.weapon.bullets.forEach(function(item){
 					if(item.alive){	
-						this.particle = game.add.emitter(item.x,item.y,8)
+						this.particle = game.add.emitter(item.x,item.y,4)
 						this.particle.makeParticles("particle_bullet_color")
 						this.particle.minParticleSpeed.setTo(-300,-300)
 						this.particle.maxParticleSpeed.setTo(800,800)
@@ -944,7 +965,7 @@ function main(){
 			}else{
 				this.weapon.bullets.forEach(function(item){
 					if(item.alive){	
-						this.particle = game.add.emitter(item.x,item.y,8)
+						this.particle = game.add.emitter(item.x,item.y,4)
 						this.particle.makeParticles("particle_bullet")
 						this.particle.minParticleSpeed.setTo(-300,-300)
 						this.particle.maxParticleSpeed.setTo(800,800)
@@ -1252,10 +1273,13 @@ function main(){
 			loadingBar.anchor.setTo(0.5,0.5);
 			this.load.setPreloadSprite(loadingBar);
 			//audio_move
-			this.game.load.audio("coin","sounds/coin.ogg");
-			this.game.load.audio("pop_minder","sounds/pop_minder.ogg");
-			this.game.load.audio("pop","sounds/pop.ogg");
 			this.game.load.audio("launch","sounds/launch.ogg");
+			this.game.load.audio("coin","sounds/coin.ogg");
+			//this.game.load.audio("pop_minder","sounds/pop_minder.ogg");
+			this.game.load.audio("pop_minder","sounds/pop2.ogg");
+			//this.game.load.audio("pop","sounds/pop.ogg");
+			this.game.load.audio("pop","sounds/pop2.ogg");
+			this.game.load.audio("click","sounds/click.ogg");
 			//images
 			this.game.load.image("cible_shadow","assets/cible_shadow.png");
 			this.game.load.image("axe_neon","assets/axe_neon.png");
@@ -1277,6 +1301,7 @@ function main(){
 			this.game.load.image("cible","assets/cible.png");
 			this.game.load.image("bullet_color","assets/bullet_color.png");
 			this.game.load.image("bullet","assets/bullet.png");
+			this.game.load.image("particle_canon","assets/particle_canon.png");
 			this.game.load.image("particle_bullet_color","assets/particle_bullet_color.png");
 			this.game.load.image("particle_bullet","assets/particle_bullet.png");
 			this.game.load.image("rect","assets/rect.png");
@@ -1296,8 +1321,8 @@ function main(){
 
 	var game_first_screen = {
 		create: function(){
-			//this.game.stage.backgroundColor = '#0d1018'
-			this.game.stage.backgroundColor = '#000000'
+			this.game.stage.backgroundColor = '#0d1018'
+			//this.game.stage.backgroundColor = '#000000'
 			this.title=new screen_first()
 			game.add.existing(this.title)
 			this.initProgressData()
@@ -1419,11 +1444,14 @@ function main(){
 		create: function() {
 			this.holdicons = [];
 			this.game.stage.backgroundColor = '#0d1018'
-			;
+			this.back=game.add.sprite(w2,h2,'background');
+			this.back.anchor.y=.5
+			this.back.anchor.x=.5
 			this.text=game.add.bitmapText(640,200,'fo','SELECT A LEVEL!',100);
 			this.text.anchor.setTo(.5,.5)
 			this.createLevelIcons();
 			this.animateLevelIcons();
+			this.game.add.existing(this.back)
 		},
 
 		update: function() {
@@ -1645,7 +1673,6 @@ game.time.events.loop( 80,function(){
 		}
 
 		//si reussi niveau
-		console.log(hero.flag_level_complete,"hero_flag_level_complete")
 		hero.flag_level_complete && flag_hide && hero.flag_level_complete==false & console.log("ok") & game.time.events.add( 900,hide_weapon,this )
 
 		//si checkicharacterisloossomewhere
