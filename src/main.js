@@ -122,8 +122,6 @@ function main(){
 		this.sound_click.play()
 		console.log("click")
 	}
-
-
 	screen_first.prototype.next_level = function() {
 		this.tween_scale_button_play = game.add.tween(this.button_next.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
 		this.audio_click()
@@ -131,7 +129,7 @@ function main(){
 			this.game.state.start("level"+level_number);
 			console.log('next-level')
 		},this)
-		}
+	}
 
 	screen_first.prototype.next_menu = function() {
 		this.tween_scale_button_menu = game.add.tween(this.button_menu.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
@@ -206,21 +204,21 @@ function main(){
 		this.sound_star=game.add.audio('coin')
 		this.sound_pop=game.add.audio('pop_minder')
 		//TODO:publish
-		this.button_publish=game.add.button(w2,h2+800,'publish',this.send_data_mail,this)
+		this.button_publish=game.add.button(w2,h2+800,'publish',this.animate_publish,this)
 		this.button_publish.anchor.setTo(.5,.5)
 		this.button_publish.scale.setTo(0,0)
 		this.button_publish.visible=true
 
-		this.button_restart=game.add.button(w2,h2,'restart',this.restart_level,this)
+		this.button_restart=game.add.button(w2,h2,'restart',this.animate_restart,this)
 		this.button_restart.anchor.setTo(.5,.5)
 		this.button_restart.scale.setTo(0,0)
 		this.button_restart.visible=false
-		this.button_next=game.add.button(w2,this.cible.y,'next',this.next_level,this)
+		this.button_next=game.add.button(w2,this.cible.y,'next',this.animate_next,this)
 		this.button_next.anchor.setTo(.5,.5)
 		this.button_next.scale.setTo(0,0)
 		this.button_next.visible=false
 		//this.button_video=game.add.button(w2,h2+400,'button_video',() => this.next_level_with_video(obj),this)
-		this.button_video=game.add.button(w2,h2+400,'button_video',() => this.next_level_with_video(),this)
+		this.button_video=game.add.button(w2,h2+400,'button_video',this.animate_video,this)
 		this.button_video.anchor.setTo(.5,.5)
 		this.button_video.scale.setTo(0,0)
 		this.button_video.visible=false
@@ -232,11 +230,50 @@ function main(){
 		this._levelNumber = 1;
 		this.count_dead=0
 		this.anim_cible()
+		this.sound_click=game.add.audio('click')
 		//this.reward_video()
 	}
 
 	character.prototype = Object.create(Phaser.Sprite.prototype)
 	character.prototype.constructor = character
+
+	character.prototype.audio_click = function() {
+		console.log("click")
+		this.sound_click.play()
+		console.log("click")
+	}
+
+
+	character.prototype.animate_restart = function() {
+		this.tween_scale_button = game.add.tween(this.button_restart.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
+		this.audio_click()
+		this.tween_scale_button.onComplete.add(function(){
+			this.restart_level()
+		},this)
+	}
+	character.prototype.animate_next = function() {
+		this.tween_scale_button = game.add.tween(this.button_next.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
+		this.audio_click()
+		this.tween_scale_button.onComplete.add(function(){
+			this.next_level()
+		},this)
+	}
+
+	character.prototype.animate_publish = function() {
+		this.tween_scale_button = game.add.tween(this.button_publish.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
+		this.audio_click()
+		this.tween_scale_button.onComplete.add(function(){
+			this.send_data_mail()
+		},this)
+	}
+
+	character.prototype.animate_video = function() {
+		this.tween_scale_button = game.add.tween(this.button_video.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
+		this.audio_click()
+		this.tween_scale_button.onComplete.add(function(){
+			this.next_level_with_video()
+		},this)
+	}
 
 	character.prototype.send_data_mail = function(){
 		//
@@ -406,15 +443,29 @@ function main(){
 	}
 
 	character.prototype.next_level_with_video = function() {
-		this.next_niveau=level_number+1
-		console.log('next-level')
-		window.chartboost.onRewardedVideoAdShown('Default')
-		window.chartboost.onRewardedVideoAdCompleted=function(location){
-			alert('next level')
-			this.game.state.start('level'+this.next_niveau,true,false);
-			console.log("video rewarded you could pass the level");
+		if( navigator.userAgent.match(/Android/i)
+			|| navigator.userAgent.match(/webOS/i)
+			|| navigator.userAgent.match(/iPhone/i)
+			|| navigator.userAgent.match(/iPad/i)
+			|| navigator.userAgent.match(/iPod/i)
+			|| navigator.userAgent.match(/BlackBerry/i)
+			|| navigator.userAgent.match(/Windows Phone/i)
+		){
+			this.next_niveau=level_number+1
+			console.log('next-level')
+			window.chartboost.onRewardedVideoAdShown('Default')
+			window.chartboost.onRewardedVideoAdCompleted=function(location){
+				alert('next level')
+				this.game.state.start('level'+this.next_niveau,true,false);
+				console.log("video rewarded you could pass the level");
+			}
+			window.onRewardedVideoAdCompleted('Default');
 		}
-		window.onRewardedVideoAdCompleted('Default');
+		else {
+			console.log('not mobile')
+			this.game.state.start('level'+this.next_niveau,true,false);
+			return true;
+		}
 	}
 
 	character.prototype.launch_with_mouse=function(){
@@ -883,6 +934,7 @@ function main(){
 		//this.table=[100,-100]
 		//this.u=0
 		//this.scale_mainbody()
+		this.launch_explosion()	
 	}
 
 	_canon.prototype = Object.create(Phaser.Sprite.prototype)
@@ -892,6 +944,11 @@ function main(){
 			//this.u=1-this.u
 			this.weapon.fire() 
 			//this.x=this.x+this.table[this.u]
+		}
+	}
+	_canon.prototype.launch_explosion=function(){
+		if(this._flag){
+		game.time.events.loop(this.frequency,this.explosion,this)	
 		}
 	}
 
@@ -910,7 +967,8 @@ function main(){
 		this.weapon.bulletSpeed = this.speed;
 		this.angle=this.angular
 		this.weapon.bulletAngleVariance = this.variance;
-		//game.time.events.add( 10,function(){this._flag=false},this )
+		//:w
+		//game.time.events.add( 10,function(){this._flag=true;console.log(this._flag)},this )
 		//this.tween_0.pause()
 		//this.scale_mainbody()
 		//this.tween_0.resume()
@@ -919,23 +977,37 @@ function main(){
 	_canon.prototype.animate_when_fire = function() {
 		this.tween_2 = game.add.tween(this.scale).to({x:1.4,y:1.2},30,Phaser.Easing.Linear.None,true,0)
 		this.tween_2.yoyo(30,true)
-		this.explosion()
+		//this.explosion()
 	}
 
 	_canon.prototype.explosion = function() {
-		//if(this._flag){
-			this.particlex = game.add.emitter(this.x,this.y,4)
+		if(this.visible){
+			if(this.x < w2){
+			this.particlex = game.add.emitter(this.x+35,this.y,4)
 			this.particlex.makeParticles("particle_canon")
-			this.particlex.minParticleSpeed.setTo(-600,-600)
-			this.particlex.maxParticleSpeed.setTo(800,800)
-			this.particlex.setAlpha(.8, .6)
-			this.particlex.minParticleScale = .7
-			this.particlex.maxParticleScale = .9
+			this.particlex.minParticleSpeed.setTo(100,-190)
+			this.particlex.maxParticleSpeed.setTo(500,240)
+			this.particlex.setAlpha(.4, .1)
+			this.particlex.minParticleScale = .4
+			this.particlex.maxParticleScale = .7
 			this.particlex.minRotation = 0
 			this.particlex.maxRotation = 0
 			this.particlex.on=false
-			this.particlex.start(true,130,null,20)
-		//}
+			this.particlex.start(true,230,null,20)
+			}else{
+			this.particlex = game.add.emitter(this.x-35,this.y,3)
+			this.particlex.makeParticles("particle_canon")
+			this.particlex.minParticleSpeed.setTo(-100,-190)
+			this.particlex.maxParticleSpeed.setTo(-500,240)
+			this.particlex.setAlpha(.5, .2)
+			this.particlex.minParticleScale = .4
+			this.particlex.maxParticleScale = .9
+			this.particlex.minRotation = 40
+			this.particlex.maxRotation = -40
+			this.particlex.on=false
+			this.particlex.start(true,140,null,20)
+			}
+		}
 	}
 	
 
@@ -1444,14 +1516,11 @@ function main(){
 		create: function() {
 			this.holdicons = [];
 			this.game.stage.backgroundColor = '#0d1018'
-			this.back=game.add.sprite(w2,h2,'background');
-			this.back.anchor.y=.5
-			this.back.anchor.x=.5
+			this.game.add.sprite(0,0,'background');
 			this.text=game.add.bitmapText(640,200,'fo','SELECT A LEVEL!',100);
 			this.text.anchor.setTo(.5,.5)
 			this.createLevelIcons();
 			this.animateLevelIcons();
-			this.game.add.existing(this.back)
 		},
 
 		update: function() {
@@ -1761,8 +1830,15 @@ game.time.events.loop( 80,function(){
 					canon[j].weapon.bullets.visible=false
 					canon[j].particlex.on=false
 					canon[j].destroy()
-				}
+					canon[j].particlex.on=false
+					canon[j].weapon.bullets.forEach(function(item){
+						if(item.alive){	
+							item.body.enable=false
+						}
+					}
+					)}
 			}
+					
 			if(neon[0]){
 				for (var j = 0; j < neon.length; j++){
 					neon[j].hide()
