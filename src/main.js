@@ -24,33 +24,39 @@
 //TODO
 //normalement réglé
 //check storage ne fonctionne plus
-// mettre un flag sur les bouttons
-
+//regler particle canon en fonction de l'inclinaison
+//mettre icone back à la place de publish
 
 //1081 retablir createBanner
 //1110 retablir createInterstitial
 //body enbale false lorsque touché un projectile violet
 //si canon = 1 dans check storage 
+
 //explode dalle neon asteroid pulsar
+
 //changer couleur particle d'asteroid
 //detecter si gsm ou ordi et régler admob et cordova en fonction
 
-
 function main(){
 	//alert("down")
-	var DEBUG = (function(){
-		var timestamp = function(){};
-		timestamp.toString = function(){
-			return "[DEBUG " + (new Date).toLocaleTimeString() + "]";    
-		};
+	//var DEBUG = (function(){
+	//var timestamp = function(){};
+	//timestamp.toString = function(){
+	//return "[DEBUG " + (new Date).toLocaleTimeString() + "]";    
+	//};
 
-		return {
-			log: console.log.bind(console, '%s', timestamp)
-		}
-	})();
+	//return {
+	//log: console.log.bind(console, '%s', timestamp)
+	//}
+	//})();
 
-	DEBUG.log("myapp");              
+	//DEBUG.log("myapp");              
 	var videoreward;
+	var c=[]
+	var a=[]
+	var n=[]
+	var p=[]
+	var d=[]
 
 	this.some_value=4
 	var gui
@@ -63,7 +69,7 @@ function main(){
 	var w2=640
 	var level_number=0
 	var debug_mode=false
-	var debug_position=true
+	var debug_position=false
 	var level_json={}
 	for (var i = 0; i < 20 ; i++) {
 		var val=100
@@ -117,39 +123,28 @@ function main(){
 	screen_first.prototype = Object.create(Phaser.Sprite.prototype)
 	screen_first.prototype.constructor = screen_first
 
-	screen_first.prototype.audio_click = function() {
-		console.log("click")
+	screen_first.prototype.audio_click = function(){
 		this.sound_click.play()
-		console.log("click")
 	}
-	screen_first.prototype.next_level = function() {
+	screen_first.prototype.next_level = function(){
 		if(this.button_next.flag){
 			this.button_next.flag=false
 			this.tween_scale_button_play = game.add.tween(this.button_next.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
 			this.audio_click()
-			this.tween_scale_button_play.onComplete.add(function(){
-				this.game.state.start("level"+level_number);
-				this.button_next.flag=true
-				console.log('next-level')
-			},this)
+			this.tween_scale_button_play.onComplete.add(function(){this.game.state.start("level"+level_number);this.button_next.flag=true;console.log('next-level')},this)
 		}
 	}
 
-	screen_first.prototype.next_menu = function() {
+	screen_first.prototype.next_menu = function(){
 		if(this.button_menu.flag){
 			this.button_menu.flag=false
 			this.tween_scale_button_menu = game.add.tween(this.button_menu.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
 			this.audio_click()
-			this.tween_scale_button_menu.onComplete.add(function(){
-				this.game.state.start("levsel");
-				this.audio_click()
-				console.log('next-level')
-				this.button_menu.flag=true
-			},this)
+			this.tween_scale_button_menu.onComplete.add(function(){this.game.state.start("levsel");this.audio_click();console.log('next-level');this.button_menu.flag=true},this)
 		}
 	}
 
-	screen_first.prototype.explosion = function() {
+	screen_first.prototype.explosion = function(){
 		this._x=game.rnd.integerInRange(0,w)
 		this._y=game.rnd.integerInRange(0,h)
 		this.particle = game.add.emitter(this._x,this._y,3)
@@ -165,7 +160,7 @@ function main(){
 		this.particle.start(true,3900,null,20)
 	}
 
-	screen_first.prototype.show_button = function() {
+	screen_first.prototype.show_button = function(){
 		this.button_menu.visible=true
 		this.button_next.visible=true
 		this.tween2=game.add.tween(this.button_menu.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
@@ -212,7 +207,11 @@ function main(){
 		this.sound_star=game.add.audio('coin')
 		this.sound_pop=game.add.audio('pop_minder')
 		//TODO:publish
+		if (debug_position){
 		this.button_publish=game.add.button(w2,h2+800,'publish',this.animate_publish,this)
+		}else{
+		this.button_publish=game.add.button(w2,h2+800,'back',this.back_to_menu,this)
+		}
 		this.button_publish.anchor.setTo(.5,.5)
 		this.button_publish.scale.setTo(0,0)
 		this.button_publish.visible=true
@@ -262,10 +261,7 @@ function main(){
 			this.button_restart.flag=false
 			this.tween_scale_button = game.add.tween(this.button_restart.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
 			this.audio_click()
-			this.tween_scale_button.onComplete.add(function(){
-				this.restart_level()
-				this.button_restart.flag=true
-			},this)
+			this.tween_scale_button.onComplete.add(function(){this.restart_level();this.button_restart.flag=true},this)
 		}
 	}
 	character.prototype.animate_next = function() {
@@ -273,10 +269,7 @@ function main(){
 			this.button_next.flag=false
 			this.tween_scale_button = game.add.tween(this.button_next.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
 			this.audio_click()
-			this.tween_scale_button.onComplete.add(function(){
-				this.next_level()
-				this.button_next.flag=true
-			},this)
+			this.tween_scale_button.onComplete.add(function(){this.next_level();this.button_next.flag=true},this)
 		}
 	}
 
@@ -285,10 +278,16 @@ function main(){
 			this.button_publish.flag=false
 			this.tween_scale_button = game.add.tween(this.button_publish.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
 			this.audio_click()
-			this.tween_scale_button.onComplete.add(function(){
-				this.send_data_mail()
-				this.button_publish.flag=true
-			},this)
+			this.tween_scale_button.onComplete.add(function(){this.send_data_mail();this.button_publish.flag=true},this)
+		}
+	}
+
+	character.prototype.back_to_menu = function() {
+		if(this.button_publish.flag){
+			this.button_publish.flag=false
+			this.tween_scale_button = game.add.tween(this.button_publish.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
+			this.audio_click()
+			this.tween_scale_button.onComplete.add(function(){this.game.state.start("game_first_screen");this.button_publish.flag=true},this)
 		}
 	}
 
@@ -297,10 +296,7 @@ function main(){
 			this.button_video.flag=false
 			this.tween_scale_button = game.add.tween(this.button_video.scale).to({x:.8,y:.8},150,Phaser.Easing.Bounce.Out,true,0)
 			this.audio_click()
-			this.tween_scale_button.onComplete.add(function(){
-				this.next_level_with_video()
-				this.button_video.flag=true
-			},this)
+			this.tween_scale_button.onComplete.add(function(){this.next_level_with_video();this.button_video.flag=true},this)
 
 		}
 	}
@@ -324,9 +320,10 @@ function main(){
 
 	character.prototype.checkicharacterisloossomewhere = function(n) {
 		console.log("checkicharacterisloossomewhere")
-		if(this.player[n].flag_check)
+		if(this.player[n].flag_check){
 			this.player[n].flag_check=false
-		game.time.events.add( 6000,() => this.checkicharacterisloossomewhere2(n),this )
+			game.time.events.add( 6000,() => this.checkicharacterisloossomewhere2(n),this )
+		}
 	}
 
 	character.prototype.checkicharacterisloossomewhere2 = function(n) {
@@ -342,26 +339,26 @@ function main(){
 		switch(this.count){
 			case 0:
 				this.life.text=3 
-				break
+			break
 			case 1:
 				this.life.text=2 
-				break
+			break
 			case 2:
 				this.life.text=2 
-				break
+			break
 			case 3:
 				this.life.text=1 
-				break
+			break
 			case 4:
 				this.life.text=1 
-				break
+			break
 			case 5:
 				this.life.text=''
-				break
+			break
 
 			default:
 				this.life.text='' 
-				break
+			break
 		}
 
 	}
@@ -419,90 +416,90 @@ function main(){
 
 	character.prototype.preload_reward_video=function(){
 		if( navigator.userAgent.match(/Android/i)
-			|| navigator.userAgent.match(/webOS/i)
-			|| navigator.userAgent.match(/iPhone/i)
-			|| navigator.userAgent.match(/iPad/i)
-			|| navigator.userAgent.match(/iPod/i)
-			|| navigator.userAgent.match(/BlackBerry/i)
-			|| navigator.userAgent.match(/Windows Phone/i)
-		){
+		   || navigator.userAgent.match(/webOS/i)
+	   || navigator.userAgent.match(/iPhone/i)
+	   || navigator.userAgent.match(/iPad/i)
+	   || navigator.userAgent.match(/iPod/i)
+	   || navigator.userAgent.match(/BlackBerry/i)
+	   || navigator.userAgent.match(/Windows Phone/i)
+		  ){
 
-			var appId = "4f7b433509b6025804000002";
-			var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
-			window.chartboost.setUp(appId, appSignature);
+			  var appId = "4f7b433509b6025804000002";
+			  var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
+			  window.chartboost.setUp(appId, appSignature);
 
-			//
-			window.chartboost.onInterstitialAdPreloaded = function(location) {
-				alert('onInterstitialAdPreloaded: ' + location);
-			};
-			window.chartboost.onInterstitialAdLoaded = function(location) {
-				alert('onInterstitialAdLoaded: ' + location);
-			};
-			window.chartboost.onInterstitialAdShown = function(location) {
-				alert('onInterstitialAdShown: ' + location);
-			};
-			window.chartboost.onInterstitialAdHidden = function(location) {
-				alert('onInterstitialAdHidden: ' + location);
-			};
-			//
-			window.chartboost.onMoreAppsAdPreloaded = function(location) {
-				alert('onMoreAppsAdPreloaded: ' + location);
-			};
-			window.chartboost.onMoreAppsAdLoaded = function(location) {
-				alert('onMoreAppsAdLoaded: ' + location);
-			};
-			window.chartboost.onMoreAppsAdShown = function(location) {
-				alert('onMoreAppsAdShown: ' + location);
-			};
-			window.chartboost.onMoreAppsAdHidden = function(location) {
-				alert('onMoreAppsAdHidden: ' + location);
-			};
-			//
-			window.chartboost.onRewardedVideoAdPreloaded = function(location) {
-				console.log('onRewardedVideoAdPreloaded: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdLoaded = function(location) {
-				console.log('onRewardedVideoAdLoaded: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdShown = function(location) {
-				console.log('onRewardedVideoAdShown: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdHidden = function(location) {
-				console.log('onRewardedVideoAdHidden: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdCompleted = function(location) {
-				console.log('next-level')
-				this.next_niveau=level_number+1
-				this.game.state.start('level'+this.next_niveau,true,false);
-				alert('onRewardedVideoAdCompleted: ' + location);
-			};
+			  //
+			  window.chartboost.onInterstitialAdPreloaded = function(location) {
+				  alert('onInterstitialAdPreloaded: ' + location);
+			  };
+			  window.chartboost.onInterstitialAdLoaded = function(location) {
+				  alert('onInterstitialAdLoaded: ' + location);
+			  };
+			  window.chartboost.onInterstitialAdShown = function(location) {
+				  alert('onInterstitialAdShown: ' + location);
+			  };
+			  window.chartboost.onInterstitialAdHidden = function(location) {
+				  alert('onInterstitialAdHidden: ' + location);
+			  };
+			  //
+			  window.chartboost.onMoreAppsAdPreloaded = function(location) {
+				  alert('onMoreAppsAdPreloaded: ' + location);
+			  };
+			  window.chartboost.onMoreAppsAdLoaded = function(location) {
+				  alert('onMoreAppsAdLoaded: ' + location);
+			  };
+			  window.chartboost.onMoreAppsAdShown = function(location) {
+				  alert('onMoreAppsAdShown: ' + location);
+			  };
+			  window.chartboost.onMoreAppsAdHidden = function(location) {
+				  alert('onMoreAppsAdHidden: ' + location);
+			  };
+			  //
+			  window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+				  console.log('onRewardedVideoAdPreloaded: ' + location);
+			  };
+			  window.chartboost.onRewardedVideoAdLoaded = function(location) {
+				  console.log('onRewardedVideoAdLoaded: ' + location);
+			  };
+			  window.chartboost.onRewardedVideoAdShown = function(location) {
+				  console.log('onRewardedVideoAdShown: ' + location);
+			  };
+			  window.chartboost.onRewardedVideoAdHidden = function(location) {
+				  console.log('onRewardedVideoAdHidden: ' + location);
+			  };
+			  window.chartboost.onRewardedVideoAdCompleted = function(location) {
+				  console.log('next-level')
+				  this.next_niveau=level_number+1
+				  this.game.state.start('level'+this.next_niveau,true,false);
+				  alert('onRewardedVideoAdCompleted: ' + location);
+			  };
 
-			window.chartboost.preloadRewardedVideoAd('Default')
+			  window.chartboost.preloadRewardedVideoAd('Default')
 
-		}
+		  }
 	}
 	character.prototype.show_reward_video = function() {
 		window.chartboost.showRewardedVideoAd('Default')
 	}
-	
+
 
 	character.prototype.next_level_with_video = function() {
 		if( navigator.userAgent.match(/Android/i)
-			|| navigator.userAgent.match(/webOS/i)
-			|| navigator.userAgent.match(/iPhone/i)
-			|| navigator.userAgent.match(/iPad/i)
-			|| navigator.userAgent.match(/iPod/i)
-			|| navigator.userAgent.match(/BlackBerry/i)
-			|| navigator.userAgent.match(/Windows Phone/i)
-		){
-			this.show_reward_video()
-		}
-		else {
-			console.log('not mobile')
-			this.next_niveau=level_number+1
-			this.game.state.start('level'+this.next_niveau,true,false);
-			//return true;
-		}
+		   || navigator.userAgent.match(/webOS/i)
+	   || navigator.userAgent.match(/iPhone/i)
+	   || navigator.userAgent.match(/iPad/i)
+	   || navigator.userAgent.match(/iPod/i)
+	   || navigator.userAgent.match(/BlackBerry/i)
+	   || navigator.userAgent.match(/Windows Phone/i)
+		  ){
+			  this.show_reward_video()
+		  }
+		  else {
+			  console.log('not mobile')
+			  this.next_niveau=level_number+1
+			  this.game.state.start('level'+this.next_niveau,true,false);
+			  //return true;
+		  }
 	}
 
 	character.prototype.launch_with_mouse=function(){
@@ -513,29 +510,29 @@ function main(){
 			switch(this.count){
 				case 0:
 					this.audio_launch()
-					this.player[0].body.enable=true
-					this.checkicharacterisloossomewhere(0)
-					this.player[0].visible=true
-					this.player[0].body.velocity.y=-800
-					break
+				this.player[0].body.enable=true
+				this.checkicharacterisloossomewhere(0)
+				this.player[0].visible=true
+				this.player[0].body.velocity.y=-800
+				break
 				case 1:
 					break
 				case 2:
 					this.audio_launch()
-					this.player[1].body.enable=true
-					this.checkicharacterisloossomewhere(1)
-					this.player[1].visible=true
-					this.player[1].body.velocity.y=-800
-					break
+				this.player[1].body.enable=true
+				this.checkicharacterisloossomewhere(1)
+				this.player[1].visible=true
+				this.player[1].body.velocity.y=-800
+				break
 				case 3:
 					break
 				case 4:
 					this.audio_launch()
-					this.player[2].body.enable=true
-					this.checkicharacterisloossomewhere(2)
-					this.player[2].visible=true
-					this.player[2].body.velocity.y=-800
-					break
+				this.player[2].body.enable=true
+				this.checkicharacterisloossomewhere(2)
+				this.player[2].visible=true
+				this.player[2].body.velocity.y=-800
+				break
 				case 5:
 					break
 
@@ -625,23 +622,23 @@ function main(){
 		switch(this.count){
 			case 0:
 				this.star.frame=3
-				break
+			break
 			case 1:
 				this.star.frame=3
-				break
+			break
 			case 2:
 				this.star.frame=2
-				console.log("this.star.frame in calculate_star",this.star.frame,this.count);
-				break
+			console.log("this.star.frame in calculate_star",this.star.frame,this.count);
+			break
 			case 3:
 				this.star.frame=2
-				break
+			break
 			case 4:
 				this.star.frame=1
-				break
+			break
 			case 5:
 				this.star.frame=1
-				break
+			break
 			default:
 				break
 		}
@@ -677,16 +674,18 @@ function main(){
 		this.tween3=game.add.tween(this.button_next.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
 	}
 
+
+	character.prototype.show_button_restart_level=function(){
+		this.flag_show_button=false
+		this.show_button_publish()
+		this.button_restart.visible=true
+		this.tween2=game.add.tween(this.button_restart.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
+	}
+
 	character.prototype.show_button_publish=function(){
 		//this.flag_show_button=false
 		this.button_publish.visible=true
 		this.tween2=game.add.tween(this.button_publish.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
-	}
-
-	character.prototype.show_button_restart_level=function(){
-		this.flag_show_button=false
-		this.button_restart.visible=true
-		this.tween2=game.add.tween(this.button_restart.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
 	}
 
 	character.prototype.show_button_video = function() {
@@ -924,6 +923,7 @@ function main(){
 		this._flag=_flag
 		this.variance=variance
 		this.sound_pop=game.add.audio('pop')
+		this.flag_for_fire=true
 		this._flag=true
 		//canon
 		//
@@ -977,7 +977,7 @@ function main(){
 	_canon.prototype = Object.create(Phaser.Sprite.prototype)
 	_canon.prototype.constructor = _canon
 	_canon.prototype.update = function(){
-		if(this._flag==false){
+		if(this._flag==false && this.flag_for_fire){
 			//this.u=1-this.u
 			this.weapon.fire() 
 			//this.x=this.x+this.table[this.u]
@@ -999,7 +999,7 @@ function main(){
 	}
 	_canon.prototype.fire = function() {
 
-		this._flag=true
+		this.flag_for_fire=true
 		this.weapon.fireRate = this.frequency ;
 		this.weapon.bulletSpeed = this.speed;
 		this.angle=this.angular
@@ -1090,225 +1090,120 @@ function main(){
 		}
 	}
 
-	//var createBanner= function(){
-	//	if( navigator.userAgent.match(/Android/i)
-	//		|| navigator.userAgent.match(/webOS/i)
-	//		|| navigator.userAgent.match(/iPhone/i)
-	//		|| navigator.userAgent.match(/iPad/i)
-	//		|| navigator.userAgent.match(/iPod/i)
-	//		|| navigator.userAgent.match(/BlackBerry/i)
-	//		|| navigator.userAgent.match(/Windows Phone/i)
-	//	){
-	//		if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
-	//			alert('Cocoon AdMob plugin not installed');
-	//			return;
-	//		}
-	//		// nécessaire 
-	//		adService = Cocoon.Ad.AdMob;
-	//		adService.configure({
-	//			ios: {
-	//				banner:"ca-app-pub-7686972479101507/8873903476",
-	//				interstitial:"ca-app-pub-7686972479101507/8873903476",
-	//			},
-	//			android: {
-	//				banner:"ca-app-pub-7686972479101507/4443703872",
-	//				interstitial:"ca-app-pub-7686972479101507/4443703872"
-	//			}
-	//		});
-
-	//		console.log('createBanner')
-	//		banner = adService.createBanner();
-
-	//		banner.on("load", function(){
-	//			console.log("Banner loaded " + banner.width, banner.height);
-	//		});
-
-	//		banner.on("fail", function(){
-	//			console.log("Banner failed to load");
-	//		});
-
-	//		banner.on("show", function(){
-	//			console.log("Banner shown a modal content");
-	//		});
-
-	//		banner.on("dismiss", function(){
-	//			console.log("Banner dismissed the modal content");
-	//		});
-
-	//		//load banner
-	//		banner.load();
-
-	//		//show banner
-	//		banner.show()
-	//		demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
-	//		banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
-	//		game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
-	//	}
-	//}
-
-	//var createInterstitial=function(){
-	//	if( navigator.userAgent.match(/Android/i)
-	//		|| navigator.userAgent.match(/webOS/i)
-	//		|| navigator.userAgent.match(/iPhone/i)
-	//		|| navigator.userAgent.match(/iPad/i)
-	//		|| navigator.userAgent.match(/iPod/i)
-	//		|| navigator.userAgent.match(/BlackBerry/i)
-	//		|| navigator.userAgent.match(/Windows Phone/i)
-	//	){
-	//		adService = Cocoon.Ad.AdMob;
-	//		adService.configure({
-	//			ios: {
-	//				banner:"ca-app-pub-7686972479101507/8873903476",
-	//				interstitial:"ca-app-pub-7686972479101507/8873903476",
-	//			},
-	//			android: {
-	//				banner:"ca-app-pub-3940256099942544/5224354917",
-	//				//precedente banners qui marchait banner:"ca-app-pub-7686972479101507/4443703872",
-	//				interstitial:"ca-app-pub-7686972479101507/4443703872"
-	//			}
-	//		});
-
-	//		interstitial = adService.createRewardedVideo();
-	//		//interstitial = adService.createInterstitial();
-
-	//		interstitial.on("load", function(){
-	//			console.log("Interstitial loaded");
-	//		});
-	//		interstitial.on("fail", function(){
-	//			console.log("Interstitial failed");
-	//		});
-	//		interstitial.on("show", function(){
-	//			console.log("Interstitial shown");
-	//		});
-	//		interstitial.on("dismiss", function(){
-	//			console.log("Interstitial dismissed");
-	//		});
-
-	//		interstitial.on("click", function(){
-	//			alert("click")
-	//			console.log("Interstitial dismissed");
-	//			if(level_number < 19){
-	//				this.game.state.start("level"+level_number+1);
-	//			}
-	//		});
-	//		interstitial.load()
-	//	}
-	//}
 	var createBanner= function(){
 		if( navigator.userAgent.match(/Android/i)
-			|| navigator.userAgent.match(/webOS/i)
-			|| navigator.userAgent.match(/iPhone/i)
-			|| navigator.userAgent.match(/iPad/i)
-			|| navigator.userAgent.match(/iPod/i)
-			|| navigator.userAgent.match(/BlackBerry/i)
-			|| navigator.userAgent.match(/Windows Phone/i)
-		){
-			if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
-				alert('Cocoon AdMob plugin not installed');
-				return;
-			}
-			// nécessaire 
-			adService = Cocoon.Ad.AdMob;
-			adService.configure({
-				ios: {
-					banner:"ca-app-pub-7686972479101507/8873903476",
-					interstitial:"ca-app-pub-7686972479101507/8873903476",
-				},
-				android: {
-					banner:"ca-app-pub-7686972479101507/4443703872",
-					interstitial:"ca-app-pub-7686972479101507/4443703872"
-				}
-			});
+		   || navigator.userAgent.match(/webOS/i)
+	   || navigator.userAgent.match(/iPhone/i)
+	   || navigator.userAgent.match(/iPad/i)
+	   || navigator.userAgent.match(/iPod/i)
+	   || navigator.userAgent.match(/BlackBerry/i)
+	   || navigator.userAgent.match(/Windows Phone/i)
+		  ){
+			  if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
+				  alert('Cocoon AdMob plugin not installed');
+				  return;
+			  }
+			  // nécessaire 
+			  adService = Cocoon.Ad.AdMob;
+			  adService.configure({
+				  ios: {
+					  banner:"ca-app-pub-7686972479101507/8873903476",
+					  interstitial:"ca-app-pub-7686972479101507/8873903476",
+				  },
+				  android: {
+					  banner:"ca-app-pub-7686972479101507/4443703872",
+					  interstitial:"ca-app-pub-7686972479101507/4443703872"
+				  }
+			  });
 
-			console.log('createBanner')
-			banner = adService.createBanner();
+			  console.log('createBanner')
+			  banner = adService.createBanner();
 
-			banner.on("load", function(){
-				console.log("Banner loaded " + banner.width, banner.height);
-			});
+			  banner.on("load", function(){
+				  console.log("Banner loaded " + banner.width, banner.height);
+			  });
 
-			banner.on("fail", function(){
-				console.log("Banner failed to load");
-			});
+			  banner.on("fail", function(){
+				  console.log("Banner failed to load");
+			  });
 
-			banner.on("show", function(){
-				console.log("Banner shown a modal content");
-			});
+			  banner.on("show", function(){
+				  console.log("Banner shown a modal content");
+			  });
 
-			banner.on("dismiss", function(){
-				console.log("Banner dismissed the modal content");
-			});
+			  banner.on("dismiss", function(){
+				  console.log("Banner dismissed the modal content");
+			  });
 
-			//load banner
-			banner.load();
+			  //load banner
+			  banner.load();
 
-			//show banner
-			banner.show()
-			demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
-			banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
-			game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
-		}
+			  //show banner
+			  banner.show()
+			  demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
+			  banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
+			  game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
+		  }
 	}
 
 
 	var createInterstitial=function(){
 		if( navigator.userAgent.match(/Android/i)
-			|| navigator.userAgent.match(/webOS/i)
-			|| navigator.userAgent.match(/iPhone/i)
-			|| navigator.userAgent.match(/iPad/i)
-			|| navigator.userAgent.match(/iPod/i)
-			|| navigator.userAgent.match(/BlackBerry/i)
-			|| navigator.userAgent.match(/Windows Phone/i)
-		){
-			adService = Cocoon.Ad.Chartboost
+		   || navigator.userAgent.match(/webOS/i)
+	   || navigator.userAgent.match(/iPhone/i)
+	   || navigator.userAgent.match(/iPad/i)
+	   || navigator.userAgent.match(/iPod/i)
+	   || navigator.userAgent.match(/BlackBerry/i)
+	   || navigator.userAgent.match(/Windows Phone/i)
+		  ){
+			  adService = Cocoon.Ad.Chartboost
 
-			adService.configure({
-				ios: {
-					appId:"4ed254a3cb5015e47c000000",
-					appSignature:"91858cc162b56414ca47e63ce7a1b20105c70e65"
-				},
-				android: {
-					appId:"50ae12d715ba47c00d01000c",
-					appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
-				}
-			});
-			interstitial = adService.createRewardedVideo();
-			//interstitial = adService.createInterstitial();
+			  adService.configure({
+				  ios: {
+					  appId:"4ed254a3cb5015e47c000000",
+					  appSignature:"91858cc162b56414ca47e63ce7a1b20105c70e65"
+				  },
+				  android: {
+					  appId:"50ae12d715ba47c00d01000c",
+					  appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
+				  }
+			  });
+			  interstitial = adService.createRewardedVideo();
+			  //interstitial = adService.createInterstitial();
 
-			interstitial.on("load", function(){
-				console.log("Interstitial loaded");
-			});
-			interstitial.on("fail", function(){
-				console.log("Interstitial failed");
-			});
-			interstitial.on("show", function(){
-				console.log("Interstitial shown");
-			});
-			interstitial.on("dismiss", function(){
-				console.log("Interstitial dismissed");
-			});
+			  interstitial.on("load", function(){
+				  console.log("Interstitial loaded");
+			  });
+			  interstitial.on("fail", function(){
+				  console.log("Interstitial failed");
+			  });
+			  interstitial.on("show", function(){
+				  console.log("Interstitial shown");
+			  });
+			  interstitial.on("dismiss", function(){
+				  console.log("Interstitial dismissed");
+			  });
 
-			interstitial.on("click", function(){
-				alert("click")
-				console.log("Interstitial dismissed");
-				if(level_number < 19){
-					this.game.state.start("level"+level_number+1);
-				}
-			});
-			interstitial.on("reward", function(){
-				alert("reward")
-				console.log("Interstitial dismissed");
-				if(level_number < 19){
-					this.game.state.start("level"+level_number+1);
-				}
-			});
+			  interstitial.on("click", function(){
+				  alert("click")
+				  console.log("Interstitial dismissed");
+				  if(level_number < 19){
+					  this.game.state.start("level"+level_number+1);
+				  }
+			  });
+			  interstitial.on("reward", function(){
+				  alert("reward")
+				  console.log("Interstitial dismissed");
+				  if(level_number < 19){
+					  this.game.state.start("level"+level_number+1);
+				  }
+			  });
 
-			interstitial.load()
-			//TOD
-			interstitial.show()
-		}
+			  interstitial.load()
+			  //TOD
+			  interstitial.show()
+		  }
 	}
-
 	var createBanner2= function(){
 
 		if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
@@ -1416,6 +1311,7 @@ function main(){
 			this.game.load.image("rect","assets/rect.png");
 			this.game.load.image("button","assets/button.png");
 			this.game.load.image("background","assets/background.png");
+			this.game.load.image("back","assets/back.png");
 
 
 			//font bitmapFont
@@ -1428,8 +1324,10 @@ function main(){
 			this.background=game.add.sprite(0,0,'background');
 			this.game.add.existing(this.background)
 			this.game.state.start("game_first_screen");
-		}
+		},
 	}
+
+
 
 	var game_first_screen = {
 		create: function(){
@@ -1472,15 +1370,15 @@ function main(){
 				console.log("create_canoin");
 
 				//canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-				canon[0]=new _canon(0,0,w-200,800,900,90,0,180,hero.flag_level_complete,true,false)
+				canon[0]=new _canon(0,0,w-200,800,900,90,0,180,hero.flag_level_complete,false,false)
 				console.log(canon[0].special_color,"special_color")
-				canon[1]=new _canon(1,0,0,1200,400,900,0,0,hero.flag_level_complete,false,true) 
+				canon[1]=new _canon(1,0,0,1200,400,900,0,0,hero.flag_level_complete,false,false) 
 			}
 			this.create_asteroid=function(){
 				//asteroid = function(number,posx,posy,speed,radius){
 				console.log("asteroid")
-				asteroid[0]=new _asteroid(100,240,900,.008,100)
-				asteroid[1]=new _asteroid(200,240,500,.008,100)
+				//asteroid[0]=new _asteroid(100,240,900,.008,100)
+				//asteroid[1]=new _asteroid(200,240,500,.008,100)
 			}
 
 			this.create_neon=function(){
@@ -1505,7 +1403,7 @@ function main(){
 
 			hero = new character() 
 
-			check_storage(this.create_canon,this.create_asteroid,this.create_neon,this.create_pulsar,this.create_dalle,2,1,0,0,2)
+			check_storage(this.create_canon,this.create_asteroid,this.create_neon,this.create_pulsar,this.create_dalle,2,0,0,0,0)
 			logic_add()
 			logic_update()
 
@@ -1542,6 +1440,11 @@ function main(){
 			logic_render()
 		},
 	}
+
+
+
+
+
 
 	var levsel={
 		// define needed variables for mygame.LevelSelect
@@ -1695,20 +1598,20 @@ function main(){
 				var xpos = IconGroup.xOrg;
 
 				var tween = this.game.add.tween(IconGroup)
-					.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos+4 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos-3 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos+2 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
-					.start();
+				.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos+4 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos-3 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos+2 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
+				.start();
 			} else {
 				// simulate button press animation to indicate selection
 				var IconGroup = this.holdicons[levelnr-1];
 				var tween = this.game.add.tween(IconGroup.scale)
-					.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
-					.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
-					.start();
+				.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
+				.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
+				.start();
 
 				// it's a little tricky to pass selected levelnr to callback function, but this works:
 				this.onLevelSelected(levelnr-1)
@@ -1719,7 +1622,7 @@ function main(){
 		animateLevelIcons: function() {
 
 			// slide all icons into screen
-			for (var i=0; i < this.holdicons.length; i++) {
+			for (var i=0; i < this.holdicons.length; i++){
 				// get variables
 				var IconGroup = this.holdicons[i];
 				IconGroup.y = IconGroup.y + 600;
@@ -1743,6 +1646,9 @@ function main(){
 			//this.state.start('game');
 		},
 	};
+
+
+
 	var logic_add=function(){
 		game.add.existing(hero)
 		if(canon[0]){
@@ -1774,7 +1680,6 @@ function main(){
 			}
 		}
 	}
-
 	var logic_update=function(){
 		game.time.events.loop( 80,function(){ 
 
@@ -1843,11 +1748,8 @@ function main(){
 
 			function onTap(pointer, doubleTap) {
 				if(hero.flag_level_complete==false){
-					if (doubleTap)
-					{
-					}
-					else
-					{
+					if (doubleTap){
+					}else{
 						hero.flag_spacekey=false
 						hero.launch_with_mouse()
 					}
@@ -1860,6 +1762,7 @@ function main(){
 		console.log("touch");
 
 	}
+
 	var hide_weapon=function(){
 		if(flag_hide){
 			console.log("hide_weapon")
@@ -1876,9 +1779,8 @@ function main(){
 					canon[j].weapon.bullets.forEach(function(item){
 						if(item.alive){	
 							item.body.enable=false
-						}
-					}
-					)}
+						}})
+				}
 			}
 
 			if(neon[0]){
@@ -1917,6 +1819,7 @@ function main(){
 	}
 
 	var show_grid_on_logic_position=function(sprite){
+		console.log("logic_position")
 		hero.grid.visible=true	
 		if(debug_position){
 			gui && gui.destroy()
@@ -1925,89 +1828,83 @@ function main(){
 			switch(sprite.name){
 				case "canon":
 					var guit={}
-					gui.add(sprite,'name')
-					guit.speed=gui.add(sprite,'speed',0,5000)
-					guit.speed.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
-					guit.frequency=gui.add(sprite,'frequency',0,5000)
-					guit.frequency.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
-					console.log(sprite.kill_with_world)
-					guit.kill=gui.add(sprite,'kill_with_world')
-					guit.kill.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
-					guit.special_color=gui.add(sprite,'special_color')
-					guit.special_color.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
-					guit.angular=gui.add(sprite,'angular',0,360)
-					guit.angular.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
-					guit.variance=gui.add(sprite,'variance',0,1000)
-					guit.variance.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
+				gui.add(sprite,'name')
+				guit.speed=gui.add(sprite,'speed',0,5000)
+				guit.speed.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
+				guit.frequency=gui.add(sprite,'frequency',0,5000)
+				guit.frequency.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
+				console.log(sprite.kill_with_world)
+				guit.kill=gui.add(sprite,'kill_with_world')
+				guit.kill.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
+				guit.special_color=gui.add(sprite,'special_color')
+				guit.special_color.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
+				guit.angular=gui.add(sprite,'angular',0,360)
+				guit.angular.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
+				guit.variance=gui.add(sprite,'variance',0,1000)
+				guit.variance.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
 
-					break
+				break
 				case "pulsar":
 					var guit={}
-					gui.add(sprite,'name')
-					guit.speed=gui.add(sprite,'speed',300,3000)
-					guit.speed.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
-					break;
+				gui.add(sprite,'name')
+				guit.speed=gui.add(sprite,'speed',300,3000)
+				guit.speed.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
+				break;
 				case "asteroid":
 					gui.add(sprite,'name')
-					gui.add(sprite,'radius',100,500)
-					gui.add(sprite,'speed',0,.01)
-
-					break;
+				gui.add(sprite,'radius',100,500)
+				gui.add(sprite,'speed',0,.01)
+				break;
 				case "neon":
 					var guit={}
-					gui.add(sprite,'name')
-					guit.speed=gui.add(sprite,'speed',300,3000)
-					guit.speed.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
-					guit.posx_in_tween=gui.add(sprite,'posx_in_tween',-800,800)
-					guit.posx_in_tween.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
-					break;
+				gui.add(sprite,'name')
+				guit.speed=gui.add(sprite,'speed',300,3000)
+				guit.speed.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
+				guit.posx_in_tween=gui.add(sprite,'posx_in_tween',-800,800)
+				guit.posx_in_tween.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
+				break;
 				case "dalle":
 					var guit={}
-					gui.add(sprite,'name')
-					guit.speed=gui.add(sprite,'speed',300,3000)
-					guit.speed.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
-					break;
+				gui.add(sprite,'name')
+				guit.speed=gui.add(sprite,'speed',300,3000)
+				guit.speed.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
+				break;
 				default:
 					break;
 			}
 		}
 	}
 
-	var c=[]
-	var a=[]
-	var n=[]
-	var p=[]
-	var d=[]
 
 	var logic_position=function(sprite){
 		if (debug_position){
@@ -2019,247 +1916,245 @@ function main(){
 			var _name_json
 			switch(sprite.name){
 				case 'canon':
-					console.log('msg')
-					_table=c
-					_name_json='canon'
-					console.log('sprite.angular',sprite.angular)
-					//var sprite.number=sprite.number
-					_table[sprite.number] = {
-						number:sprite.number,
-						delay:sprite.delay,
-						x:sprite.x,
-						y:sprite.y,
-						speed:sprite.speed,
-						frequency:sprite.frequency,
-						variance:sprite.variance,
-						angular:sprite.angular,
-						_flag:sprite._flag,
-						kill_with_world:sprite.kill_with_world,
-						special_color:sprite.special_color,
-					};
-					break
-					//asteroid = function(posx,posy,speed,radius){
+				_table=c
+				_name_json='canon'
+				console.log('sprite.angular',sprite.angular,_name_json)
+				//var sprite.number=sprite.number
+				_table[sprite.number] = {
+					number:sprite.number,
+					delay:sprite.delay,
+					x:sprite.x,
+					y:sprite.y,
+					speed:sprite.speed,
+					frequency:sprite.frequency,
+					variance:sprite.variance,
+					angular:sprite.angular,
+					_flag:sprite._flag,
+					kill_with_world:sprite.kill_with_world,
+					special_color:sprite.special_color,
+				};
+				break
+				//asteroid = function(posx,posy,speed,radius)
 				case 'asteroid':
 					_table=a
-					_name_json='asteroid'
-					_table[sprite.number] = {
-						x:sprite.x,
-						y:sprite.y,
-						speed:sprite.speed,
-						radius:sprite.radius,
-					};
-					break
-					//neon = function(delay,posx,posy,speed,posx_in_tween){
+				_name_json='asteroid'
+				_table[sprite.number] = {
+					x:sprite.x,
+					y:sprite.y,
+					speed:sprite.speed,
+					radius:sprite.radius,
+				};
+				break
+				//neon = function(delay,posx,posy,speed,posx_in_tween)
 				case 'neon':
 					_table=n
-					_name_json='neon'
-					_table[sprite.number] = {
-						delay:sprite.delay,
-						x:sprite.x,
-						y:sprite.y,
-						speed:sprite.speed,
-						posx_in_tween:sprite.posx_in_tween,
-					};
-					break
-					//
-					//pulsar = function(delay,time,posx,posy,speed,scale_factor){
+				_name_json='neon'
+				_table[sprite.number] = {
+					delay:sprite.delay,
+					x:sprite.x,
+					y:sprite.y,
+					speed:sprite.speed,
+					posx_in_tween:sprite.posx_in_tween,
+				};
+				break
+				//
+				//pulsar = function(delay,time,posx,posy,speed,scale_factor)
 				case 'pulsar':
 					console.log('sprite.name',sprite.name)
-					console.log(sprite.x)
-					_table=p
-					_name_json='pulsar'
-					_table[sprite.number] = {
-						delay:sprite.delay,
-						time:sprite.time,
-						x:sprite.x,
-						y:sprite.y,
-						speed:sprite.speed,
-						scale_factor:sprite.scale_factor,
-					};
-					break
+				console.log(sprite.x)
+				_table=p
+				_name_json='pulsar'
+				_table[sprite.number] = {
+					delay:sprite.delay,
+					time:sprite.time,
+					x:sprite.x,
+					y:sprite.y,
+					speed:sprite.speed,
+					scale_factor:sprite.scale_factor,
+				};
+				break
 				case 'dalle':
 					_table=d
-					_name_json='dalle'
-					_table[sprite.number] = {
-						delay:sprite.delay,
-						x:sprite.x,
-						y:sprite.y,
-						speed:sprite.speed,
-					};
-					break
-
+				_name_json='dalle'
+				_table[sprite.number] = {
+					delay:sprite.delay,
+					x:sprite.x,
+					y:sprite.y,
+					speed:sprite.speed,
+				};
+				break
 			}
-
 			localStorage.setItem(_name_json+sprite.number+'lev0', JSON.stringify(_table[sprite.number]));
-
 		}
 	}
 
-var check_storage=function(_create_canon,_create_asteroid,_create_neon,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_neon,num_pulsar,num_dalle){
-	console.log("asteroid")
-	for(var i=0;i<num_canon;i++){
-		try {
-			c[i] = JSON.parse( localStorage.getItem( 'canon'+i+'lev'+level_number ) ) ;
-		} catch(e){
-			c[i]=[]
-		}
-	};
-	for(var i=0;i<num_canon;i++){
-		//c[i] = localStorage.getItem('canon'+i+'lev'+level_number)
-		if (c[i]===null){
-			_create_canon()
-			break
-		}else{
-			c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number))
-			canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,hero.flag_level_complete,c[i].kill_with_world,c[i].special_color);
-		}
-	}
-
-	///////////////////////////////////////////////////////////////////////////////////////////
-	for(var i=0;i<num_asteroid;i++){
-		try {
-			a[i] = JSON.parse( localStorage.getItem( 'asteroid'+i+'lev'+level_number ) ) ;
-		} catch(e){
-			a[i]=[]
+	var check_storage=function(_create_canon,_create_asteroid,_create_neon,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_neon,num_pulsar,num_dalle){
+		console.log("check_storage")
+		for(var i=0;i<num_canon;i++){
+			try {
+				c[i] = JSON.parse( localStorage.getItem( 'canon'+i+'lev'+level_number ) ) ;
+			} catch(e){
+				c[i]=[];
+			}
 		};
+		for(var i=0;i<num_canon;i++){
+			//c[i] = localStorage.getItem('canon'+i+'lev'+level_number)
+			if (c[i]===null){
+				_create_canon()
+				break
+			}else{
+				c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number))
+				canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,hero.flag_level_complete,c[i].kill_with_world,c[i].special_color);
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////////////////////
+		for(var i=0;i<num_asteroid;i++){
+			try {
+				a[i] = JSON.parse( localStorage.getItem( 'asteroid'+i+'lev'+level_number ) ) ;
+			} catch(e){
+				a[i]=[]
+			};
+		}
+
+		for(var i=0;i<num_asteroid;i++){
+			if (a[i]===null){
+				_create_asteroid()
+				break
+			}else{
+				//asteroid = function(number,posx,posy,speed,radius)
+				asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius)
+			}
+		}
+		///////////////////////////////////////////////////////////////////////////////////////////
+		for(var i=0;i<num_neon;i++){
+			try {
+				n[i] = JSON.parse( localStorage.getItem( 'neon'+i+'lev'+level_number ) ) ;
+			} catch(e){
+				n[i]=[]
+			};
+		}
+
+		for(var i=0;i<num_neon;i++){
+			if (n[i]===null){
+				_create_neon()
+				break
+			}else{
+				//neon = function(number,delay,posx,posy,speed)
+				neon[i]=new _neon(i,n[i].delay,n[i].x,n[i].y,n[i].speed,n[i].posx_in_tween)
+			}
+		}
+		///////////////////////////////////////////////////////////////////////////////////////////
+		for(var i=0;i<num_pulsar;i++){
+			try {
+				p[i] = JSON.parse( localStorage.getItem( 'pulsar'+i+'lev'+level_number ) ) ;
+			} catch(e){
+				p[i]=[]
+			};
+		}
+		for(var i=0;i<num_pulsar;i++){
+			if (p[i]===null){
+				_create_pulsar()
+				break
+			}else{
+				//pulsar = function(number,delay,time,posx,posy,speed,scale_factor)
+				pulsar[i]=new _pulsar(i,p[i].delay,p[i].time,p[i].x,p[i].y,p[i].speed,p[i].scale_factor)
+			}
+		}
+
+		for(var i=0;i<num_dalle;i++){
+			try {
+				d[i] = JSON.parse( localStorage.getItem( 'dalle'+i+'lev'+level_number ) ) ;
+			} catch(e){
+				d[i]=[]
+			};
+		}
+		for(var i=0;i<num_dalle;i++){
+			if (d[i]===null){
+				//console.log(d[i])
+				_create_dalle()
+				break
+			}else{
+				//dalle = function(number,delay,posx,posy,speed)
+				dalle[i]=new _dalle(i,d[i].delay,d[i].x,d[i].y,d[i].speed)
+			}
+		}
+
 	}
 
-	for(var i=0;i<num_asteroid;i++){
-		if (a[i]===null){
-			_create_asteroid()
-			break
-		}else{
-			//asteroid = function(number,posx,posy,speed,radius){
-			asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius)
-		}
-	}
-	///////////////////////////////////////////////////////////////////////////////////////////
-	for(var i=0;i<num_neon;i++){
-		try {
-			n[i] = JSON.parse( localStorage.getItem( 'neon'+i+'lev'+level_number ) ) ;
-		} catch(e){
-			n[i]=[]
-		};
-	}
 
-	for(var i=0;i<num_neon;i++){
-		if (n[i]===null){
-			_create_neon()
-			break
-		}else{
-			//neon = function(number,delay,posx,posy,speed){
-			neon[i]=new _neon(i,n[i].delay,n[i].x,n[i].y,n[i].speed,n[i].posx_in_tween)
-		}
-	}
-	///////////////////////////////////////////////////////////////////////////////////////////
-	for(var i=0;i<num_pulsar;i++){
-		try {
-			p[i] = JSON.parse( localStorage.getItem( 'pulsar'+i+'lev'+level_number ) ) ;
-		} catch(e){
-			p[i]=[]
-		};
-	}
-	for(var i=0;i<num_pulsar;i++){
-		if (p[i]===null){
-			_create_pulsar()
-			break
-		}else{
-			//pulsar = function(number,delay,time,posx,posy,speed,scale_factor){
-			pulsar[i]=new _pulsar(i,p[i].delay,p[i].time,p[i].x,p[i].y,p[i].speed,p[i].scale_factor)
+	var logic_render=function(){
+		if(debug_mode){
+			game.debug.body(hero.cible_shadow)
+			game.debug.body(hero.cible)
+			for (var i = 0; i < 3;i++){
+				game.debug.body(hero.player[i])
+			}
+
+			if(neon[0]){
+				for (var i = 0;i < neon.length;i++){
+					game.debug.body(neon[i])
+				}
+			}
+
+			if(pulsar[0]){
+				for (var i = 0;i < pulsar.length;i++){
+					game.debug.body(pulsar[i])
+				}
+			}
+
+			if(asteroid[0]){
+				for (var i = 0;i < asteroid.length;i++){
+					game.debug.body(asteroid[i])
+				}
+			}
+
+			if(canon[0]){
+				for (var i = 0; i < canon.length;i++){
+					canon[i].weapon.bullets.forEach(function(item){game.debug.body(item)})
+				}
+			}
+
 		}
 	}
 
-	for(var i=0;i<num_dalle;i++){
-		try {
-			d[i] = JSON.parse( localStorage.getItem( 'dalle'+i+'lev'+level_number ) ) ;
-		} catch(e){
-			d[i]=[]
-		};
-	}
-	for(var i=0;i<num_dalle;i++){
-		if (d[i]===null){
-			//console.log(d[i])
-			_create_dalle()
-			break
-		}else{
-			//dalle = function(number,delay,posx,posy,speed){
-			dalle[i]=new _dalle(i,d[i].delay,d[i].x,d[i].y,d[i].speed)
-		}
-	}
+	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
+	game.state.add('boot',bootstate)
+	game.state.add('preload',preloadstate)
+	game.state.add('game_first_screen',game_first_screen)
+	//game.state.add('game_state',game_state)
+	//for (var i = 0; i < 1; i++) {
+	//game.state.add('level'+i,level+i)
+	//game.state.add('level'+i,level+i)
+	//}
+	game.state.add('level0',level0)
+	game.state.add('level1',level1)
+	//game.state.add('menu_level_select',menu_level_select)
+	game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
+	game.state.start('boot',bootstate)
 }
 
-var logic_render=function(){
-	if(debug_mode){
-		game.debug.body(hero.cible_shadow)
-		game.debug.body(hero.cible)
-		for (var i = 0; i < 3; i++){
-			game.debug.body(hero.player[i])
-		}
-		if(neon[0]){
-			for (var i = 0; i < neon.length; i++){
-				game.debug.body(neon[i])
-			}
-		}
-
-		if(pulsar[0]){
-			for (var i = 0; i < pulsar.length; i++){
-				game.debug.body(pulsar[i])
-			}
-		}
-
-		if(asteroid[0]){
-			for (var i = 0; i < asteroid.length; i++){
-				game.debug.body(asteroid[i])
-			}
-		}
-
-		if(canon[0]){
-			for (var i = 0; i < canon.length; i++){
-				canon[i].weapon.bullets.forEach(function(item){
-					game.debug.body(item)	
-				})
-			}
-		}
-	}
-}
-game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
-game.state.add('boot',bootstate)
-game.state.add('preload',preloadstate)
-game.state.add('game_first_screen',game_first_screen)
-//game.state.add('game_state',game_state)
-//for (var i = 0; i < 1; i++) {
-//game.state.add('level'+i,level+i)
-//game.state.add('level'+i,level+i)
-//}
-game.state.add('level0',level0)
-game.state.add('level1',level1)
-//game.state.add('menu_level_select',menu_level_select)
-game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
-game.state.start('boot',bootstate)
-	}
-
-var detectmob=function() { 
+var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i)
-		|| navigator.userAgent.match(/webOS/i)
-		|| navigator.userAgent.match(/iPhone/i)
-		|| navigator.userAgent.match(/iPad/i)
-		|| navigator.userAgent.match(/iPod/i)
-		|| navigator.userAgent.match(/BlackBerry/i)
-		|| navigator.userAgent.match(/Windows Phone/i)
-	){
-		document.addEventListener('deviceready',main,false)
-		return true;
-	}
-	else {
-		console.log('not mobile')
-		main()
-		return true;
-	}
+	   || navigator.userAgent.match(/webOS/i)
+   || navigator.userAgent.match(/iPhone/i)
+   || navigator.userAgent.match(/iPad/i)
+   || navigator.userAgent.match(/iPod/i)
+   || navigator.userAgent.match(/BlackBerry/i)
+   || navigator.userAgent.match(/Windows Phone/i)
+	  ){
+		  document.addEventListener('deviceready',main,false)
+		  return true;
+	  } else {
+		  console.log('not mobile')
+		  main()
+		  return true;
+	  }
 }
 //pour tester dans github décocher ceci
 //main()
-
 //si c'est cocoon décocher ici
 detectmob()
 //document.addEventListener('deviceready',main,false)
+
 
