@@ -198,11 +198,18 @@ function main(){
 			this.player[i].body.enable=false
 			this.player[i].flag_check=true
 			this.player[i].flag_cant_explode=true
+			this.player[i].is_waiting=true
+			this.player[i].is_launching=false
+			this.player[i].is_exploding=false
+			this.player[i].is_winning=false
 		} 
 		this.score = game.add.bitmapText(w2,300,'fo','',100)
 		this.score.anchor.setTo(.5,.5)
 		this.life = game.add.bitmapText(w2,1550,'fo','3',120)
 		this.life.anchor.setTo(.5,.5)
+		this.touch_button = game.add.sprite(this.life.x,this.life.y-20,'touch')
+		this.touch_button.anchor.setTo(.5,.5)
+		this.touch_button.alpha=.4
 		this.sound_launch=game.add.audio('launch')
 		this.sound_star=game.add.audio('coin')
 		this.sound_pop=game.add.audio('pop_minder')
@@ -244,10 +251,31 @@ function main(){
 		this.anim_cible()
 		this.sound_click=game.add.audio('click')
 		this.preload_reward_video()
+		this.animate_touch()
 	}
 
 	character.prototype = Object.create(Phaser.Sprite.prototype)
 	character.prototype.constructor = character
+
+	character.prototype.animate_touch = function() {
+		this.touch_button.alpha=.4
+		this.tween_touch = game.add.tween(this.touch_button.scale).to({x:1.5,y:1.5},1000,Phaser.Easing.Linear.None,true,0)
+		this.tween_touch2 = game.add.tween(this.touch_button).to({alpha:0},1000,Phaser.Easing.Linear.None,true,0)
+
+		this.tween_touch.onComplete.add(this.animate_touch_next,this)
+	}
+	character.prototype.animate_touch_next = function() {
+game.time.events.add( 400,this.animate_touch_next2,this )
+
+	}
+
+	character.prototype.animate_touch_next2 = function() {
+		this.touch_button.alpha=0	
+		this.touch_button.scale.setTo(1,1)
+		this.animate_touch()
+
+	}
+
 
 	character.prototype.audio_click = function() {
 		console.log("click")
@@ -329,13 +357,13 @@ function main(){
 	character.prototype.checkicharacterisloossomewhere2 = function(n) {
 		if(this.flag_level_complete==false){
 			console.log("checkicharacterisloossomewhere2");
-			this.explode(w2,0,n)	
+			this.explode(this.player[n].x,0,n)	
 		}
 	}
 
 	character.prototype.calculate_life_remaining= function(){
-		console.log("calculate_life_remaining")
 		this.count=this.count+1
+		console.log(this.count,"thiscount in calculate_life_remaining")
 		switch(this.count){
 			case 0:
 				this.life.text=3 
@@ -352,10 +380,6 @@ function main(){
 			case 4:
 				this.life.text=1 
 			break
-			case 5:
-				this.life.text=''
-			break
-
 			default:
 				this.life.text='' 
 			break
@@ -504,57 +528,45 @@ function main(){
 
 	character.prototype.launch_with_mouse=function(){
 		if(this.flag_level_complete==false && this.flag_mouse==false){
+			console.log(this.flag_mouse,"normalement false")
 			this.flag_mouse=true
-			game.time.events.add( 400,function(){this.flag_mouse=false},this )
+			console.log(this.flag_mouse,"normalement true")
+			game.time.events.add( 4000,function(){this.flag_mouse=false;console.log("initiate events flag mouse false")},this )
 			this.calculate_life_remaining()
+			console.log(this.count,"this count in launch with mouse")
 			switch(this.count){
 				case 0:
-					this.audio_launch()
-				this.player[0].body.enable=true
-				this.checkicharacterisloossomewhere(0)
-				this.player[0].visible=true
-				this.player[0].body.velocity.y=-800
+					this.launch_number(0)
+console.log(this.player[0].is_exploding,"this.player[n].is_exploding in launch")
 				break
 				case 1:
 					break
 				case 2:
-					this.audio_launch()
-				this.player[1].body.enable=true
-				this.checkicharacterisloossomewhere(1)
-				this.player[1].visible=true
-				this.player[1].body.velocity.y=-800
+					this.launch_number(1)
 				break
 				case 3:
 					break
 				case 4:
-					this.audio_launch()
-				this.player[2].body.enable=true
-				this.checkicharacterisloossomewhere(2)
-				this.player[2].visible=true
-				this.player[2].body.velocity.y=-800
+					this.launch_number(2)
 				break
 				case 5:
 					break
-
 				default:
 					break
 			}
 		}
 	}
 
-	character.prototype.launch=function(){
-		console.log("instace")
-		if(this.flag_level_complete==false && this.flag_spacekey==false){
-			game.time.events.add( 500,function(){this.flag_spacekey=true;console.log('couco',this.flag_spacekey)},this )
-			this.count=this.count+1
-			if(this.count <= 2){
-				console.log(this.count,"this.count");
-				this.player[this.count].visible=true
-				this.player[this.count].body.velocity.y=-800
-				this.checkicharacterisloossomewhere(this.count)
-			}
-		}
+
+	character.prototype.launch_number = function(n) {
+					this.audio_launch()
+				this.player[n].body.enable=true
+				this.checkicharacterisloossomewhere(n)
+				this.player[n].visible=true
+				this.player[n].body.velocity.y=-800
+		
 	}
+	
 
 	character.prototype.explode_cible=function(){
 		this.particle = game.add.emitter(this.cible.x,this.cible.y,8)
@@ -571,8 +583,9 @@ function main(){
 	}
 
 	character.prototype.explode=function(posx,posy,n){
-		if(this.player[n].flag_cant_explode){
-			this.player[n].flag_cant_explode=false
+		if(this.player[n].is_exploding==false){
+			console.log("explode on",n,this.player[n].is_exploding)
+			this.player[n].is_exploding=true
 			this.calculate_life_remaining()
 			this.audio_pop()
 			this.on_explode()
@@ -1285,6 +1298,7 @@ function main(){
 			this.game.load.audio("pop","sounds/pop2.ogg");
 			this.game.load.audio("click","sounds/click.ogg");
 			//images
+			this.game.load.image("touch","assets/touch.png");
 			this.game.load.image("cible_shadow","assets/cible_shadow.png");
 			this.game.load.image("axe_neon","assets/axe_neon.png");
 			this.game.load.image("publish","assets/publish.png");
@@ -1410,6 +1424,17 @@ function main(){
 			return level_number
 		},
 		update:function(){
+			game.input.onTap.add(onTap,this);
+
+			function onTap(pointer, doubleTap) {
+				if(hero.flag_level_complete==false){
+					if (doubleTap){
+					}else{
+						//hero.flag_spacekey=false
+						hero.launch_with_mouse()
+					}
+				}
+			}
 			//logic_update()
 		},
 		render:function(){
@@ -1744,17 +1769,6 @@ function main(){
 				}
 			}
 
-			game.input.onTap.add(onTap,this);
-
-			function onTap(pointer, doubleTap) {
-				if(hero.flag_level_complete==false){
-					if (doubleTap){
-					}else{
-						hero.flag_spacekey=false
-						hero.launch_with_mouse()
-					}
-				}
-			}
 		})
 	}
 
