@@ -989,33 +989,33 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	this.input.enableSnap(40,40,true,true)
 	//particle for Xplode
 	if(this.x < w2){
-		this.particlex = game.add.emitter(this.x+35,this.y)
+		this.particlex = game.add.emitter(this.x+40,this.y)
 		this.particlex.makeParticles("particle_canon")
-		this.particlex.minParticleSpeed.setTo(100,-190)
-		this.particlex.maxParticleSpeed.setTo(500,240)
-		this.particlex.setAlpha(.4, .1)
-		this.particlex.minParticleScale = .4
-		this.particlex.maxParticleScale = .7
+		this.particlex.minParticleSpeed.setTo(100,-120)
+		this.particlex.maxParticleSpeed.setTo(300,120)
+		this.particlex.setAlpha(.6, .2)
+		this.particlex.minParticleScale = .1
+		this.particlex.maxParticleScale = .9
 		this.particlex.minRotation = 0
 		this.particlex.maxRotation = 0
 		this.particlex.on=false
 			//this.particlex.start(true,900,null,3)
 	}else{
-		this.particlex = game.add.emitter(this.x-35,this.y)
+		this.particlex = game.add.emitter(this.x-40,this.y)
 		this.particlex.makeParticles("particle_canon")
-		this.particlex.minParticleSpeed.setTo(-100,-190)
-		this.particlex.maxParticleSpeed.setTo(-500,240)
+		this.particlex.minParticleSpeed.setTo(-100,-129)
+		this.particlex.maxParticleSpeed.setTo(-300,120)
 		this.particlex.setAlpha(.5, .2)
-		this.particlex.minParticleScale = .4
+		this.particlex.minParticleScale = .1
 		this.particlex.maxParticleScale = .9
 		this.particlex.minRotation = 40
 		this.particlex.maxRotation = -40
 		this.particlex.on=false
 			//this.particlex.start(true,900,null,3)
 	}
-	this.animate_when_fire()
+	//this.animate_when_fire()
 
-	game.time.events.loop( this.frequency,this.animate_when_fire,this )
+	//game.time.events.loop( this.frequency,this.animate_when_fire,this )
 
 	game.physics.arcade.enable(this);
 	this.special_color ? this.weapon=game.add.weapon(9,'bullet_color'):this.weapon=game.add.weapon(9,'bullet')	
@@ -1043,15 +1043,64 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	//  Tell the Weapon to track the 'player' Sprite, offset by 14px horizontally, 0 vertically
 	this.weapon.trackSprite(this,0,0,true);
 	game.time.events.add( this.delay,function(){this._flag=false},this )
+	this.time_for_count=0
+	this.ratio_time=8
+	//this.frequency > 50 ? this.time_total=50:this.time_total=this.frequency
+	this.time_total=Math.round(this.frequency*.01)
+	this.time_part=Math.round(this.time_total/this.ratio_time)
+	this.flag_for_time_count=true
+		game.time.events.loop( this.frequency,function(){this.flag_for_time_count=true},this) 
+	
 }
 
 _canon.prototype = Object.create(Phaser.Sprite.prototype)
 _canon.prototype.constructor = _canon
-_canon.prototype.update = function(){
-	this._flag==false && this.flag_for_fire && this.weapon.fire() 
+	_canon.prototype.update = function(){
+		this._flag==false && this.flag_for_fire && this.weapon.fire() 
 		this.particlex.x=this.x
 		this.particlex.y=this.y
-}
+		if(this.flag_for_time_count){
+			this.time_for_count=this.time_for_count+1
+			switch(this.time_for_count){
+				case this.time_part:
+					this.x=this.x+2	
+					this.scale.y=1.1
+					break
+				case this.time_part*2:
+					this.x=this.x+4	
+					this.scale.y=1.2
+					break
+				case this.time_part*3:
+					this.x=this.x+6	
+					this.scale.y=1.3
+					break
+				case this.time_part*4:
+					this.x=this.x+8	
+					this.scale.y=1.4
+					this.explosion()
+					break
+				case this.time_part*5:
+					this.x=this.x-2	
+					this.scale.y=1.3
+					break
+				case this.time_part*6:
+					this.x=this.x-4	
+					this.scale.y=1.2
+					break
+				case this.time_part*7:
+					this.x=this.x-6	
+					this.scale.y=1.1
+					break
+				case this.time_total:
+					this.x=this.x-8	
+					this.scale.y=1.0
+					this.time_for_count=0
+					this.flag_for_time_count=false
+					this.hide_explosion()
+					break
+			}
+		}
+	}
 
 _canon.prototype.transition = function() {
 	this.tween_characteristic = game.add.tween(this.canon).to({x:posx,y:posy},time,Phaser.Easing.Linear.None,true,delay)
@@ -1067,18 +1116,22 @@ _canon.prototype.fire = function() {
 	this.angle=this.angular
 	this.weapon.bulletAngleVariance = this.variance;
 }
+	
 
 _canon.prototype.animate_when_fire = function() {
-	this.tween_2 = game.add.tween(this.scale).to({x:1.4,y:1.2},30,Phaser.Easing.Linear.None,true,0)
-	this.tween_2.yoyo(30,true)
-	this.explosion()
+	//this.tween_2 = game.add.tween(this.scale).to({x:1.4,y:1.2},30,Phaser.Easing.Linear.None,true,0)
+	//this.tween_2.yoyo(30,true)
+	//this.explosion()
 }
 
 _canon.prototype.explosion = function() {
 	if(this.visible){
 			this.particlex.on=true
-			this.particlex.start(false,200,null,3)
+			this.particlex.start(true,450,null,6)
 	}
+}
+_canon.prototype.hide_explosion = function() {
+			this.particlex.on=false
 }
 
 _canon.prototype.audio_pop = function() {
