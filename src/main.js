@@ -43,7 +43,6 @@
 //1081 retablir createBanner
 //1110 retablir createInterstitial
 //body enbale false lorsque touché un projectile violet
-//si canon = 1 dans check storage 
 
 //explode dalle neon asteroid pulsar
 
@@ -70,6 +69,12 @@ function main(){
 	var n=[]
 	var p=[]
 	var d=[]
+
+var number_canon=null 
+var number_asteroid=null 
+var number_neon=null 
+var number_pulsar=null 
+var number_dalle=null 
 
 	this.some_value=4
 	var gui
@@ -135,7 +140,7 @@ function main(){
 		this._x=game.rnd.integerInRange(0,w)
 		this._y=game.rnd.integerInRange(0,h)
 		this.particle = game.add.emitter(this._x,this._y)
-		this.particle.makeParticles("rect")
+		this.particle.makeParticles("particle_character")
 		this.particle.minParticleSpeed.setTo(-600,-600)
 		this.particle.maxParticleSpeed.setTo(800,800)
 		this.particle.setAlpha(.5, .2)
@@ -185,7 +190,7 @@ function main(){
 	}
 
 	character = function(){
-		Phaser.Sprite.call(this,game,w2,h+500,'rect')
+		Phaser.Sprite.call(this,game,w2,h+500,'particle_character')
 		this.flag_mouse=false
 		this.flag_show_button=true
 		this.cible_shadow=game.add.sprite(w2,300,'cible_shadow')
@@ -208,7 +213,7 @@ function main(){
 		this.count=-1
 		this.player={}
 		for (var i = 0; i < 3; i++){
-			this.player[i]=game.add.sprite(w2,1980,'rect')	
+			this.player[i]=game.add.sprite(w2,1980,'particle_character')	
 			game.physics.arcade.enable(this.player[i],Phaser.Physics.ARCADE)
 			this.player[i].anchor.setTo(.5,.5)
 			//this.player[i].enableBody=true
@@ -282,6 +287,17 @@ function main(){
 		this.counter = 100;
 		this.delay_for_launch_next_player=500
 		this.animate_touch()
+		this.particle = game.add.emitter(this.x,this.y)
+		this.particle.makeParticles("particle_character")
+		this.particle.minParticleSpeed.setTo(-600,-600)
+		this.particle.maxParticleSpeed.setTo(800,800)
+		this.particle.setAlpha(.8, .6)
+		this.particle.minParticleScale = .2
+		this.particle.maxParticleScale = .5
+		this.particle.minRotation = 0
+		this.particle.maxRotation = 0
+		this.particle.on=false
+		//this.particle.start(true,3900,null,10)
 	}
 
 	character.prototype = Object.create(Phaser.Sprite.prototype)
@@ -625,17 +641,11 @@ character.prototype.launch_number = function(n) {
 
 
 character.prototype.explode_cible=function(){
-	this.particle = game.add.emitter(this.cible.x,this.cible.y)
-	this.particle.makeParticles("rect")
-	this.particle.minParticleSpeed.setTo(-600,-600)
-	this.particle.maxParticleSpeed.setTo(800,800)
-	this.particle.setAlpha(.8, .6)
-	this.particle.minParticleScale = .2
-	this.particle.maxParticleScale = .5
-	this.particle.minRotation = 0
-	this.particle.maxRotation = 0
-	this.particle.on=false
+	this.particle.x=this.cible.x
+	this.particle.y=this.cible.y
+	this.particle.on=true
 	this.particle.start(true,3900,null,15)
+	game.time.events.add( 100,function(){this.particle.on=false},this )
 }
 
 character.prototype.explode=function(posx,posy,n){
@@ -649,17 +659,11 @@ character.prototype.explode=function(posx,posy,n){
 		this.audio_pop()
 		this.on_explode()
 		this.player[n].visible=false
-		this.particle = game.add.emitter(posx,posy)
-		this.particle.makeParticles("rect")
-		this.particle.minParticleSpeed.setTo(-600,-600)
-		this.particle.maxParticleSpeed.setTo(800,800)
-		this.particle.setAlpha(.8, .6)
-		this.particle.minParticleScale = .2
-		this.particle.maxParticleScale = .5
-		this.particle.minRotation = 0
-		this.particle.maxRotation = 0
-		this.particle.on=false
+		this.particle.x=posx
+		this.particle.y=posy
+		this.particle.on=true
 		this.particle.start(true,3900,null,10)
+		game.time.events.add( 100,function(){this.particle.on=false},this )
 		this.player[n].body.enable=false
 	}
 }
@@ -667,7 +671,6 @@ character.prototype.explode=function(posx,posy,n){
 character.prototype.on_explode=function(){
 	this.count_dead=this.count_dead+1
 	if(this.count_dead==3){
-		console.log('this.count_dead',this.count_dead)
 		this.decide_if_show_button_restart_level()
 	}
 }
@@ -676,7 +679,6 @@ character.prototype.decide_if_show_button_restart_level = function() {
 	console.log('decide')
 	this.flag_hide_enemies=true
 	game.time.events.add( 2000,this.show_button_restart_level,this )
-	//seulement si le flag level est complete lance show_button_video
 	game.time.events.add( 2000,this.show_button_video,this )
 }
 
@@ -700,7 +702,6 @@ character.prototype.calculate_star = function() {
 			break
 		case 2:
 			this.star.frame=2
-			console.log("this.star.frame in calculate_star",this.star.frame,this.count);
 			break
 		case 3:
 			this.star.frame=2
@@ -755,7 +756,6 @@ character.prototype.show_button_restart_level=function(){
 }
 
 character.prototype.show_button_publish=function(){
-	//this.flag_show_button=false
 	this.button_publish.visible=true
 	this.tween2=game.add.tween(this.button_publish.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,300)
 }
@@ -769,12 +769,6 @@ character.prototype.show_button_video = function() {
 }
 
 character.prototype.update=function(){
-	//pour lancer avec le keyboard
-	//if (this.spaceKey.isDown && this.flag_spacekey)
-	//{
-	//this.flag_spacekey=false
-	//this.launch()
-	//}
 }
 
 _asteroid = function(number,posx,posy,speed,radius){
@@ -790,11 +784,7 @@ _asteroid = function(number,posx,posy,speed,radius){
 	this.anchor.y=.5
 	this.axe=game.add.sprite(this.posx,this.posy,'axe')
 	this.axe.anchor.setTo(.5,.5)
-	if(debug_position){
-		this.visible=true
-	}else{
-		this.visible=false
-	}
+	debug_position ? this.visible=true:this.visible=false
 	this.inputEnabled=true
 	this.input.enableDrag(true)
 	this.events.onDragStop.add(logic_position,this)
@@ -846,8 +836,7 @@ _pulsar = function(number,delay,time,posx,posy,speed,scale_factor){
 	this.posy=posy
 	this.speed=speed
 	Phaser.Sprite.call(this,game,this.posx,this.posy,'pulsar')
-	this.anchor.x=0.5
-	this.anchor.y=.5
+	this.anchor.setTo(.5,.5)
 	this.scale.setTo(0,0)
 	this.inputEnabled=true
 	this.input.enableDrag(true)
@@ -869,7 +858,6 @@ _pulsar.prototype.tweens = function() {
 }
 _pulsar.prototype.fire = function() {
 	game.tweens.remove(this.tween0)	
-	console.log("remove");
 	this.scale.setTo(0,0)
 	this.tween0=game.add.tween(this.scale).to({x:this.scale_factor,y:this.scale_factor},this.time,Phaser.Easing.Linear.None,true,this.delay,-1)
 	this.tween0.yoyo(true,this.speed)		
@@ -888,8 +876,7 @@ _dalle = function(number,delay,posx,posy,speed){
 	this.posy=posy
 	this.speed=speed
 	Phaser.Sprite.call(this,game,this.posx,this.posy,'axe_neon')
-	this.anchor.x=.5
-	this.anchor.y=.5
+	this.anchor.setTo(.5,.5)
 	this.alpha=0
 	this.inputEnabled=true
 	this.input.enableDrag(true)
@@ -911,11 +898,7 @@ _dalle.prototype.tweens = function() {
 }
 
 _dalle.prototype.update = function() {
-	if(this.alpha > .7){
-		this.body.enable=true	
-	}else{
-		this.body.enable=false	
-	}
+	this.alpha > .7 ? this.body.enable=true : this.body.enable=false
 }
 
 _dalle.prototype.fire = function() {
@@ -937,8 +920,7 @@ _neon = function(number,delay,posx,posy,speed,posx_in_tween){
 	this.posy=posy
 	this.speed=speed
 	Phaser.Sprite.call(this,game,this.posx,this.posy,'axe_neon')
-	this.anchor.x=.5
-	this.anchor.y=.5
+	this.anchor.setTo(.5,.5)
 	this.axe_neon=game.add.sprite(this.x,this.y,'neon')
 	this.axe_neon.anchor.setTo(.5,.5)
 	this.inputEnabled=true
@@ -949,7 +931,6 @@ _neon = function(number,delay,posx,posy,speed,posx_in_tween){
 	game.physics.arcade.enable(this.axe_neon);
 	this.axe_neon.body.immovable=true
 	this.tweens()
-	console.log(this.posx_in_tween)
 }
 
 _neon.prototype = Object.create(Phaser.Sprite.prototype)
@@ -967,7 +948,6 @@ _neon.prototype.update = function() {
 
 _neon.prototype.fire = function() {
 	game.tweens.remove(this.tween0)	
-	console.log("remove");
 	this.axe_neon.x=this.x
 	this.axe_neon.y=this.posy
 	this.posx_in_tween=this.posx_in_tween
@@ -1007,18 +987,38 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	this.events.onDragStop.add(logic_position,this)
 	this.events.onDragStart.add(show_grid_on_logic_position,this)
 	this.input.enableSnap(40,40,true,true)
-	//this.animate_when_fire()
+	//particle for Xplode
+	if(this.x < w2){
+		this.particlex = game.add.emitter(this.x+35,this.y)
+		this.particlex.makeParticles("particle_canon")
+		this.particlex.minParticleSpeed.setTo(100,-190)
+		this.particlex.maxParticleSpeed.setTo(500,240)
+		this.particlex.setAlpha(.4, .1)
+		this.particlex.minParticleScale = .4
+		this.particlex.maxParticleScale = .7
+		this.particlex.minRotation = 0
+		this.particlex.maxRotation = 0
+		this.particlex.on=false
+			//this.particlex.start(true,900,null,3)
+	}else{
+		this.particlex = game.add.emitter(this.x-35,this.y)
+		this.particlex.makeParticles("particle_canon")
+		this.particlex.minParticleSpeed.setTo(-100,-190)
+		this.particlex.maxParticleSpeed.setTo(-500,240)
+		this.particlex.setAlpha(.5, .2)
+		this.particlex.minParticleScale = .4
+		this.particlex.maxParticleScale = .9
+		this.particlex.minRotation = 40
+		this.particlex.maxRotation = -40
+		this.particlex.on=false
+			//this.particlex.start(true,900,null,3)
+	}
+	this.animate_when_fire()
 
-	//game.time.events.loop( this.frequency,this.animate_when_fire,this )
-	//this.launch_explosion()	
-	//game.time.events.loop( this.frequency,this.launch_explosion,this )
+	game.time.events.loop( this.frequency,this.animate_when_fire,this )
 
 	game.physics.arcade.enable(this);
-	if(this.special_color){
-		this.weapon=game.add.weapon(9,'bullet_color')
-	}else{
-		this.weapon=game.add.weapon(9,'bullet')	
-	}
+	this.special_color ? this.weapon=game.add.weapon(9,'bullet_color'):this.weapon=game.add.weapon(9,'bullet')	
 
 	if(this.kill_with_world){
 		this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
@@ -1043,27 +1043,15 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	//  Tell the Weapon to track the 'player' Sprite, offset by 14px horizontally, 0 vertically
 	this.weapon.trackSprite(this,0,0,true);
 	game.time.events.add( this.delay,function(){this._flag=false},this )
-	//this.table=[100,-100]
-	//this.u=0
-	//this.scale_mainbody()
 }
 
 _canon.prototype = Object.create(Phaser.Sprite.prototype)
 _canon.prototype.constructor = _canon
 _canon.prototype.update = function(){
-	if(this._flag==false && this.flag_for_fire){
-		//this.u=1-this.u
-		this.weapon.fire() 
-		//this.x=this.x+this.table[this.u]
-	}
+	this._flag==false && this.flag_for_fire && this.weapon.fire() 
+		this.particlex.x=this.x
+		this.particlex.y=this.y
 }
-_canon.prototype.launch_explosion=function(){
-	this.explosion()
-	//if(this._flag){
-	//game.time.events.loop(this.frequency,this.explosion,this)	
-	//}
-}
-
 
 _canon.prototype.transition = function() {
 	this.tween_characteristic = game.add.tween(this.canon).to({x:posx,y:posy},time,Phaser.Easing.Linear.None,true,delay)
@@ -1073,55 +1061,25 @@ _canon.prototype.kill = function() {
 	console.log('kill')	
 }
 _canon.prototype.fire = function() {
-
 	this.flag_for_fire=true
 	this.weapon.fireRate = this.frequency ;
 	this.weapon.bulletSpeed = this.speed;
 	this.angle=this.angular
 	this.weapon.bulletAngleVariance = this.variance;
-	//:w
-	//game.time.events.add( 10,function(){this._flag=true;console.log(this._flag)},this )
-	//this.tween_0.pause()
-	//this.scale_mainbody()
-	//this.tween_0.resume()
-	//this.weapon.fire()
 }
+
 _canon.prototype.animate_when_fire = function() {
 	this.tween_2 = game.add.tween(this.scale).to({x:1.4,y:1.2},30,Phaser.Easing.Linear.None,true,0)
 	this.tween_2.yoyo(30,true)
-	//this.explosion()
+	this.explosion()
 }
 
 _canon.prototype.explosion = function() {
 	if(this.visible){
-		if(this.x < w2){
-			this.particlex = game.add.emitter(this.x+35,this.y)
-			this.particlex.makeParticles("particle_canon")
-			this.particlex.minParticleSpeed.setTo(100,-190)
-			this.particlex.maxParticleSpeed.setTo(500,240)
-			this.particlex.setAlpha(.4, .1)
-			this.particlex.minParticleScale = .4
-			this.particlex.maxParticleScale = .7
-			this.particlex.minRotation = 0
-			this.particlex.maxRotation = 0
-			this.particlex.on=false
-			this.particlex.start(true,200,null,3)
-		}else{
-			this.particlex = game.add.emitter(this.x-35,this.y)
-			this.particlex.makeParticles("particle_canon")
-			this.particlex.minParticleSpeed.setTo(-100,-190)
-			this.particlex.maxParticleSpeed.setTo(-500,240)
-			this.particlex.setAlpha(.5, .2)
-			this.particlex.minParticleScale = .4
-			this.particlex.maxParticleScale = .9
-			this.particlex.minRotation = 40
-			this.particlex.maxRotation = -40
-			this.particlex.on=false
-			this.particlex.start(true,200,null,3)
-		}
+			this.particlex.on=true
+			this.particlex.start(false,200,null,3)
 	}
 }
-
 
 _canon.prototype.audio_pop = function() {
 	this.sound_pop.play()
@@ -1221,7 +1179,6 @@ var createBanner= function(){
 	}
 }
 
-
 var createInterstitial=function(){
 	if( navigator.userAgent.match(/Android/i)
 		|| navigator.userAgent.match(/webOS/i)
@@ -1232,7 +1189,6 @@ var createInterstitial=function(){
 		|| navigator.userAgent.match(/Windows Phone/i)
 	){
 		adService = Cocoon.Ad.Chartboost
-
 		adService.configure({
 			ios: {
 				appId:"4ed254a3cb5015e47c000000",
@@ -1244,7 +1200,6 @@ var createInterstitial=function(){
 			}
 		});
 		interstitial = adService.createRewardedVideo();
-		//interstitial = adService.createInterstitial();
 
 		interstitial.on("load", function(){
 			console.log("Interstitial loaded");
@@ -1354,9 +1309,7 @@ var preloadstate = {
 		//audio_move
 		this.game.load.audio("launch","sounds/launch.ogg");
 		this.game.load.audio("coin","sounds/coin.ogg");
-		//this.game.load.audio("pop_minder","sounds/pop_minder.ogg");
 		this.game.load.audio("pop_minder","sounds/pop2.ogg");
-		//this.game.load.audio("pop","sounds/pop.ogg");
 		this.game.load.audio("pop","sounds/pop2.ogg");
 		this.game.load.audio("click","sounds/click.ogg");
 		//images
@@ -1384,8 +1337,7 @@ var preloadstate = {
 		this.game.load.image("particle_canon","assets/particle_canon.png");
 		this.game.load.image("particle_bullet_color","assets/particle_bullet_color.png");
 		this.game.load.image("particle_bullet","assets/particle_bullet.png");
-		this.game.load.image("rect","assets/rect.png");
-		this.game.load.image("button","assets/button.png");
+		this.game.load.image("particle_character","assets/particle_character.png");
 		this.game.load.image("background","assets/background.png");
 		this.game.load.image("back","assets/back.png");
 
@@ -1408,7 +1360,6 @@ var preloadstate = {
 var game_first_screen = {
 	create: function(){
 		this.game.stage.backgroundColor = '#0d1018'
-		//this.game.stage.backgroundColor = '#000000'
 		this.title=new screen_first()
 		game.add.existing(this.title)
 		this.initProgressData()
@@ -1441,10 +1392,14 @@ var level0 = {
 	create: function(){
 		flag_hide=true
 		level_number=0
-		//createInterstitial()
+		number_canon=2
+		number_asteroid=0
+		number_neon=0
+		number_pulsar=0
+		number_dalle=0
+
 		this.create_canon=function(){
 			console.log("create_canon");
-
 			//canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 			canon[0]=new _canon(0,0,w-200,800,900,90,0,180,hero.flag_level_complete,true,false)
 			canon[1]=new _canon(1,0,0,1200,400,900,0,0,hero.flag_level_complete,true,false) 
@@ -1474,11 +1429,9 @@ var level0 = {
 			//dalle[1]=new _dalle(1,0,500,640,9000)
 		}
 
-
-
 		hero = new character() 
-
-		check_storage(this.create_canon,this.create_asteroid,this.create_neon,this.create_pulsar,this.create_dalle,2,0,0,0,0)
+		console.log('number_canon',number_canon)
+		check_storage(this.create_canon,this.create_asteroid,this.create_neon,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_neon,number_pulsar,number_dalle)
 		logic_add()
 		logic_update()
 
@@ -1767,7 +1720,7 @@ var level0 = {
 		}
 	}
 	var logic_update=function(){
-		game.time.events.loop( 150,function(){ 
+		game.time.events.loop( 50,function(){ 
 
 			//debug_position && logic_position()
 			for (var j = 0; j < 3; j++){
@@ -1988,8 +1941,6 @@ var level0 = {
 		if (debug_position){
 			console.log("retablissement des paramètres")
 			hero.grid.visible=false	
-			//var _table=null
-			//var _name_json=null
 			var _table
 			var _name_json
 			switch(sprite.name){
@@ -2200,14 +2151,8 @@ var level0 = {
 	game.state.add('boot',bootstate)
 	game.state.add('preload',preloadstate)
 	game.state.add('game_first_screen',game_first_screen)
-	//game.state.add('game_state',game_state)
-	//for (var i = 0; i < 1; i++) {
-	//game.state.add('level'+i,level+i)
-	//game.state.add('level'+i,level+i)
-	//}
 	game.state.add('level0',level0)
 	game.state.add('level1',level1)
-	//game.state.add('menu_level_select',menu_level_select)
 	game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
 	game.state.start('boot',bootstate)
 }
