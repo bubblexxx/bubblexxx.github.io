@@ -1046,11 +1046,11 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	this.time_for_count=0
 	this.ratio_time=8
 	//this.frequency > 50 ? this.time_total=50:this.time_total=this.frequency
-	this.time_total=Math.round(this.frequency*.01)
+	this.frequency > (this.ratio_time*100) ? this.time_total=Math.round(this.frequency*.01):this.time_total=8
 	this.time_part=Math.round(this.time_total/this.ratio_time)
+	console.log('this.time_part',this.time_part)
 	this.flag_for_time_count=true
-		game.time.events.loop( this.frequency,function(){this.flag_for_time_count=true},this) 
-	
+	game.time.events.loop( this.frequency,function(){this.flag_for_time_count=true},this) 
 }
 
 _canon.prototype = Object.create(Phaser.Sprite.prototype)
@@ -1077,7 +1077,7 @@ _canon.prototype.constructor = _canon
 				case this.time_part*4:
 					this.x=this.x+8	
 					this.scale.y=1.4
-					//this.explosion()
+					this.explosion()
 					break
 				case this.time_part*5:
 					this.x=this.x-2	
@@ -1096,7 +1096,7 @@ _canon.prototype.constructor = _canon
 					this.scale.y=1.0
 					this.time_for_count=0
 					this.flag_for_time_count=false
-					//this.hide_explosion()
+					this.hide_explosion()
 					break
 			}
 		}
@@ -1127,7 +1127,7 @@ _canon.prototype.animate_when_fire = function() {
 _canon.prototype.explosion = function() {
 	if(this.visible){
 			this.particlex.on=true
-			this.particlex.start(true,450,null,6)
+			this.particlex.start(true,450,null,4)
 	}
 }
 _canon.prototype.hide_explosion = function() {
@@ -1508,30 +1508,73 @@ var level0 = {
 		logic_render()
 	},
 }
-	var level1 = {
-		create: function(){
-			flag_hide=true
-			level_number=1
-			createInterstitial()
-			hero = new character(interstitial) 
-			//weapon = function(delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
-			console.log("neon[0]",neon[0]);
-			//asteroid = function(posx,posy,speed,radius){
-			//asteroid[0]=new _asteroid(w2-150,900,.008,100)
-			//neon = function(delay,posx,posy,speed){
-			//neon[0]=new _neon(0,w2-200,h2+100,.1)
-			//pulsar = function(delay,time,posx,posy,speed,scale_factor){
-			//pulsar[0]=new _pulsar(100,500,w2+200,800,900,2)
-			logic_add()
-			return level_number
-		},
-		update:function(){
-			logic_update()
-		},
-		render:function(){
-			logic_render()
-		},
-	}
+var level1 = {
+	create: function(){
+		flag_hide=true
+		level_number=1
+		number_canon=1
+		number_asteroid=1
+		number_neon=0
+		number_pulsar=0
+		number_dalle=0
+
+		this.create_canon=function(){
+			console.log("create_canon");
+			//canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+			canon[0]=new _canon(0,0,w-200,800,900,190,0,180,hero.flag_level_complete,true,false)
+			//canon[1]=new _canon(1,0,0,1200,400,900,0,0,hero.flag_level_complete,true,false) 
+		}
+		this.create_asteroid=function(){
+			//asteroid = function(number,posx,posy,speed,radius){
+			console.log("asteroid")
+			asteroid[0]=new _asteroid(100,240,900,.008,100)
+			//asteroid[1]=new _asteroid(200,240,500,.008,100)
+		}
+
+		this.create_neon=function(){
+			//neon = function(number,delay,posx,posy,speed,posx_in_tween){
+			//neon[0]=new _neon(0,0,240,h2+100,300,3)
+			//neon[1]=new _neon(1,0,240,h2+500,300)
+		}
+
+		this.create_pulsar=function(){
+			//pulsar = function(number,delay,time,posx,posy,speed,scale_factor){
+			//pulsar[0]=new _pulsar(0,100,500,240,600,900,2)
+			//pulsar[1]=new _pulsar(1,200,200,240,600,900,2)
+		}
+
+		this.create_dalle=function(){
+			//_dalle = function(number,delay,posx,posy,speed){
+			//dalle[0]=new _dalle(0,0,300,440,9000)
+			//dalle[1]=new _dalle(1,0,500,640,9000)
+		}
+
+		hero = new character() 
+		console.log('number_canon',number_canon)
+		check_storage(this.create_canon,this.create_asteroid,this.create_neon,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_neon,number_pulsar,number_dalle)
+		logic_add()
+		logic_update()
+
+		return level_number
+	},
+	update:function(){
+		game.input.onTap.add(onTap,this);
+
+		function onTap(pointer, doubleTap) {
+			if(hero.flag_level_complete==false){
+				if (!doubleTap && hero.flag_mouse==false){
+					hero.flag_mouse=true
+					game.time.events.add( hero.delay_for_launch_next_player,function(){this.flag_mouse=false},this )
+					hero.launch_with_mouse()
+				}
+			}
+		}
+		//logic_update()
+	},
+	render:function(){
+		logic_render()
+	},
+}
 
 
 
@@ -1859,6 +1902,7 @@ var level0 = {
 					canon[j].visible=false
 					canon[j].weapon.bullets.visible=false
 					//canon[j].particlex.on=false
+					canon[j].hide_explosion()
 					canon[j].destroy()
 					canon[j].weapon.bullets.forEach(function(item){
 						if(item.alive){	
