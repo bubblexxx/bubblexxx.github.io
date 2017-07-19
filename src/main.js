@@ -1077,7 +1077,7 @@ _canon.prototype.constructor = _canon
 				case this.time_part*4:
 					this.x=this.x+8	
 					this.scale.y=1.4
-					this.explosion()
+					//this.explosion()
 					break
 				case this.time_part*5:
 					this.x=this.x-2	
@@ -1096,7 +1096,7 @@ _canon.prototype.constructor = _canon
 					this.scale.y=1.0
 					this.time_for_count=0
 					this.flag_for_time_count=false
-					this.hide_explosion()
+					//this.hide_explosion()
 					break
 			}
 		}
