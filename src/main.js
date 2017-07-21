@@ -196,7 +196,8 @@ var number_dalle=null
 		this.cible_shadow=game.add.sprite(w2,300,'cible_shadow')
 		this.cible_shadow.anchor.setTo(.5,.5)
 		this.cible_shadow.scale.setTo(1.5,1.5)
-		this.cible_shadow.alpha=.2
+		//this.cible_shadow.alpha=.2
+		this.cible_shadow.alpha=.15
 		this.grid=game.add.sprite(0,0,'grid')
 		this.grid.visible=false
 		//cible
@@ -473,7 +474,8 @@ var number_dalle=null
 	}
 
 	character.prototype.anim_cible = function() {
-		this.tween6 = game.add.tween(this.cible_shadow.scale).to({x:3.0,y:3.0},750,Phaser.Easing.Linear.None,true,0,-1)
+		//this.tween6 = game.add.tween(this.cible_shadow.scale).to({x:3.0,y:3.0},750,Phaser.Easing.Linear.None,true,0,-1)
+		this.tween6 = game.add.tween(this.cible_shadow.scale).to({x:2.0,y:2.0},750,Phaser.Easing.Linear.None,true,0,-1)
 		this.tween7 = game.add.tween(this.cible_shadow).to({alpha:0.01},750,Phaser.Easing.Exponential.In,true,0,-1)
 		this.tween6.onComplete.add(function(){this.cible_shadow.scale.setTo(0,0)},this)	
 		this.tween7.onComplete.add(function(){this.cible_shadow.alpha=0},this)	
@@ -1385,7 +1387,8 @@ var preloadstate = {
 		this.game.load.image("restart","assets/restart.png");
 		this.game.load.image("next","assets/next.png");
 		this.game.load.image("canon","assets/canon.png");
-		this.game.load.image("cible","assets/cible.png");
+		//this.game.load.image("cible","assets/cible.png");
+		this.game.load.image("cible","assets/cible2.png");
 		this.game.load.image("bullet_color","assets/bullet_color.png");
 		this.game.load.image("bullet","assets/bullet.png");
 		this.game.load.image("particle_canon","assets/particle_canon.png");
