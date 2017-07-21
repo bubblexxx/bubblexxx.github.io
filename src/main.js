@@ -326,7 +326,8 @@ var number_dalle=null
 	}
 	character.prototype.reset_update_circle_timer = function() {
 		console.log("reset_update_circle_timer")
-		this.counter=100	
+		//plus il est bas plus le cercle ira vite
+		this.counter=50	
 		this.timer = this.game.time.create(false);
 		this.timer.loop(10, this.update_circle_timer, this);
 		this.timer.start()
@@ -678,8 +679,8 @@ character.prototype.on_explode=function(){
 character.prototype.decide_if_show_button_restart_level = function() {
 	console.log('decide')
 	this.flag_hide_enemies=true
-	game.time.events.add( 2000,this.show_button_restart_level,this )
-	game.time.events.add( 2000,this.show_button_video,this )
+	game.time.events.add( 1000,this.show_button_restart_level,this )
+	game.time.events.add( 1000,this.show_button_video,this )
 }
 
 character.prototype.land=function(n){
@@ -1827,7 +1828,7 @@ var level1 = {
 			hero.flag_level_complete && flag_hide && hero.flag_level_complete==false & console.log("ok") & game.time.events.add( 9,hide_weapon,this )
 
 			//si checkicharacterisloossomewhere
-			hero.flag_hide_enemies && flag_hide && hero.flag_hide_enemies==false & game.time.events.add( 500,hide_weapon,this )
+			hero.flag_hide_enemies && flag_hide && hero.flag_hide_enemies==false & game.time.events.add( 300,hide_weapon,this )
 
 			if(canon[1]){
 				game.physics.arcade.collide(canon[0].weapon.bullets,canon[1].weapon.bullets,touch_between_enemies,null,this)
