@@ -80,7 +80,7 @@ function main(){
 	var w2=640
 	var level_number=0
 	var debug_mode=false
-	var debug_position=false
+	var debug_position=true
 	var level_json={}
 	for (var i = 0; i < 20 ; i++) {
 		var val=100
@@ -1356,7 +1356,7 @@ function main(){
 			number_asteroid=0
 			number_dalle_moving=0
 			number_pulsar=0
-			number_dalle=2
+			number_dalle=1
 
 			this.create_canon=function(){
 				//canon[0]=new _canon(
@@ -1427,13 +1427,13 @@ function main(){
 					posy=440,
 					speed=300,
 				)
-				dalle[1]=new _dalle(
-					number=0,
-					delay=100,
-					posx=600,
-					posy=940,
-					speed=300,
-				)
+			//	dalle[1]=new _dalle(
+			//		number=0,
+			//		delay=100,
+			//		posx=600,
+			//		posy=940,
+			//		speed=300,
+			//	)
 			}
 
 			hero = new character() 
@@ -1919,6 +1919,7 @@ function main(){
 	var show_grid_on_logic_position=function(sprite){
 		console.log("logic_position")
 		debug_mode ? hero.grid.visible=true:hero.grid.visible=false	
+		logic_position(sprite)
 		if(debug_position){
 			gui && gui.destroy()
 			gui=new dat.GUI()
@@ -2115,18 +2116,26 @@ function main(){
 			this.name_level='lev'
 			this.combined_level=this.name_level+this.level
 			localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]));
+			console.log(_name_json+sprite.number+this.combined_level,"peut etre ici")
 		}
 	}
 
 	var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
 		console.log("check_storage")
+		//var check_in_local_storage=function(obj,num,table){
+		//	for(var i=0;i<num;i++){
+		//		try {
+		//			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
+		//			console.log(table[i],"ici")
+		//		} catch(e){
+		//			table[i]=[];
+		//		}
+		//	};
+		//}
 		var check_in_local_storage=function(obj,num,table){
 			for(var i=0;i<num;i++){
-				try {
 					table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
-				} catch(e){
-					table[i]=[];
-				}
+					console.log(table[i],"ici")
 			};
 		}
 
