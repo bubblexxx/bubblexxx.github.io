@@ -2222,7 +2222,7 @@ function main(){
 		}
 	}
 
-	game = new Phaser.Game(1280,1920,Phaser.AUTO,'game' )
+	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 	game.state.add('boot',bootstate)
 	game.state.add('preload',preloadstate)
 	game.state.add('game_first_screen',game_first_screen)
