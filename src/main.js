@@ -1425,7 +1425,7 @@ function main(){
 					delay=100,
 					posx=100,
 					posy=440,
-					speed=300,
+					speed=300
 				)
 			//	dalle[1]=new _dalle(
 			//		number=0,
