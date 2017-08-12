@@ -79,13 +79,9 @@ function main(){
 	var h2=h*.5
 	var w2=640
 	var level_number=0
-	var debug_mode=false
+	var debug_mode=true
 	var debug_position=true
 	var level_json={}
-	for (var i = 0; i < 20 ; i++) {
-		var val=100
-		//level_json.push(val)
-	}
 	//
 	//console.log(level_json[0].val,"le")
 	var canon=[]
@@ -486,6 +482,12 @@ function main(){
 		}
 	}
 
+	//character.prototype.method_name = function(count,table) {
+		//count=count+1	
+		//switch(count)
+		//foreach(table,return table)
+	//}
+	
 	character.prototype.calculate_life_remaining= function(){
 		this.count=this.count+1
 		switch(this.count){
@@ -565,7 +567,14 @@ function main(){
 
 			  var appId = "4f7b433509b6025804000002";
 			  var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
-			  window.chartboost.setUp(appId, appSignature);
+			window.chartboost.setUp(appId, appSignature);
+
+			////////////////////////////////////////////////////////////
+			function chartboost(location,etat,action){
+				window.chartboost.etat = function(location){
+					co('etat')+ action}	
+				return window.chartboost.etat
+			}
 
 			  //
 			  window.chartboost.onInterstitialAdPreloaded = function(location) {
@@ -1779,34 +1788,46 @@ function main(){
 
 	var logic_add=function(){
 		game.add.existing(hero)
-		if(canon[0]){
-			for (var i = 0; i < canon.length; i++){
-				game.add.existing(canon[i])
-			}
-		}
-		if(dalle_moving[0]){
-			console.log("value");
-			for (var i = 0; i < dalle_moving.length; i++){
-				game.add.existing(dalle_moving[i])
-			}
+
+		var logic_add_intenal=function(obj){
+			if(obj[0]){
+				foreach(obj,game.add.existing.bind(game));
+			}	
 		}
 
-		if(pulsar[0]){
-			for (var i = 0; i < pulsar.length; i++){
-				game.add.existing(pulsar[i])
-			}
-		}
+		logic_add_intenal(dalle)
+		logic_add_intenal(canon)
+		logic_add_intenal(dalle_moving)
+		logic_add_intenal(pulsar)
+		logic_add_intenal(asteroid)
+		//if(canon[0]){
+		//	foreach(canon,game.add.existing)
+		//	//for (var i = 0; i < canon.length; i++){
+		//		//game.add.existing(canon[i])
+		//	//}
+		//}
+		//if(dalle_moving[0]){
+		//	foreach(dalle_moving,game.add.existing)
+		//	//for (var i = 0; i < dalle_moving.length; i++){
+		//		//game.add.existing(dalle_moving[i])
+		//	//}
+		//}
 
-		if(asteroid[0]){
-			for (var i = 0; i < asteroid.length; i++){
-				game.add.existing(asteroid[i])
-			}
-		}
-		if(dalle[0]){
-			for (var i = 0; i < dalle.length; i++){
-				game.add.existing(dalle[i])
-			}
-		}
+		//if(pulsar[0]){
+
+		//	foreach(pulsar,game.add.existing)
+		//	//for (var i = 0; i < pulsar.length; i++){
+		//		//game.add.existing(pulsar[i])
+		//	//}
+		//}
+
+		//if(asteroid[0]){
+
+		//	foreach(asteroid,game.add.existing)
+		//	//for (var i = 0; i < asteroid.length; i++){
+		//		//game.add.existing(asteroid[i])
+		//	//}
+		//}
 	}
 	var logic_update=function(){
 		game.time.events.loop( 50,function(){ 
@@ -1888,30 +1909,42 @@ function main(){
 				}
 			}
 
-			if(dalle_moving[0]){
-				for (var j = 0; j < dalle_moving.length; j++){
-					dalle_moving[j].hide()
-				}
-			}
 
-			if(pulsar[0]){
-				for (var j = 0; j < pulsar.length; j++){
-					pulsar[j].hide()
-				}
-			}
+			//var hide_weapon_internal=function(obj){
+				//is_exist(obj[0]) && for_each(obj,hide)
+				//is_exist(obj[0]) && hide_enemies(obj)
+				//hide_enemies(obj)
+			//}
+			hide_enemies(dalle)
+			hide_enemies(dalle_moving)
+			hide_enemies(asteroid)
+			hide_enemies(pulsar)
+			//hide_weapon_internal(dalle)
 
-			if(asteroid[0]){
-				for (var j = 0; j < asteroid.length; j++){
-					asteroid[j].hide()
-					asteroid[0].flag=false
-					asteroid[0].particle.on=false
-				}
-			}
-			if(dalle[0]){
-				for (var j = 0; j < dalle.length; j++){
-					dalle[j].hide()
-				}
-			}
+			//if(dalle_moving[0]){
+			//	for (var j = 0; j < dalle_moving.length; j++){
+			//		dalle_moving[j].hide()
+			//	}
+			//}
+
+			//if(pulsar[0]){
+			//	for (var j = 0; j < pulsar.length; j++){
+			//		pulsar[j].hide()
+			//	}
+			//}
+
+			//if(asteroid[0]){
+			//	for (var j = 0; j < asteroid.length; j++){
+			//		asteroid[j].hide()
+			//		asteroid[0].flag=false
+			//		asteroid[0].particle.on=false
+			//	}
+			//}
+			//if(dalle[0]){
+			//	for (var j = 0; j < dalle.length; j++){
+			//		dalle[j].hide()
+			//	}
+			//}
 
 		}
 	}
@@ -1920,6 +1953,9 @@ function main(){
 		console.log("logic_position")
 		debug_mode ? hero.grid.visible=true:hero.grid.visible=false	
 		logic_position(sprite)
+
+
+
 		if(debug_position){
 			gui && gui.destroy()
 			gui=new dat.GUI()
@@ -2135,7 +2171,6 @@ function main(){
 		var check_in_local_storage=function(obj,num,table){
 			for(var i=0;i<num;i++){
 					table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
-					console.log(table[i],"ici")
 			};
 		}
 
@@ -2200,21 +2235,22 @@ function main(){
 
 	}
 
-	var logic_render=function(){
-		if(debug_mode){
-			game.debug.body(hero.cible_shadow)
-			game.debug.body(hero.cible)
+var logic_render=function(){
+	if(debug_mode){
+		game.debug.body(hero.cible_shadow)
+		game.debug.body(hero.cible)
+
+		//ne sait pas appliquer foreach car this.hero.player renvoit Object[Object,Object,Object]
 			for (var i = 0; i < 3;i++){
-				game.debug.body(hero.player[i])
+			game.debug.body(hero.player[i])
 			}
 
 			var debug_obj=function(obj){
 				if (obj[0]){
-					for (var i = 0; i < obj.length;i++){
-						game.debug.body(obj[i])
-					}
+					foreach(obj,game.debug.body)
 				}
 			}
+			debug_obj(dalle)
 			debug_obj(dalle_moving)
 			debug_obj(pulsar)
 			debug_obj(asteroid)
@@ -2234,20 +2270,20 @@ function main(){
 
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i)
-	   || navigator.userAgent.match(/webOS/i)
-   || navigator.userAgent.match(/iPhone/i)
-   || navigator.userAgent.match(/iPad/i)
-   || navigator.userAgent.match(/iPod/i)
-   || navigator.userAgent.match(/BlackBerry/i)
-   || navigator.userAgent.match(/Windows Phone/i)
-	  ){
-		  document.addEventListener('deviceready',main,false)
-		  return true;
-	  } else {
-		  console.log('not mobile')
-		  main()
-		  return true;
-	  }
+		|| navigator.userAgent.match(/webOS/i)
+		|| navigator.userAgent.match(/iPhone/i)
+		|| navigator.userAgent.match(/iPad/i)
+		|| navigator.userAgent.match(/iPod/i)
+		|| navigator.userAgent.match(/BlackBerry/i)
+		|| navigator.userAgent.match(/Windows Phone/i)
+	){
+		document.addEventListener('deviceready',main,false)
+		return true;
+	} else {
+		console.log('not mobile')
+		main()
+		return true;
+	}
 }
 //pour tester dans github décocher ceci
 //main()
