@@ -1,4 +1,3 @@
-//uu
 /* *************************************************************************
  * 
  * bubblexxxL
@@ -19,9 +18,7 @@
  * rue de Brionsart 36a-5340 Gesves-Belgium
  */
 
-
 //TODO
-
 
 //collide_function à régler suivant 
 //normalement réglé
@@ -50,7 +47,6 @@ function main(){
 	//log: console.log.bind(console, '%s', timestamp)
 	//}
 	//})();
-
 	//DEBUG.log("myapp");              
 	var videoreward;
 	var c=[]
@@ -58,15 +54,23 @@ function main(){
 	var n=[]
 	var p=[]
 	var d=[]
-
+	var level_name=[
+		"for beginners :)",
+		"intermediate"
+	]
 	var game_begin=false
 	var delay_for_game_begin=800
-	var level_name=null 
 	var number_canon=null 
 	var number_asteroid=null 
 	var number_dalle_moving=null 
 	var number_pulsar=null 
 	var number_dalle=null 
+
+	var level_number=0
+	var level0
+	var level_number_adapt
+	var text_to_describe_level
+	var text_to_number_level
 
 	this.some_value=4
 	var gui
@@ -78,8 +82,7 @@ function main(){
 	var time_hide=500
 	var h2=h*.5
 	var w2=640
-	var level_number=0
-	var debug_mode=true
+	var debug_mode=false
 	var debug_position=true
 	var level_json={}
 	//
@@ -109,12 +112,13 @@ function main(){
 	var email=JSON.stringify(localStorage);
 
 	//class for text intitulé dans chaque level
-	_text=function(){
-			this.text=game.add.bitmapText(w2,h2,'police',level_name,100);
-		this.text.alpha=0
+	_text=function(message,posx,posy,taille){
+		this.text=game.add.bitmapText(posx,posy,'police',message,taille);
 		this.text.anchor.setTo(.5,.5)
-		this.text.visible=false
-		this.show()
+		//seulement pour le texte décrivant le level
+		//this.text.alpha=0
+		//this.show()
+		//this.text.visible=false
 		game.add.existing(this.text)
 	}
 
@@ -123,12 +127,12 @@ function main(){
 	_text.prototype.show = function() {
 		this.text.visible=true	
 		this.tween1 = game.add.tween(this.text).to({alpha:1},400,Phaser.Easing.Linear.None,true,0)
-	this.tween1.onComplete.add(this.hide,this)	
+		this.tween1.onComplete.add(this.hide,this)	
 	}
 	_text.prototype.hide = function() {
 		this.tween2 = game.add.tween(this.text).to({alpha:0},400,Phaser.Easing.Linear.None,true,0)
 		game.time.events.add( delay_for_game_begin,function(){game_begin=true},this )
-		
+
 	}
 
 	//class for mechant
@@ -167,6 +171,8 @@ function main(){
 		this.particle.maxRotation = 0
 		this.particle.on=false
 		this.show()
+		this.flag_wait_before_fire=false
+		game.time.events.add( time_show,() => {this.flag_wait_before_fire=true} )
 	}
 
 
@@ -187,8 +193,9 @@ function main(){
 	}
 
 	_mechant.prototype.kill=function(){
-		this.sprite_for_body.enable=false
+		co("kill")
 		this.visible=false
+		this.sprite_for_body.enable=false
 		this.sprite_for_body.visible=false
 		this.particle.on=false
 	}
@@ -200,11 +207,11 @@ function main(){
 		}
 	}
 	_mechant.prototype.particle_show = function(){
-			this.particle.x=this.x
-			this.particle.y=this.y
-			this.particle.on=true
-			this.particle.start(true,350,null,5)
-			game.time.events.add( 10,function(){this.particle.on=false},this )
+		this.particle.x=this.x
+		this.particle.y=this.y
+		this.particle.on=true
+		this.particle.start(true,350,null,5)
+		game.time.events.add( 10,function(){this.particle.on=false},this )
 	}
 
 
@@ -314,14 +321,9 @@ function main(){
 			this.player[i]=game.add.sprite(w2,1980,'particle_character')	
 			game.physics.arcade.enable(this.player[i],Phaser.Physics.ARCADE)
 			this.player[i].anchor.setTo(.5,.5)
-			//this.player[i].enableBody=true
 			this.player[i].body.enable=false
 			this.player[i].flag_check=true
-			this.player[i].flag_cant_explode=true
-			this.player[i].is_waiting=true
-			this.player[i].is_launching=false
 			this.player[i].is_exploding=false
-			this.player[i].is_winning=false
 		} 
 		this.score = game.add.bitmapText(w2,300,'police','',100)
 		this.score.anchor.setTo(.5,.5)
@@ -385,11 +387,9 @@ function main(){
 
 	character.prototype.animate_touch = function() {
 		this.tween_touch_initialyze()
-		console.log("animate_touch")
 		this.timer_touch = this.game.time.create(false);
 		this.timer_touch.loop(1000,() => this.tween_touch_initialyze(),this);
 		this.timer_touch.start()
-		console.log("error")
 	}
 
 	character.prototype.update_circle_timer = function() {
@@ -407,7 +407,7 @@ function main(){
 	character.prototype.reset_update_circle_timer = function() {
 		console.log("reset_update_circle_timer")
 		//plus il est bas plus le cercle ira vite
-		this.counter=50	
+		this.counter=30	
 		this.timer = this.game.time.create(false);
 		this.timer.loop(10, this.update_circle_timer, this);
 		this.timer.start()
@@ -483,32 +483,32 @@ function main(){
 	}
 
 	//character.prototype.method_name = function(count,table) {
-		//count=count+1	
-		//switch(count)
-		//foreach(table,return table)
+	//count=count+1	
+	//switch(count)
+	//foreach(table,return table)
 	//}
-	
+
 	character.prototype.calculate_life_remaining= function(){
 		this.count=this.count+1
 		switch(this.count){
 			case 0:
 				this.life.text=3 
-			break
+				break
 			case 1:
 				this.life.text=2 
-			break
+				break
 			case 2:
 				this.life.text=2 
-			break
+				break
 			case 3:
 				this.life.text=1 
-			break
+				break
 			case 4:
 				this.life.text=1 
-			break
+				break
 			default:
 				this.life.text='' 
-			break
+				break
 		}
 
 	}
@@ -557,16 +557,16 @@ function main(){
 
 	character.prototype.preload_reward_video=function(){
 		if( navigator.userAgent.match(/Android/i)
-		   || navigator.userAgent.match(/webOS/i)
-	   || navigator.userAgent.match(/iPhone/i)
-	   || navigator.userAgent.match(/iPad/i)
-	   || navigator.userAgent.match(/iPod/i)
-	   || navigator.userAgent.match(/BlackBerry/i)
-	   || navigator.userAgent.match(/Windows Phone/i)
-		  ){
+			|| navigator.userAgent.match(/webOS/i)
+			|| navigator.userAgent.match(/iPhone/i)
+			|| navigator.userAgent.match(/iPad/i)
+			|| navigator.userAgent.match(/iPod/i)
+			|| navigator.userAgent.match(/BlackBerry/i)
+			|| navigator.userAgent.match(/Windows Phone/i)
+		){
 
-			  var appId = "4f7b433509b6025804000002";
-			  var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
+			var appId = "4f7b433509b6025804000002";
+			var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
 			window.chartboost.setUp(appId, appSignature);
 
 			////////////////////////////////////////////////////////////
@@ -576,55 +576,55 @@ function main(){
 				return window.chartboost.etat
 			}
 
-			  //
-			  window.chartboost.onInterstitialAdPreloaded = function(location) {
-				  alert('onInterstitialAdPreloaded: ' + location);
-			  };
-			  window.chartboost.onInterstitialAdLoaded = function(location) {
-				  alert('onInterstitialAdLoaded: ' + location);
-			  };
-			  window.chartboost.onInterstitialAdShown = function(location) {
-				  alert('onInterstitialAdShown: ' + location);
-			  };
-			  window.chartboost.onInterstitialAdHidden = function(location) {
-				  alert('onInterstitialAdHidden: ' + location);
-			  };
-			  //
-			  window.chartboost.onMoreAppsAdPreloaded = function(location) {
-				  alert('onMoreAppsAdPreloaded: ' + location);
-			  };
-			  window.chartboost.onMoreAppsAdLoaded = function(location) {
-				  alert('onMoreAppsAdLoaded: ' + location);
-			  };
-			  window.chartboost.onMoreAppsAdShown = function(location) {
-				  alert('onMoreAppsAdShown: ' + location);
-			  };
-			  window.chartboost.onMoreAppsAdHidden = function(location) {
-				  alert('onMoreAppsAdHidden: ' + location);
-			  };
-			  //
-			  window.chartboost.onRewardedVideoAdPreloaded = function(location) {
-				  console.log('onRewardedVideoAdPreloaded: ' + location);
-			  };
-			  window.chartboost.onRewardedVideoAdLoaded = function(location) {
-				  console.log('onRewardedVideoAdLoaded: ' + location);
-			  };
-			  window.chartboost.onRewardedVideoAdShown = function(location) {
-				  console.log('onRewardedVideoAdShown: ' + location);
-			  };
-			  window.chartboost.onRewardedVideoAdHidden = function(location) {
-				  console.log('onRewardedVideoAdHidden: ' + location);
-			  };
-			  window.chartboost.onRewardedVideoAdCompleted = function(location) {
-				  console.log('next-level')
-				  this.next_niveau=level_number+1
-				  this.game.state.start('level'+this.next_niveau,true,false);
-				  alert('onRewardedVideoAdCompleted: ' + location);
-			  };
+			//
+			window.chartboost.onInterstitialAdPreloaded = function(location) {
+				alert('onInterstitialAdPreloaded: ' + location);
+			};
+			window.chartboost.onInterstitialAdLoaded = function(location) {
+				alert('onInterstitialAdLoaded: ' + location);
+			};
+			window.chartboost.onInterstitialAdShown = function(location) {
+				alert('onInterstitialAdShown: ' + location);
+			};
+			window.chartboost.onInterstitialAdHidden = function(location) {
+				alert('onInterstitialAdHidden: ' + location);
+			};
+			//
+			window.chartboost.onMoreAppsAdPreloaded = function(location) {
+				alert('onMoreAppsAdPreloaded: ' + location);
+			};
+			window.chartboost.onMoreAppsAdLoaded = function(location) {
+				alert('onMoreAppsAdLoaded: ' + location);
+			};
+			window.chartboost.onMoreAppsAdShown = function(location) {
+				alert('onMoreAppsAdShown: ' + location);
+			};
+			window.chartboost.onMoreAppsAdHidden = function(location) {
+				alert('onMoreAppsAdHidden: ' + location);
+			};
+			//
+			window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+				console.log('onRewardedVideoAdPreloaded: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdLoaded = function(location) {
+				console.log('onRewardedVideoAdLoaded: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdShown = function(location) {
+				console.log('onRewardedVideoAdShown: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdHidden = function(location) {
+				console.log('onRewardedVideoAdHidden: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdCompleted = function(location) {
+				console.log('next-level')
+				this.next_niveau=level_number+1
+				this.game.state.start('level'+this.next_niveau,true,false);
+				alert('onRewardedVideoAdCompleted: ' + location);
+			};
 
-			  window.chartboost.preloadRewardedVideoAd('Default')
+			window.chartboost.preloadRewardedVideoAd('Default')
 
-		  }
+		}
 	}
 	character.prototype.show_reward_video = function() {
 		window.chartboost.showRewardedVideoAd('Default')
@@ -634,21 +634,21 @@ function main(){
 	character.prototype.next_level_with_video = function() {
 
 		if( navigator.userAgent.match(/Android/i)
-		   || navigator.userAgent.match(/webOS/i)
-	   || navigator.userAgent.match(/iPhone/i)
-	   || navigator.userAgent.match(/iPad/i)
-	   || navigator.userAgent.match(/iPod/i)
-	   || navigator.userAgent.match(/BlackBerry/i)
-	   || navigator.userAgent.match(/Windows Phone/i)
-		  ){
-			  this.show_reward_video()
-		  }
-		  else {
-			  console.log('not mobile')
-			  this.next_niveau=level_number+1
-			  this.game.state.start('level'+this.next_niveau,true,false);
-			  //return true;
-		  }
+			|| navigator.userAgent.match(/webOS/i)
+			|| navigator.userAgent.match(/iPhone/i)
+			|| navigator.userAgent.match(/iPad/i)
+			|| navigator.userAgent.match(/iPod/i)
+			|| navigator.userAgent.match(/BlackBerry/i)
+			|| navigator.userAgent.match(/Windows Phone/i)
+		){
+			this.show_reward_video()
+		}
+		else {
+			console.log('not mobile')
+			this.next_niveau=level_number+1
+			this.game.state.start('level'+this.next_niveau,true,false);
+			//return true;
+		}
 	}
 
 	character.prototype.launch_with_mouse=function(){
@@ -656,17 +656,17 @@ function main(){
 		switch(this.count){
 			case 0:
 				this.launch_number(0)
-			break
+				break
 			case 1:
 				break
 			case 2:
 				this.launch_number(1)
-			break
+				break
 			case 3:
 				break
 			case 4:
 				this.launch_number(2)
-			break
+				break
 			default:
 				break
 		}
@@ -736,22 +736,22 @@ function main(){
 		switch(this.count){
 			case 0:
 				this.star.frame=3
-			break
+				break
 			case 1:
 				this.star.frame=3
-			break
+				break
 			case 2:
 				this.star.frame=2
-			break
+				break
 			case 3:
 				this.star.frame=2
-			break
+				break
 			case 4:
 				this.star.frame=1
-			break
+				break
 			case 5:
 				this.star.frame=1
-			break
+				break
 			default:
 				break
 		}
@@ -802,7 +802,7 @@ function main(){
 	_asteroid.prototype=Object.create(_mechant.prototype)
 
 	_asteroid.prototype.update = function() {
-		if(this.flag){
+		if(this.flag && this.flag_wait_before_fire){
 			var period = game.time.now * this.speed;
 			this.sprite_for_body.x = this.x + Math.cos(period) * this.radius;
 			this.sprite_for_body.y = this.y + Math.sin(period) * this.radius;	
@@ -818,7 +818,7 @@ function main(){
 		this.time=time
 		this.speed=speed
 		this.scale_factor=scale_factor
-		this.tweens()
+		game.time.events.add( time_show,this.tweens,this )
 		this.posx=posx
 		this.posy=posy
 		game.time.events.loop(16,this.update2,this)
@@ -830,6 +830,7 @@ function main(){
 		this.tween0.yoyo(true,this.speed)		
 	}
 	_pulsar.prototype.fire = function() {
+		//ici mettre is_exist(this.tweens) && game.tweens.remove.this et utiliser fire comme déclencheur
 		game.tweens.remove(this.tween0)	
 		this.sprite_for_body.scale.setTo(0,0)
 		this.tween0=game.add.tween(this.sprite_for_body.scale).to({x:this.scale_factor,y:this.scale_factor},this.time,Phaser.Easing.Linear.None,true,this.delay,-1)
@@ -857,7 +858,8 @@ function main(){
 
 	_dalle.prototype.fire = function() {
 		game.tweens.remove(this.tween0)	
-		this.tween0=game.add.tween(this).to({alpha:1},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1)
+		this.sprite_for_body.alpha=0
+		this.tween0=game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1)
 		this.tween0.yoyo(true,this.speed)		
 	}
 
@@ -866,7 +868,7 @@ function main(){
 		this.posx_in_tween=posx_in_tween
 		this.delay=delay
 		this.speed=speed
-		this.tweens()
+		game.time.events.add( time_show,this.tweens,this )
 	}
 	_dalle_moving.prototype=Object.create(_mechant.prototype)
 
@@ -972,6 +974,7 @@ function main(){
 		this.flag_for_time_count=true
 		game.time.events.loop( this.frequency,function(){this.flag_for_time_count=true},this) 
 		game.time.events.loop(16,this.update2,this)
+		
 	}
 
 	_canon.prototype=Object.create(_mechant.prototype)
@@ -981,6 +984,7 @@ function main(){
 	}
 
 	_canon.prototype.update = function(){
+		if(this.flag_wait_before_fire){
 		this._flag==false && this.flag_for_fire && this.weapon.fire() 
 		this.particlex.x=this.x
 		this.particlex.y=this.y
@@ -989,46 +993,59 @@ function main(){
 			switch(this.time_for_count){
 				case this.time_part:
 					this.x=this.x+2	
-				this.scale.y=1.1
-				break
+					this.scale.y=1.1
+					break
 				case this.time_part*2:
 					this.x=this.x+4	
-				this.scale.y=1.2
-				break
+					this.scale.y=1.2
+					break
 				case this.time_part*3:
 					this.x=this.x+6	
-				this.scale.y=1.3
-				break
+					this.scale.y=1.3
+					break
 				case this.time_part*4:
 					this.x=this.x+8	
-				this.scale.y=1.4
-				this.explosion()
-				break
+					this.scale.y=1.4
+					this.explosion()
+					break
 				case this.time_part*5:
 					this.x=this.x-2	
-				this.scale.y=1.3
-				break
+					this.scale.y=1.3
+					break
 				case this.time_part*6:
 					this.x=this.x-4	
-				this.scale.y=1.2
-				break
+					this.scale.y=1.2
+					break
 				case this.time_part*7:
 					this.x=this.x-6	
-				this.scale.y=1.1
-				break
+					this.scale.y=1.1
+					break
 				case this.time_total:
 					this.x=this.x-8	
-				this.scale.y=1.0
-				this.time_for_count=0
-				this.flag_for_time_count=false
-				this.hide_explosion()
-				break
+					this.scale.y=1.0
+					this.time_for_count=0
+					this.flag_for_time_count=false
+					this.hide_explosion()
+					break
 			}
 		}
+	}
 	}
 
 	_canon.prototype.transition = function() {
 		this.tween_characteristic = game.add.tween(this.canon).to({x:posx,y:posy},time,Phaser.Easing.Linear.None,true,delay)
+	}
+	_canon.prototype.kill = function(){
+		this.explode_bullet(this.weapon.bullets)
+		this.weapon.bullets.visible=false
+		//canon[j].particlex.on=false
+		this.hide()
+		this.hide_explosion()
+		this.destroy()
+		this.weapon.bullets.forEach(function(item){
+			if(item.alive){	
+				item.body.enable=false
+			}})
 	}
 
 	_canon.prototype.fire = function() {
@@ -1090,114 +1107,114 @@ function main(){
 
 	var createBanner= function(){
 		if( navigator.userAgent.match(/Android/i)
-		   || navigator.userAgent.match(/webOS/i)
-	   || navigator.userAgent.match(/iPhone/i)
-	   || navigator.userAgent.match(/iPad/i)
-	   || navigator.userAgent.match(/iPod/i)
-	   || navigator.userAgent.match(/BlackBerry/i)
-	   || navigator.userAgent.match(/Windows Phone/i)
-		  ){
-			  if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
-				  alert('Cocoon AdMob plugin not installed');
-				  return;
-			  }
-			  // nécessaire 
-			  adService = Cocoon.Ad.AdMob;
-			  adService.configure({
-				  ios: {
-					  banner:"ca-app-pub-7686972479101507/8873903476",
-					  interstitial:"ca-app-pub-7686972479101507/8873903476",
-				  },
-				  android: {
-					  banner:"ca-app-pub-7686972479101507/4443703872",
-					  interstitial:"ca-app-pub-7686972479101507/4443703872"
-				  }
-			  });
+			|| navigator.userAgent.match(/webOS/i)
+			|| navigator.userAgent.match(/iPhone/i)
+			|| navigator.userAgent.match(/iPad/i)
+			|| navigator.userAgent.match(/iPod/i)
+			|| navigator.userAgent.match(/BlackBerry/i)
+			|| navigator.userAgent.match(/Windows Phone/i)
+		){
+			if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
+				alert('Cocoon AdMob plugin not installed');
+				return;
+			}
+			// nécessaire 
+			adService = Cocoon.Ad.AdMob;
+			adService.configure({
+				ios: {
+					banner:"ca-app-pub-7686972479101507/8873903476",
+					interstitial:"ca-app-pub-7686972479101507/8873903476",
+				},
+				android: {
+					banner:"ca-app-pub-7686972479101507/4443703872",
+					interstitial:"ca-app-pub-7686972479101507/4443703872"
+				}
+			});
 
-			  console.log('createBanner')
-			  banner = adService.createBanner();
+			console.log('createBanner')
+			banner = adService.createBanner();
 
-			  banner.on("load", function(){
-				  console.log("Banner loaded " + banner.width, banner.height);
-			  });
+			banner.on("load", function(){
+				console.log("Banner loaded " + banner.width, banner.height);
+			});
 
-			  banner.on("fail", function(){
-				  console.log("Banner failed to load");
-			  });
+			banner.on("fail", function(){
+				console.log("Banner failed to load");
+			});
 
-			  banner.on("show", function(){
-				  console.log("Banner shown a modal content");
-			  });
+			banner.on("show", function(){
+				console.log("Banner shown a modal content");
+			});
 
-			  banner.on("dismiss", function(){
-				  console.log("Banner dismissed the modal content");
-			  });
+			banner.on("dismiss", function(){
+				console.log("Banner dismissed the modal content");
+			});
 
-			  //load banner
-			  banner.load();
+			//load banner
+			banner.load();
 
-			  //show banner
-			  banner.show()
-			  demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
-			  banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
-			  game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
-		  }
+			//show banner
+			banner.show()
+			demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
+			banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
+			game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
+		}
 	}
 
 	var createInterstitial=function(){
 		if( navigator.userAgent.match(/Android/i)
-		   || navigator.userAgent.match(/webOS/i)
-	   || navigator.userAgent.match(/iPhone/i)
-	   || navigator.userAgent.match(/iPad/i)
-	   || navigator.userAgent.match(/iPod/i)
-	   || navigator.userAgent.match(/BlackBerry/i)
-	   || navigator.userAgent.match(/Windows Phone/i)
-		  ){
-			  adService = Cocoon.Ad.Chartboost
-			  adService.configure({
-				  ios: {
-					  appId:"4ed254a3cb5015e47c000000",
-					  appSignature:"91858cc162b56414ca47e63ce7a1b20105c70e65"
-				  },
-				  android: {
-					  appId:"50ae12d715ba47c00d01000c",
-					  appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
-				  }
-			  });
-			  interstitial = adService.createRewardedVideo();
+			|| navigator.userAgent.match(/webOS/i)
+			|| navigator.userAgent.match(/iPhone/i)
+			|| navigator.userAgent.match(/iPad/i)
+			|| navigator.userAgent.match(/iPod/i)
+			|| navigator.userAgent.match(/BlackBerry/i)
+			|| navigator.userAgent.match(/Windows Phone/i)
+		){
+			adService = Cocoon.Ad.Chartboost
+			adService.configure({
+				ios: {
+					appId:"4ed254a3cb5015e47c000000",
+					appSignature:"91858cc162b56414ca47e63ce7a1b20105c70e65"
+				},
+				android: {
+					appId:"50ae12d715ba47c00d01000c",
+					appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
+				}
+			});
+			interstitial = adService.createRewardedVideo();
 
-			  interstitial.on("load", function(){
-				  console.log("Interstitial loaded");
-			  });
-			  interstitial.on("fail", function(){
-				  console.log("Interstitial failed");
-			  });
-			  interstitial.on("show", function(){
-				  console.log("Interstitial shown");
-			  });
-			  interstitial.on("dismiss", function(){
-				  console.log("Interstitial dismissed");
-			  });
+			interstitial.on("load", function(){
+				console.log("Interstitial loaded");
+			});
+			interstitial.on("fail", function(){
+				console.log("Interstitial failed");
+			});
+			interstitial.on("show", function(){
+				console.log("Interstitial shown");
+			});
+			interstitial.on("dismiss", function(){
+				console.log("Interstitial dismissed");
+			});
 
-			  interstitial.on("click", function(){
-				  alert("click")
-				  console.log("Interstitial dismissed");
-				  if(level_number < 19){
-					  this.game.state.start("level"+level_number+1);
-				  }
-			  });
-			  interstitial.on("reward", function(){
-				  alert("reward")
-				  console.log("Interstitial dismissed");
-				  if(level_number < 19){
-					  this.game.state.start("level"+level_number+1);
-				  }
-			  });
+			interstitial.on("click", function(){
+				alert("click")
+				console.log("Interstitial dismissed");
+				if(level_number < 19){
+					this.game.state.start("level"+level_number+1);
+				}
+			});
+			interstitial.on("reward", function(){
+				alert("reward")
+				console.log("Interstitial dismissed");
+				if(level_number < 19){
+					this.game.state.start("level"+level_number+1);
+				}
+			});
 
-			  interstitial.load()
-			  //TOD
-			  interstitial.show()
-		  }
+			interstitial.load()
+			//TOD
+			interstitial.show()
+		}
 	}
 	var createBanner2= function(){
 
@@ -1354,120 +1371,149 @@ function main(){
 		},
 	}
 
-	var level0 = {
-		create: function(){
-			level_number=0
-			this.level_number_adapt=level_number+1
-			level_name="for beginners :)"
-			this.text_level=new _text()
-			flag_hide=true
-			number_canon=2
-			number_asteroid=0
-			number_dalle_moving=0
-			number_pulsar=0
-			number_dalle=1
+	function create_level(num){ 
+		hero = new character() 
+		level_number=num
+		level_number_adapt=level_number+1
+		var _level_name=level_name[level_number]
+		text_to_describe_level=new _text(_level_name,w2,h2,100)
+		text_to_describe_level.visible=false
+		text_to_describe_level.alpha=0
+		text_to_describe_level.show()
+		text_to_number_level=new _text(level_number_adapt,w2,320,90);
+		flag_hide=true
+	}
 
-			this.create_canon=function(){
-				//canon[0]=new _canon(
-				//	number=0,
-				//	delay=0,
-				//	posx=w-200,
-				//	posy=100,
-				//	speed=900,
-				//	frequency=90,
-				//	variance=0,
-				//	angular=180,
-				//	_flag=hero.flag_level_complete,
-				//	kill_with_world=true,
-				//	special_color=false
-				//)
-				//canon[1]=new _canon(
-				//	number=1,
-				//	delay=0,
-				//	posx=0,
-				//	posy=1200,
-				//	speed=400,
-				//	frequency=900,
-				//	variance=0,
-				//	angular=0,
-				//	_flag=hero.flag_level_complete,
-				//	kill_with_world=true,
-				//	special_color=false
-				//)
-			}
-			this.create_asteroid=function(){
-				//asteroid[0]=new _asteroid(
-				//	number=0,
-				//	posx=100,
-				//	posy=240,
-				//	speed=.008,
-				//	radius=100
-				//)
-			}
+	function logic(){
+		logic_add()
+		logic_update()
+	}
+	function tap(th,obj){
+		game.input.onTap.add(onTap,th);
 
-			this.create_dalle_moving=function(){
-				//dalle_moving[0]=new _dalle_moving(
-				//	number=0,
-				//	delay=100,
-				//	posx=240,
-				//	posy=h2+100,
-				//	speed=300,
-				//	posx_in_tween=300
-				//)
+		function onTap(pointer, doubleTap) {
+			if(obj.flag_level_complete==false){
+				if (!doubleTap && obj.flag_mouse==false && game_begin){
+					obj.flag_mouse=true
+					game.time.events.add( obj.delay_for_launch_next_player,function(){th.flag_mouse=false},th )
+					obj.launch_with_mouse()
+				}
 			}
+		}
+	}
 
-			this.create_pulsar=function(){
-				//pulsar[0]=new _pulsar(
-				//	number=0,
-				//	delay=100,
-				//	time=100,
-				//	posx=w2,
-				//	posy=840,
-				//	speed=2000,
-				//	scale_factor=2
-				//)
-			}
+var level0 = {
+	create: function(){
+		//indication du level
+		create_level(0)
 
-			this.create_dalle=function(){
-				dalle[0]=new _dalle(
-					number=0,
-					delay=100,
-					posx=100,
-					posy=440,
-					speed=300
-				)
-			//	dalle[1]=new _dalle(
-			//		number=0,
-			//		delay=100,
-			//		posx=600,
-			//		posy=940,
-			//		speed=300,
-			//	)
-			}
+		number_canon=1
+		number_asteroid=1
+		number_dalle_moving=0
+		number_pulsar=1
+		number_dalle=1
 
-			hero = new character() 
-			this.text=game.add.bitmapText(w2,320,'police',this.level_number_adapt,90);
-			this.text.anchor.setTo(.5)
-			//this.text.tint=0x0d1018
-			console.log('number_canon',number_canon)
+		var config_canon0=[
+				number=0,
+				delay=0,
+				posx=w-200,
+				posy=100,
+				speed=900,
+				frequency=90,
+				variance=0,
+				angular=180,
+				_flag=hero.flag_level_complete,
+				kill_with_world=true,
+				special_color=false
+		]
+		//function create_obj_internal(obj,tableau){
+			//obj=new _canon(tableau)	
+		//}
+
+		this.create_canon=function(){
+			canon[0]=new _canon(
+				number=0,
+				delay=0,
+				posx=w-200,
+				posy=100,
+				speed=900,
+				frequency=90,
+				variance=0,
+				angular=180,
+				_flag=hero.flag_level_complete,
+				kill_with_world=true,
+				special_color=false
+			)
+			//canon[1]=new _canon(
+			//	number=1,
+			//	delay=0,
+			//	posx=0,
+			//	posy=1200,
+			//	speed=400,
+			//	frequency=900,
+			//	variance=0,
+			//	angular=0,
+			//	_flag=hero.flag_level_complete,
+			//	kill_with_world=true,
+			//	special_color=false
+			//)
+		}
+		this.create_asteroid=function(){
+			asteroid[0]=new _asteroid(
+				number=0,
+				posx=100,
+				posy=240,
+				speed=.008,
+				radius=100
+			)
+		}
+
+		this.create_dalle_moving=function(){
+			//dalle_moving[0]=new _dalle_moving(
+			//	number=0,
+			//	delay=100,
+			//	posx=240,
+			//	posy=h2+100,
+			//	speed=300,
+			//	posx_in_tween=300
+			//)
+		}
+
+		this.create_pulsar=function(){
+			pulsar[0]=new _pulsar(
+				number=0,
+				delay=100,
+				time=100,
+				posx=w2,
+				posy=840,
+				speed=2000,
+				scale_factor=2
+			)
+		}
+
+		this.create_dalle=function(){
+			dalle[0]=new _dalle(
+				number=0,
+				delay=100,
+				posx=100,
+				posy=440,
+				speed=300
+			)
+		//	dalle[1]=new _dalle(
+		//		number=0,
+		//		delay=100,
+		//		posx=600,
+		//		posy=940,
+		//		speed=300,
+		//	)
+		}
+
 			check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
-			logic_add()
-			logic_update()
+			logic()
 			return level_number
 		},
 		update:function(){
-			game.input.onTap.add(onTap,this);
-
-			function onTap(pointer, doubleTap) {
-				if(hero.flag_level_complete==false){
-					if (!doubleTap && hero.flag_mouse==false && game_begin){
-						hero.flag_mouse=true
-						game.time.events.add( hero.delay_for_launch_next_player,function(){this.flag_mouse=false},this )
-						hero.launch_with_mouse()
-					}
-				}
-			}
-			//logic_update()
+			tap(this,hero)
 		},
 		render:function(){
 			logic_render()
@@ -1568,7 +1614,6 @@ function main(){
 			this.text=game.add.bitmapText(w2,320,'police',this.level_number_adapt,90);
 			this.text.anchor.setTo(.5)
 			//this.text.tint=0x0d1018
-			console.log('number_canon',number_canon)
 			check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
 			logic_add()
 			logic_update()
@@ -1742,20 +1787,20 @@ function main(){
 				var xpos = IconGroup.xOrg;
 
 				var tween = this.game.add.tween(IconGroup)
-				.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
-				.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
-				.to({ x: xpos+4 }, 20, Phaser.Easing.Linear.None)
-				.to({ x: xpos-3 }, 20, Phaser.Easing.Linear.None)
-				.to({ x: xpos+2 }, 20, Phaser.Easing.Linear.None)
-				.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
-				.start();
+					.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos+4 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos-3 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos+2 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
+					.start();
 			} else {
 				// simulate button press animation to indicate selection
 				var IconGroup = this.holdicons[levelnr-1];
 				var tween = this.game.add.tween(IconGroup.scale)
-				.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
-				.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
-				.start();
+					.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
+					.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
+					.start();
 
 				// it's a little tricky to pass selected levelnr to callback function, but this works:
 				this.onLevelSelected(levelnr-1)
@@ -1899,7 +1944,7 @@ function main(){
 					canon[j].visible=false
 					canon[j].weapon.bullets.visible=false
 					//canon[j].particlex.on=false
-					canon[j].hide()
+					//canon[j].hide()
 					canon[j].hide_explosion()
 					canon[j].destroy()
 					canon[j].weapon.bullets.forEach(function(item){
@@ -1911,15 +1956,16 @@ function main(){
 
 
 			//var hide_weapon_internal=function(obj){
-				//is_exist(obj[0]) && for_each(obj,hide)
-				//is_exist(obj[0]) && hide_enemies(obj)
-				//hide_enemies(obj)
+			//is_exist(obj[0]) && for_each(obj,hide)
+			//is_exist(obj[0]) && hide_enemies(obj)
+			//hide_enemies(obj)
 			//}
-			hide_enemies(dalle)
-			hide_enemies(dalle_moving)
-			hide_enemies(asteroid)
-			hide_enemies(pulsar)
-			//hide_weapon_internal(dalle)
+			//hide_enemies(dalle,'hide')
+			for_action(dalle,'hide')
+			for_action(canon,'hide')
+			for_action(dalle_moving,'hide')
+			for_action(asteroid,'hide')
+			for_action(pulsar,'hide')
 
 			//if(dalle_moving[0]){
 			//	for (var j = 0; j < dalle_moving.length; j++){
@@ -1954,286 +2000,227 @@ function main(){
 		debug_mode ? hero.grid.visible=true:hero.grid.visible=false	
 		logic_position(sprite)
 
-
-
 		if(debug_position){
+
 			gui && gui.destroy()
 			gui=new dat.GUI()
 			gui.start=true
+			var guit={}
+
+			function guit_declare(obj,parameter,valuemin,valuemax){
+
+				const arg=[obj,parameter,valuemin,valuemax]
+
+				let condition=arg.length
+				if ( condition> 2 ){	
+					guit.parameter=gui.add(obj,parameter,valuemin,valuemax)
+					guit.parameter.onChange(function(value){
+						obj.fire()
+						logic_position(obj)
+					})
+				}else{
+					guit.parameter=gui.add(obj,parameter)
+					guit.parameter.onChange(function(value){
+						obj.kill()
+						logic_position(obj)
+					})
+				}
+			}
+
 			switch(sprite.name){
 				case "canon":
-					var guit={}
-				gui.add(sprite,'name')
-				guit.speed=gui.add(sprite,'speed',0,5000)
-				guit.speed.onChange(function(value) {
-					sprite.fire()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				guit.frequency=gui.add(sprite,'frequency',0,5000)
-				guit.frequency.onChange(function(value) {
-					sprite.fire()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				console.log(sprite.kill_with_world)
-				guit.kill=gui.add(sprite,'kill_with_world')
-				guit.kill.onChange(function(value) {
-					sprite.fire()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				guit.special_color=gui.add(sprite,'special_color')
-				guit.special_color.onChange(function(value) {
-					sprite.fire()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				guit.angular=gui.add(sprite,'angular',0,360)
-				guit.angular.onChange(function(value) {
-					sprite.fire()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				guit.variance=gui.add(sprite,'variance',0,1000)
-				guit.variance.onChange(function(value) {
-					sprite.fire()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				guit.kill=gui.add(sprite,'kill')
-				guit.kill.onChange(function(value) {
-					//sprite.kill()// Fires on every change, drag, keypress, etc.
-					sprite.hide()
-					sprite.explode_bullet(sprite.weapon.bullets)
-					sprite.visible=false
-					sprite.weapon.bullets.visible=false
-					//canon[j].particlex.on=false
-					sprite.hide()
-					sprite.hide_explosion()
-					sprite.destroy()
-					sprite.weapon.bullets.forEach(function(item){
-						if(item.alive){	
-							item.body.enable=false
-						}})
-					logic_position(sprite)
-				})
-
-				break
+					gui.add(sprite,'name')
+					guit_declare(sprite,'speed',0,5000)
+					guit_declare(sprite,'frequency',0,5000)
+					guit_declare(sprite,'kill_with_world')
+					guit_declare(sprite,'special_color')
+					guit_declare(sprite,'angular',0,360)
+					guit_declare(sprite,'variance',0,1000)
+					guit_declare(sprite,'kill')
+					break
 				case "pulsar":
-					var guit={}
-				gui.add(sprite,'name')
-				guit.speed=gui.add(sprite,'speed',300,3000)
-				guit.speed.onChange(function(value) {
-					sprite.fire()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				guit.kill=gui.add(sprite,'kill')
-				guit.kill.onChange(function(value) {
-					sprite.kill()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				break;
+					//var guit={}
+					gui.add(sprite,'name')
+					guit_declare(sprite,'speed',300,3000)
+					guit_declare(sprite,'kill')
+					break;
 				case "asteroid":
 					gui.add(sprite,'name')
-				gui.add(sprite,'radius',100,500)
-				gui.add(sprite,'speed',0,.01)
-				guit.kill=gui.add(sprite,'kill')
-				guit.kill.onChange(function(value) {
-					sprite.kill()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				break;
+					gui.add(sprite,'radius',100,500)
+					gui.add(sprite,'speed',0,.01)
+					guit_declare(sprite,'kill')
+					break;
 				case "dalle_moving":
-					var guit={}
-				gui.add(sprite,'name')
-				console.log(sprite.speed,"ps")
-				guit.speed=gui.add(sprite,'speed',300,3000)
-				guit.speed.onChange(function(value) {
-					sprite.fire()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				guit.posx_in_tween=gui.add(sprite,'posx_in_tween',-800,800)
-				guit.posx_in_tween.onChange(function(value) {
-					sprite.fire()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				guit.kill=gui.add(sprite,'kill')
-				guit.kill.onChange(function(value) {
-					sprite.kill()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				break;
+					//var guit={}
+					gui.add(sprite,'name')
+					guit_declare(sprite,'speed',300,3000)
+					guit_declare(sprite,'posx_in_tween',-800,800)
+					guit.kill=gui.add(sprite,'kill')
+					guit_declare(sprite,'kill')
+					break;
 				case "dalle":
-					var guit={}
-				gui.add(sprite,'name')
-				guit.speed=gui.add(sprite,'speed',300,3000)
-				guit.speed.onChange(function(value) {
-					sprite.fire()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				guit.kill=gui.add(sprite,'kill')
-				guit.kill.onChange(function(value) {
-					sprite.kill()// Fires on every change, drag, keypress, etc.
-					logic_position(sprite)
-				})
-				break;
+					gui.add(sprite,'name')
+					guit_declare(sprite,'speed',300,3000);
+					guit_declare(sprite,'kill');
+					break;
 				default:
 					break;
 			}
 		}
 	}
 
-	var logic_position=function(sprite){
-		if (debug_position){
-			hero.grid.visible=false	
-			var _table
-			var _name_json
-			switch(sprite.name){
-				case 'canon':
-					_table=c
+var logic_position=function(sprite){
+	if (debug_position){
+		hero.grid.visible=false	
+		var _table
+		var _name_json
+		switch(sprite.name){
+			case 'canon':
+				_table=c
 				_name_json='canon'
-				console.log('sprite.angular',sprite.angular,_name_json)
 				_table[sprite.number] = {
 					number:sprite.number,
-					delay:sprite.delay,
-					x:sprite.x,
-					y:sprite.y,
-					speed:sprite.speed,
-					frequency:sprite.frequency,
-					variance:sprite.variance,
-					angular:sprite.angular,
+					delay:Math.round(sprite.delay),
+					x:Math.round(sprite.x),
+					y:Math.round(sprite.y),
+					speed:Math.round(sprite.speed),
+					frequency:Math.round(sprite.frequency),
+					variance:Math.round(sprite.variance),
+					angular:Math.round(sprite.angular),
 					_flag:sprite._flag,
 					kill_with_world:sprite.kill_with_world,
 					special_color:sprite.special_color,
 				};
 				break
-				case 'asteroid':
-					_table=a
+			case 'asteroid':
+				_table=a
 				_name_json='asteroid'
 				_table[sprite.number] = {
-					x:sprite.x,
-					y:sprite.y,
+					x:Math.round(sprite.x),
+					y:Math.round(sprite.y),
 					speed:sprite.speed,
-					radius:sprite.radius,
+					radius:Math.round(sprite.radius),
 				};
 				break
-				case 'dalle_moving':
-					_table=n
+			case 'dalle_moving':
+				_table=n
 				_name_json='dalle_moving'
 				_table[sprite.number] = {
-					delay:sprite.delay,
-					x:sprite.x,
-					y:sprite.y,
-					speed:sprite.speed,
-					posx_in_tween:sprite.posx_in_tween,
+					delay:Math.round(sprite.delay),
+					x:Math.round(sprite.x),
+					y:Math.round(sprite.y),
+					speed:Math.round(sprite.speed),
+					posx_in_tween:Math.round(sprite.posx_in_tween),
 				};
 				break
-				case 'pulsar':
-					console.log('sprite.name',sprite.name)
-				console.log(sprite.x)
+			case 'pulsar':
 				_table=p
 				_name_json='pulsar'
 				_table[sprite.number] = {
-					delay:sprite.delay,
-					time:sprite.time,
-					x:sprite.x,
-					y:sprite.y,
-					speed:sprite.speed,
+					delay:Math.round(sprite.delay),
+					time:Math.round(sprite.time),
+					x:Math.round(sprite.x),
+					y:Math.round(sprite.y),
+					speed:Math.round(sprite.speed),
 					scale_factor:sprite.scale_factor,
 				};
 				break
-				case 'dalle':
-					_table=d
+			case 'dalle':
+				_table=d
 				_name_json='dalle'
 				_table[sprite.number] = {
-					delay:sprite.delay,
-					x:sprite.x,
-					y:sprite.y,
-					speed:sprite.speed,
+					delay:Math.round(sprite.delay),
+					x:Math.round(sprite.x),
+					y:Math.round(sprite.y),
+					speed:Math.round(sprite.speed),
 				};
 				break
-			}
-			this.level=level_number
-			this.name_level='lev'
-			this.combined_level=this.name_level+this.level
-			localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]));
-			console.log(_name_json+sprite.number+this.combined_level,"peut etre ici")
+		}
+		this.level=level_number
+		this.name_level='lev'
+		this.combined_level=this.name_level+this.level
+		localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]));
+		console.log(_name_json+sprite.number+this.combined_level,"peut etre ici")
+	}
+}
+
+var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
+	//var check_in_local_storage=function(obj,num,table){
+	//	for(var i=0;i<num;i++){
+	//		try {
+	//			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
+	//			console.log(table[i],"ici")
+	//		} catch(e){
+	//			table[i]=[];
+	//		}
+	//	};
+	//}
+	var check_in_local_storage=function(obj,num,table){
+		for(var i=0;i<num;i++){
+			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
+		};
+	}
+
+	check_in_local_storage("canon",num_canon,c)
+	check_in_local_storage("asteroid",num_asteroid,a)
+	check_in_local_storage("dalle_moving",num_dalle_moving,n)
+	check_in_local_storage("pulsar",num_pulsar,p)
+	check_in_local_storage("dalle",num_dalle,d)
+
+	for(var i=0;i<num_canon;i++){
+		if (c[i]===null){
+			_create_canon()
+			break
+		}else{
+			c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number))
+			canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,hero.flag_level_complete,c[i].kill_with_world,c[i].special_color);
 		}
 	}
 
-	var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
-		console.log("check_storage")
-		//var check_in_local_storage=function(obj,num,table){
-		//	for(var i=0;i<num;i++){
-		//		try {
-		//			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
-		//			console.log(table[i],"ici")
-		//		} catch(e){
-		//			table[i]=[];
-		//		}
-		//	};
-		//}
-		var check_in_local_storage=function(obj,num,table){
-			for(var i=0;i<num;i++){
-					table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
-			};
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+	for(var i=0;i<num_asteroid;i++){
+		if (a[i]===null){
+			_create_asteroid()
+			break
+		}else{
+			//asteroid = function(number,posx,posy,speed,radius)
+			asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius)
 		}
-
-		check_in_local_storage("canon",num_canon,c)
-		check_in_local_storage("asteroid",num_asteroid,a)
-		check_in_local_storage("dalle_moving",num_dalle_moving,n)
-		check_in_local_storage("pulsar",num_pulsar,p)
-		check_in_local_storage("dalle",num_dalle,d)
-
-		for(var i=0;i<num_canon;i++){
-			if (c[i]===null){
-				_create_canon()
-				break
-			}else{
-				c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number))
-				canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,hero.flag_level_complete,c[i].kill_with_world,c[i].special_color);
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////////////////
-
-		for(var i=0;i<num_asteroid;i++){
-			if (a[i]===null){
-				_create_asteroid()
-				break
-			}else{
-				//asteroid = function(number,posx,posy,speed,radius)
-				asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius)
-			}
-		}
-		///////////////////////////////////////////////////////////////////////////////////////////
-
-		for(var i=0;i<num_dalle_moving;i++){
-			if (n[i]===null){
-				_create_dalle_moving()
-				break
-			}else{
-				//dalle_moving = function(number,delay,posx,posy,speed)
-				dalle_moving[i]=new _dalle_moving(i,n[i].delay,n[i].x,n[i].y,n[i].speed,n[i].posx_in_tween)
-			}
-		}
-		///////////////////////////////////////////////////////////////////////////////////////////
-		for(var i=0;i<num_pulsar;i++){
-			if (p[i]===null){
-				_create_pulsar()
-				break
-			}else{
-				//pulsar = function(number,delay,time,posx,posy,speed,scale_factor)
-				pulsar[i]=new _pulsar(i,p[i].delay,p[i].time,p[i].x,p[i].y,p[i].speed,p[i].scale_factor)
-			}
-		}
-
-		for(var i=0;i<num_dalle;i++){
-			if (d[i]===null){
-				_create_dalle()
-				break
-			}else{
-				//dalle = function(number,delay,posx,posy,speed)
-				dalle[i]=new _dalle(i,d[i].delay,d[i].x,d[i].y,d[i].speed)
-			}
-		}
-
 	}
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+	for(var i=0;i<num_dalle_moving;i++){
+		if (n[i]===null){
+			_create_dalle_moving()
+			break
+		}else{
+			//dalle_moving = function(number,delay,posx,posy,speed)
+			dalle_moving[i]=new _dalle_moving(i,n[i].delay,n[i].x,n[i].y,n[i].speed,n[i].posx_in_tween)
+		}
+	}
+	///////////////////////////////////////////////////////////////////////////////////////////
+	for(var i=0;i<num_pulsar;i++){
+		if (p[i]===null){
+			_create_pulsar()
+			break
+		}else{
+			//pulsar = function(number,delay,time,posx,posy,speed,scale_factor)
+			pulsar[i]=new _pulsar(i,p[i].delay,p[i].time,p[i].x,p[i].y,p[i].speed,p[i].scale_factor)
+		}
+	}
+
+	for(var i=0;i<num_dalle;i++){
+		if (d[i]===null){
+			_create_dalle()
+			break
+		}else{
+			//dalle = function(number,delay,posx,posy,speed)
+			dalle[i]=new _dalle(i,d[i].delay,d[i].x,d[i].y,d[i].speed)
+		}
+	}
+
+}
 
 var logic_render=function(){
 	if(debug_mode){
@@ -2241,31 +2228,36 @@ var logic_render=function(){
 		game.debug.body(hero.cible)
 
 		//ne sait pas appliquer foreach car this.hero.player renvoit Object[Object,Object,Object]
-			for (var i = 0; i < 3;i++){
+		for (var i = 0; i < 3;i++){
 			game.debug.body(hero.player[i])
-			}
+		}
 
-			var debug_obj=function(obj){
-				if (obj[0]){
-					foreach(obj,game.debug.body)
-				}
+		var debug_obj=function(obj){
+			if (obj[0]){
+				foreach(obj,game.debug.body)
 			}
-			debug_obj(dalle)
-			debug_obj(dalle_moving)
-			debug_obj(pulsar)
-			debug_obj(asteroid)
-			debug_obj(canon)
+		}
+		debug_obj(dalle)
+		debug_obj(dalle_moving)
+		debug_obj(pulsar)
+		debug_obj(asteroid)
+		//encore à peaufiner check dernier
+		if(canon[0]){
+			for (var i = 0; i < canon.length;i++){
+				canon[i].weapon.bullets.forEach(function(item){game.debug.body(item)})
+			}
 		}
 	}
+}
 
-	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
-	game.state.add('boot',bootstate)
-	game.state.add('preload',preloadstate)
-	game.state.add('game_first_screen',game_first_screen)
-	game.state.add('level0',level0)
-	game.state.add('level1',level1)
-	game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
-	game.state.start('boot',bootstate)
+game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
+game.state.add('boot',bootstate)
+game.state.add('preload',preloadstate)
+game.state.add('game_first_screen',game_first_screen)
+game.state.add('level0',level0)
+game.state.add('level1',level1)
+game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
+game.state.start('boot',bootstate)
 }
 
 var detectmob=function(){ 
