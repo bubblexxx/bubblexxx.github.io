@@ -54,6 +54,20 @@ const for_action=(obj,action) => obj.forEach((item) => item[action]());
 //	})
 //}
 
+/***delay and then action
+args[0]=delay
+args[1]=action
+args[2]=this
+*/
+const del=(...args) => {
+	let action = args[1]
+		if(args[2] == 'undefined') {
+			game.time.events.add( args[0],action())
+		}else{
+			game.time.events.add( args[0],action(),args[2])
+		}
+}
+
 function countor(x){
 	x++
 	return x
