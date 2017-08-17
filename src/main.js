@@ -65,7 +65,7 @@ function main(){
 	var number_dalle_moving=null 
 	var number_pulsar=null 
 	var number_dalle=null 
-	var count_hero = -1
+	var count_hero 
 	var level_number=0
 	var level0
 	var level_number_adapt
@@ -294,7 +294,7 @@ function main(){
 
 	character = function(){
 		Phaser.Sprite.call(this,game,w2,h+500,'particle_character')
-		this.flag_mouse=false
+		this.flag_mouse=true
 		this.flag_show_button=true
 		this.cible_shadow=game.add.sprite(w2,300,'cible_shadow')
 		this.cible_shadow.anchor.setTo(.5,.5)
@@ -399,7 +399,7 @@ function main(){
 		if(this.counter === 0) {
 			this.timer.destroy();
 			this.circle_timer.visible=false
-			this.flag_mouse=false
+			this.flag_mouse=true
 			this.animate_touch()
 		}
 	}
@@ -1415,7 +1415,7 @@ function main(){
 			}
 		}
 
-		if ( condition == true && f == false ){
+		if ( condition == true && f == true ){
 			//changer ici pour avoir true donc changer le flag à la base
 //////////////////////////////////////////////////////////////////////////////////////////
 			return false
@@ -1458,10 +1458,11 @@ function main(){
 
 		function onTap(pointer, doubleTap) {
 			if(hero.flag_level_complete==false){
-				if (!doubleTap && hero.flag_mouse==false && game_begin){
-					hero.flag_mouse=true
+				if (!doubleTap && hero.flag_mouse==true && game_begin){
+					hero.flag_mouse=false
 					count_hero=count_hero+1
-					let _action = function(){hero.flag_mouse=false}
+					co(count_hero,"count_hero")
+					let _action = function(){hero.flag_mouse=true}
 					game.time.events.add(hero.delay_for_launch_next_player,_action)
 					can_t_launch(count_hero,hero.flag_mouse)
 				}
@@ -1511,7 +1512,7 @@ var level0 = {
 	create: function(){
 		//indication du level
 		create_level(0)
-
+		count_hero=-1
 		number_canon=1
 		number_asteroid=1
 		number_dalle_moving=0
