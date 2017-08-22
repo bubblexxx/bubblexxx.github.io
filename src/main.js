@@ -20,9 +20,7 @@
 
 //TODO
 
-//collide_function à régler suivant 
-//normalement réglé
-//check storage ne fonctionne plus
+//hide mettre animate_touch en non visible
 //regler particle canon en fonction de l'inclinaison
 //mettre icone back à la place de publish
 
@@ -30,10 +28,6 @@
 //1110 retablir createInterstitial
 //body enbale false lorsque touché un projectile violet
 
-//explode dalle dalle_moving asteroid pulsar
-
-//changer couleur particle d'asteroid
-//detecter si gsm ou ordi et régler admob et cordova en fonction
 
 function main(){
 	//alert("down")
@@ -72,6 +66,10 @@ function main(){
 	var text_to_describe_level
 	var text_to_number_level
 
+	var tw_animate_touch=[]
+	var flag_animate_touch=true
+	var delay_circle_timer = 1800
+
 	this.some_value=4
 	var gui
 	var PLAYER_DATA 
@@ -83,7 +81,10 @@ function main(){
 	var h2=h*.5
 	var w2=640
 	var debug_mode=false
+	//si false pas de possibilité de déplacer les enemis
 	var debug_position=true
+	// si false pas de localStorage
+	var debug_store=true
 	var level_json={}
 	//
 	var canon=[]
@@ -332,7 +333,6 @@ function main(){
 		this.touch_button.anchor.setTo(.5,.5)
 		this.touch_button.alpha=.9
 		this.touch_button.visible=false
-		this.touch_button.on=false
 
 		this.sound_launch=game.add.audio('launch')
 		this.sound_star=game.add.audio('coin')
@@ -367,8 +367,7 @@ function main(){
 		this.circle_timer = this.game.add.graphics(this.life.x, this.life.y-15);
 		this.circle_timer.anchor.setTo(.5,.5)
 		this.counter = 100;
-		this.delay_for_launch_next_player=500
-		this.animate_touch()
+		this.delay_for_launch_next_player=1000
 		this.particle = game.add.emitter(this.x,this.y)
 		this.particle.makeParticles("particle_character")
 		this.particle.minParticleSpeed.setTo(-600,-600)
@@ -384,13 +383,6 @@ function main(){
 	character.prototype = Object.create(Phaser.Sprite.prototype)
 	character.prototype.constructor = character
 
-	character.prototype.animate_touch = function() {
-		this.tween_touch_initialyze()
-		this.timer_touch = this.game.time.create(false);
-		this.timer_touch.loop(1000,() => this.tween_touch_initialyze(),this);
-		this.timer_touch.start()
-	}
-
 	character.prototype.update_circle_timer = function() {
 		this.counter--;
 		this.circle_timer.clear();
@@ -400,7 +392,6 @@ function main(){
 			this.timer.destroy();
 			this.circle_timer.visible=false
 			this.flag_mouse=true
-			this.animate_touch()
 		}
 	}
 	character.prototype.reset_update_circle_timer = function() {
@@ -411,28 +402,6 @@ function main(){
 		this.timer.start()
 		this.circle_timer.visible=true
 	}
-
-	character.prototype.stop_animate_touch = function() {
-		this.touch_button.visible=false
-		this.timer_touch.destroy()
-		!this.touch_button.on && game.tweens.remove(this.tween_touch)	
-		!this.touch_button.on && game.tweens.remove(this.tween_touch2)	
-		!this.touch_button.on && game.tweens.remove(this.tween_touch3)	
-	}
-
-	//pour animer le cerlce autour du chiffre qui lance le joueur
-	character.prototype.tween_touch_initialyze = function() {
-		if (this.flag_level_complete==false) {
-			this.touch_button.on=true
-			this.touch_button.scale.setTo(1,1)
-			this.touch_button.alpha=.4
-			this.touch_button.visible=true
-			this.tween_touch = game.add.tween(this.touch_button.scale).to({x:1.5,y:1.5},1000,Phaser.Easing.Linear.None,true,0)
-			this.tween_touch2 = game.add.tween(this.touch_button).to({alpha:0},1000,Phaser.Easing.Linear.None,true,0)
-			this.tween_touch3 = game.add.tween(this.touch_button.scale).to({x:1,y:1},0,Phaser.Easing.Linear.None,true,1000)
-		}
-	}
-
 
 	character.prototype.audio_click = function() {
 		this.sound_click.play()
@@ -479,28 +448,12 @@ function main(){
 		}
 	}
 
-	//character.prototype.method_name = function(count,table) {
-	//count=count+1	
-	//switch(count)
-	//foreach(table,return table)
-	//}
-
-	character.prototype.calculate_life_remaining= function(){
-		this.count=this.count+1
-		switch(this.count){
+	character.prototype.calculate_life_remaining= function(n){
+		switch(n){
 			case 0:
-				this.life.text=3 
+				this.life.text=2 
 				break
 			case 1:
-				this.life.text=2 
-				break
-			case 2:
-				this.life.text=2 
-				break
-			case 3:
-				this.life.text=1 
-				break
-			case 4:
 				this.life.text=1 
 				break
 			default:
@@ -646,37 +599,6 @@ function main(){
 		}
 	}
 
-	character.prototype.launch_with_mouse=function(){
-		this.calculate_life_remaining()
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-		this.stop_animate_touch()
-		this.reset_update_circle_timer()
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-		//ICI MODIFIER 012 
-		switch(this.count){
-			case 0:
-				this.launch_number(0)
-				break
-			case 1:
-				this.launch_number(1)
-				break
-			case 2:
-				this.launch_number(2)
-				break
-			case 3:
-				//this.launch_number(0)
-				break
-			case 4:
-				//this.launch_number(2)
-				break
-			default:
-				break
-		}
-	}
 	character.prototype.launch=function(n){
 		this.audio_launch()
 		this.player[n].body.enable=true
@@ -684,16 +606,6 @@ function main(){
 		this.player[n].visible=true
 		this.player[n].body.velocity.y=-800
 	}
-
-	character.prototype.launch_number = function(n) {
-		//this.stop_animate_touch()
-		this.audio_launch()
-		this.player[n].body.enable=true
-		this.checkicharacterisloossomewhere(n)
-		this.player[n].visible=true
-		this.player[n].body.velocity.y=-800
-	}
-
 
 	character.prototype.explode_cible=function(){
 		this.particle.x=this.cible.x
@@ -708,8 +620,9 @@ function main(){
 			if(!this.flag_level_complete && n < 2){
 				this.reset_update_circle_timer()	
 			}
+			count_modif_obj(this.life.text,count_hero,2)
 			this.player[n].is_exploding=true
-			this.calculate_life_remaining()
+			this.calculate_life_remaining(n)
 			this.audio_pop()
 			this.on_explode()
 			this.player[n].visible=false
@@ -903,13 +816,10 @@ function main(){
 	}
 	_canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
 		_mechant.call(this,"canon",number,posx,posy,'canon','sprite_for_drag')
-		//this.number=number
 		this.special_color=special_color
 		this.kill_with_world=kill_with_world
 		this.delay=delay
 		this.name="canon"
-		//this.posx=posx
-		//this.posy=posy
 		this.flag_explode=false
 		this.speed=speed
 		this.angular=angular
@@ -986,7 +896,7 @@ function main(){
 		this.flag_for_time_count=true
 		game.time.events.loop( this.frequency,function(){this.flag_for_time_count=true},this) 
 		game.time.events.loop(16,this.update2,this)
-		
+
 	}
 
 	_canon.prototype=Object.create(_mechant.prototype)
@@ -997,51 +907,51 @@ function main(){
 
 	_canon.prototype.update = function(){
 		if(this.flag_wait_before_fire){
-		this._flag==false && this.flag_for_fire && this.weapon.fire() 
-		this.particlex.x=this.x
-		this.particlex.y=this.y
-		if(this.flag_for_time_count){
-			this.time_for_count=this.time_for_count+1
-			switch(this.time_for_count){
-				case this.time_part:
-					this.x=this.x+2	
-					this.scale.y=1.1
-					break
-				case this.time_part*2:
-					this.x=this.x+4	
-					this.scale.y=1.2
-					break
-				case this.time_part*3:
-					this.x=this.x+6	
-					this.scale.y=1.3
-					break
-				case this.time_part*4:
-					this.x=this.x+8	
-					this.scale.y=1.4
-					this.explosion()
-					break
-				case this.time_part*5:
-					this.x=this.x-2	
-					this.scale.y=1.3
-					break
-				case this.time_part*6:
-					this.x=this.x-4	
-					this.scale.y=1.2
-					break
-				case this.time_part*7:
-					this.x=this.x-6	
-					this.scale.y=1.1
-					break
-				case this.time_total:
-					this.x=this.x-8	
-					this.scale.y=1.0
-					this.time_for_count=0
-					this.flag_for_time_count=false
-					this.hide_explosion()
-					break
+			this._flag==false && this.flag_for_fire && this.weapon.fire() 
+			this.particlex.x=this.x
+			this.particlex.y=this.y
+			if(this.flag_for_time_count){
+				this.time_for_count=this.time_for_count+1
+				switch(this.time_for_count){
+					case this.time_part:
+						this.x=this.x+2	
+						this.scale.y=1.1
+						break
+					case this.time_part*2:
+						this.x=this.x+4	
+						this.scale.y=1.2
+						break
+					case this.time_part*3:
+						this.x=this.x+6	
+						this.scale.y=1.3
+						break
+					case this.time_part*4:
+						this.x=this.x+8	
+						this.scale.y=1.4
+						this.explosion()
+						break
+					case this.time_part*5:
+						this.x=this.x-2	
+						this.scale.y=1.3
+						break
+					case this.time_part*6:
+						this.x=this.x-4	
+						this.scale.y=1.2
+						break
+					case this.time_part*7:
+						this.x=this.x-6	
+						this.scale.y=1.1
+						break
+					case this.time_total:
+						this.x=this.x-8	
+						this.scale.y=1.0
+						this.time_for_count=0
+						this.flag_for_time_count=false
+						this.hide_explosion()
+						break
+				}
 			}
 		}
-	}
 	}
 
 	_canon.prototype.transition = function() {
@@ -1383,8 +1293,23 @@ function main(){
 		},
 	}
 
+		
+	tw_action = (obj,tw_name) => {
+		obj.alpha=.5
+		obj.scale.setTo(1,1)
+		tw_name[0]= game.add.tween(obj.scale).to({x:1.5,y:1.5},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1)
+		tw_name[1] = game.add.tween(obj).to({alpha:0.1},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1)
+		tw_name[0].onStart.add(()=> {obj.visible=true})
+	}
+
+	//animate_touch = tw(obj,tw_start,tw_name,f) 
+	animate_touch = tw
+	
+
 	function create_level(num){ 
 		hero = new character() 
+		//nouveau
+		animate_touch(hero.touch_button,tw_action,tw_animate_touch,flag_animate_touch)
 		level_number=num
 		level_number_adapt=level_number+1
 		var _level_name=level_name[level_number]
@@ -1406,45 +1331,37 @@ function main(){
 			switch(count){
 				case 0:
 					return true
+					break
 				case 1:
 					return true
+					break
 				case 2:
 					return true
+					break
 				default:
 					return false
+					break
 			}
 		}
+		co((condition(count) && f) ? true : false)
 
-		if ( condition == true && f == true ){
-			//changer ici pour avoir true donc changer le flag à la base
-//////////////////////////////////////////////////////////////////////////////////////////
-			return false
-		}else{
-			co("ok")
+		if (condition(count) && f){
 			return true
+		}else{
+			return false
 		}
 	}
+
 	condition_update_circle_timer = (count) => {
-		switch(count){
-			case 0:
-				hero.life.text=2	
-				return true
-			case 1:
-				hero.life.text=1	
-				return true
-			default:
-				hero.life.text=''	
-				return false
-		}
+		count_modif_obj(hero.life.text,count,2)
 	}
 
 	action=(count) => {
-		if (condition_update_circle_timer(count)){
-			hero.reset_update_circle_timer()
-		} 	
-		co("launch")
+		condition_update_circle_timer(count)
+		count_hero++
 		hero.launch(count)
-		hero.stop_animate_touch()	
+		console.log(flag_animate_touch,"flag_animate_touch")
+		stop_tw(tw_animate_touch,flag_animate_touch,hero.touch_button)	
 	}
 
 	can_t_launch = (count,f) => {
@@ -1459,67 +1376,28 @@ function main(){
 		function onTap(pointer, doubleTap) {
 			if(hero.flag_level_complete==false){
 				if (!doubleTap && hero.flag_mouse==true && game_begin){
+					can_t_launch(count_hero,hero.flag_mouse)
 					hero.flag_mouse=false
-					count_hero=count_hero+1
 					co(count_hero,"count_hero")
 					let _action = function(){hero.flag_mouse=true}
 					game.time.events.add(hero.delay_for_launch_next_player,_action)
-					can_t_launch(count_hero,hero.flag_mouse)
-				}
-
-			}
-		}
-	}
-
-
-	function tap(th,obj){
-		game.input.onTap.add(onTap,th);
-
-		function onTap(pointer, doubleTap) {
-			if(obj.flag_level_complete==false){
-				if (!doubleTap && obj.flag_mouse==false && game_begin){
-					obj.flag_mouse=true
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-					//game.time.events.add( obj.delay_for_launch_next_player,function(){th.flag_mouse=false},th )
-
-					/*
-					DELAY > FLAG_MOUSE 
-					> launch_with_mouse >> launch_number 'in case [0,2,4]' >> stop_animate_touch  
-					> calculate_life_remaining 
-
-					DANS CHARACTER
-					animate_touch > boucle > tween_touch_initialyze >
-
-					CHARACTER explode
-					reset_update_circle_timer > boucle > update_circle_timer > end = animate_touch 
-					calculate_life_remaining
-
-					this.count > au début -1 , via calculate_life_remaining this.count=this.count+1 
-
-					*/
-
-
-					game.time.events.add( obj.delay_for_launch_next_player,function(){obj.flag_mouse=false,co(obj,obj.flag_mouse,"obj.flag_mouse")})
-					obj.launch_with_mouse()
 				}
 			}
 		}
 	}
 
-var level0 = {
-	create: function(){
-		//indication du level
-		create_level(0)
-		count_hero=-1
-		number_canon=1
-		number_asteroid=1
-		number_dalle_moving=0
-		number_pulsar=1
-		number_dalle=1
+	var level0 = {
+		create: function(){
+			//indication du level
+			create_level(0)
+			count_hero=0
+			number_canon=1
+			number_asteroid=1
+			number_dalle_moving=0
+			number_pulsar=1
+			number_dalle=1
 
-		var config_canon0=[
+			var config_canon0=[
 				number=0,
 				delay=0,
 				posx=w-200,
@@ -1531,90 +1409,99 @@ var level0 = {
 				_flag=hero.flag_level_complete,
 				kill_with_world=true,
 				special_color=false
-		]
-		//function create_obj_internal(obj,tableau){
+			]
+			//function create_obj_internal(obj,tableau){
 			//obj=new _canon(tableau)	
-		//}
+			//}
 
-		this.create_canon=function(){
-			canon[0]=new _canon(
-				number=0,
-				delay=0,
-				posx=w-200,
-				posy=100,
-				speed=900,
-				frequency=90,
-				variance=0,
-				angular=180,
-				_flag=hero.flag_level_complete,
-				kill_with_world=true,
-				special_color=false
-			)
-			//canon[1]=new _canon(
-			//	number=1,
-			//	delay=0,
-			//	posx=0,
-			//	posy=1200,
-			//	speed=400,
-			//	frequency=900,
-			//	variance=0,
-			//	angular=0,
-			//	_flag=hero.flag_level_complete,
-			//	kill_with_world=true,
-			//	special_color=false
-			//)
-		}
-		this.create_asteroid=function(){
-			asteroid[0]=new _asteroid(
-				number=0,
-				posx=100,
-				posy=240,
-				speed=.008,
-				radius=100
-			)
-		}
+			this.create_canon=function(){
+				canon[0]=new _canon(
+					number=0,
+					delay=0,
+					posx=w-200,
+					posy=100,
+					speed=900,
+					frequency=90,
+					variance=0,
+					angular=180,
+					_flag=hero.flag_level_complete,
+					kill_with_world=true,
+					special_color=false
+				)
+				//canon[1]=new _canon(
+				//	number=1,
+				//	delay=0,
+				//	posx=0,
+				//	posy=1200,
+				//	speed=400,
+				//	frequency=900,
+				//	variance=0,
+				//	angular=0,
+				//	_flag=hero.flag_level_complete,
+				//	kill_with_world=true,
+				//	special_color=false
+				//)
+			}
+			this.create_asteroid=function(){
+				asteroid[0]=new _asteroid(
+					number=0,
+					posx=100,
+					posy=240,
+					speed=.008,
+					radius=100
+				)
+			}
 
-		this.create_dalle_moving=function(){
-			//dalle_moving[0]=new _dalle_moving(
-			//	number=0,
-			//	delay=100,
-			//	posx=240,
-			//	posy=h2+100,
-			//	speed=300,
-			//	posx_in_tween=300
-			//)
-		}
+			this.create_dalle_moving=function(){
+				//dalle_moving[0]=new _dalle_moving(
+				//	number=0,
+				//	delay=100,
+				//	posx=240,
+				//	posy=h2+100,
+				//	speed=300,
+				//	posx_in_tween=300
+				//)
+			}
 
-		this.create_pulsar=function(){
-			pulsar[0]=new _pulsar(
-				number=0,
-				delay=100,
-				time=800,
-				posx=w2,
-				posy=840,
-				speed=2000,
-				scale_factor=2
-			)
-		}
+			this.create_pulsar=function(){
+				pulsar[0]=new _pulsar(
+					number=0,
+					delay=100,
+					time=800,
+					posx=w2,
+					posy=840,
+					speed=2000,
+					scale_factor=2
+				)
+			}
 
-		this.create_dalle=function(){
-			dalle[0]=new _dalle(
-				number=0,
-				delay=100,
-				posx=100,
-				posy=440,
-				speed=300
-			)
-		//	dalle[1]=new _dalle(
-		//		number=0,
-		//		delay=100,
-		//		posx=600,
-		//		posy=940,
-		//		speed=300,
-		//	)
-		}
+			this.create_dalle=function(){
+				dalle[0]=new _dalle(
+					number=0,
+					delay=100,
+					posx=100,
+					posy=440,
+					speed=300
+				)
+				//	dalle[1]=new _dalle(
+				//		number=0,
+				//		delay=100,
+				//		posx=600,
+				//		posy=940,
+				//		speed=300,
+				//	)
+			}
 
-			check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
+			if(debug_store){
+				check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
+
+			}else{
+				this.create_canon()
+				this.create_asteroid()
+				this.create_dalle_moving()
+				this.create_pulsar()
+				this.create_dalle()
+			}
 			logic()
 			return level_number
 		},
@@ -1626,100 +1513,108 @@ var level0 = {
 			logic_render()
 		},
 	}
-var level1 = {
-	create: function(){
-		//indication du level
-		create_level(1)
+	var level1 = {
+		create: function(){
+			//indication du level
+			create_level(1)
 
-		number_canon=1
-		number_asteroid=1
-		number_dalle_moving=0
-		number_pulsar=1
-		number_dalle=1
+			number_canon=1
+			number_asteroid=1
+			number_dalle_moving=0
+			number_pulsar=1
+			number_dalle=1
 
-		//function create_obj_internal(obj,tableau){
+			//function create_obj_internal(obj,tableau){
 			//obj=new _canon(tableau)	
-		//}
+			//}
 
-		this.create_canon=function(){
-			canon[0]=new _canon(
-				number=0,
-				delay=0,
-				posx=w-200,
-				posy=100,
-				speed=900,
-				frequency=90,
-				variance=0,
-				angular=180,
-				_flag=hero.flag_level_complete,
-				kill_with_world=true,
-				special_color=false
-			)
-			//canon[1]=new _canon(
-			//	number=1,
-			//	delay=0,
-			//	posx=0,
-			//	posy=1200,
-			//	speed=400,
-			//	frequency=900,
-			//	variance=0,
-			//	angular=0,
-			//	_flag=hero.flag_level_complete,
-			//	kill_with_world=true,
-			//	special_color=false
-			//)
-		}
-		this.create_asteroid=function(){
-			asteroid[0]=new _asteroid(
-				number=0,
-				posx=100,
-				posy=240,
-				speed=.008,
-				radius=100
-			)
-		}
+			this.create_canon=function(){
+				canon[0]=new _canon(
+					number=0,
+					delay=0,
+					posx=w-200,
+					posy=100,
+					speed=900,
+					frequency=90,
+					variance=0,
+					angular=180,
+					_flag=hero.flag_level_complete,
+					kill_with_world=true,
+					special_color=false
+				)
+				//canon[1]=new _canon(
+				//	number=1,
+				//	delay=0,
+				//	posx=0,
+				//	posy=1200,
+				//	speed=400,
+				//	frequency=900,
+				//	variance=0,
+				//	angular=0,
+				//	_flag=hero.flag_level_complete,
+				//	kill_with_world=true,
+				//	special_color=false
+				//)
+			}
+			this.create_asteroid=function(){
+				asteroid[0]=new _asteroid(
+					number=0,
+					posx=100,
+					posy=240,
+					speed=.008,
+					radius=100
+				)
+			}
 
-		this.create_dalle_moving=function(){
-			//dalle_moving[0]=new _dalle_moving(
-			//	number=0,
-			//	delay=100,
-			//	posx=240,
-			//	posy=h2+100,
-			//	speed=300,
-			//	posx_in_tween=300
-			//)
-		}
+			this.create_dalle_moving=function(){
+				//dalle_moving[0]=new _dalle_moving(
+				//	number=0,
+				//	delay=100,
+				//	posx=240,
+				//	posy=h2+100,
+				//	speed=300,
+				//	posx_in_tween=300
+				//)
+			}
 
-		this.create_pulsar=function(){
-			pulsar[0]=new _pulsar(
-				number=0,
-				delay=100,
-				time=100,
-				posx=w2,
-				posy=840,
-				speed=2000,
-				scale_factor=2
-			)
-		}
+			this.create_pulsar=function(){
+				pulsar[0]=new _pulsar(
+					number=0,
+					delay=100,
+					time=100,
+					posx=w2,
+					posy=840,
+					speed=2000,
+					scale_factor=2
+				)
+			}
 
-		this.create_dalle=function(){
-			dalle[0]=new _dalle(
-				number=0,
-				delay=100,
-				posx=100,
-				posy=440,
-				speed=300
-			)
-		//	dalle[1]=new _dalle(
-		//		number=0,
-		//		delay=100,
-		//		posx=600,
-		//		posy=940,
-		//		speed=300,
-		//	)
-		}
+			this.create_dalle=function(){
+				dalle[0]=new _dalle(
+					number=0,
+					delay=100,
+					posx=100,
+					posy=440,
+					speed=300
+				)
+				//	dalle[1]=new _dalle(
+				//		number=0,
+				//		delay=100,
+				//		posx=600,
+				//		posy=940,
+				//		speed=300,
+				//	)
+			}
+			if(debug_store){
+				check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
 
-			check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
+			}else{
+				this.create_canon()
+				this.create_asteroid()
+				this.create_dalle_moving()
+				this.create_pulsar()
+				this.create_dalle()
+			}
 			logic()
 			return level_number
 		},
@@ -1994,7 +1889,7 @@ var level1 = {
 				if(obj[0]){
 					for (var i = 0; i < 3; i++){
 						for (var j = 0; j < obj.length; j++){
-							game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
+							game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i) ; animate_touch(hero.touch_button,tw_action,tw_animate_touch,flag_animate_touch)})
 						}
 					}
 				}
@@ -2030,7 +1925,7 @@ var level1 = {
 			console.log("hide_weapon")
 			flag_hide = false
 			console.log('hide')
-			hero.stop_animate_touch()
+			stop_tw(tw_animate_touch,flag_animate_touch,hero.touch_button)	
 			if(canon[0]){
 				for (var j = 0; j < canon.length; j++){
 					canon[j].explode_bullet(canon[j].weapon.bullets)
@@ -2229,7 +2124,7 @@ var logic_position=function(sprite){
 		this.level=level_number
 		this.name_level='lev'
 		this.combined_level=this.name_level+this.level
-		localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]));
+		debug_store && localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]));
 	}
 }
 

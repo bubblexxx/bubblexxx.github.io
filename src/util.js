@@ -15,7 +15,6 @@ function isArray(obj){
 //isArray(message) ? console.log({message}) : console.log(message);
 //}
 
-var co=console.log
 
 //foreach >> for_action
 function foreach(tableau,action){
@@ -54,19 +53,6 @@ const for_action=(obj,action) => obj.forEach((item) => item[action]());
 //	})
 //}
 
-/***delay and then action
-args[0]=delay
-args[1]=action
-args[2]=this
-*/
-const del=(...args) => {
-	let action = args[1]
-		if(args[2] == 'undefined') {
-			game.time.events.add( args[0],action())
-		}else{
-			game.time.events.add( args[0],action(),args[2])
-		}
-}
 
 function countor(x){
 	x++
@@ -87,4 +73,81 @@ function is_exist(obj){
 		return false; 
 	}
 }
+count_modif_obj = (obj,i,num_max) => {
+	i++
+	if (i > num_max){
+		obj = ''
+	}else{
+		obj = i
+	}
+}
+// dans explode character
+// attention check syntaxe hero.text.text ?
 
+//const de = game.time.events.add
+/***delay and then action
+args[0]=delay
+args[1]=action
+args[2]=this
+*/
+//const del=(...args) => {
+//	let action = args[1]
+//	if (args[2] == 'undefined'){
+//		de(args[0],action)
+//	}else{
+//		de(args[0],action,args[2])
+//	}
+//}
+
+//necessite dans setItem via localstorage 
+//_table=[item1,item2]
+
+
+//creation =(obj,table) => {new obj(table)}
+//storage_check =(obj,liste_obj,liste) => {
+//	let condition = for_each(tableau) === null
+//	if(condition){
+//		for_each = (obj,liste_obj) => {creation(obj,table)}
+//	} else {
+//		for_each = (obj,liste_obj_storage) => {creation(obj,table)}
+//	}
+//}
+var co=console.log
+
+
+//initier une transition et y mettre fin
+//tw = (obj,tw_action,tw_name,f) => {
+//	f=true
+//	co("start")
+//	tw_action(obj,tw_name)
+//}
+//
+//tw_action=(obj,tw_name)=> {
+//	//reset here object
+//	obj.scale.setTo(0,0)
+//	obj.x=400
+//	obj.y=400
+//	//use array for multiple instance
+//	tw_name[0] = game.add.tween(obj.scale).to({x:4,y:3},800,Phaser.Easing.Linear.None,true,0)
+//	tw_name[1] = game.add.tween(obj).to({x:0,y:0},800,Phaser.Easing.Linear.None,true,0)
+//}
+//
+	//tw = (obj,tw_action,tw_name,f) => {
+tw = (obj,tw_action,tw_name,f) => {
+	f=true
+	tw_action(obj,tw_name)
+}
+
+stop_tw = (tw_name,f,obj) => {
+	if(f){
+		co("stop")
+		obj.visible=false
+		for(var i=0;i<tw_name.length;i++){
+			console.log(game.tweens.remove)
+			game.tweens.remove(tw_name[i])
+		}
+		f=false
+	}
+ }
+//initier une transition et y mettre fin
+//////////////////////////////////////////////////////////////////////////////////////////
