@@ -1,12 +1,6 @@
 
 
-function al(message){
-	alert(message)
-}
 
-function isArray(obj){
-	return !!obj && obj.constructor === Array;
-}
 
 //function co(message){
 //console.log(message)
@@ -16,35 +10,20 @@ function isArray(obj){
 //}
 
 
-//foreach >> for_action
-function foreach(tableau,action){
-	for(var i=0;i<tableau.length;i++){
-		action(tableau[i]);
-	}
-}
 
-const all = method => list =>{
-	let i =list.length
-	while(--i){
-		list[i][action]()	
-	}
-}
+//const all = method => list =>{
+	//let i =list.length
+	//while(--i){
+		//list[i][action]()	
+	//}
+//}
 //const countor= (obj) => foreach(obj,function(){obj++;console.log(obj,"countor");return obj})
 
-function run (...args) {
-	const data = args.shift()
-	let i = data.length
-	while (--i >= 0) {
-		args.forEach(fn => fn(data[i]))
-	}
-}
 
 
 
-const hide_enemies = (enemies, actionString) => enemies.forEach( (enemy) => enemy.actionString() );
 
 //const for_action=(obj,action) => obj.forEach((item) => action());
-const for_action=(obj,action) => obj.forEach((item) => item[action]());
 
 //function for_action(obj,action){
 //	obj.forEach(function(item){
@@ -54,10 +33,6 @@ const for_action=(obj,action) => obj.forEach((item) => item[action]());
 //}
 
 
-function countor=(x)=>{
-	x++
-	return x
-} 
 
 //function cond(obj,action){
 	//if (obj){
@@ -73,14 +48,6 @@ function countor=(x)=>{
 		//return false; 
 	//}
 //}
-count_modif_obj = (obj,i,num_max) => {
-	i++
-	if (i > num_max){
-		obj = ''
-	}else{
-		obj = i
-	}
-}
 // dans explode character
 // attention check syntaxe hero.text.text ?
 
@@ -112,7 +79,7 @@ args[2]=this
 //		for_each = (obj,liste_obj_storage) => {creation(obj,table)}
 //	}
 //}
-var co=console.log
+//var co=console.log
 
 
 //initier une transition et y mettre fin

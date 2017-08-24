@@ -1354,7 +1354,6 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 			}
 		}
 		let cond = condition(count)
-		co((cond && f) ? true : false)
 
 		if (condition(count) && f){
 			return true
@@ -1369,16 +1368,13 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 
 	action=(count) => {
 		condition_update_circle_timer(count)
-		co(count)
 		stop_tw(tw_animate_touch,flag_animate_touch,hero.touch_button)	
 		count_hero++
-		co(count)
 		hero.launch(count)
 		console.log(flag_animate_touch,"flag_animate_touch")
 	}
 
 	can_t_launch = (count,f) => {
-		co(count,"count")
 		if(is_clic_valid(count,f)){
 			action(count);
 		}  
@@ -1392,7 +1388,6 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 				if (!doubleTap && hero.flag_mouse==true && game_begin){
 					can_t_launch(count_hero,hero.flag_mouse)
 					hero.flag_mouse=false
-					co(count_hero,"count_hero")
 					let _action = function(){hero.flag_mouse=true}
 					game.time.events.add(hero.delay_for_launch_next_player,_action)
 				}
@@ -1839,7 +1834,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 
 		var logic_add_intenal=function(obj){
 			if(obj[0]){
-				foreach(obj,game.add.existing.bind(game));
+				for_each(obj,game.add.existing.bind(game));
 			}	
 		}
 
@@ -2236,7 +2231,7 @@ var logic_render=function(){
 
 		var debug_obj=function(obj){
 			if (obj[0]){
-				foreach(obj,game.debug.body)
+				for_each(obj,game.debug.body)
 			}
 		}
 		debug_obj(dalle)
