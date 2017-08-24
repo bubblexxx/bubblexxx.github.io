@@ -54,25 +54,25 @@ const for_action=(obj,action) => obj.forEach((item) => item[action]());
 //}
 
 
-function countor(x){
+function countor=(x)=>{
 	x++
 	return x
 } 
 
-function cond(obj,action){
-	if (obj){
-		return action()
-	}
-}
+//function cond(obj,action){
+	//if (obj){
+		//return action()
+	//}
+//}
 
 
-function is_exist(obj){
-	if(typeof obj != "undefined"){
-		return true; 
-	}else{
-		return false; 
-	}
-}
+//function is_exist(obj){
+	//if(typeof obj != "undefined"){
+		//return true; 
+	//}else{
+		//return false; 
+	//}
+//}
 count_modif_obj = (obj,i,num_max) => {
 	i++
 	if (i > num_max){
@@ -133,21 +133,6 @@ var co=console.log
 //}
 //
 	//tw = (obj,tw_action,tw_name,f) => {
-tw = (obj,tw_action,tw_name,f) => {
-	f=true
-	tw_action(obj,tw_name)
-}
 
-stop_tw = (tw_name,f,obj) => {
-	if(f){
-		co("stop")
-		obj.visible=false
-		for(var i=0;i<tw_name.length;i++){
-			console.log(game.tweens.remove)
-			game.tweens.remove(tw_name[i])
-		}
-		f=false
-	}
- }
 //initier une transition et y mettre fin
 //////////////////////////////////////////////////////////////////////////////////////////

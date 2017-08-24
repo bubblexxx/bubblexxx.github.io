@@ -66,7 +66,7 @@ function main(){
 	var text_to_describe_level
 	var text_to_number_level
 
-	var tw_animate_touch=[]
+	var tw_animate_touch
 	var flag_animate_touch=true
 	var delay_circle_timer = 1800
 
@@ -283,7 +283,6 @@ function main(){
 	}
 
 	screen_first.prototype.next_menu = function(){
-		console.log("next_menu")
 		this.game.state.start("levsel")
 	}
 
@@ -482,10 +481,8 @@ function main(){
 		//var randstars = this.game.rnd.integerInRange(1, 3);
 		var randstars = this.star.frame
 		//this._stars = this.game.add.bitmapText(160, 200, 'police', 'You get '+randstars+' stars!', 48);
-		console.log("this._levelNumber",this._levelNumber);
 		// set nr of stars for this level
 		PLAYER_DATA[this._levelNumber-1] = randstars;
-		console.log(PLAYER_DATA);
 		// unlock next level
 		if (this._levelNumber < PLAYER_DATA.length) {
 			if (PLAYER_DATA[this._levelNumber] < 0) { // currently locked (=-1)
@@ -657,7 +654,6 @@ function main(){
 	}
 
 	character.prototype.calculate_star = function() {
-		console.log(this.count,"calculate_star")
 		switch(this.count){
 			case 0:
 				this.star.frame=3
@@ -1293,18 +1289,32 @@ function main(){
 		},
 	}
 
-		
+
+	/*	
+	clic0 - stop anim0 >c0 -e -anim1
+	clic1 - stop anim1 >c1 -e -anim2
+	clic2 - stop anim2 >c2 -e
+
+-e -anim1 via collide dans update on incremente manuellement de 1
+ensuite via accion dans clic l'incrementation se fait automatiquement
+*/
 	tw_action = (obj,tw_name) => {
+		//if_undefined(tw_name[0],() => {_action(obj,tw_name)})
+		let esss=() => {console.log("marche yaouuu")}
+		if_undefined(tw_name,esss)
+		//var _action = (obj,tw_name)=> {
 		obj.alpha=.5
 		obj.scale.setTo(1,1)
-		tw_name[0]= game.add.tween(obj.scale).to({x:1.5,y:1.5},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1)
-		tw_name[1] = game.add.tween(obj).to({alpha:0.1},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1)
-		tw_name[0].onStart.add(()=> {obj.visible=true})
+		tw_name= game.add.tween(obj.scale).to({x:1.5,y:1.5},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1)
+		tw_name = game.add.tween(obj).to({alpha:0.1},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1)
+		tw_name.onStart.add(()=> {obj.visible=true})
+		//tw_name[n].yoyo(true,1000)
+		//}
 	}
 
 	//animate_touch = tw(obj,tw_start,tw_name,f) 
 	animate_touch = tw
-	
+
 
 	function create_level(num){ 
 		hero = new character() 
@@ -1343,7 +1353,8 @@ function main(){
 					break
 			}
 		}
-		co((condition(count) && f) ? true : false)
+		let cond = condition(count)
+		co((cond && f) ? true : false)
 
 		if (condition(count) && f){
 			return true
@@ -1358,13 +1369,16 @@ function main(){
 
 	action=(count) => {
 		condition_update_circle_timer(count)
+		co(count)
+		stop_tw(tw_animate_touch,flag_animate_touch,hero.touch_button)	
 		count_hero++
+		co(count)
 		hero.launch(count)
 		console.log(flag_animate_touch,"flag_animate_touch")
-		stop_tw(tw_animate_touch,flag_animate_touch,hero.touch_button)	
 	}
 
 	can_t_launch = (count,f) => {
+		co(count,"count")
 		if(is_clic_valid(count,f)){
 			action(count);
 		}  
@@ -1388,9 +1402,10 @@ function main(){
 
 	var level0 = {
 		create: function(){
+			//ne peut pas bouger
+			count_hero=0
 			//indication du level
 			create_level(0)
-			count_hero=0
 			number_canon=1
 			number_asteroid=1
 			number_dalle_moving=0
@@ -1889,7 +1904,12 @@ function main(){
 				if(obj[0]){
 					for (var i = 0; i < 3; i++){
 						for (var j = 0; j < obj.length; j++){
-							game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i) ; animate_touch(hero.touch_button,tw_action,tw_animate_touch,flag_animate_touch)})
+							if(i == 2 ){
+								game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i)})
+							}else{
+								game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i) ; animate_touch(hero.touch_button,tw_action,tw_animate_touch,flag_animate_touch)})
+
+							}
 						}
 					}
 				}
@@ -1925,7 +1945,6 @@ function main(){
 			console.log("hide_weapon")
 			flag_hide = false
 			console.log('hide')
-			stop_tw(tw_animate_touch,flag_animate_touch,hero.touch_button)	
 			if(canon[0]){
 				for (var j = 0; j < canon.length; j++){
 					canon[j].explode_bullet(canon[j].weapon.bullets)
