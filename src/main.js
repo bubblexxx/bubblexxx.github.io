@@ -17,7 +17,6 @@
  * from Gregory Dailly - espace3d@gmail.com - 0032486/925736 
  * rue de Brionsart 36a-5340 Gesves-Belgium
  */
-
 //TODO
 
 //hide mettre animate_touch en non visible
@@ -27,7 +26,6 @@
 //1081 retablir createBanner
 //1110 retablir createInterstitial
 //body enbale false lorsque touché un projectile violet
-
 
 function main(){
 	//alert("down")
@@ -68,7 +66,7 @@ function main(){
 
 	var tw_animate_touch
 	var flag_animate_touch=true
-	var delay_circle_timer = 1800
+	var delay_circle_timer = 2400
 
 	this.some_value=4
 	var gui
@@ -105,7 +103,6 @@ function main(){
 	var backgroundTexture;
 	var button1Texture;
 	var button2Texture;
-
 	var adService;
 	var container;
 
@@ -330,8 +327,8 @@ function main(){
 		this.life.anchor.setTo(.5,.5)
 		this.touch_button = game.add.sprite(this.life.x,this.life.y-20,'touch')
 		this.touch_button.anchor.setTo(.5,.5)
-		this.touch_button.alpha=.9
-		this.touch_button.visible=false
+		this.touch_button.alpha=.0
+		this.touch_button.visible=true
 
 		this.sound_launch=game.add.audio('launch')
 		this.sound_star=game.add.audio('coin')
@@ -1307,7 +1304,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		obj.scale.setTo(1,1)
 		tw_name= game.add.tween(obj.scale).to({x:1.5,y:1.5},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1)
 		tw_name = game.add.tween(obj).to({alpha:0.1},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1)
-		tw_name.onStart.add(()=> {obj.visible=true})
+		//tw_name.onStart.add(()=> {obj.alpha=.5})
 		//tw_name[n].yoyo(true,1000)
 		//}
 	}
@@ -1899,12 +1896,8 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 				if(obj[0]){
 					for (var i = 0; i < 3; i++){
 						for (var j = 0; j < obj.length; j++){
-							if(i == 2 ){
-								game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i)})
-							}else{
-								game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i) ; animate_touch(hero.touch_button,tw_action,tw_animate_touch,flag_animate_touch)})
+							game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i);animate_touch(hero.touch_button,tw_action,tw_animate_touch,flag_animate_touch);console.log("une fois seulement")})
 
-							}
 						}
 					}
 				}
@@ -1938,6 +1931,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 	var hide_weapon=function(){
 		if(flag_hide){
 			console.log("hide_weapon")
+			hero.touch_button.visible=false
 			flag_hide = false
 			console.log('hide')
 			if(canon[0]){

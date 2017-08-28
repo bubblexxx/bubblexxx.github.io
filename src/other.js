@@ -11,9 +11,10 @@ tw = (obj,tw_action,tw_name,f) => {
 
 stop_tw = (tw_name,f,obj) => {
 	if(f){
-		obj.visible=false
-		game.tweens.remove(tw_name)
+
+		obj.alpha=0
 		f=false
+		game.tweens.remove(tw_name)
 	}
 }
 //initier une transition et y mettre fin
@@ -54,4 +55,6 @@ countor=(x)=>{
 	x++
 	return x
 } 
+//console.log
 
+co = console.log.bind(console);
