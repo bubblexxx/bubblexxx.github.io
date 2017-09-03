@@ -4,19 +4,19 @@ if_undefined = (obj,action) => {
 	}
 }
 
-tw = (obj,tw_action,tw_name,f) => {
-	f=true
-	tw_action(obj,tw_name)
-}
-
-stop_tw = (tw_name,f,obj) => {
-	if(f){
-
-		obj.alpha=0
-		f=false
-		game.tweens.remove(tw_name)
-	}
-}
+//tw = (obj,tw_action,tw_name,f) => {
+//	f=true
+//	tw_action(obj,tw_name)
+//}
+//
+//stop_tw = (tw_name,f,obj) => {
+//	if(f){
+//
+//		obj.alpha=0
+//		f=false
+//		game.tweens.remove(tw_name)
+//	}
+//}
 //initier une transition et y mettre fin
 //////////////////////////////////////////////////////////////////////////////////////////
 //foreach >> for_action

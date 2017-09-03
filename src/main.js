@@ -19,7 +19,6 @@
  */
 //TODO
 
-//hide mettre animate_touch en non visible
 //regler particle canon en fonction de l'inclinaison
 //mettre icone back à la place de publish
 
@@ -64,8 +63,9 @@ function main(){
 	var text_to_describe_level
 	var text_to_number_level
 
-	var tw_animate_touch
-	var flag_animate_touch=true
+	var animate_touch
+	var tw_name
+	var flag_tween_en_cours=true
 	var delay_circle_timer = 2400
 
 	this.some_value=4
@@ -327,7 +327,7 @@ function main(){
 		this.life.anchor.setTo(.5,.5)
 		this.touch_button = game.add.sprite(this.life.x,this.life.y-20,'touch')
 		this.touch_button.anchor.setTo(.5,.5)
-		this.touch_button.alpha=.0
+		this.touch_button.alpha=0
 		this.touch_button.visible=true
 
 		this.sound_launch=game.add.audio('launch')
@@ -822,16 +822,6 @@ function main(){
 		this.sound_pop=game.add.audio('pop')
 		this.flag_for_fire=true
 		this._flag=true
-		//canon
-		//Phaser.Sprite.call(this,game,this.posx,this.posy,'canon')
-		//this.anchor.setTo(.5,.5)
-		//this.angle=this.angular
-		//this.inputEnabled=true
-		//this.input.enableDrag(true)
-		//this.events.onDragStop.add(logic_position,this)
-		//this.events.onDragStart.add(show_grid_on_logic_position,this)
-		//this.input.enableSnap(40,40,true,true)
-		//particle for Xplode
 		if(this.x < w2){
 			this.particlex = game.add.emitter(this.x+40,this.y)
 			this.particlex.makeParticles("particle_canon")
@@ -1295,28 +1285,36 @@ function main(){
 -e -anim1 via collide dans update on incremente manuellement de 1
 ensuite via accion dans clic l'incrementation se fait automatiquement
 */
-	tw_action = (obj,tw_name) => {
-		//if_undefined(tw_name[0],() => {_action(obj,tw_name)})
-		let esss=() => {console.log("marche yaouuu")}
-		if_undefined(tw_name,esss)
-		//var _action = (obj,tw_name)=> {
-		obj.alpha=.5
+	//tween on the circle
+	start_tw = (obj) => {
+		tw_action(obj)
+		flag_tween_en_cours=true
+	}
+	
+	// declaration of tw_action
+	tw_action= (obj) => {
 		obj.scale.setTo(1,1)
 		tw_name= game.add.tween(obj.scale).to({x:1.5,y:1.5},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1)
-		tw_name = game.add.tween(obj).to({alpha:0.1},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1)
-		//tw_name.onStart.add(()=> {obj.alpha=.5})
-		//tw_name[n].yoyo(true,1000)
-		//}
+		tw_name = game.add.tween(obj).to({alpha:1},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1)
 	}
 
-	//animate_touch = tw(obj,tw_start,tw_name,f) 
-	animate_touch = tw
 
+	//stop tween
+	stop_tw = (obj,tw) => {
+		if(tw != 'undefined'){
+			obj.alpha=0		
+			game.tweens.remove(tw)
+			flag_tween_en_cours=false
+		}
+	}
+
+	animate_touch = start_tw
+	var conditional_animate_touch = ()=>{co("conditional_animate_touch");!flag_tween_en_cours && animate_touch(hero.touch_button)}
 
 	function create_level(num){ 
 		hero = new character() 
 		//nouveau
-		animate_touch(hero.touch_button,tw_action,tw_animate_touch,flag_animate_touch)
+		animate_touch(hero.touch_button)
 		level_number=num
 		level_number_adapt=level_number+1
 		var _level_name=level_name[level_number]
@@ -1365,11 +1363,11 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 
 	action=(count) => {
 		condition_update_circle_timer(count)
-		stop_tw(tw_animate_touch,flag_animate_touch,hero.touch_button)	
+		stop_tw(hero.touch_button,tw_name)	
 		count_hero++
 		hero.launch(count)
-		console.log(flag_animate_touch,"flag_animate_touch")
 	}
+
 
 	can_t_launch = (count,f) => {
 		if(is_clic_valid(count,f)){
@@ -1840,34 +1838,6 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		logic_add_intenal(dalle_moving)
 		logic_add_intenal(pulsar)
 		logic_add_intenal(asteroid)
-		//if(canon[0]){
-		//	foreach(canon,game.add.existing)
-		//	//for (var i = 0; i < canon.length; i++){
-		//		//game.add.existing(canon[i])
-		//	//}
-		//}
-		//if(dalle_moving[0]){
-		//	foreach(dalle_moving,game.add.existing)
-		//	//for (var i = 0; i < dalle_moving.length; i++){
-		//		//game.add.existing(dalle_moving[i])
-		//	//}
-		//}
-
-		//if(pulsar[0]){
-
-		//	foreach(pulsar,game.add.existing)
-		//	//for (var i = 0; i < pulsar.length; i++){
-		//		//game.add.existing(pulsar[i])
-		//	//}
-		//}
-
-		//if(asteroid[0]){
-
-		//	foreach(asteroid,game.add.existing)
-		//	//for (var i = 0; i < asteroid.length; i++){
-		//		//game.add.existing(asteroid[i])
-		//	//}
-		//}
 	}
 	var logic_update=function(){
 		game.time.events.loop( 50,function(){ 
@@ -1896,7 +1866,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 				if(obj[0]){
 					for (var i = 0; i < 3; i++){
 						for (var j = 0; j < obj.length; j++){
-							game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i);animate_touch(hero.touch_button,tw_action,tw_animate_touch,flag_animate_touch);console.log("une fois seulement")})
+							game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i);conditional_animate_touch()})
 
 						}
 					}
@@ -1939,8 +1909,6 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 					canon[j].explode_bullet(canon[j].weapon.bullets)
 					canon[j].visible=false
 					canon[j].weapon.bullets.visible=false
-					//canon[j].particlex.on=false
-					//canon[j].hide()
 					canon[j].hide_explosion()
 					canon[j].destroy()
 					canon[j].weapon.bullets.forEach(function(item){
@@ -1949,118 +1917,84 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 						}})
 				}
 			}
-
-
-			//var hide_weapon_internal=function(obj){
-			//is_exist(obj[0]) && for_each(obj,hide)
-			//is_exist(obj[0]) && hide_enemies(obj)
-			//hide_enemies(obj)
-			//}
-			//hide_enemies(dalle,'hide')
 			for_action(dalle,'hide')
 			for_action(canon,'hide')
 			for_action(dalle_moving,'hide')
 			for_action(asteroid,'hide')
 			for_action(pulsar,'hide')
-
-			//if(dalle_moving[0]){
-			//	for (var j = 0; j < dalle_moving.length; j++){
-			//		dalle_moving[j].hide()
-			//	}
-			//}
-
-			//if(pulsar[0]){
-			//	for (var j = 0; j < pulsar.length; j++){
-			//		pulsar[j].hide()
-			//	}
-			//}
-
-			//if(asteroid[0]){
-			//	for (var j = 0; j < asteroid.length; j++){
-			//		asteroid[j].hide()
-			//		asteroid[0].flag=false
-			//		asteroid[0].particle.on=false
-			//	}
-			//}
-			//if(dalle[0]){
-			//	for (var j = 0; j < dalle.length; j++){
-			//		dalle[j].hide()
-			//	}
-			//}
-
 		}
 	}
 
-	var show_grid_on_logic_position=function(sprite){
-		console.log("logic_position")
-		debug_mode ? hero.grid.visible=true:hero.grid.visible=false	
-		logic_position(sprite)
+var show_grid_on_logic_position=function(sprite){
+	console.log("logic_position")
+	debug_mode ? hero.grid.visible=true:hero.grid.visible=false	
+	logic_position(sprite)
 
-		if(debug_position){
+	if(debug_position){
 
-			gui && gui.destroy()
-			gui=new dat.GUI()
-			gui.start=true
-			var guit={}
+		gui && gui.destroy()
+		gui=new dat.GUI()
+		gui.start=true
+		var guit={}
 
-			function guit_declare(...args){
-				let condition=args.length
-				//obligé ...ne sait pas pourquoi
-				let parameter=args[1]
-				if (condition> 2){	
-					guit.parameter=gui.add(args[0],args[1],args[2],args[3])
-					co(args[1],"args")
-					guit.parameter.onChange(function(value){
-						args[0].fire()
-						logic_position(args[0])
-					})
-				}else{
-					guit.parameter=gui.add(args[0],args[1])
-					guit.parameter.onChange(function(value){
-						args[0].kill()
-						logic_position(args[0])
-					})
-				}
-			}
-
-			switch(sprite.name){
-				case "canon":
-					gui.add(sprite,'name')
-					guit_declare(sprite,'speed',0,5000)
-					guit_declare(sprite,'frequency',0,5000)
-					guit_declare(sprite,'kill_with_world')
-					guit_declare(sprite,'special_color')
-					guit_declare(sprite,'angular',0,360)
-					guit_declare(sprite,'variance',0,1000)
-					guit_declare(sprite,'kill')
-					break
-				case "pulsar":
-					gui.add(sprite,'name')
-					guit_declare(sprite,'speed',300,9000)
-					guit_declare(sprite,'kill')
-					break;
-				case "asteroid":
-					gui.add(sprite,'name')
-					gui.add(sprite,'radius',100,500)
-					gui.add(sprite,'speed',0,.01)
-					guit_declare(sprite,'kill')
-					break;
-				case "dalle_moving":
-					gui.add(sprite,'name')
-					guit_declare(sprite,'speed',300,3000)
-					guit_declare(sprite,'posx_in_tween',-800,800)
-					guit_declare(sprite,'kill')
-					break;
-				case "dalle":
-					gui.add(sprite,'name')
-					guit_declare(sprite,'speed',300,3000);
-					guit_declare(sprite,'kill');
-					break;
-				default:
-					break;
+		function guit_declare(...args){
+			let condition=args.length
+			//obligé ...ne sait pas pourquoi
+			let parameter=args[1]
+			if (condition> 2){	
+				guit.parameter=gui.add(args[0],args[1],args[2],args[3])
+				co(args[1],"args")
+				guit.parameter.onChange(function(value){
+					args[0].fire()
+					logic_position(args[0])
+				})
+			}else{
+				guit.parameter=gui.add(args[0],args[1])
+				guit.parameter.onChange(function(value){
+					args[0].kill()
+					logic_position(args[0])
+				})
 			}
 		}
+
+		switch(sprite.name){
+			case "canon":
+				gui.add(sprite,'name')
+				guit_declare(sprite,'speed',0,5000)
+				guit_declare(sprite,'frequency',0,5000)
+				guit_declare(sprite,'kill_with_world')
+				guit_declare(sprite,'special_color')
+				guit_declare(sprite,'angular',0,360)
+				guit_declare(sprite,'variance',0,1000)
+				guit_declare(sprite,'kill')
+				break
+			case "pulsar":
+				gui.add(sprite,'name')
+				guit_declare(sprite,'speed',300,9000)
+				guit_declare(sprite,'kill')
+				break;
+			case "asteroid":
+				gui.add(sprite,'name')
+				gui.add(sprite,'radius',100,500)
+				gui.add(sprite,'speed',0,.01)
+				guit_declare(sprite,'kill')
+				break;
+			case "dalle_moving":
+				gui.add(sprite,'name')
+				guit_declare(sprite,'speed',300,3000)
+				guit_declare(sprite,'posx_in_tween',-800,800)
+				guit_declare(sprite,'kill')
+				break;
+			case "dalle":
+				gui.add(sprite,'name')
+				guit_declare(sprite,'speed',300,3000);
+				guit_declare(sprite,'kill');
+				break;
+			default:
+				break;
+		}
 	}
+}
 
 var logic_position=function(sprite){
 	if (debug_position){
