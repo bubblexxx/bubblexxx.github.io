@@ -509,8 +509,8 @@ function main(){
 			|| navigator.userAgent.match(/Windows Phone/i)
 		){
 
-			var appId = "4f7b433509b6025804000002";
-			var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
+			var appId = "593f9e2504b0160769416382";
+			var appSignature = "41fd9a8fc8adea90df03e94772ffa7e5373afcc6";
 			window.chartboost.setUp(appId, appSignature);
 			////////////////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////
@@ -1314,6 +1314,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 	function create_level(num){ 
 		hero = new character() 
 		//nouveau
+		count_hero=0
 		animate_touch(hero.touch_button)
 		level_number=num
 		level_number_adapt=level_number+1
@@ -1390,134 +1391,125 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		}
 	}
 
-	var level0 = {
-		create: function(){
-			//ne peut pas bouger
-			count_hero=0
-			//indication du level
-			create_level(0)
-			number_canon=1
-			number_asteroid=1
-			number_dalle_moving=0
-			number_pulsar=1
-			number_dalle=1
-
-			var config_canon0=[
-				number=0,
-				delay=0,
-				posx=w-200,
-				posy=100,
-				speed=900,
-				frequency=90,
-				variance=0,
-				angular=180,
-				_flag=hero.flag_level_complete,
-				kill_with_world=true,
-				special_color=false
-			]
-			//function create_obj_internal(obj,tableau){
-			//obj=new _canon(tableau)	
-			//}
-
-			this.create_canon=function(){
-				canon[0]=new _canon(
-					number=0,
-					delay=0,
-					posx=w-200,
-					posy=100,
-					speed=900,
-					frequency=90,
-					variance=0,
-					angular=180,
-					_flag=hero.flag_level_complete,
-					kill_with_world=true,
-					special_color=false
-				)
-				//canon[1]=new _canon(
-				//	number=1,
-				//	delay=0,
-				//	posx=0,
-				//	posy=1200,
-				//	speed=400,
-				//	frequency=900,
-				//	variance=0,
-				//	angular=0,
-				//	_flag=hero.flag_level_complete,
-				//	kill_with_world=true,
-				//	special_color=false
-				//)
-			}
-			this.create_asteroid=function(){
-				asteroid[0]=new _asteroid(
-					number=0,
-					posx=100,
-					posy=240,
-					speed=.008,
-					radius=100
-				)
-			}
-
-			this.create_dalle_moving=function(){
-				//dalle_moving[0]=new _dalle_moving(
-				//	number=0,
-				//	delay=100,
-				//	posx=240,
-				//	posy=h2+100,
-				//	speed=300,
-				//	posx_in_tween=300
-				//)
-			}
-
-			this.create_pulsar=function(){
-				pulsar[0]=new _pulsar(
-					number=0,
-					delay=100,
-					time=800,
-					posx=w2,
-					posy=840,
-					speed=2000,
-					scale_factor=2
-				)
-			}
-
-			this.create_dalle=function(){
-				dalle[0]=new _dalle(
-					number=0,
-					delay=100,
-					posx=100,
-					posy=440,
-					speed=300
-				)
-				//	dalle[1]=new _dalle(
-				//		number=0,
-				//		delay=100,
-				//		posx=600,
-				//		posy=940,
-				//		speed=300,
-				//	)
-			}
-
-			if(debug_store){
-				check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
-
-			}else{
-				this.create_canon()
-				this.create_asteroid()
-				this.create_dalle_moving()
-				this.create_pulsar()
-				this.create_dalle()
-			}
-			logic()
-			return level_number
-		},
-		update:function(){
+	//var level0 = level_0(0,create_level,canon,asteroid,dalle_moving,pulsar,dalle,check_storage,logic,_tap,this)
+	var level0 = level_0(0,create_level,_tap,this,canon,_canon,logic,hero)
+	
+//			
+//			
+//
+//			//ne peut pas bouger
+//			count_hero=0
+//			//indication du level
+//			create_level(0)
+//			number_canon=1
+//			number_asteroid=1
+//			number_dalle_moving=0
+//			number_pulsar=1
+//			number_dalle=1
+//
+//			//function create_obj_internal(obj,tableau){
+//			//obj=new _canon(tableau)	
+//			//}
+//
+//			this.create_canon=function(){
+//				canon[0]=new _canon(
+//					number=0,
+//					delay=0,
+//					posx=w-200,
+//					posy=100,
+//					speed=900,
+//					frequency=90,
+//					variance=0,
+//					angular=180,
+//					_flag=hero.flag_level_complete,
+//					kill_with_world=true,
+//					special_color=false
+//				)
+//				//canon[1]=new _canon(
+//				//	number=1,
+//				//	delay=0,
+//				//	posx=0,
+//				//	posy=1200,
+//				//	speed=400,
+//				//	frequency=900,
+//				//	variance=0,
+//				//	angular=0,
+//				//	_flag=hero.flag_level_complete,
+//				//	kill_with_world=true,
+//				//	special_color=false
+//				//)
+//			}
+//			this.create_asteroid=function(){
+//				asteroid[0]=new _asteroid(
+//					number=0,
+//					posx=100,
+//					posy=240,
+//					speed=.008,
+//					radius=100
+//				)
+//			}
+//
+//			this.create_dalle_moving=function(){
+//				//dalle_moving[0]=new _dalle_moving(
+//				//	number=0,
+//				//	delay=100,
+//				//	posx=240,
+//				//	posy=h2+100,
+//				//	speed=300,
+//				//	posx_in_tween=300
+//				//)
+//			}
+//
+//			this.create_pulsar=function(){
+//				pulsar[0]=new _pulsar(
+//					number=0,
+//					delay=100,
+//					time=800,
+//					posx=w2,
+//					posy=840,
+//					speed=2000,
+//					scale_factor=2
+//				)
+//			}
+//
+//			this.create_dalle=function(){
+//				dalle[0]=new _dalle(
+//					number=0,
+//					delay=100,
+//					posx=100,
+//					posy=440,
+//					speed=300
+//				)
+//				//	dalle[1]=new _dalle(
+//				//		number=0,
+//				//		delay=100,
+//				//		posx=600,
+//				//		posy=940,
+//				//		speed=300,
+//				//	)
+//			}
+//
+//			if(debug_store){
+//				check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
+//
+//			}else{
+//				this.create_canon()
+//				this.create_asteroid()
+//				this.create_dalle_moving()
+//				this.create_pulsar()
+//				this.create_dalle()
+//			}
+//			logic()
+//			return level_number
+		//},
+		//update:function(){
 			//tap(this,hero)
-			_tap(this)
-		},
-		render:function(){
-			logic_render()
-		},
-	}
+			//_tap(this)
+		//},
+		//render:function(){
+			//logic_render()
+		//},
+	//}
 	var level1 = {
 		create: function(){
 			//indication du level
@@ -1833,8 +1825,8 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 			}	
 		}
 
-		logic_add_intenal(dalle)
 		logic_add_intenal(canon)
+		logic_add_intenal(dalle)
 		logic_add_intenal(dalle_moving)
 		logic_add_intenal(pulsar)
 		logic_add_intenal(asteroid)
