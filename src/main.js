@@ -307,7 +307,7 @@ function main(){
 		this.cible.body.immovable=true
 		this.cible.scale.setTo(1.5,1.5)
 		this.anchor.setTo(.5,.5)
-		this.flag_level_complete=false
+		//this.flag_level_complete=false
 		this.flag_hide_enemies=false
 		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		this.flag_spacekey=true
@@ -439,7 +439,7 @@ function main(){
 	}
 
 	character.prototype.checkicharacterisloossomewhere2 = function(n) {
-		if(this.flag_level_complete==false){
+		if(flag_level_complete==false){
 			this.explode(this.player[n].x,0,n)	
 		}
 	}
@@ -611,7 +611,7 @@ function main(){
 
 	character.prototype.explode=function(posx,posy,n){
 		if(this.player[n].is_exploding==false){
-			if(!this.flag_level_complete && n < 2){
+			if(!flag_level_complete && n < 2){
 				this.reset_update_circle_timer()	
 			}
 			count_modif_obj(this.life.text,count_hero,2)
@@ -643,7 +643,7 @@ function main(){
 	}
 
 	character.prototype.land=function(n){
-		this.flag_level_complete=true
+		flag_level_complete=true
 		this.cible.body.enable=false
 		this.player[n].body.enable=false
 		this.tween0=game.add.tween(this.player[n]).to({x:w2,y:300},500,Phaser.Easing.Linear.None,true,0)
@@ -1313,7 +1313,8 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 
 	function create_level(num){ 
 		hero = new character() 
-		//nouveau
+		flag_level_complete=false
+		flag_hide=true
 		count_hero=0
 		animate_touch(hero.touch_button)
 		level_number=num
@@ -1324,7 +1325,6 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		text_to_describe_level.alpha=0
 		text_to_describe_level.show()
 		text_to_number_level=new _text(level_number_adapt,w2,320,90);
-		flag_hide=true
 	}
 
 	function logic(){
@@ -1380,7 +1380,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		game.input.onTap.add(onTap,th);
 
 		function onTap(pointer, doubleTap) {
-			if(hero.flag_level_complete==false){
+			if(flag_level_complete==false){
 				if (!doubleTap && hero.flag_mouse==true && game_begin){
 					can_t_launch(count_hero,hero.flag_mouse)
 					hero.flag_mouse=false
@@ -1391,8 +1391,9 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		}
 	}
 
-	//var level0 = level_0(0,create_level,canon,asteroid,dalle_moving,pulsar,dalle,check_storage,logic,_tap,this)
-	var level0 = level_0(0,create_level,_tap,this,canon,_canon,logic,hero)
+	
+	//} 
+	//var level0 = level_0(0,create_level,_tap,this,canon,_canon,logic,flag_level_complete)
 	
 //			
 //			
@@ -1421,7 +1422,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 //					frequency=90,
 //					variance=0,
 //					angular=180,
-//					_flag=hero.flag_level_complete,
+//					_flag=flag_level_complete,
 //					kill_with_world=true,
 //					special_color=false
 //				)
@@ -1434,7 +1435,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 //				//	frequency=900,
 //				//	variance=0,
 //				//	angular=0,
-//				//	_flag=hero.flag_level_complete,
+//				//	_flag=flag_level_complete,
 //				//	kill_with_world=true,
 //				//	special_color=false
 //				//)
@@ -1535,7 +1536,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 					frequency=90,
 					variance=0,
 					angular=180,
-					_flag=hero.flag_level_complete,
+					_flag=flag_level_complete,
 					kill_with_world=true,
 					special_color=false
 				)
@@ -1548,7 +1549,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 				//	frequency=900,
 				//	variance=0,
 				//	angular=0,
-				//	_flag=hero.flag_level_complete,
+				//	_flag=flag_level_complete,
 				//	kill_with_world=true,
 				//	special_color=false
 				//)
@@ -1840,7 +1841,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 			}
 
 			//si reussi niveau
-			hero.flag_level_complete && flag_hide && hero.flag_level_complete==false & console.log("ok") & game.time.events.add( 9,hide_weapon,this )
+			flag_level_complete && flag_hide && flag_level_complete==false & console.log("ok") & game.time.events.add( 9,hide_weapon,this )
 
 			//si checkicharacterisloossomewhere
 			hero.flag_hide_enemies && flag_hide && hero.flag_hide_enemies==false & game.time.events.add( 300,hide_weapon,this )
@@ -2090,7 +2091,7 @@ var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_
 			break
 		}else{
 			c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number))
-			canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,hero.flag_level_complete,c[i].kill_with_world,c[i].special_color);
+			canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color);
 		}
 	}
 
@@ -2166,6 +2167,21 @@ var logic_render=function(){
 		}
 	}
 }
+
+	var level_config={
+		constructor_canon:_canon,
+		num:0,
+		canon:canon,
+		_flag_level_complete:flag_level_complete,
+		debug_store:debug_store,
+		_check_storage:check_storage,
+		create_level:create_level,
+		logic:logic,
+		th:this,
+		tap:_tap,
+	}
+	var level0=level_0(level_config)
+
 
 game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 game.state.add('boot',bootstate)
