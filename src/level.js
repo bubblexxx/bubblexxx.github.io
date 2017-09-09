@@ -1,14 +1,18 @@
-function level_0 (params) {
+	var h=1920
+	var w=1280
+	var h2=h*.5
+	var w2=640
+function level_0 (params,num) {
 	return {
 		create: function () {
 			var _num_canon = 1  
-			var _num_asteroid = 0 
-			var _num_dalle_moving = 0  
-			var _num_pulsar = 0
-			var _num_dalle = 0 
-			params.create_level(params.num)
+			var _num_asteroid = 1 
+			var _num_dalle_moving = 1  
+			var _num_pulsar = 1
+			var _num_dalle = 1 
+			params.create_level(num)
 			create_canon=()=>{
-				co("create_canon")
+				co("create_canon") 
 				params.canon[0]=new params.constructor_canon(
 					number=0,
 					delay=0,
@@ -24,13 +28,45 @@ function level_0 (params) {
 				)
 			}
 			create_asteroid=()=>{
+			params.asteroid[0]=new params.constructor_asteroid(
+					number=0,
+					posx=100,
+					posy=240,
+					speed=.008,
+					radius=100
+				)
 			}
 			create_dalle_moving=()=>{
+				params.dalle_moving[0]=new params.constructor_dalle_moving(
+					number=0,
+					delay=100,
+					posx=240,
+					posy=h2+100,
+					speed=300,
+					posx_in_tween=300
+				)
 			}
 			create_pulsar=()=>{
+			params.pulsar[0]=new params.constructor_pulsar(
+					number=0,
+					delay=100,
+					time=100,
+					posx=w2,
+					posy=840,
+					speed=2000,
+					scale_factor=2
+				)
 			}
 			create_dalle=()=>{
+				params.dalle[0]=new params.constructor_dalle(
+					number=0,
+					delay=100,
+					posx=100,
+					posy=440,
+					speed=300
+				)
 			}
+
 			if(params.debug_store){
 				co(params.debug_store)
 				params._check_storage(create_canon,create_asteroid,create_dalle_moving,create_pulsar,create_dalle,_num_canon,_num_asteroid,_num_dalle_moving,_num_pulsar,_num_dalle)
@@ -46,7 +82,7 @@ function level_0 (params) {
 		},
 
 		update: function () {
-			params.tap(params.th) 
+			params.tap() 
 		},
 
 		render: function () {
