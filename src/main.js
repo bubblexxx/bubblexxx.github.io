@@ -509,8 +509,8 @@ function main(){
 			|| navigator.userAgent.match(/Windows Phone/i)
 		){
 
-			var appId = "593f9e2504b0160769416382";
-			var appSignature = "41fd9a8fc8adea90df03e94772ffa7e5373afcc6";
+			var appId = "4f7b433509b6025804000002";
+			var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
 			window.chartboost.setUp(appId, appSignature);
 			////////////////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////
