@@ -28,7 +28,7 @@
 	var is_mobile=true
 
 function main(){
-	//alert("op")
+	alert("op")
 	//var DEBUG = (function(){
 	//var timestamp = function(){};
 	//timestamp.toString = function(){
@@ -547,7 +547,7 @@ function main(){
 			};
 			window.chartboost.onRewardedVideoAdCompleted = function(location) {
 				alert('onRewardedVideoAdCompleted: ' + location);
-				this.next_niveau=level_number+1
+				this.next_niveau=level_number+2
 				this.game.state.start('level'+this.next_niveau,true,false);
 			};
 			window.chartboost.preloadRewardedVideoAd('Default')
