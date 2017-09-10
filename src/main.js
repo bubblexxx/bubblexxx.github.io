@@ -500,77 +500,54 @@ function main(){
 	}
 
 	character.prototype.preload_reward_video=function(){
-		if( navigator.userAgent.match(/Android/i)
-			|| navigator.userAgent.match(/webOS/i)
-			|| navigator.userAgent.match(/iPhone/i)
-			|| navigator.userAgent.match(/iPad/i)
-			|| navigator.userAgent.match(/iPod/i)
-			|| navigator.userAgent.match(/BlackBerry/i)
-			|| navigator.userAgent.match(/Windows Phone/i)
-		){
 
-			var appId = "4f7b433509b6025804000002";
-			var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
-			window.chartboost.setUp(appId, appSignature);
-			////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////
-			function chartboost(location,etat,action){
-				window.chartboost.etat = function(location){
-					co('etat')+ action}	
-				return window.chartboost.etat
-			}
+		var appId = "4f7b433509b6025804000002";
+		var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
+		window.chartboost.setUp(appId, appSignature);
 
-			//
-			window.chartboost.onInterstitialAdPreloaded = function(location) {
-				alert('onInterstitialAdPreloaded: ' + location);
-			};
-			window.chartboost.onInterstitialAdLoaded = function(location) {
-				alert('onInterstitialAdLoaded: ' + location);
-			};
-			window.chartboost.onInterstitialAdShown = function(location) {
-				alert('onInterstitialAdShown: ' + location);
-			};
-			window.chartboost.onInterstitialAdHidden = function(location) {
-				alert('onInterstitialAdHidden: ' + location);
-			};
-			//
-			window.chartboost.onMoreAppsAdPreloaded = function(location) {
-				alert('onMoreAppsAdPreloaded: ' + location);
-			};
-			window.chartboost.onMoreAppsAdLoaded = function(location) {
-				alert('onMoreAppsAdLoaded: ' + location);
-			};
-			window.chartboost.onMoreAppsAdShown = function(location) {
-				alert('onMoreAppsAdShown: ' + location);
-			};
-			window.chartboost.onMoreAppsAdHidden = function(location) {
-				alert('onMoreAppsAdHidden: ' + location);
-			};
-			//
-			window.chartboost.onRewardedVideoAdPreloaded = function(location) {
-				console.log('onRewardedVideoAdPreloaded: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdLoaded = function(location) {
-				console.log('onRewardedVideoAdLoaded: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdShown = function(location) {
-				console.log('onRewardedVideoAdShown: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdHidden = function(location) {
-				console.log('onRewardedVideoAdHidden: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdCompleted = function(location) {
-				alert('onRewardedVideoAdCompleted: ' + location);
-
-				//		alert('next_niveau')
-				//		console.log('next-level')
-				//		this.next_niveau=level_number+1
-				//		this.game.state.start('level'+this.next_niveau,true,false);
-				//		alert('onRewardedVideoAdCompleted: ' + location);
-			};
-
-			window.chartboost.preloadRewardedVideoAd('Default')
-		}
+		//
+		window.chartboost.onInterstitialAdPreloaded = function(location) {
+			alert('onInterstitialAdPreloaded: ' + location);
+		};
+		window.chartboost.onInterstitialAdLoaded = function(location) {
+			alert('onInterstitialAdLoaded: ' + location);
+		};
+		window.chartboost.onInterstitialAdShown = function(location) {
+			alert('onInterstitialAdShown: ' + location);
+		};
+		window.chartboost.onInterstitialAdHidden = function(location) {
+			alert('onInterstitialAdHidden: ' + location);
+		};
+		//
+		window.chartboost.onMoreAppsAdPreloaded = function(location) {
+			alert('onMoreAppsAdPreloaded: ' + location);
+		};
+		window.chartboost.onMoreAppsAdLoaded = function(location) {
+			alert('onMoreAppsAdLoaded: ' + location);
+		};
+		window.chartboost.onMoreAppsAdShown = function(location) {
+			alert('onMoreAppsAdShown: ' + location);
+		};
+		window.chartboost.onMoreAppsAdHidden = function(location) {
+			alert('onMoreAppsAdHidden: ' + location);
+		};
+		//
+		window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+			alert('onRewardedVideoAdPreloaded: ' + location);
+		};
+		window.chartboost.onRewardedVideoAdLoaded = function(location) {
+			alert('onRewardedVideoAdLoaded: ' + location);
+		};
+		window.chartboost.onRewardedVideoAdShown = function(location) {
+			alert('onRewardedVideoAdShown: ' + location);
+		};
+		window.chartboost.onRewardedVideoAdHidden = function(location) {
+			alert('onRewardedVideoAdHidden: ' + location);
+		};
+		window.chartboost.onRewardedVideoAdCompleted = function(location) {
+			alert('onRewardedVideoAdCompleted: ' + location);
+		};
+		window.chartboost.preloadRewardedVideoAd('Default')
 	}
 	character.prototype.show_reward_video = function() {
 		window.chartboost.showRewardedVideoAd('Default')
