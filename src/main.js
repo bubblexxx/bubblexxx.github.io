@@ -27,7 +27,7 @@
 //body enbale false lorsque touché un projectile violet
 
 function main(){
-	//alert("down")
+	alert("down")
 	//var DEBUG = (function(){
 	//var timestamp = function(){};
 	//timestamp.toString = function(){
@@ -572,7 +572,6 @@ function main(){
 	}
 	character.prototype.show_reward_video = function() {
 		window.chartboost.showRewardedVideoAd('Default')
-		window.chartboost.onRewardedVideoAdCompleted()
 	}
 
 	character.prototype.next_level_with_video = function() {
