@@ -27,7 +27,7 @@
 //body enbale false lorsque touché un projectile violet
 
 function main(){
-	alert("up")
+	alert("op")
 	//var DEBUG = (function(){
 	//var timestamp = function(){};
 	//timestamp.toString = function(){
@@ -343,7 +343,9 @@ function main(){
 		this.button_restart=new _button(w2,h2,'button_restart',this.restart_level)
 		this.button_next=new _button(w2,this.cible.y,'button_next',this.next_level)
 		this.button_video=new _button(w2,h2+400,'button_video',this.next_level_with_video)
-game.time.events.add(5000,this.next_level_with_video)
+		//TODO
+		//
+game.time.events.add(5000,this.show_reward_video,this)
 		this.star= this.game.add.sprite(w2, h2-320, 'star', 0);
 		this.star.anchor.setTo(.5,.5)
 		this.star.frame=2
