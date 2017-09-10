@@ -25,9 +25,10 @@
 //1081 retablir createBanner
 //1110 retablir createInterstitial
 //body enbale false lorsque touché un projectile violet
+	var is_mobile=true
 
 function main(){
-	alert("op")
+	//alert("op")
 	//var DEBUG = (function(){
 	//var timestamp = function(){};
 	//timestamp.toString = function(){
@@ -342,10 +343,9 @@ function main(){
 
 		this.button_restart=new _button(w2,h2,'button_restart',this.restart_level)
 		this.button_next=new _button(w2,this.cible.y,'button_next',this.next_level)
-		this.button_video=new _button(w2,h2+400,'button_video',this.next_level_with_video)
+		this.button_video=new _button(w2,h2+400,'button_video',this.show_reward_video)
 		//TODO
 		//
-game.time.events.add(5000,this.show_reward_video,this)
 		this.star= this.game.add.sprite(w2, h2-320, 'star', 0);
 		this.star.anchor.setTo(.5,.5)
 		this.star.frame=2
@@ -355,7 +355,7 @@ game.time.events.add(5000,this.show_reward_video,this)
 		this.count_dead=0
 		this.anim_cible()
 		this.sound_click=game.add.audio('click')
-		this.preload_reward_video()
+		is_mobile && this.preload_reward_video()
 		this.circle_timer = null;
 		this.counterMax = 100;
 		this.counter = null;
@@ -502,57 +502,59 @@ game.time.events.add(5000,this.show_reward_video,this)
 	}
 
 	character.prototype.preload_reward_video=function(){
+			var appId = "4f7b433509b6025804000002";
+			var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
+			window.chartboost.setUp(appId, appSignature);
 
-		var appId = "4f7b433509b6025804000002";
-		var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
-		window.chartboost.setUp(appId, appSignature);
-
-		//
-		window.chartboost.onInterstitialAdPreloaded = function(location) {
-			alert('onInterstitialAdPreloaded: ' + location);
-		};
-		window.chartboost.onInterstitialAdLoaded = function(location) {
-			alert('onInterstitialAdLoaded: ' + location);
-		};
-		window.chartboost.onInterstitialAdShown = function(location) {
-			alert('onInterstitialAdShown: ' + location);
-		};
-		window.chartboost.onInterstitialAdHidden = function(location) {
-			alert('onInterstitialAdHidden: ' + location);
-		};
-		//
-		window.chartboost.onMoreAppsAdPreloaded = function(location) {
-			alert('onMoreAppsAdPreloaded: ' + location);
-		};
-		window.chartboost.onMoreAppsAdLoaded = function(location) {
-			alert('onMoreAppsAdLoaded: ' + location);
-		};
-		window.chartboost.onMoreAppsAdShown = function(location) {
-			alert('onMoreAppsAdShown: ' + location);
-		};
-		window.chartboost.onMoreAppsAdHidden = function(location) {
-			alert('onMoreAppsAdHidden: ' + location);
-		};
-		//
-		window.chartboost.onRewardedVideoAdPreloaded = function(location) {
-			alert('onRewardedVideoAdPreloaded: ' + location);
-		};
-		window.chartboost.onRewardedVideoAdLoaded = function(location) {
-			alert('onRewardedVideoAdLoaded: ' + location);
-		};
-		window.chartboost.onRewardedVideoAdShown = function(location) {
-			alert('onRewardedVideoAdShown: ' + location);
-		};
-		window.chartboost.onRewardedVideoAdHidden = function(location) {
-			alert('onRewardedVideoAdHidden: ' + location);
-		};
-		window.chartboost.onRewardedVideoAdCompleted = function(location) {
-			alert('onRewardedVideoAdCompleted: ' + location);
-		};
-		window.chartboost.preloadRewardedVideoAd('Default')
+			//
+			window.chartboost.onInterstitialAdPreloaded = function(location) {
+				alert('onInterstitialAdPreloaded: ' + location);
+			};
+			window.chartboost.onInterstitialAdLoaded = function(location) {
+				alert('onInterstitialAdLoaded: ' + location);
+			};
+			window.chartboost.onInterstitialAdShown = function(location) {
+				alert('onInterstitialAdShown: ' + location);
+			};
+			window.chartboost.onInterstitialAdHidden = function(location) {
+				alert('onInterstitialAdHidden: ' + location);
+			};
+			//
+			window.chartboost.onMoreAppsAdPreloaded = function(location) {
+				alert('onMoreAppsAdPreloaded: ' + location);
+			};
+			window.chartboost.onMoreAppsAdLoaded = function(location) {
+				alert('onMoreAppsAdLoaded: ' + location);
+			};
+			window.chartboost.onMoreAppsAdShown = function(location) {
+				alert('onMoreAppsAdShown: ' + location);
+			};
+			window.chartboost.onMoreAppsAdHidden = function(location) {
+				alert('onMoreAppsAdHidden: ' + location);
+			};
+			//
+			window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+				alert('onRewardedVideoAdPreloaded: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdLoaded = function(location) {
+				alert('onRewardedVideoAdLoaded: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdShown = function(location) {
+				alert('onRewardedVideoAdShown: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdHidden = function(location) {
+				alert('onRewardedVideoAdHidden: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdCompleted = function(location) {
+				alert('onRewardedVideoAdCompleted: ' + location);
+				this.next_niveau=level_number+1
+				this.game.state.start('level'+this.next_niveau,true,false);
+			};
+			window.chartboost.preloadRewardedVideoAd('Default')
 	}
 	character.prototype.show_reward_video = function() {
-		window.chartboost.showRewardedVideoAd('Default')
+		co("show_reward_video")
+		is_mobile && window.chartboost.showRewardedVideoAd('Default')
 	}
 
 	character.prototype.next_level_with_video = function() {
@@ -2199,9 +2201,11 @@ var detectmob=function(){
 		|| navigator.userAgent.match(/Windows Phone/i)
 	){
 		document.addEventListener('deviceready',main,false)
+		is_mobile=true
 		return true;
 	} else {
 		console.log('not mobile')
+		is_mobile=false
 		main()
 		return true;
 	}
