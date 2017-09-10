@@ -27,7 +27,7 @@
 //body enbale false lorsque touché un projectile violet
 
 function main(){
-	alert("down")
+	alert("up")
 	//var DEBUG = (function(){
 	//var timestamp = function(){};
 	//timestamp.toString = function(){
