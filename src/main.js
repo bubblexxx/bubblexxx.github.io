@@ -28,7 +28,6 @@
 	var is_mobile=true
 
 function main(){
-	alert("op")
 	//var DEBUG = (function(){
 	//var timestamp = function(){};
 	//timestamp.toString = function(){
