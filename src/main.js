@@ -112,10 +112,6 @@ function main(){
 	_text=function(message,posx,posy,taille){
 		this.text=game.add.bitmapText(posx,posy,'police',message,taille);
 		this.text.anchor.setTo(.5,.5)
-		//seulement pour le texte décrivant le level
-		//this.text.alpha=0
-		//this.show()
-		//this.text.visible=false
 		game.add.existing(this.text)
 	}
 
@@ -156,7 +152,6 @@ function main(){
 		game.physics.arcade.enable(this.sprite_for_body)
 		this.sprite_for_body.immovable=true
 		this.sprite_for_body.scale.setTo(0,0)
-		//this.particle=null
 		this.particle = game.add.emitter(this._x,this._y)
 		this.particle.makeParticles("particle_character")
 		this.particle.minParticleSpeed.setTo(-600,-600)
@@ -296,7 +291,6 @@ function main(){
 		this.cible_shadow=game.add.sprite(w2,300,'cible_shadow')
 		this.cible_shadow.anchor.setTo(.5,.5)
 		this.cible_shadow.scale.setTo(1.5,1.5)
-		//this.cible_shadow.alpha=.2
 		this.cible_shadow.alpha=.15
 		this.grid=game.add.sprite(0,0,'grid')
 		this.grid.visible=false
@@ -307,7 +301,6 @@ function main(){
 		this.cible.body.immovable=true
 		this.cible.scale.setTo(1.5,1.5)
 		this.anchor.setTo(.5,.5)
-		//this.flag_level_complete=false
 		this.flag_hide_enemies=false
 		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		this.flag_spacekey=true
@@ -337,14 +330,13 @@ function main(){
 		if (debug_position){
 			this.button_publish=new _button(w2,h2+800,'button_publish',this.send_data_mail)
 		}else{
-			this.button_publish=new _button(w2,h2+800,'back',this.back_to_menuk)
+			this.button_publish=new _button(w2,h2+800,'back',this.back_to_menu)
 		}
 
 		this.button_restart=new _button(w2,h2,'button_restart',this.restart_level)
 		this.button_next=new _button(w2,this.cible.y,'button_next',this.next_level)
 		this.button_video=new _button(w2,h2+400,'button_video',this.show_reward_video)
 		//TODO
-		//
 		this.star= this.game.add.sprite(w2, h2-320, 'star', 0);
 		this.star.anchor.setTo(.5,.5)
 		this.star.frame=2
@@ -413,7 +405,6 @@ function main(){
 	}
 
 	character.prototype.send_data_mail = function(){
-		//
 		var current_level=level_number+1
 		var SubjectVariable='bubblex'+current_level
 		var EmailVariable='espace3d@gmail.com'
@@ -505,7 +496,6 @@ function main(){
 			var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
 			window.chartboost.setUp(appId, appSignature);
 
-			//
 			window.chartboost.onInterstitialAdPreloaded = function(location) {
 				alert('onInterstitialAdPreloaded: ' + location);
 			};
@@ -518,7 +508,6 @@ function main(){
 			window.chartboost.onInterstitialAdHidden = function(location) {
 				alert('onInterstitialAdHidden: ' + location);
 			};
-			//
 			window.chartboost.onMoreAppsAdPreloaded = function(location) {
 				alert('onMoreAppsAdPreloaded: ' + location);
 			};
@@ -533,19 +522,19 @@ function main(){
 			};
 			//
 			window.chartboost.onRewardedVideoAdPreloaded = function(location) {
-				alert('onRewardedVideoAdPreloaded: ' + location);
+				//alert('onRewardedVideoAdPreloaded: ' + location);
 			};
 			window.chartboost.onRewardedVideoAdLoaded = function(location) {
-				alert('onRewardedVideoAdLoaded: ' + location);
+				//alert('onRewardedVideoAdLoaded: ' + location);
 			};
 			window.chartboost.onRewardedVideoAdShown = function(location) {
-				alert('onRewardedVideoAdShown: ' + location);
+				//alert('onRewardedVideoAdShown: ' + location);
 			};
 			window.chartboost.onRewardedVideoAdHidden = function(location) {
-				alert('onRewardedVideoAdHidden: ' + location);
+				//alert('onRewardedVideoAdHidden: ' + location);
 			};
 			window.chartboost.onRewardedVideoAdCompleted = function(location) {
-				alert('onRewardedVideoAdCompleted: ' + location);
+				//alert('onRewardedVideoAdCompleted: ' + location);
 				this.next_niveau=level_number+1
 				game.state.start('level'+this.next_niveau,true,false);
 			};
@@ -572,7 +561,6 @@ function main(){
 			console.log('not mobile')
 			this.next_niveau=level_number+1
 			this.game.state.start('level'+this.next_niveau,true,false);
-			//return true;
 		}
 	}
 
@@ -740,6 +728,7 @@ function main(){
 		this.tween0.yoyo(true,this.speed)		
 	}
 	_pulsar.prototype.fire = function() {
+		//voir si TODO
 		//ici mettre is_exist(this.tweens) && game.tweens.remove.this et utiliser fire comme déclencheur
 		game.tweens.remove(this.tween0)	
 		this.sprite_for_body.scale.setTo(0,0)
@@ -935,7 +924,6 @@ function main(){
 	_canon.prototype.kill = function(){
 		this.explode_bullet(this.weapon.bullets)
 		this.weapon.bullets.visible=false
-		//canon[j].particlex.on=false
 		this.hide()
 		this.hide_explosion()
 		this.destroy()
@@ -1112,53 +1100,6 @@ function main(){
 			//TOD
 			interstitial.show()
 		}
-	}
-	var createBanner2= function(){
-
-		if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
-			alert('Cocoon AdMob plugin not installed');
-			return;
-		}
-		// nécessaire 
-		adService = Cocoon.Ad.AdMob;
-		adService.configure({
-			ios: {
-				banner:"ca-app-pub-7686972479101507/8873903476",
-				interstitial:"ca-app-pub-7686972479101507/8873903476",
-			},
-			android: {
-				banner:"ca-app-pub-7686972479101507/4443703872",
-				interstitial:"ca-app-pub-7686972479101507/4443703872"
-			}
-		});
-
-		console.log('createBanner')
-		banner = adService.createBanner();
-
-		banner.on("load", function(){
-			console.log("Banner loaded " + banner.width, banner.height);
-		});
-
-		banner.on("fail", function(){
-			console.log("Banner failed to load");
-		});
-
-		banner.on("show", function(){
-			console.log("Banner shown a modal content");
-		});
-
-		banner.on("dismiss", function(){
-			console.log("Banner dismissed the modal content");
-		});
-
-		//load banner
-		banner.load();
-
-		//show banner
-		banner.show()
-		demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
-		banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
-		game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
 	}
 
 	var bootstate= {
@@ -2209,10 +2150,6 @@ var detectmob=function(){
 		return true;
 	}
 }
-//pour tester dans github décocher ceci
-//main()
-//si c'est cocoon décocher ici
 detectmob()
-//document.addEventListener('deviceready',main,false)
 
 
