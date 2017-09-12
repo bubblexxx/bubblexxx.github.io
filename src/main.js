@@ -40,6 +40,7 @@ function main(){
 "beginners out !",
 
 	]
+var background_to_pass_level
 	var game_begin=false
 	var delay_for_game_begin=800
 	var number_canon=null 
@@ -274,6 +275,12 @@ function main(){
 		this.particle.y=game.rnd.integerInRange(0,h)
 	}
 
+	ecran_intermediaire_pour_passer_level=(obj,next_action) => {
+		obj.alpha =1
+		this.tween_alpha = game.add.tween(obj).to({alpha:0},400,Phaser.Easing.Linear.None,true,0)
+		this.tween_alpha.onComplete.add(next_action)	
+	}
+
 	character = function(){
 		Phaser.Sprite.call(this,game,w2,h+500,'particle_character')
 		this.flag_mouse=true
@@ -480,6 +487,10 @@ function main(){
 		this.next_niveau=level_number+1
 		this.game.state.start('level'+this.next_niveau,true,false);
 	}
+	character.prototype.pass_level= function(){
+			this.next_niveau=level_number+1
+			game.state.start('level'+this.next_niveau,true,false);
+	}
 
 	character.prototype.preload_reward_video=function(){
 		var appId = "4f7b433509b6025804000002";
@@ -525,8 +536,9 @@ function main(){
 		};
 		window.chartboost.onRewardedVideoAdCompleted = function(location) {
 			//alert('onRewardedVideoAdCompleted: ' + location);
-			this.next_niveau=level_number+1
-			game.state.start('level'+this.next_niveau,true,false);
+			ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
+			//this.next_niveau=level_number+1
+			//game.state.start('level'+this.next_niveau,true,false);
 		};
 		window.chartboost.preloadRewardedVideoAd('Default')
 	}
@@ -1177,6 +1189,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 	animate_touch = start_tw
 	var conditional_animate_touch = ()=>{co("conditional_animate_touch");!flag_tween_en_cours && animate_touch(hero.touch_button)}
 
+
 	function create_level(num){ 
 		hero = new character() 
 		flag_level_complete=false
@@ -1186,6 +1199,8 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		level_number=num
 		level_number_adapt=level_number+1
 		var _level_name=level_name[level_number]
+		background_to_pass_level = game.add.sprite(0,0,'background')
+		background_to_pass_level.alpha = 0
 		text_to_describe_level=new _text(_level_name,w2,h2,100)
 		text_to_describe_level.visible=false
 		text_to_describe_level.alpha=0
