@@ -1,7 +1,8 @@
-	var h=1920
-	var w=1280
-	var h2=h*.5
-	var w2=640
+var h=1920
+var w=1280
+var h2=h*.5
+var w2=640
+var level_number=0
 function level_0 (params,num) {
 	return {
 		create: function () {
@@ -10,6 +11,7 @@ function level_0 (params,num) {
 			var _num_dalle_moving = 1  
 			var _num_pulsar = 1
 			var _num_dalle = 1 
+			level_number=num
 			params.create_level(num)
 			create_canon=()=>{
 				co("create_canon") 
@@ -28,7 +30,7 @@ function level_0 (params,num) {
 				)
 			}
 			create_asteroid=()=>{
-			params.asteroid[0]=new params.constructor_asteroid(
+				params.asteroid[0]=new params.constructor_asteroid(
 					number=0,
 					posx=100,
 					posy=240,
@@ -47,7 +49,7 @@ function level_0 (params,num) {
 				)
 			}
 			create_pulsar=()=>{
-			params.pulsar[0]=new params.constructor_pulsar(
+				params.pulsar[0]=new params.constructor_pulsar(
 					number=0,
 					delay=100,
 					time=100,
@@ -65,6 +67,232 @@ function level_0 (params,num) {
 					posy=440,
 					speed=300
 				)
+			}
+
+			if(params.debug_store){
+				co(params.debug_store)
+				params._check_storage(create_canon,create_asteroid,create_dalle_moving,create_pulsar,create_dalle,_num_canon,_num_asteroid,_num_dalle_moving,_num_pulsar,_num_dalle)
+			}else{
+				create_canon()
+				create_asteroid()
+				create_dalle_moving()
+				create_pulsar()
+				create_dalle()
+			}
+			params.logic()
+			//return level_number
+		},
+
+		update: function () {
+			params.tap() 
+		},
+
+		render: function () {
+		}
+	};
+}
+function level_1 (params,num) {
+	return {
+		create: function () {
+			level_number=num
+			var _num_canon = 2  
+			var _num_asteroid = 0 
+			var _num_dalle_moving = 0  
+			var _num_pulsar = 0
+			var _num_dalle = 0 
+			params.create_level(num)
+			create_canon=()=>{
+				co("create_canon") 
+				params.canon[0]=new params.constructor_canon(
+					number=0,
+					delay=0,
+					posx=400-200,
+					posy=100,
+					speed=900,
+					frequency=50,
+					variance=0,
+					angular=180,
+					_flag=params._flag_level_complete,
+					kill_with_world=true,
+					special_color=false
+				)
+				params.canon[1]=new params.constructor_canon(
+					number=1,
+					delay=0,
+					posx=400-200,
+					posy=400,
+					speed=900,
+					frequency=50,
+					variance=0,
+					angular=180,
+					_flag=params._flag_level_complete,
+					kill_with_world=true,
+					special_color=false
+				)
+			}
+			create_asteroid=()=>{
+			}
+			create_dalle_moving=()=>{
+			}
+			create_pulsar=()=>{
+			}
+			create_dalle=()=>{
+			}
+
+			if(params.debug_store){
+				co(params.debug_store)
+				params._check_storage(create_canon,create_asteroid,create_dalle_moving,create_pulsar,create_dalle,_num_canon,_num_asteroid,_num_dalle_moving,_num_pulsar,_num_dalle)
+			}else{
+				create_canon()
+				create_asteroid()
+				create_dalle_moving()
+				create_pulsar()
+				create_dalle()
+			}
+			params.logic()
+			//return level_number
+		},
+
+		update: function () {
+			params.tap() 
+		},
+
+		render: function () {
+		}
+	};
+}
+function level_2 (params,num) {
+	return {
+		create: function () {
+			level_number=num
+			var _num_canon = 3  
+			var _num_asteroid = 0 
+			var _num_dalle_moving = 0  
+			var _num_pulsar = 0
+			var _num_dalle = 0 
+			params.create_level(num)
+			create_canon=()=>{
+				co("create_canon") 
+
+				params.canon[0]=new params.constructor_canon(
+					number=0,
+					delay=0,
+					posx=400-200,
+					posy=100,
+					speed=900,
+					frequency=50,
+					variance=0,
+					angular=180,
+					_flag=params._flag_level_complete,
+					kill_with_world=true,
+					special_color=false
+				)
+				params.canon[1]=new params.constructor_canon(
+					number=0,
+					delay=0,
+					posx=400-200,
+					posy=500,
+					speed=900,
+					frequency=50,
+					variance=0,
+					angular=180,
+					_flag=params._flag_level_complete,
+					kill_with_world=true,
+					special_color=false
+				)
+				params.canon[2]=new params.constructor_canon(
+					number=0,
+					delay=0,
+					posx=400-100,
+					posy=600,
+					speed=900,
+					frequency=50,
+					variance=0,
+					angular=180,
+					_flag=params._flag_level_complete,
+					kill_with_world=true,
+					special_color=false
+				)
+			}
+			create_asteroid=()=>{
+			}
+			create_dalle_moving=()=>{
+			}
+			create_pulsar=()=>{
+			}
+			create_dalle=()=>{
+			}
+
+			if(params.debug_store){
+				co(params.debug_store)
+				params._check_storage(create_canon,create_asteroid,create_dalle_moving,create_pulsar,create_dalle,_num_canon,_num_asteroid,_num_dalle_moving,_num_pulsar,_num_dalle)
+			}else{
+				create_canon()
+				create_asteroid()
+				create_dalle_moving()
+				create_pulsar()
+				create_dalle()
+			}
+			params.logic()
+			//return level_number
+		},
+
+		update: function () {
+			params.tap() 
+		},
+
+		render: function () {
+		}
+	};
+}
+function level_3 (params,num) {
+	return {
+		create: function () {
+			level_number=num
+			var _num_canon = 2  
+			var _num_asteroid = 0 
+			var _num_dalle_moving = 0  
+			var _num_pulsar = 0
+			var _num_dalle = 0 
+			params.create_level(num)
+			create_canon=()=>{
+				co("create_canon") 
+
+				params.canon[0]=new params.constructor_canon(
+					number=0,
+					delay=0,
+					posx=400-200,
+					posy=100,
+					speed=900,
+					frequency=50,
+					variance=0,
+					angular=180,
+					_flag=params._flag_level_complete,
+					kill_with_world=true,
+					special_color=false
+				)
+				params.canon[1]=new params.constructor_canon(
+					number=0,
+					delay=0,
+					posx=400-200,
+					posy=500,
+					speed=900,
+					frequency=50,
+					variance=0,
+					angular=180,
+					_flag=params._flag_level_complete,
+					kill_with_world=true,
+					special_color=false
+				)
+
+			}
+			create_asteroid=()=>{
+			}
+			create_dalle_moving=()=>{
+			}
+			create_pulsar=()=>{
+			}
+			create_dalle=()=>{
 			}
 
 			if(params.debug_store){

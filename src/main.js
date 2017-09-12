@@ -18,27 +18,15 @@
  * rue de Brionsart 36a-5340 Gesves-Belgium
  */
 //TODO
+// regler sensibilité de touch lorsque player launch
 // radius asteroid n'est pas pris en compte avec storage
 //regler particle canon en fonction de l'inclinaison
-//mettre icone back à la place de publish
-
-//1081 retablir createBanner
-//1110 retablir createInterstitial
+//mettre icone button_back à la place de publish
 //body enbale false lorsque touché un projectile violet
-	var is_mobile=true
+
+var is_mobile=true
 
 function main(){
-	//var DEBUG = (function(){
-	//var timestamp = function(){};
-	//timestamp.toString = function(){
-	//return "[DEBUG " + (new Date).toLocaleTimeString() + "]";    
-	//};
-
-	//return {
-	//log: console.log.bind(console, '%s', timestamp)
-	//}
-	//})();
-	//DEBUG.log("myapp");              
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -47,7 +35,10 @@ function main(){
 	var d=[]
 	var level_name=[
 		"for beginners :)",
-		"intermediate"
+		"let easy",
+		"oh it hurts",
+"beginners out !",
+
 	]
 	var game_begin=false
 	var delay_for_game_begin=800
@@ -57,7 +48,6 @@ function main(){
 	var number_pulsar=null 
 	var number_dalle=null 
 	var count_hero 
-	var level_number=0
 	var level0
 	var level_number_adapt
 	var text_to_describe_level
@@ -79,7 +69,7 @@ function main(){
 	var h2=h*.5
 	var w2=640
 	var debug_mode=false
-	//si false pas de possibilité de déplacer les enemis
+	//si false pas de possibilité de déplacer les enemis et de publier les levels
 	var debug_position=true
 	// si false pas de localStorage
 	var debug_store=true
@@ -330,7 +320,7 @@ function main(){
 		if (debug_position){
 			this.button_publish=new _button(w2,h2+800,'button_publish',this.send_data_mail)
 		}else{
-			this.button_publish=new _button(w2,h2+800,'back',this.back_to_menu)
+			this.button_publish=new _button(w2,h2+800,'button_back',this.back_to_menu)
 		}
 
 		this.button_restart=new _button(w2,h2,'button_restart',this.restart_level)
@@ -492,53 +482,53 @@ function main(){
 	}
 
 	character.prototype.preload_reward_video=function(){
-			var appId = "4f7b433509b6025804000002";
-			var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
-			window.chartboost.setUp(appId, appSignature);
+		var appId = "4f7b433509b6025804000002";
+		var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
+		window.chartboost.setUp(appId, appSignature);
 
-			window.chartboost.onInterstitialAdPreloaded = function(location) {
-				alert('onInterstitialAdPreloaded: ' + location);
-			};
-			window.chartboost.onInterstitialAdLoaded = function(location) {
-				alert('onInterstitialAdLoaded: ' + location);
-			};
-			window.chartboost.onInterstitialAdShown = function(location) {
-				alert('onInterstitialAdShown: ' + location);
-			};
-			window.chartboost.onInterstitialAdHidden = function(location) {
-				alert('onInterstitialAdHidden: ' + location);
-			};
-			window.chartboost.onMoreAppsAdPreloaded = function(location) {
-				alert('onMoreAppsAdPreloaded: ' + location);
-			};
-			window.chartboost.onMoreAppsAdLoaded = function(location) {
-				alert('onMoreAppsAdLoaded: ' + location);
-			};
-			window.chartboost.onMoreAppsAdShown = function(location) {
-				alert('onMoreAppsAdShown: ' + location);
-			};
-			window.chartboost.onMoreAppsAdHidden = function(location) {
-				alert('onMoreAppsAdHidden: ' + location);
-			};
-			//
-			window.chartboost.onRewardedVideoAdPreloaded = function(location) {
-				//alert('onRewardedVideoAdPreloaded: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdLoaded = function(location) {
-				//alert('onRewardedVideoAdLoaded: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdShown = function(location) {
-				//alert('onRewardedVideoAdShown: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdHidden = function(location) {
-				//alert('onRewardedVideoAdHidden: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdCompleted = function(location) {
-				//alert('onRewardedVideoAdCompleted: ' + location);
-				this.next_niveau=level_number+1
-				game.state.start('level'+this.next_niveau,true,false);
-			};
-			window.chartboost.preloadRewardedVideoAd('Default')
+		window.chartboost.onInterstitialAdPreloaded = function(location) {
+			alert('onInterstitialAdPreloaded: ' + location);
+		};
+		window.chartboost.onInterstitialAdLoaded = function(location) {
+			alert('onInterstitialAdLoaded: ' + location);
+		};
+		window.chartboost.onInterstitialAdShown = function(location) {
+			alert('onInterstitialAdShown: ' + location);
+		};
+		window.chartboost.onInterstitialAdHidden = function(location) {
+			alert('onInterstitialAdHidden: ' + location);
+		};
+		window.chartboost.onMoreAppsAdPreloaded = function(location) {
+			alert('onMoreAppsAdPreloaded: ' + location);
+		};
+		window.chartboost.onMoreAppsAdLoaded = function(location) {
+			alert('onMoreAppsAdLoaded: ' + location);
+		};
+		window.chartboost.onMoreAppsAdShown = function(location) {
+			alert('onMoreAppsAdShown: ' + location);
+		};
+		window.chartboost.onMoreAppsAdHidden = function(location) {
+			alert('onMoreAppsAdHidden: ' + location);
+		};
+		//
+		window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+			//alert('onRewardedVideoAdPreloaded: ' + location);
+		};
+		window.chartboost.onRewardedVideoAdLoaded = function(location) {
+			//alert('onRewardedVideoAdLoaded: ' + location);
+		};
+		window.chartboost.onRewardedVideoAdShown = function(location) {
+			//alert('onRewardedVideoAdShown: ' + location);
+		};
+		window.chartboost.onRewardedVideoAdHidden = function(location) {
+			//alert('onRewardedVideoAdHidden: ' + location);
+		};
+		window.chartboost.onRewardedVideoAdCompleted = function(location) {
+			//alert('onRewardedVideoAdCompleted: ' + location);
+			this.next_niveau=level_number+1
+			game.state.start('level'+this.next_niveau,true,false);
+		};
+		window.chartboost.preloadRewardedVideoAd('Default')
 	}
 	character.prototype.show_reward_video = function() {
 		co("show_reward_video")
@@ -611,6 +601,7 @@ function main(){
 		this.flag_hide_enemies=true
 		game.time.events.add( 1000,this.button_restart.show_button,this.button_restart )
 		game.time.events.add( 1000,this.button_video.show_button,this.button_video )
+		game.time.events.add(1000,this.button_publish.show_button,this.button_publish )
 	}
 
 	character.prototype.land=function(n){
@@ -689,8 +680,6 @@ function main(){
 	}
 
 	_asteroid.prototype=Object.create(_mechant.prototype)
-
-
 
 	_asteroid.prototype.update = function() {
 		if(this.flag && this.flag_wait_before_fire){
@@ -1046,62 +1035,6 @@ function main(){
 		}
 	}
 
-	var createInterstitial=function(){
-		if( navigator.userAgent.match(/Android/i)
-			|| navigator.userAgent.match(/webOS/i)
-			|| navigator.userAgent.match(/iPhone/i)
-			|| navigator.userAgent.match(/iPad/i)
-			|| navigator.userAgent.match(/iPod/i)
-			|| navigator.userAgent.match(/BlackBerry/i)
-			|| navigator.userAgent.match(/Windows Phone/i)
-		){
-			adService = Cocoon.Ad.Chartboost
-			adService.configure({
-				ios: {
-					appId:"4ed254a3cb5015e47c000000",
-					appSignature:"91858cc162b56414ca47e63ce7a1b20105c70e65"
-				},
-				android: {
-					appId:"50ae12d715ba47c00d01000c",
-					appSignature:"95fb313c08717042903819d76f65d64d2347ac44"
-				}
-			});
-			interstitial = adService.createRewardedVideo();
-
-			interstitial.on("load", function(){
-				console.log("Interstitial loaded");
-			});
-			interstitial.on("fail", function(){
-				console.log("Interstitial failed");
-			});
-			interstitial.on("show", function(){
-				console.log("Interstitial shown");
-			});
-			interstitial.on("dismiss", function(){
-				console.log("Interstitial dismissed");
-			});
-
-			interstitial.on("click", function(){
-				alert("click")
-				console.log("Interstitial dismissed");
-				if(level_number < 19){
-					this.game.state.start("level"+level_number+1);
-				}
-			});
-			interstitial.on("reward", function(){
-				alert("reward")
-				console.log("Interstitial dismissed");
-				if(level_number < 19){
-					this.game.state.start("level"+level_number+1);
-				}
-			});
-
-			interstitial.load()
-			//TOD
-			interstitial.show()
-		}
-	}
-
 	var bootstate= {
 		preload: function(){
 			console.log("%cStarting Bubx", "color:white; background:#ff1fcd");
@@ -1128,7 +1061,7 @@ function main(){
 			this.load.setPreloadSprite(loadingBar);
 			//interface
 			this.game.load.image("background","assets/background.png");
-			this.game.load.image("back","assets/back.png");
+			this.game.load.image("button_back","assets/button_back.png");
 			this.game.load.image("title","assets/title.png");
 			this.game.load.spritesheet('star','assets/star.png', 300, 100);
 			this.game.load.image("levelselecticons","assets/levelselecticons.png");
@@ -1994,111 +1927,111 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		}
 	}
 
-var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
-	//var check_in_local_storage=function(obj,num,table){
-	//	for(var i=0;i<num;i++){
-	//		try {
-	//			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
-	//		} catch(e){
-	//			table[i]=[];
-	//		}
-	//	};
-	//}
-	var check_in_local_storage=function(obj,num,table){
-		for(var i=0;i<num;i++){
-			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
-		};
-	}
-
-	check_in_local_storage("canon",num_canon,c)
-	check_in_local_storage("asteroid",num_asteroid,a)
-	check_in_local_storage("dalle_moving",num_dalle_moving,n)
-	check_in_local_storage("pulsar",num_pulsar,p)
-	check_in_local_storage("dalle",num_dalle,d)
-
-	for(var i=0;i<num_canon;i++){
-		if (c[i]===null){
-			_create_canon()
-			break
-		}else{
-			c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number))
-			canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color);
-		}
-	}
-
-	///////////////////////////////////////////////////////////////////////////////////////////
-
-	for(var i=0;i<num_asteroid;i++){
-		if (a[i]===null){
-			_create_asteroid()
-			break
-		}else{
-			//asteroid = function(number,posx,posy,speed,radius)
-			co(a[i].radius,"check_in_local_storage")
-			asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius)
-		}
-	}
-	///////////////////////////////////////////////////////////////////////////////////////////
-
-	for(var i=0;i<num_dalle_moving;i++){
-		if (n[i]===null){
-			_create_dalle_moving()
-			break
-		}else{
-			//dalle_moving = function(number,delay,posx,posy,speed)
-			dalle_moving[i]=new _dalle_moving(i,n[i].delay,n[i].x,n[i].y,n[i].speed,n[i].posx_in_tween)
-		}
-	}
-	///////////////////////////////////////////////////////////////////////////////////////////
-	for(var i=0;i<num_pulsar;i++){
-		if (p[i]===null){
-			_create_pulsar()
-			break
-		}else{
-			//pulsar = function(number,delay,time,posx,posy,speed,scale_factor)
-			pulsar[i]=new _pulsar(i,p[i].delay,p[i].time,p[i].x,p[i].y,p[i].speed,p[i].scale_factor)
-		}
-	}
-
-	for(var i=0;i<num_dalle;i++){
-		if (d[i]===null){
-			_create_dalle()
-			break
-		}else{
-			//dalle = function(number,delay,posx,posy,speed)
-			dalle[i]=new _dalle(i,d[i].delay,d[i].x,d[i].y,d[i].speed)
-		}
-	}
-
-}
-
-var logic_render=function(){
-	if(debug_mode){
-		game.debug.body(hero.cible_shadow)
-		game.debug.body(hero.cible)
-
-		//ne sait pas appliquer foreach car this.hero.player renvoit Object[Object,Object,Object]
-		for (var i = 0; i < 3;i++){
-			game.debug.body(hero.player[i])
+	var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
+		//var check_in_local_storage=function(obj,num,table){
+		//	for(var i=0;i<num;i++){
+		//		try {
+		//			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
+		//		} catch(e){
+		//			table[i]=[];
+		//		}
+		//	};
+		//}
+		var check_in_local_storage=function(obj,num,table){
+			for(var i=0;i<num;i++){
+				table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
+			};
 		}
 
-		var debug_obj=function(obj){
-			if (obj[0]){
-				for_each(obj,game.debug.body)
+		check_in_local_storage("canon",num_canon,c)
+		check_in_local_storage("asteroid",num_asteroid,a)
+		check_in_local_storage("dalle_moving",num_dalle_moving,n)
+		check_in_local_storage("pulsar",num_pulsar,p)
+		check_in_local_storage("dalle",num_dalle,d)
+
+		for(var i=0;i<num_canon;i++){
+			if (c[i]===null){
+				_create_canon()
+				break
+			}else{
+				c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number))
+				canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color);
 			}
 		}
-		debug_obj(dalle)
-		debug_obj(dalle_moving)
-		debug_obj(pulsar)
-		debug_obj(asteroid)
-		//encore à peaufiner check dernier
-		if(canon[0]){
-			for (var i = 0; i < canon.length;i++){
-				canon[i].weapon.bullets.forEach(function(item){game.debug.body(item)})
+
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+		for(var i=0;i<num_asteroid;i++){
+			if (a[i]===null){
+				_create_asteroid()
+				break
+			}else{
+				//asteroid = function(number,posx,posy,speed,radius)
+				co(a[i].radius,"check_in_local_storage")
+				asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius)
+			}
+		}
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+		for(var i=0;i<num_dalle_moving;i++){
+			if (n[i]===null){
+				_create_dalle_moving()
+				break
+			}else{
+				//dalle_moving = function(number,delay,posx,posy,speed)
+				dalle_moving[i]=new _dalle_moving(i,n[i].delay,n[i].x,n[i].y,n[i].speed,n[i].posx_in_tween)
+			}
+		}
+		///////////////////////////////////////////////////////////////////////////////////////////
+		for(var i=0;i<num_pulsar;i++){
+			if (p[i]===null){
+				_create_pulsar()
+				break
+			}else{
+				//pulsar = function(number,delay,time,posx,posy,speed,scale_factor)
+				pulsar[i]=new _pulsar(i,p[i].delay,p[i].time,p[i].x,p[i].y,p[i].speed,p[i].scale_factor)
+			}
+		}
+
+		for(var i=0;i<num_dalle;i++){
+			if (d[i]===null){
+				_create_dalle()
+				break
+			}else{
+				//dalle = function(number,delay,posx,posy,speed)
+				dalle[i]=new _dalle(i,d[i].delay,d[i].x,d[i].y,d[i].speed)
+			}
+		}
+
+	}
+
+	var logic_render=function(){
+		if(debug_mode){
+			game.debug.body(hero.cible_shadow)
+			game.debug.body(hero.cible)
+
+			//ne sait pas appliquer foreach car this.hero.player renvoit Object[Object,Object,Object]
+			for (var i = 0; i < 3;i++){
+				game.debug.body(hero.player[i])
+			}
+
+			var debug_obj=function(obj){
+				if (obj[0]){
+					for_each(obj,game.debug.body)
+				}
+			}
+			debug_obj(dalle)
+			debug_obj(dalle_moving)
+			debug_obj(pulsar)
+			debug_obj(asteroid)
+			//encore à peaufiner check dernier
+			if(canon[0]){
+				for (var i = 0; i < canon.length;i++){
+					canon[i].weapon.bullets.forEach(function(item){game.debug.body(item)})
+				}
 			}
 		}
 	}
-}
 const level_config={
 	constructor_canon:_canon,
 	canon:canon,
@@ -2118,7 +2051,9 @@ const level_config={
 	tap:_tap,
 }
 var level0=level_0(level_config,0)
-var level1=level_0(level_config,1)
+var level1=level_1(level_config,1)
+var level2=level_2(level_config,2)
+var level3=level_3(level_config,3)
 
 
 game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
@@ -2127,6 +2062,8 @@ game.state.add('preload',preloadstate)
 game.state.add('game_first_screen',game_first_screen)
 game.state.add('level0',level0)
 game.state.add('level1',level1)
+game.state.add('level2',level2)
+game.state.add('level3',level3)
 game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
 game.state.start('boot',bootstate)
 }
