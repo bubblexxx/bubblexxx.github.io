@@ -40,6 +40,7 @@ function main(){
 "beginners out !",
 
 	]
+	var is_preload_rewarded_video=false
 	var text_passed_level
 	var background_to_pass_level
 	var game_begin=false
@@ -515,6 +516,7 @@ function main(){
 		};
 		//
 		window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+			is_preload_rewarded_video=true
 			//alert('onRewardedVideoAdPreloaded: ' + location);
 		};
 		window.chartboost.onRewardedVideoAdLoaded = function(location) {
@@ -604,7 +606,7 @@ function main(){
 	character.prototype.decide_if_show_button_restart_level = function() {
 		this.flag_hide_enemies=true
 		game.time.events.add( 1000,this.button_restart.show_button,this.button_restart )
-		game.time.events.add( 1000,this.button_video.show_button,this.button_video )
+		is_preload_rewarded_video && game.time.events.add( 1000,this.button_video.show_button,this.button_video )
 		game.time.events.add(1000,this.button_publish.show_button,this.button_publish )
 	}
 
