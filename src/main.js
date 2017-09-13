@@ -40,6 +40,7 @@ function main(){
 "beginners out !",
 
 	]
+	var text_passed_level
 	var background_to_pass_level
 	var game_begin=false
 	var delay_for_game_begin=800
@@ -262,11 +263,11 @@ function main(){
 		this.sound_click.play()
 	}
 	screen_first.prototype.next_level = function(){
-		this.game.state.start("level"+level_number)
+		game.state.start("level"+level_number)
 	}
 
 	screen_first.prototype.next_menu = function(){
-		this.game.state.start("levsel")
+		game.state.start("levsel")
 	}
 
 	screen_first.prototype.explosion = function(){
@@ -275,11 +276,6 @@ function main(){
 		this.particle.y=game.rnd.integerInRange(0,h)
 	}
 
-	ecran_intermediaire_pour_passer_level=(obj,next_action) => {
-		obj.alpha =1
-		this.tween_alpha = game.add.tween(obj.scale).to({x:2,y:2},4000,Phaser.Easing.Linear.None,true,0)
-		this.tween_alpha.onComplete.add(next_action)	
-	}
 
 	character = function(){
 		Phaser.Sprite.call(this,game,w2,h+500,'particle_character')
@@ -353,7 +349,7 @@ function main(){
 		this.circle_timer = this.game.add.graphics(this.life.x, this.life.y-15);
 		this.circle_timer.anchor.setTo(.5,.5)
 		this.counter = 100;
-		this.delay_for_launch_next_player=1000
+		this.delay_for_launch_next_player=500
 		this.particle = game.add.emitter(this.x,this.y)
 		this.particle.makeParticles("particle_character")
 		this.particle.minParticleSpeed.setTo(-600,-600)
@@ -398,7 +394,7 @@ function main(){
 	}
 
 	character.prototype.back_to_menu = function() {
-		this.game.state.start("game_first_screen")
+		game.state.start("game_first_screen")
 	}
 
 	character.prototype.send_data_mail = function(){
@@ -480,17 +476,17 @@ function main(){
 	}
 	character.prototype.restart_level = function() {
 		this.next_niveau=level_number
-		this.game.state.start('level'+this.next_niveau,true,false);
+		game.state.start('level'+this.next_niveau,true,false);
 	}
 
 	character.prototype.next_level = function() {
 		this.next_niveau=level_number+1
-		this.game.state.start('level'+this.next_niveau,true,false);
+		game.state.start('level'+this.next_niveau,true,false);
 	}
 
 	character.prototype.preload_reward_video=function(){
-		var appId = "4f7b433509b6025804000002";
-		var appSignature = "dd2d41b69ac01b80f443f5b6cf06096d457f82bd";
+		var appId = "593f9e2504b0160769416382";
+		var appSignature = "41fd9a8fc8adea90df03e94772ffa7e5373afcc6";
 		window.chartboost.setUp(appId, appSignature);
 
 		window.chartboost.onInterstitialAdPreloaded = function(location) {
@@ -558,7 +554,7 @@ function main(){
 		else {
 			console.log('not mobile')
 			this.next_niveau=level_number+1
-			this.game.state.start('level'+this.next_niveau,true,false);
+			game.state.start('level'+this.next_niveau,true,false);
 		}
 	}
 
@@ -1115,7 +1111,7 @@ function main(){
 			this.game.stage.backgroundColor = '#0d1018'
 			this.background=game.add.sprite(0,0,'background');
 			this.game.add.existing(this.background)
-			this.game.state.start("game_first_screen");
+			game.state.start("game_first_screen");
 		},
 	}
 
@@ -1439,562 +1435,547 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 	//
 	//			this.create_dalle_moving=function(){
 	//				//dalle_moving[0]=new _dalle_moving(
-//				//	number=0,
-//				//	delay=100,
-//				//	posx=240,
+	//				//	number=0,
+	//				//	delay=100,
+	//				//	posx=240,
 	//				//	posy=h2+100,
 	//				//	speed=300,
 	//				//	posx_in_tween=300
-//				//)
-//			}
-//
-//			this.create_pulsar=function(){
-//				pulsar[0]=new _pulsar(
-//					number=0,
-//					delay=100,
-//					time=100,
-//					posx=w2,
+	//				//)
+	//			}
+	//
+	//			this.create_pulsar=function(){
+	//				pulsar[0]=new _pulsar(
+	//					number=0,
+	//					delay=100,
+	//					time=100,
+	//					posx=w2,
 	//					posy=840,
-//					speed=2000,
-//					scale_factor=2
-//				)
-//			}
-//
-//			this.create_dalle=function(){
-//				dalle[0]=new _dalle(
-//					number=0,
-//					delay=100,
-//					posx=100,
-//					posy=440,
-//					speed=300
-//				)
-//				//	dalle[1]=new _dalle(
-//				//		number=0,
-//				//		delay=100,
-//				//		posx=600,
-//				//		posy=940,
-//				//		speed=300,
-//				//	)
-//			}
-//			if(debug_store){
-//				check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
-//
-//			}else{
-//				this.create_canon()
-//				this.create_asteroid()
-//				this.create_dalle_moving()
-//				this.create_pulsar()
-//				this.create_dalle()
-//			}
-//			logic()
-//			return level_number
-//		},
-//		update:function(){
-//			tap(this,hero)
-//		},
-//		render:function(){
-//			logic_render()
-//		},
-//	}
-var intermediate_screen={
+	//					speed=2000,
+	//					scale_factor=2
+	//				)
+	//			}
+	//
+	//			this.create_dalle=function(){
+	//				dalle[0]=new _dalle(
+	//					number=0,
+	//					delay=100,
+	//					posx=100,
+	//					posy=440,
+	//					speed=300
+	//				)
+	//				//	dalle[1]=new _dalle(
+	//				//		number=0,
+	//				//		delay=100,
+	//				//		posx=600,
+	//				//		posy=940,
+	//				//		speed=300,
+	//				//	)
+	//			}
+	//			if(debug_store){
+	//				check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
+	//
+	//			}else{
+	//				this.create_canon()
+	//				this.create_asteroid()
+	//				this.create_dalle_moving()
+	//				this.create_pulsar()
+	//				this.create_dalle()
+	//			}
+	//			logic()
+	//			return level_number
+	//		},
+	//		update:function(){
+	//			tap(this,hero)
+	//		},
+	//		render:function(){
+	//			logic_render()
+	//		},
+	//	}
+	var levsel={
+		// define needed variables for mygame.LevelSelect
+		preload: function() {
+			this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
+			this.game.load.bitmapFont('police','fonts/font.png', 'fonts/font.fnt');
+			this.game.load.image("background","assets/background.png");
 
-	create:function(){
-	this.pass_level=()=>{
-		this.next_niveau=level_number+1
-		game.state.start('level'+this.next_niveau,true,false);
-	}
-	background_to_pass_level = game.add.sprite(0,0,'background')
-	background_to_pass_level.alpha = 1
+			this.initProgressData();
+		},
 
-	this.text=new _text("level passed",w2,h2,100)
-	ecran_intermediaire_pour_passer_level(this.text,this.pass_level)
-},
+		create: function() {
+			this.holdicons = [];
+			this.game.stage.backgroundColor = '#0d1018'
+			this.game.add.sprite(0,0,'background');
+			this.text=game.add.bitmapText(640,200,'police','SELECT A LEVEL!',100);
+			this.text.anchor.setTo(.5,.5)
+			this.createLevelIcons();
+			this.animateLevelIcons();
+		},
 
-}
-var levsel={
-	// define needed variables for mygame.LevelSelect
-	preload: function() {
-		this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
-		this.game.load.bitmapFont('police','fonts/font.png', 'fonts/font.fnt');
-		this.game.load.image("background","assets/background.png");
+		update: function() {
+			// nothing to do but wait until player selects a level
+		},
 
-		this.initProgressData();
-	},
+		render: function() {
+			// display some debug info..?
+		},
 
-	create: function() {
-		this.holdicons = [];
-		this.game.stage.backgroundColor = '#0d1018'
-		this.game.add.sprite(0,0,'background');
-		this.text=game.add.bitmapText(640,200,'police','SELECT A LEVEL!',100);
-		this.text.anchor.setTo(.5,.5)
-		this.createLevelIcons();
-		this.animateLevelIcons();
-	},
+		initProgressData: function() {
 
-	update: function() {
-		// nothing to do but wait until player selects a level
-	},
+			// array might be undefined at first time start up
+			if (!PLAYER_DATA) {
+				// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
+				var str = window.localStorage.getItem('mygame_progress');
 
-	render: function() {
-		// display some debug info..?
-	},
-
-	initProgressData: function() {
-
-		// array might be undefined at first time start up
-		if (!PLAYER_DATA) {
-			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
-			var str = window.localStorage.getItem('mygame_progress');
-
-			// error checking, localstorage might not exist yet at first time start up
-			try {
-				PLAYER_DATA = JSON.parse(str);
-			} catch(e){
-				PLAYER_DATA = []; //error in the above string(in this case,yes)!
+				// error checking, localstorage might not exist yet at first time start up
+				try {
+					PLAYER_DATA = JSON.parse(str);
+				} catch(e){
+					PLAYER_DATA = []; //error in the above string(in this case,yes)!
+				};
+				// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
+				if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
+					PLAYER_DATA = [];
+				};
 			};
-			// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
-			if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
-				PLAYER_DATA = [];
-			};
-		};
-	},
+		},
 
-	createLevelIcons: function() {
-		var levelnr = 0;
+		createLevelIcons: function() {
+			var levelnr = 0;
 
-		for (var y=0; y < 5; y++) {
-			for (var x=0; x < 4; x++) {
-				// next level
-				levelnr = levelnr + 1;
+			for (var y=0; y < 5; y++) {
+				for (var x=0; x < 4; x++) {
+					// next level
+					levelnr = levelnr + 1;
 
-				// check if array not yet initialised
-				if (typeof PLAYER_DATA[levelnr-1] !== 'number') {
-					// value is null or undefined, i.e. array not defined or too short between app upgrades with more levels
-					if (levelnr == 1) {
-						PLAYER_DATA[levelnr-1] = 0; // level 1 should never be locked
-					} else {
-						PLAYER_DATA[levelnr-1] = -1;
+					// check if array not yet initialised
+					if (typeof PLAYER_DATA[levelnr-1] !== 'number') {
+						// value is null or undefined, i.e. array not defined or too short between app upgrades with more levels
+						if (levelnr == 1) {
+							PLAYER_DATA[levelnr-1] = 0; // level 1 should never be locked
+						} else {
+							PLAYER_DATA[levelnr-1] = -1;
+						};
 					};
+
+					// player progress info for this level
+					var playdata = PLAYER_DATA[levelnr-1];
+					console.log("playdata",playdata);
+					// decide which icon
+					var isLocked = true; // locked
+					var stars = 0; // no stars
+
+					// check if level is unlocked
+					if (playdata > -1) {
+						isLocked = false; // unlocked
+						if (playdata < 4) {stars = playdata;}; // 0..3 stars
+					};
+
+					// calculate position on screen
+					var xpos = 60 + (x*300);
+					var ypos = 320 + (y*300);
+
+					// create icon
+					this.holdicons[levelnr-1] = this.createLevelIcon(xpos, ypos, levelnr, isLocked, stars);
+					var backicon = this.holdicons[levelnr-1].getAt(0);
+
+					// keep level nr, used in onclick method
+					backicon.health = levelnr;
+
+					// input handler
+					backicon.inputEnabled = true;
+					backicon.events.onInputDown.add(this.onSpriteDown, this);
 				};
-
-				// player progress info for this level
-				var playdata = PLAYER_DATA[levelnr-1];
-				console.log("playdata",playdata);
-				// decide which icon
-				var isLocked = true; // locked
-				var stars = 0; // no stars
-
-				// check if level is unlocked
-				if (playdata > -1) {
-					isLocked = false; // unlocked
-					if (playdata < 4) {stars = playdata;}; // 0..3 stars
-				};
-
-				// calculate position on screen
-				var xpos = 60 + (x*300);
-				var ypos = 320 + (y*300);
-
-				// create icon
-				this.holdicons[levelnr-1] = this.createLevelIcon(xpos, ypos, levelnr, isLocked, stars);
-				var backicon = this.holdicons[levelnr-1].getAt(0);
-
-				// keep level nr, used in onclick method
-				backicon.health = levelnr;
-
-				// input handler
-				backicon.inputEnabled = true;
-				backicon.events.onInputDown.add(this.onSpriteDown, this);
 			};
-		};
-	},
+		},
 
-	// -------------------------------------
-	// Add level icon buttons
-	// -------------------------------------
-	createLevelIcon: function(xpos, ypos, levelnr, isLocked, stars) {
+		// -------------------------------------
+		// Add level icon buttons
+		// -------------------------------------
+		createLevelIcon: function(xpos, ypos, levelnr, isLocked, stars) {
 
-		// create new group
-		var IconGroup = this.game.add.group();
-		IconGroup.x = xpos;
-		IconGroup.y = ypos;
+			// create new group
+			var IconGroup = this.game.add.group();
+			IconGroup.x = xpos;
+			IconGroup.y = ypos;
 
-		// keep original position, for restoring after certain tweens
-		IconGroup.xOrg = xpos;
-		IconGroup.yOrg = ypos;
+			// keep original position, for restoring after certain tweens
+			IconGroup.xOrg = xpos;
+			IconGroup.yOrg = ypos;
 
-		// determine background frame
-		var frame = 0;
-		if (isLocked == false) {frame = 1};
+			// determine background frame
+			var frame = 0;
+			if (isLocked == false) {frame = 1};
 
-		// add background
-		var icon1 = this.game.add.sprite(0, 0, 'levelselecticons', frame);
-		IconGroup.add(icon1);
+			// add background
+			var icon1 = this.game.add.sprite(0, 0, 'levelselecticons', frame);
+			IconGroup.add(icon1);
 
-		// add stars, if needed
-		if (isLocked == false) {
-			var txt = this.game.add.bitmapText(137, 147, 'police', ''+levelnr, 100);
-			txt.anchor.setTo(.5,.5)
-			var icon2 = this.game.add.sprite(0, 0, 'levelselecticons', (2+stars));
+			// add stars, if needed
+			if (isLocked == false) {
+				var txt = this.game.add.bitmapText(137, 147, 'police', ''+levelnr, 100);
+				txt.anchor.setTo(.5,.5)
+				var icon2 = this.game.add.sprite(0, 0, 'levelselecticons', (2+stars));
 
-			IconGroup.add(icon2);
-			IconGroup.add(txt);
-		}else{
-			var txt_locked = this.game.add.bitmapText(137, 147, 'police', ''+levelnr, 100);
-			txt_locked.anchor.setTo(.5,.5)
-			//txt_locked.tint=0x9a136b
-			IconGroup.add(txt_locked);
-
-		};
-
-		return IconGroup;
-	},
-
-	onSpriteDown: function(sprite, pointer) {
-
-		// retrieve the iconlevel
-		var levelnr = sprite.health;
-
-		if (PLAYER_DATA[levelnr-1] < 0) {
-			// indicate it's locked by shaking left/right
-			var IconGroup = this.holdicons[levelnr-1];
-			var xpos = IconGroup.xOrg;
-
-			var tween = this.game.add.tween(IconGroup)
-				.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
-				.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
-				.to({ x: xpos+4 }, 20, Phaser.Easing.Linear.None)
-				.to({ x: xpos-3 }, 20, Phaser.Easing.Linear.None)
-				.to({ x: xpos+2 }, 20, Phaser.Easing.Linear.None)
-				.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
-				.start();
-		} else {
-			// simulate button press animation to indicate selection
-			var IconGroup = this.holdicons[levelnr-1];
-			var tween = this.game.add.tween(IconGroup.scale)
-				.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
-				.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
-				.start();
-
-			// it's a little tricky to pass selected levelnr to callback function, but this works:
-			this.onLevelSelected(levelnr-1)
-			//tween._lastChild.onComplete.add(function(){this.onLevelSelected(sprite.health);}, this);
-		};
-	},
-
-	animateLevelIcons: function() {
-
-		// slide all icons into screen
-		for (var i=0; i < this.holdicons.length; i++){
-			// get variables
-			var IconGroup = this.holdicons[i];
-			IconGroup.y = IconGroup.y + 600;
-			var y = IconGroup.y;
-
-			// tween animation
-			this.game.add.tween(IconGroup).to( {y: y-600}, 500, Phaser.Easing.Back.Out, true, (i*40));
-		};
-	},
-
-	onLevelSelected: function(levelnr) {
-		console.log(levelnr,'rr');
-		this.number_level=levelnr
-		this.game.state.start('level'+this.number_level,true,false)
-	},
-};
-
-
-
-var logic_add=function(){
-	game.add.existing(hero)
-
-	var logic_add_intenal=function(obj){
-		if(obj[0]){
-			for_each(obj,game.add.existing.bind(game));
-		}	
-	}
-
-	logic_add_intenal(canon)
-	logic_add_intenal(dalle)
-	logic_add_intenal(dalle_moving)
-	logic_add_intenal(pulsar)
-	logic_add_intenal(asteroid)
-}
-var logic_update=function(){
-	game.time.events.loop( 50,function(){ 
-
-		//debug_position && logic_position()
-		for (var j = 0; j < 3; j++){
-			game.physics.arcade.collide(hero.cible,hero.player[j],() => hero.land(j))
-		}
-
-		//si reussi niveau
-		flag_level_complete && flag_hide && flag_level_complete==false & console.log("ok") & game.time.events.add( 9,hide_weapon,this )
-
-		//si checkicharacterisloossomewhere
-		hero.flag_hide_enemies && flag_hide && hero.flag_hide_enemies==false & game.time.events.add( 300,hide_weapon,this )
-
-		if(canon[1]){
-			game.physics.arcade.collide(canon[0].weapon.bullets,canon[1].weapon.bullets,touch_between_enemies,null,this)
-		}
-
-		if(canon[2]){
-			game.physics.arcade.collide(canon[0].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
-			game.physics.arcade.collide(canon[1].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
-		}
-
-		var collide_function=function(obj){
-			if(obj[0]){
-				for (var i = 0; i < 3; i++){
-					for (var j = 0; j < obj.length; j++){
-						game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i);conditional_animate_touch()})
-
-					}
-				}
-			}
-		}
-
-		if(canon[0]){
-			for (var i = 0; i < 3; i++){
-				for (var j = 0; j < canon.length; j++){
-					if(canon[j].special_color){
-						game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],hide_weapon,null,this)
-					}else{
-						game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
-					}
-				}
-			}
-		}
-
-		collide_function(dalle_moving)
-		collide_function(pulsar)
-		collide_function(asteroid)
-		collide_function(dalle)
-
-	})
-}
-
-var touch_between_enemies=function(){
-	console.log("touch");
-
-}
-
-var hide_weapon=function(){
-	if(flag_hide){
-		console.log("hide_weapon")
-		hero.touch_button.visible=false
-		flag_hide = false
-		console.log('hide')
-		if(canon[0]){
-			for (var j = 0; j < canon.length; j++){
-				canon[j].explode_bullet(canon[j].weapon.bullets)
-				canon[j].visible=false
-				canon[j].weapon.bullets.visible=false
-				canon[j].hide_explosion()
-				canon[j].destroy()
-				canon[j].weapon.bullets.forEach(function(item){
-					if(item.alive){	
-						item.body.enable=false
-					}})
-			}
-		}
-		for_action(dalle,'hide')
-		for_action(canon,'hide')
-		for_action(dalle_moving,'hide')
-		for_action(asteroid,'hide')
-		for_action(pulsar,'hide')
-	}
-}
-
-var show_grid_on_logic_position=function(sprite){
-	console.log("logic_position")
-	debug_mode ? hero.grid.visible=true:hero.grid.visible=false	
-	logic_position(sprite)
-
-	if(debug_position){
-
-		gui && gui.destroy()
-		gui=new dat.GUI()
-		gui.start=true
-		var guit={}
-
-		function guit_declare(...args){
-			let condition=args.length
-			//obligé ...ne sait pas pourquoi
-			let parameter=args[1]
-			if (condition> 2){	
-				guit.parameter=gui.add(args[0],args[1],args[2],args[3])
-				co(args[1],"args")
-				guit.parameter.onChange(function(value){
-					args[0].fire()
-					logic_position(args[0])
-				})
+				IconGroup.add(icon2);
+				IconGroup.add(txt);
 			}else{
-				guit.parameter=gui.add(args[0],args[1])
-				guit.parameter.onChange(function(value){
-					args[0].kill()
-					logic_position(args[0])
-				})
+				var txt_locked = this.game.add.bitmapText(137, 147, 'police', ''+levelnr, 100);
+				txt_locked.anchor.setTo(.5,.5)
+				//txt_locked.tint=0x9a136b
+				IconGroup.add(txt_locked);
+
+			};
+
+			return IconGroup;
+		},
+
+		onSpriteDown: function(sprite, pointer) {
+
+			// retrieve the iconlevel
+			var levelnr = sprite.health;
+
+			if (PLAYER_DATA[levelnr-1] < 0) {
+				// indicate it's locked by shaking left/right
+				var IconGroup = this.holdicons[levelnr-1];
+				var xpos = IconGroup.xOrg;
+
+				var tween = this.game.add.tween(IconGroup)
+					.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos+4 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos-3 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos+2 }, 20, Phaser.Easing.Linear.None)
+					.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
+					.start();
+			} else {
+				// simulate button press animation to indicate selection
+				var IconGroup = this.holdicons[levelnr-1];
+				var tween = this.game.add.tween(IconGroup.scale)
+					.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
+					.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
+					.start();
+
+				// it's a little tricky to pass selected levelnr to callback function, but this works:
+				this.onLevelSelected(levelnr-1)
+				//tween._lastChild.onComplete.add(function(){this.onLevelSelected(sprite.health);}, this);
+			};
+		},
+
+		animateLevelIcons: function() {
+
+			// slide all icons into screen
+			for (var i=0; i < this.holdicons.length; i++){
+				// get variables
+				var IconGroup = this.holdicons[i];
+				IconGroup.y = IconGroup.y + 600;
+				var y = IconGroup.y;
+
+				// tween animation
+				this.game.add.tween(IconGroup).to( {y: y-600}, 500, Phaser.Easing.Back.Out, true, (i*40));
+			};
+		},
+
+		onLevelSelected: function(levelnr) {
+			console.log(levelnr,'rr');
+			this.number_level=levelnr
+			game.state.start('level'+this.number_level,true,false)
+		},
+	};
+
+
+
+	var logic_add=function(){
+		game.add.existing(hero)
+
+		var logic_add_intenal=function(obj){
+			if(obj[0]){
+				for_each(obj,game.add.existing.bind(game));
+			}	
+		}
+
+		logic_add_intenal(canon)
+		logic_add_intenal(dalle)
+		logic_add_intenal(dalle_moving)
+		logic_add_intenal(pulsar)
+		logic_add_intenal(asteroid)
+	}
+	var logic_update=function(){
+		game.time.events.loop( 50,function(){ 
+
+			//debug_position && logic_position()
+			for (var j = 0; j < 3; j++){
+				game.physics.arcade.collide(hero.cible,hero.player[j],() => hero.land(j))
+			}
+
+			//si reussi niveau
+			flag_level_complete && flag_hide && flag_level_complete==false & console.log("ok") & game.time.events.add( 9,hide_weapon,this )
+
+			//si checkicharacterisloossomewhere
+			hero.flag_hide_enemies && flag_hide && hero.flag_hide_enemies==false & game.time.events.add( 300,hide_weapon,this )
+
+			if(canon[1]){
+				game.physics.arcade.collide(canon[0].weapon.bullets,canon[1].weapon.bullets,touch_between_enemies,null,this)
+			}
+
+			if(canon[2]){
+				game.physics.arcade.collide(canon[0].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
+				game.physics.arcade.collide(canon[1].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
+			}
+
+			var collide_function=function(obj){
+				if(obj[0]){
+					for (var i = 0; i < 3; i++){
+						for (var j = 0; j < obj.length; j++){
+							game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i);conditional_animate_touch()})
+
+						}
+					}
+				}
+			}
+
+			if(canon[0]){
+				for (var i = 0; i < 3; i++){
+					for (var j = 0; j < canon.length; j++){
+						if(canon[j].special_color){
+							game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],hide_weapon,null,this)
+						}else{
+							game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
+						}
+					}
+				}
+			}
+
+			collide_function(dalle_moving)
+			collide_function(pulsar)
+			collide_function(asteroid)
+			collide_function(dalle)
+
+		})
+	}
+
+	var touch_between_enemies=function(){
+		console.log("touch");
+
+	}
+
+	var hide_weapon=function(){
+		if(flag_hide){
+			console.log("hide_weapon")
+			hero.touch_button.visible=false
+			flag_hide = false
+			console.log('hide')
+			if(canon[0]){
+				for (var j = 0; j < canon.length; j++){
+					canon[j].explode_bullet(canon[j].weapon.bullets)
+					canon[j].visible=false
+					canon[j].weapon.bullets.visible=false
+					canon[j].hide_explosion()
+					canon[j].destroy()
+					canon[j].weapon.bullets.forEach(function(item){
+						if(item.alive){	
+							item.body.enable=false
+						}})
+				}
+			}
+			for_action(dalle,'hide')
+			for_action(canon,'hide')
+			for_action(dalle_moving,'hide')
+			for_action(asteroid,'hide')
+			for_action(pulsar,'hide')
+		}
+	}
+
+	var show_grid_on_logic_position=function(sprite){
+		console.log("logic_position")
+		debug_mode ? hero.grid.visible=true:hero.grid.visible=false	
+		logic_position(sprite)
+
+		if(debug_position){
+
+			gui && gui.destroy()
+			gui=new dat.GUI()
+			gui.start=true
+			var guit={}
+
+			function guit_declare(...args){
+				let condition=args.length
+				//obligé ...ne sait pas pourquoi
+				let parameter=args[1]
+				if (condition> 2){	
+					guit.parameter=gui.add(args[0],args[1],args[2],args[3])
+					co(args[1],"args")
+					guit.parameter.onChange(function(value){
+						args[0].fire()
+						logic_position(args[0])
+					})
+				}else{
+					guit.parameter=gui.add(args[0],args[1])
+					guit.parameter.onChange(function(value){
+						args[0].kill()
+						logic_position(args[0])
+					})
+				}
+			}
+
+			switch(sprite.name){
+				case "canon":
+					gui.add(sprite,'name')
+					guit_declare(sprite,'speed',0,5000)
+					guit_declare(sprite,'frequency',0,5000)
+					guit_declare(sprite,'kill_with_world')
+					guit_declare(sprite,'special_color')
+					guit_declare(sprite,'angular',0,360)
+					guit_declare(sprite,'variance',0,1000)
+					guit_declare(sprite,'kill')
+					break
+				case "pulsar":
+					gui.add(sprite,'name')
+					guit_declare(sprite,'speed',300,9000)
+					guit_declare(sprite,'kill')
+					break;
+				case "asteroid":
+					gui.add(sprite,'name')
+					gui.add(sprite,'radius',100,500)
+					gui.add(sprite,'speed',0,.01)
+					guit_declare(sprite,'kill')
+					break;
+				case "dalle_moving":
+					gui.add(sprite,'name')
+					guit_declare(sprite,'speed',300,3000)
+					guit_declare(sprite,'posx_in_tween',-800,800)
+					guit_declare(sprite,'kill')
+					break;
+				case "dalle":
+					gui.add(sprite,'name')
+					guit_declare(sprite,'speed',300,3000);
+					guit_declare(sprite,'kill');
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	var logic_position=function(sprite){
+		if (debug_position){
+			hero.grid.visible=false	
+			var _table
+			var _name_json
+			switch(sprite.name){
+				case 'canon':
+					_table=c
+					_name_json='canon'
+					_table[sprite.number] = {
+						number:sprite.number,
+						delay:Math.round(sprite.delay),
+						x:Math.round(sprite.x),
+						y:Math.round(sprite.y),
+						speed:Math.round(sprite.speed),
+						frequency:Math.round(sprite.frequency),
+						variance:Math.round(sprite.variance),
+						angular:Math.round(sprite.angular),
+						_flag:sprite._flag,
+						kill_with_world:sprite.kill_with_world,
+						special_color:sprite.special_color,
+					};
+					break
+				case 'asteroid':
+					_table=a
+					_name_json='asteroid'
+					_table[sprite.number] = {
+						x:Math.round(sprite.x),
+						y:Math.round(sprite.y),
+						speed:sprite.speed,
+						radius:Math.round(sprite.radius),
+					};
+					break
+				case 'dalle_moving':
+					_table=n
+					_name_json='dalle_moving'
+					_table[sprite.number] = {
+						delay:Math.round(sprite.delay),
+						x:Math.round(sprite.x),
+						y:Math.round(sprite.y),
+						speed:Math.round(sprite.speed),
+						posx_in_tween:Math.round(sprite.posx_in_tween),
+					};
+					break
+				case 'pulsar':
+					_table=p
+					_name_json='pulsar'
+					_table[sprite.number] = {
+						delay:Math.round(sprite.delay),
+						time:Math.round(sprite.time),
+						x:Math.round(sprite.x),
+						y:Math.round(sprite.y),
+						speed:Math.round(sprite.speed),
+						scale_factor:sprite.scale_factor,
+					};
+					break
+				case 'dalle':
+					_table=d
+					_name_json='dalle'
+					_table[sprite.number] = {
+						delay:Math.round(sprite.delay),
+						x:Math.round(sprite.x),
+						y:Math.round(sprite.y),
+						speed:Math.round(sprite.speed),
+					};
+					break
+			}
+			this.level=level_number
+			this.name_level='lev'
+			this.combined_level=this.name_level+this.level
+			debug_store && localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]));
+		}
+	}
+
+	var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
+		//var check_in_local_storage=function(obj,num,table){
+		//	for(var i=0;i<num;i++){
+		//		try {
+		//			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
+		//		} catch(e){
+		//			table[i]=[];
+		//		}
+		//	};
+		//}
+		var check_in_local_storage=function(obj,num,table){
+			for(var i=0;i<num;i++){
+				table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
+			};
+		}
+
+		check_in_local_storage("canon",num_canon,c)
+		check_in_local_storage("asteroid",num_asteroid,a)
+		check_in_local_storage("dalle_moving",num_dalle_moving,n)
+		check_in_local_storage("pulsar",num_pulsar,p)
+		check_in_local_storage("dalle",num_dalle,d)
+
+		for(var i=0;i<num_canon;i++){
+			if (c[i]===null){
+				_create_canon()
+				break
+			}else{
+				c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number))
+				canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color);
 			}
 		}
 
-		switch(sprite.name){
-			case "canon":
-				gui.add(sprite,'name')
-				guit_declare(sprite,'speed',0,5000)
-				guit_declare(sprite,'frequency',0,5000)
-				guit_declare(sprite,'kill_with_world')
-				guit_declare(sprite,'special_color')
-				guit_declare(sprite,'angular',0,360)
-				guit_declare(sprite,'variance',0,1000)
-				guit_declare(sprite,'kill')
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+		for(var i=0;i<num_asteroid;i++){
+			if (a[i]===null){
+				_create_asteroid()
 				break
-			case "pulsar":
-				gui.add(sprite,'name')
-				guit_declare(sprite,'speed',300,9000)
-				guit_declare(sprite,'kill')
-				break;
-			case "asteroid":
-				gui.add(sprite,'name')
-				gui.add(sprite,'radius',100,500)
-				gui.add(sprite,'speed',0,.01)
-				guit_declare(sprite,'kill')
-				break;
-			case "dalle_moving":
-				gui.add(sprite,'name')
-				guit_declare(sprite,'speed',300,3000)
-				guit_declare(sprite,'posx_in_tween',-800,800)
-				guit_declare(sprite,'kill')
-				break;
-			case "dalle":
-				gui.add(sprite,'name')
-				guit_declare(sprite,'speed',300,3000);
-				guit_declare(sprite,'kill');
-				break;
-			default:
-				break;
+			}else{
+				//asteroid = function(number,posx,posy,speed,radius)
+				co(a[i].radius,"check_in_local_storage")
+				asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius)
+			}
 		}
-	}
-}
-
-var logic_position=function(sprite){
-	if (debug_position){
-		hero.grid.visible=false	
-		var _table
-		var _name_json
-		switch(sprite.name){
-			case 'canon':
-				_table=c
-				_name_json='canon'
-				_table[sprite.number] = {
-					number:sprite.number,
-					delay:Math.round(sprite.delay),
-					x:Math.round(sprite.x),
-					y:Math.round(sprite.y),
-					speed:Math.round(sprite.speed),
-					frequency:Math.round(sprite.frequency),
-					variance:Math.round(sprite.variance),
-					angular:Math.round(sprite.angular),
-					_flag:sprite._flag,
-					kill_with_world:sprite.kill_with_world,
-					special_color:sprite.special_color,
-				};
-				break
-			case 'asteroid':
-				_table=a
-				_name_json='asteroid'
-				_table[sprite.number] = {
-					x:Math.round(sprite.x),
-					y:Math.round(sprite.y),
-					speed:sprite.speed,
-					radius:Math.round(sprite.radius),
-				};
-				break
-			case 'dalle_moving':
-				_table=n
-				_name_json='dalle_moving'
-				_table[sprite.number] = {
-					delay:Math.round(sprite.delay),
-					x:Math.round(sprite.x),
-					y:Math.round(sprite.y),
-					speed:Math.round(sprite.speed),
-					posx_in_tween:Math.round(sprite.posx_in_tween),
-				};
-				break
-			case 'pulsar':
-				_table=p
-				_name_json='pulsar'
-				_table[sprite.number] = {
-					delay:Math.round(sprite.delay),
-					time:Math.round(sprite.time),
-					x:Math.round(sprite.x),
-					y:Math.round(sprite.y),
-					speed:Math.round(sprite.speed),
-					scale_factor:sprite.scale_factor,
-				};
-				break
-			case 'dalle':
-				_table=d
-				_name_json='dalle'
-				_table[sprite.number] = {
-					delay:Math.round(sprite.delay),
-					x:Math.round(sprite.x),
-					y:Math.round(sprite.y),
-					speed:Math.round(sprite.speed),
-				};
-				break
-		}
-		this.level=level_number
-		this.name_level='lev'
-		this.combined_level=this.name_level+this.level
-		debug_store && localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]));
-	}
-}
-
-var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
-	//var check_in_local_storage=function(obj,num,table){
-	//	for(var i=0;i<num;i++){
-	//		try {
-	//			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
-	//		} catch(e){
-	//			table[i]=[];
-	//		}
-	//	};
-	//}
-	var check_in_local_storage=function(obj,num,table){
-		for(var i=0;i<num;i++){
-			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
-		};
-	}
-
-	check_in_local_storage("canon",num_canon,c)
-	check_in_local_storage("asteroid",num_asteroid,a)
-	check_in_local_storage("dalle_moving",num_dalle_moving,n)
-	check_in_local_storage("pulsar",num_pulsar,p)
-	check_in_local_storage("dalle",num_dalle,d)
-
-	for(var i=0;i<num_canon;i++){
-		if (c[i]===null){
-			_create_canon()
-			break
-		}else{
-			c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number))
-			canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color);
-		}
-	}
-
-	///////////////////////////////////////////////////////////////////////////////////////////
-
-for(var i=0;i<num_asteroid;i++){
-	if (a[i]===null){
-		_create_asteroid()
-		break
-	}else{
-		//asteroid = function(number,posx,posy,speed,radius)
-		co(a[i].radius,"check_in_local_storage")
-		asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius)
-	}
-}
-///////////////////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////////////////
 
 for(var i=0;i<num_dalle_moving;i++){
 	if (n[i]===null){
@@ -2055,6 +2036,7 @@ var logic_render=function(){
 		}
 	}
 }
+
 const level_config={
 	constructor_canon:_canon,
 	canon:canon,
@@ -2073,6 +2055,32 @@ const level_config={
 	logic:logic,
 	tap:_tap,
 }
+ecran_intermediaire_pour_passer_level=(obj,next_action) => {
+	co(obj,next_action)
+	obj.alpha =1
+	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},900,Phaser.Easing.Elastic.Out,true,100)
+	this.tween_alpha = game.add.tween(obj).to({alpha:0},300,Phaser.Easing.Linear.None,true,700)
+	this.tween_alpha.onComplete.add(next_action)	
+}
+
+var pass_level=()=>{
+	let next_niveau=level_number+1
+	game.state.start('level'+next_niveau,true,false);
+}
+
+var intermediate_screen={
+	create:function(){
+		background_to_pass_level = game.add.sprite(0,0,'background')
+		background_to_pass_level.alpha = 1
+		text_passed_level = new _text("level passed",w2,h2,100)
+
+		let next_action = ()=>{
+			game.time.events.add(300,pass_level)	
+		}
+		ecran_intermediaire_pour_passer_level(text_passed_level.text,next_action)
+	},
+}
+
 var level0=level_0(level_config,0)
 var level1=level_1(level_config,1)
 var level2=level_2(level_config,2)
