@@ -27,7 +27,7 @@
 var is_mobile=true
 
 function main(){
-	alert("zelda")
+	alert("zeldax")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -152,7 +152,7 @@ function main(){
 		this.particle.makeParticles("particle_character")
 		this.particle.minParticleSpeed.setTo(-600,-600)
 		this.particle.maxParticleSpeed.setTo(700,700)
-		this.particle.setAlpha(.5, .1)
+		this.particle.setAlpha(.8, .5)
 		this.particle.minParticleScale = .1
 		this.particle.maxParticleScale = .5
 		this.particle.minRotation = 0
@@ -686,8 +686,8 @@ function main(){
 		this.particle.maxParticleScale = .7
 		this.particle.minRotation = 0
 		this.particle.maxRotation = 0
-		this.particle.on=true
-		game.time.events.add(delay_for_game_begin,()=>{this.particle.start(true,500,5)})
+		this.particle.on=false
+		game.time.events.add(delay_for_game_begin,()=>{this.particle.on=true;this.particle.start(true,500,5)})
 		game.time.events.loop(16,this.update2,this)
 	}
 
@@ -872,7 +872,7 @@ function main(){
 
 	_canon.prototype.update = function(){
 		if(this.flag_wait_before_fire){
-			this._flag==false && this.flag_for_fire && this.weapon.fire() 
+			this._flag==false && this.flag_for_fire && game_begin && this.weapon.fire() 
 			this.particlex.x=this.x
 			this.particlex.y=this.y
 			if(this.flag_for_time_count){
