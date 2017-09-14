@@ -27,7 +27,7 @@
 var is_mobile=true
 
 function main(){
-	alert("XXX")
+	alert("X")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -47,7 +47,7 @@ function main(){
 	var background_to_pass_level
 	var game_begin=false
 	var delay_for_show_describe_text=500
-	var time_to_show_describe_text = 800
+	var time_to_show_describe_text = 1800
 	var delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+800
 	var number_canon=null 
 	var number_asteroid=null 
@@ -136,7 +136,7 @@ function main(){
 		this.flag=true
 		Phaser.Sprite.call(this,game,this.posx,this.posy,this.image_drag)
 		this.scale.setTo(0,0)
-		debug_position ? this.alpha=.2 : this.alpha=0
+		debug_position ? this.alpha=0 : this.alpha=0
 		this.anchor.setTo(.5,.5)
 		this.inputEnabled=true
 		this.input.enableDrag(true)
@@ -175,9 +175,9 @@ function main(){
 	}
 
 	_mechant.prototype.show=function(){
-		game.time.events.add( delay_for_game_begin,this.particle_show,this )
-		this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin)
-		this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin)
+		game.time.events.add( delay_for_game_begin+400,this.particle_show,this )
+		this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin+400)
+		this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin+400)
 	}
 
 	_mechant.prototype.kill=function(){
@@ -1191,11 +1191,12 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 
 
 	function create_level(num){ 
+		game_begin=false
 		game.time.events.add(delay_for_game_begin,function(){game_begin=true})
+		game.time.events.add(delay_for_game_begin,()=>{flag_level_complete=false})
 		is_rewarded_video_completed=false
 		is_preload_rewarded_video=false
 		hero = new character() 
-		game.time.events.add(delay_for_game_begin,()=>{flag_level_complete=false})
 		flag_hide=true
 		count_hero=0
 		animate_touch(hero.touch_button)
