@@ -27,7 +27,6 @@
 var is_mobile=true
 
 function main(){
-	alert("new")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -41,6 +40,7 @@ function main(){
 "beginners out !",
 
 	]
+	var is_rewarded_video_completed=false
 	var is_preload_rewarded_video=false
 	var text_passed_level
 	var background_to_pass_level
@@ -528,12 +528,14 @@ function main(){
 		};
 		window.chartboost.onRewardedVideoAdHidden = function(location) {
 			//alert('onRewardedVideoAdHidden: ' + location);
+			is_rewarded_video_completed && game.state.start('intermediate_screen');
 		};
 		window.chartboost.onRewardedVideoAdCompleted = function(location) {
 			//alert('onRewardedVideoAdCompleted: ' + location);
 			//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
 			//this.next_niveau=level_number+1
-			game.state.start('intermediate_screen');
+			is_rewarded_video_completed=true
+			//game.state.start('intermediate_screen');
 		};
 		window.chartboost.preloadRewardedVideoAd('Default')
 	}
@@ -1186,6 +1188,8 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 
 
 	function create_level(num){ 
+		is_rewarded_video_completed=false
+		is_preload_rewarded_video=false
 		hero = new character() 
 		flag_level_complete=false
 		flag_hide=true
