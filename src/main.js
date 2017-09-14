@@ -27,7 +27,7 @@
 var is_mobile=true
 
 function main(){
-	alert("u")
+	alert("a")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -381,7 +381,7 @@ function main(){
 	}
 	character.prototype.reset_update_circle_timer = function() {
 		//plus il est bas plus le cercle ira vite
-		this.counter=40	
+		this.counter=20	
 		this.timer = this.game.time.create(false);
 		this.timer.loop(10, this.update_circle_timer, this);
 		this.timer.start()
