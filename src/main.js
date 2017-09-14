@@ -27,7 +27,6 @@
 var is_mobile=true
 
 function main(){
-	alert("zeldax")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -2097,8 +2096,8 @@ var intermediate_screen={
 		this.particlex.minRotation = 0
 		this.particlex.maxRotation = 0
 		this.particlex.on=true
-		this.particlex.start(true,450,null,4)
-		game.time.events.add(1300,()=>{this.particlex.on=false})
+		this.particlex.start(true,950,null,5)
+		game.time.events.add(1000,()=>{this.particlex.on=false})
 
 		let next_action = ()=>{
 			game.time.events.add(500,pass_level)	
