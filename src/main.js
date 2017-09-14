@@ -2065,8 +2065,8 @@ const level_config={
 ecran_intermediaire_pour_passer_level=(obj,next_action) => {
 	co(obj,next_action)
 	obj.alpha =1
-	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},900,Phaser.Easing.Elastic.Out,true,3500)
-	this.tween_alpha = game.add.tween(obj).to({alpha:0},300,Phaser.Easing.Linear.None,true,4100)
+	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},900,Phaser.Easing.Elastic.Out,true,500)
+	this.tween_alpha = game.add.tween(obj).to({alpha:0},300,Phaser.Easing.Linear.None,true,1100)
 	this.tween_alpha.onComplete.add(next_action)	
 }
 
