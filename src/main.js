@@ -27,7 +27,7 @@
 var is_mobile=true
 
 function main(){
-	alert("a")
+	alert("X")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -46,7 +46,7 @@ function main(){
 	var text_passed_level
 	var background_to_pass_level
 	var game_begin=false
-	var delay_for_game_begin=1100
+	var delay_for_game_begin=1500
 	var number_canon=null 
 	var number_asteroid=null 
 	var number_dalle_moving=null 
@@ -114,12 +114,12 @@ function main(){
 
 	_text.prototype.show = function() {
 		this.text.visible=true	
-		this.tween1 = game.add.tween(this.text).to({alpha:1},400,Phaser.Easing.Linear.None,true,400)
+		this.tween1 = game.add.tween(this.text).to({alpha:1},delay_for_game_begin/3,Phaser.Easing.Linear.None,true,delay_for_game_begin/3)
 		this.tween1.onComplete.add(this.hide,this)	
+		game.time.events.add( delay_for_game_begin,function(){game_begin=true},this )
 	}
 	_text.prototype.hide = function() {
-		this.tween2 = game.add.tween(this.text).to({alpha:0},400,Phaser.Easing.Linear.None,true,0)
-		game.time.events.add( delay_for_game_begin,function(){game_begin=true},this )
+		this.tween2 = game.add.tween(this.text).to({alpha:0},delay_for_game_begin/3,Phaser.Easing.Linear.None,true,0)
 
 	}
 
