@@ -27,7 +27,6 @@
 var is_mobile=true
 
 function main(){
-	alert("o")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -2066,8 +2065,8 @@ const level_config={
 ecran_intermediaire_pour_passer_level=(obj,next_action) => {
 	co(obj,next_action)
 	obj.alpha =1
-	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},900,Phaser.Easing.Elastic.Out,true,500)
-	this.tween_alpha = game.add.tween(obj).to({alpha:0},300,Phaser.Easing.Linear.None,true,1100)
+	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},900,Phaser.Easing.Elastic.Out,true,200)
+	this.tween_alpha = game.add.tween(obj).to({alpha:0},300,Phaser.Easing.Linear.None,true,800)
 	this.tween_alpha.onComplete.add(next_action)	
 }
 
@@ -2078,9 +2077,23 @@ var pass_level=()=>{
 
 var intermediate_screen={
 	create:function(){
+
 		background_to_pass_level = game.add.sprite(0,0,'background')
 		background_to_pass_level.alpha = 1
 		text_passed_level = new _text("level passed",w2,h2,100)
+
+		this.particlex = game.add.emitter(text_passed_level.text.x,text_passed_level.text.y)
+		this.particlex.makeParticles("particle_canon")
+		this.particlex.minParticleSpeed.setTo(100,-120)
+		this.particlex.maxParticleSpeed.setTo(300,120)
+		this.particlex.setAlpha(.6, .2)
+		this.particlex.minParticleScale = .1
+		this.particlex.maxParticleScale = .9
+		this.particlex.minRotation = 0
+		this.particlex.maxRotation = 0
+		this.particlex.on=true
+		this.particlex.start(true,450,null,4)
+		game.time.events.add(450,()=>{this.particlex.on=false})
 
 		let next_action = ()=>{
 			game.time.events.add(300,pass_level)	
