@@ -27,7 +27,7 @@
 var is_mobile=true
 
 function main(){
-	alert("X")
+	alert("XXX")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -46,7 +46,9 @@ function main(){
 	var text_passed_level
 	var background_to_pass_level
 	var game_begin=false
-	var delay_for_game_begin=1500
+	var delay_for_show_describe_text=500
+	var time_to_show_describe_text = 800
+	var delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+800
 	var number_canon=null 
 	var number_asteroid=null 
 	var number_dalle_moving=null 
@@ -114,13 +116,12 @@ function main(){
 
 	_text.prototype.show = function() {
 		this.text.visible=true	
-		this.tween1 = game.add.tween(this.text).to({alpha:1},delay_for_game_begin/3,Phaser.Easing.Linear.None,true,delay_for_game_begin/3)
+		this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text)
 		this.tween1.onComplete.add(this.hide,this)	
-		game.time.events.add( delay_for_game_begin,function(){game_begin=true},this )
 	}
-	_text.prototype.hide = function() {
-		this.tween2 = game.add.tween(this.text).to({alpha:0},delay_for_game_begin/3,Phaser.Easing.Linear.None,true,0)
 
+	_text.prototype.hide = function() {
+		this.tween2 = game.add.tween(this.text).to({alpha:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,0)
 	}
 
 	//class for mechant
@@ -565,6 +566,7 @@ function main(){
 	}
 
 	character.prototype.launch=function(n){
+		this.reset_update_circle_timer()	
 		this.audio_launch()
 		this.player[n].body.enable=true
 		this.checkicharacterisloossomewhere(n)
@@ -1189,6 +1191,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 
 
 	function create_level(num){ 
+		game.time.events.add(delay_for_game_begin,function(){game_begin=true})
 		is_rewarded_video_completed=false
 		is_preload_rewarded_video=false
 		hero = new character() 
@@ -2066,8 +2069,8 @@ const level_config={
 ecran_intermediaire_pour_passer_level=(obj,next_action) => {
 	co(obj,next_action)
 	obj.alpha =1
-	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},900,Phaser.Easing.Elastic.Out,true,200)
-	this.tween_alpha = game.add.tween(obj).to({alpha:0},300,Phaser.Easing.Linear.None,true,800)
+	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},900,Phaser.Easing.Elastic.Out,true,500)
+	this.tween_alpha = game.add.tween(obj).to({alpha:0},600,Phaser.Easing.Linear.None,true,800)
 	this.tween_alpha.onComplete.add(next_action)	
 }
 
@@ -2094,10 +2097,10 @@ var intermediate_screen={
 		this.particlex.maxRotation = 0
 		this.particlex.on=true
 		this.particlex.start(true,450,null,4)
-		game.time.events.add(450,()=>{this.particlex.on=false})
+		game.time.events.add(1300,()=>{this.particlex.on=false})
 
 		let next_action = ()=>{
-			game.time.events.add(300,pass_level)	
+			game.time.events.add(500,pass_level)	
 		}
 		ecran_intermediaire_pour_passer_level(text_passed_level.text,next_action)
 	},
