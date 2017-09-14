@@ -27,7 +27,7 @@
 var is_mobile=true
 
 function main(){
-	//alert("X")
+	alert("zelda")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -175,7 +175,7 @@ function main(){
 	}
 
 	_mechant.prototype.show=function(){
-		game.time.events.add( delay_for_game_begin+400,this.particle_show,this )
+		game.time.events.add( delay_for_game_begin+4000,this.particle_show,this )
 		this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin+4000)
 		this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin+4000)
 	}
@@ -198,8 +198,8 @@ function main(){
 		this.particle.x=this.x
 		this.particle.y=this.y
 		this.particle.on=true
-		this.particle.start(true,350,null,5)
-		game.time.events.add( 10,function(){this.particle.on=false},this )
+		this.particle.start(true,650,null,5)
+		game.time.events.add( 650,function(){this.particle.on=false},this )
 	}
 
 
@@ -687,14 +687,14 @@ function main(){
 		this.particle.minRotation = 0
 		this.particle.maxRotation = 0
 		this.particle.on=true
-		this.particle.start(true,500,5)
+		game.time.events.add(delay_for_game_begin,()=>{this.particle.start(true,500,5)})
 		game.time.events.loop(16,this.update2,this)
 	}
 
 	_asteroid.prototype=Object.create(_mechant.prototype)
 
 	_asteroid.prototype.update = function() {
-		if(this.flag && this.flag_wait_before_fire){
+		if(this.flag && this.flag_wait_before_fire && game_begin){
 			var period = game.time.now * this.speed;
 			this.sprite_for_body.x = this.x + Math.cos(period) * this.radius;
 			this.sprite_for_body.y = this.y + Math.sin(period) * this.radius;	
@@ -717,7 +717,7 @@ function main(){
 		this.time=time
 		this.speed=speed
 		this.scale_factor=scale_factor
-		game.time.events.add( time_show,this.tweens,this )
+		game.time.events.add( delay_for_game_begin,this.tweens,this )
 		this.posx=posx
 		this.posy=posy
 		game.time.events.loop(16,this.update2,this)
