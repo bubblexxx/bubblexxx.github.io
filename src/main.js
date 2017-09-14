@@ -533,7 +533,7 @@ function main(){
 			//alert('onRewardedVideoAdCompleted: ' + location);
 			//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
 			//this.next_niveau=level_number+1
-			game.state.start('intermediate_screen');
+			//game.state.start('intermediate_screen');
 		};
 		window.chartboost.preloadRewardedVideoAd('Default')
 	}
