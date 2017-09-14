@@ -175,9 +175,9 @@ function main(){
 	}
 
 	_mechant.prototype.show=function(){
-		game.time.events.add( delay_for_game_begin+4000,this.particle_show,this )
-		this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin+4000)
-		this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin+4000)
+		game.time.events.add( delay_for_game_begin,this.particle_show,this )
+		this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin)
+		this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin)
 	}
 
 	_mechant.prototype.kill=function(){
@@ -871,8 +871,8 @@ function main(){
 	}
 
 	_canon.prototype.update = function(){
-		if(this.flag_wait_before_fire){
-			this._flag==false && this.flag_for_fire && game_begin && this.weapon.fire() 
+		if(this.flag_wait_before_fire && game_begin){
+			this._flag==false && this.flag_for_fire && this.weapon.fire() 
 			this.particlex.x=this.x
 			this.particlex.y=this.y
 			if(this.flag_for_time_count){
@@ -943,7 +943,7 @@ function main(){
 	}
 
 	_canon.prototype.explosion = function() {
-		if(this.visible){
+		if(this.visible && game_begin){
 			this.particlex.on=true
 			this.particlex.start(true,450,null,4)
 		}
