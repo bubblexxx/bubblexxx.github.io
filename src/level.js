@@ -97,7 +97,7 @@ function level_1 (params,num) {
 			level_number=num
 			var _num_canon = 2  
 			var _num_asteroid = 0 
-			var _num_dalle_moving = 0  
+			var _num_dalle_moving = 1  
 			var _num_pulsar = 0
 			var _num_dalle = 0 
 			params.create_level(num)
@@ -133,6 +133,14 @@ function level_1 (params,num) {
 			create_asteroid=()=>{
 			}
 			create_dalle_moving=()=>{
+				params.dalle_moving[0]=new params.constructor_dalle_moving(
+					number=0,
+					delay=100,
+					posx=240,
+					posy=h2+100,
+					speed=300,
+					posx_in_tween=300
+				)
 			}
 			create_pulsar=()=>{
 			}
@@ -142,6 +150,7 @@ function level_1 (params,num) {
 			if(params.debug_store){
 				co(params.debug_store)
 				params._check_storage(create_canon,create_asteroid,create_dalle_moving,create_pulsar,create_dalle,_num_canon,_num_asteroid,_num_dalle_moving,_num_pulsar,_num_dalle)
+				co(params.canon[0].alpha,"alpha",params.canon[0].visible,"visible")
 			}else{
 				create_canon()
 				create_asteroid()

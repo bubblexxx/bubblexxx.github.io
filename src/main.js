@@ -46,7 +46,7 @@ function main(){
 	var background_to_pass_level
 	var game_begin=false
 	var delay_for_show_describe_text=500
-	var time_to_show_describe_text = 1800
+	var time_to_show_describe_text = 300
 	var delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+800
 	var number_canon=null 
 	var number_asteroid=null 
@@ -70,7 +70,7 @@ function main(){
 	var ratio_device=window.screen.width/window.screen.height
 	var h=1920
 	var w=1280
-	var time_show=800
+	var time_appears_enemies=800
 	var time_hide=500
 	var h2=h*.5
 	var w2=640
@@ -115,17 +115,20 @@ function main(){
 
 	_text.prototype.show = function() {
 		this.text.visible=true	
-		this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text)
+		this.text.scale.setTo(0,0)
+		this.tween1 = game.add.tween(this.text.scale).to({x:1,y:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,0)
+		this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,0)
 		this.tween1.onComplete.add(this.hide,this)	
 	}
 
 	_text.prototype.hide = function() {
-		this.tween2 = game.add.tween(this.text).to({alpha:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,0)
+		this.tween2 = game.add.tween(this.text).to({alpha:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text)
 	}
 
 	//class for mechant
 	_mechant = function(name,number,posx,posy,image_body,image_drag){
 		//this = this.sprite_for_drag
+		this.visible=true
 		this.name=name
 		this.number=number
 		this.image_body=image_body
@@ -147,6 +150,8 @@ function main(){
 		game.physics.arcade.enable(this.sprite_for_body)
 		this.sprite_for_body.immovable=true
 		this.sprite_for_body.scale.setTo(0,0)
+		this.sprite_for_body.visible=true
+		this.sprite_for_body.alpha=1
 		this.particle = game.add.emitter(this._x,this._y)
 		this.particle.makeParticles("particle_character")
 		this.particle.minParticleSpeed.setTo(-600,-600)
@@ -159,7 +164,7 @@ function main(){
 		this.particle.on=false
 		this.show()
 		this.flag_wait_before_fire=false
-		game.time.events.add( time_show,() => {this.flag_wait_before_fire=true} )
+		game.time.events.add( time_appears_enemies,() => {this.flag_wait_before_fire=true} )
 	}
 
 
@@ -175,8 +180,8 @@ function main(){
 
 	_mechant.prototype.show=function(){
 		game.time.events.add( delay_for_game_begin,this.particle_show,this )
-		this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin)
-		this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin)
+		this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_appears_enemies,Phaser.Easing.Elastic.Out,true,delay_for_game_begin)
+		this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_appears_enemies,Phaser.Easing.Elastic.Out,true,delay_for_game_begin)
 	}
 
 	_mechant.prototype.kill=function(){
@@ -314,6 +319,7 @@ function main(){
 		this.score.anchor.setTo(.5,.5)
 		this.life = game.add.bitmapText(w2,1550,'police','3',120)
 		this.life.anchor.setTo(.5,.5)
+			this.life.visible=false
 		this.touch_button = game.add.sprite(this.life.x,this.life.y-20,'touch')
 		this.touch_button.anchor.setTo(.5,.5)
 		this.touch_button.alpha=0
@@ -483,8 +489,8 @@ function main(){
 	}
 
 	character.prototype.next_level = function() {
-		this.next_niveau=level_number+1
-		game.state.start('level'+this.next_niveau,true,false);
+		let next_niveau=level_number+1
+		game.state.start('level'+next_niveau,true,false);
 	}
 
 	character.prototype.preload_reward_video=function(){
@@ -767,7 +773,7 @@ function main(){
 		this.posx_in_tween=posx_in_tween
 		this.delay=delay
 		this.speed=speed
-		game.time.events.add( time_show,this.tweens,this )
+		game.time.events.add( time_appears_enemies,this.tweens,this )
 	}
 	_dalle_moving.prototype=Object.create(_mechant.prototype)
 
@@ -1191,14 +1197,17 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 
 	function create_level(num){ 
 		game_begin=false
+		flag_hide=false
+
+		game.time.events.add(delay_for_game_begin,function(){flag_hide=true})
 		game.time.events.add(delay_for_game_begin,function(){game_begin=true})
 		game.time.events.add(delay_for_game_begin,()=>{flag_level_complete=false})
 		is_rewarded_video_completed=false
 		is_preload_rewarded_video=false
 		hero = new character() 
-		flag_hide=true
 		count_hero=0
-		animate_touch(hero.touch_button)
+			game.time.events.add(delay_for_game_begin,()=>{hero.life.visible=true})
+		game.time.events.add(delay_for_game_begin,()=>{animate_touch(hero.touch_button)})
 		level_number=num
 		level_number_adapt=level_number+1
 		var _level_name=level_name[level_number]
@@ -2088,15 +2097,15 @@ var intermediate_screen={
 
 		this.particlex = game.add.emitter(text_passed_level.text.x,text_passed_level.text.y)
 		this.particlex.makeParticles("particle_canon")
-		this.particlex.minParticleSpeed.setTo(100,-120)
-		this.particlex.maxParticleSpeed.setTo(300,120)
-		this.particlex.setAlpha(.6, .2)
-		this.particlex.minParticleScale = .1
-		this.particlex.maxParticleScale = .9
+		this.particlex.minParticleSpeed.setTo(200,-320)
+		this.particlex.maxParticleSpeed.setTo(600,320)
+		this.particlex.setAlpha(.9, .5)
+		this.particlex.minParticleScale = .3
+		this.particlex.maxParticleScale = .8
 		this.particlex.minRotation = 0
 		this.particlex.maxRotation = 0
 		this.particlex.on=true
-		this.particlex.start(true,950,null,5)
+		this.particlex.start(true,1950,null,8)
 		game.time.events.add(1000,()=>{this.particlex.on=false})
 
 		let next_action = ()=>{
