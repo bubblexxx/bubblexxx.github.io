@@ -27,7 +27,7 @@
 var is_mobile=true
 
 function main(){
-	alert("X")
+	//alert("X")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -176,8 +176,8 @@ function main(){
 
 	_mechant.prototype.show=function(){
 		game.time.events.add( delay_for_game_begin+400,this.particle_show,this )
-		this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin+400)
-		this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin+400)
+		this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin+4000)
+		this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_show,Phaser.Easing.Elastic.Out,true,delay_for_game_begin+4000)
 	}
 
 	_mechant.prototype.kill=function(){
