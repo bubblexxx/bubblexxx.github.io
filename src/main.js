@@ -122,7 +122,8 @@ function main(){
 	}
 
 	_text.prototype.hide = function() {
-		this.tween2 = game.add.tween(this.text).to({alpha:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text)
+		this.tween2 = game.add.tween(this.text.scale).to({x:1,y:0},time_to_show_describe_text,Phaser.Easing.Linear.none,true,delay_for_show_describe_text)
+		this.tween2 = game.add.tween(this.text).to({alpha:0},time_to_show_describe_text,Phaser.Easing.Linear.none,true,delay_for_show_describe_text)
 	}
 
 	//class for mechant
@@ -387,9 +388,9 @@ function main(){
 	}
 	character.prototype.reset_update_circle_timer = function() {
 		//plus il est bas plus le cercle ira vite
-		this.counter=20	
+		this.counter=45	
 		this.timer = this.game.time.create(false);
-		this.timer.loop(10, this.update_circle_timer, this);
+		this.timer.loop(1, this.update_circle_timer, this);
 		this.timer.start()
 		this.circle_timer.visible=true
 	}
@@ -950,7 +951,7 @@ function main(){
 	_canon.prototype.explosion = function() {
 		if(this.visible && game_begin){
 			this.particlex.on=true
-			this.particlex.start(true,450,null,4)
+			this.particlex.start(true,450,null,1)
 		}
 	}
 	_canon.prototype.hide_explosion = function() {
@@ -975,7 +976,7 @@ function main(){
 						this.particle.minRotation = 0
 						this.particle.maxRotation = 0
 						this.particle.on=false
-						this.particle.start(true,9000,null,10)
+						this.particle.start(true,9000,null,2)
 					}})
 			}else{
 				this.weapon.bullets.forEach(function(item){
@@ -990,7 +991,7 @@ function main(){
 						this.particle.minRotation = 0
 						this.particle.maxRotation = 0
 						this.particle.on=false
-						this.particle.start(true,9000,null,10)
+						this.particle.start(true,9000,null,2)
 					}})
 			}
 		}
@@ -1124,7 +1125,8 @@ function main(){
 			this.game.stage.backgroundColor = '#0d1018'
 			this.background=game.add.sprite(0,0,'background');
 			this.game.add.existing(this.background)
-			game.state.start("game_first_screen");
+			game.state.start("intermediate_screen");
+			//game.state.start("game_first_screen");
 		},
 	}
 
@@ -1192,7 +1194,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 	}
 
 	animate_touch = start_tw
-	var conditional_animate_touch = ()=>{co("conditional_animate_touch");!flag_tween_en_cours && animate_touch(hero.touch_button)}
+	var conditional_animate_touch = ()=>{!flag_tween_en_cours && animate_touch(hero.touch_button)}
 
 
 	function create_level(num){ 
@@ -2078,8 +2080,10 @@ const level_config={
 ecran_intermediaire_pour_passer_level=(obj,next_action) => {
 	co(obj,next_action)
 	obj.alpha =1
+	obj.scale.setTo(0,0)
 	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},900,Phaser.Easing.Elastic.Out,true,500)
-	this.tween_alpha = game.add.tween(obj).to({alpha:0},600,Phaser.Easing.Linear.None,true,800)
+	this.tween_alpha = game.add.tween(obj).to({alpha:1},600,Phaser.Easing.Linear.None,true,800)
+	this.tween_scale = game.add.tween(obj.scale).to({x:1,y:0},500,Phaser.Easing.Elastic.Out,true,1400)
 	this.tween_alpha.onComplete.add(next_action)	
 }
 
@@ -2094,19 +2098,19 @@ var intermediate_screen={
 		background_to_pass_level = game.add.sprite(0,0,'background')
 		background_to_pass_level.alpha = 1
 		text_passed_level = new _text("level passed",w2,h2,100)
-
 		this.particlex = game.add.emitter(text_passed_level.text.x,text_passed_level.text.y)
 		this.particlex.makeParticles("particle_canon")
-		this.particlex.minParticleSpeed.setTo(200,-320)
-		this.particlex.maxParticleSpeed.setTo(600,320)
-		this.particlex.setAlpha(.9, .5)
-		this.particlex.minParticleScale = .3
-		this.particlex.maxParticleScale = .8
+		this.particlex.minParticleSpeed.setTo(-900,900)
+		this.particlex.maxParticleSpeed.setTo(900,-900)
+		this.particlex.setAlpha(.5, .1)
+		this.particlex.minParticleScale = .1
+		this.particlex.maxParticleScale = .4
 		this.particlex.minRotation = 0
 		this.particlex.maxRotation = 0
-		this.particlex.on=true
-		this.particlex.start(true,1950,null,8)
-		game.time.events.add(1000,()=>{this.particlex.on=false})
+		this.particlex.on=false
+		
+		game.time.events.add(600,()=>{this.particlex.start(true,2950,null,5)})
+		game.time.events.add(800,()=>{this.particlex.on=true})
 
 		let next_action = ()=>{
 			game.time.events.add(500,pass_level)	
