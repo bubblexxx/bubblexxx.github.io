@@ -1125,8 +1125,7 @@ function main(){
 			this.game.stage.backgroundColor = '#0d1018'
 			this.background=game.add.sprite(0,0,'background');
 			this.game.add.existing(this.background)
-			game.state.start("intermediate_screen");
-			//game.state.start("game_first_screen");
+			game.state.start("game_first_screen");
 		},
 	}
 
