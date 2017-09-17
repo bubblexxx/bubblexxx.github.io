@@ -45,8 +45,8 @@ function main(){
 	var text_passed_level
 	var background_to_pass_level
 	var game_begin=false
-	var delay_for_show_describe_text=500
-	var time_to_show_describe_text = 300
+	var delay_for_show_describe_text=400
+	var time_to_show_describe_text = 100
 	var delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+800
 	var number_canon=null 
 	var number_asteroid=null 
@@ -122,8 +122,8 @@ function main(){
 	}
 
 	_text.prototype.hide = function() {
-		this.tween2 = game.add.tween(this.text.scale).to({x:1,y:0},time_to_show_describe_text,Phaser.Easing.Linear.none,true,delay_for_show_describe_text)
-		this.tween2 = game.add.tween(this.text).to({alpha:0},time_to_show_describe_text,Phaser.Easing.Linear.none,true,delay_for_show_describe_text)
+		this.tween2 = game.add.tween(this.text.scale).to({x:1,y:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text)
+		this.tween2 = game.add.tween(this.text).to({alpha:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text)
 	}
 
 	//class for mechant
@@ -1126,6 +1126,7 @@ function main(){
 			this.background=game.add.sprite(0,0,'background');
 			this.game.add.existing(this.background)
 			game.state.start("game_first_screen");
+			//game.state.start("intermediate_screen");
 		},
 	}
 
@@ -2080,6 +2081,7 @@ ecran_intermediaire_pour_passer_level=(obj,next_action) => {
 	co(obj,next_action)
 	obj.alpha =1
 	obj.scale.setTo(0,0)
+	this.tween_alpha = game.add.tween(obj).to({angle:45},900,Phaser.Easing.Elastic.Out,true,500)
 	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},900,Phaser.Easing.Elastic.Out,true,500)
 	this.tween_alpha = game.add.tween(obj).to({alpha:1},600,Phaser.Easing.Linear.None,true,800)
 	this.tween_scale = game.add.tween(obj.scale).to({x:1,y:0},500,Phaser.Easing.Elastic.Out,true,1400)
