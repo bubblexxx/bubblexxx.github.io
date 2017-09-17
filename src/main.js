@@ -2081,10 +2081,10 @@ ecran_intermediaire_pour_passer_level=(obj,next_action) => {
 	co(obj,next_action)
 	obj.alpha =1
 	obj.scale.setTo(0,0)
-	this.tween_alpha = game.add.tween(obj).to({angle:45},900,Phaser.Easing.Elastic.Out,true,500)
-	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},900,Phaser.Easing.Elastic.Out,true,500)
-	this.tween_alpha = game.add.tween(obj).to({alpha:1},600,Phaser.Easing.Linear.None,true,800)
-	this.tween_scale = game.add.tween(obj.scale).to({x:1,y:0},500,Phaser.Easing.Elastic.Out,true,1400)
+	this.tween_alpha = game.add.tween(obj).to({angle:45},1100,Phaser.Easing.Elastic.Out,true,500)
+	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},1100,Phaser.Easing.Elastic.Out,true,500)
+	this.tween_alpha = game.add.tween(obj).to({alpha:1},800,Phaser.Easing.Linear.None,true,800)
+	this.tween_scale = game.add.tween(obj.scale).to({x:1,y:0},700,Phaser.Easing.Elastic.Out,true,1400)
 	this.tween_alpha.onComplete.add(next_action)	
 }
 
