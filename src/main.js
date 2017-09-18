@@ -38,7 +38,6 @@ function main(){
 		"2. let easy",
 		"3. oh it hurts",
 "4. beginners out !",
-
 	]
 	var is_rewarded_video_completed=false
 	var is_preload_rewarded_video=false
@@ -864,7 +863,7 @@ function main(){
 		this.weapon.bulletAngleVariance = this.variance;
 
 		//  Tell the Weapon to track the 'player' Sprite, offset by 14px horizontally, 0 vertically
-		this.weapon.trackSprite(this,0,0,true);
+		this.weapon.trackSprite(this.sprite_for_body,0,0,true);
 		game.time.events.add( this.delay,function(){this._flag=false},this )
 		this.time_for_count=0
 		this.ratio_time=8
@@ -948,9 +947,9 @@ function main(){
 
 	_canon.prototype.fire = function() {
 		this.flag_for_fire=true
+		this.sprite_for_body.angle=this.angular
 		this.weapon.fireRate = this.frequency ;
 		this.weapon.bulletSpeed = this.speed;
-		this.angle=this.angular
 		this.weapon.bulletAngleVariance = this.variance;
 	}
 
@@ -1854,7 +1853,11 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 					gui.add(sprite,'name')
 					guit_declare(sprite,'speed',0,5000)
 					guit_declare(sprite,'frequency',0,5000)
-					guit_declare(sprite,'kill_with_world')
+					guit.kill=gui.add(sprite,'kill_with_world')
+					guit.kill.onChange(function(value) {
+						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
+					})
 					guit_declare(sprite,'special_color')
 					guit_declare(sprite,'angular',0,360)
 					guit_declare(sprite,'variance',0,1000)
@@ -2002,7 +2005,6 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 				break
 			}else{
 				//asteroid = function(number,posx,posy,speed,radius)
-				co(a[i].radius,"check_in_local_storage")
 				asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius)
 			}
 		}
