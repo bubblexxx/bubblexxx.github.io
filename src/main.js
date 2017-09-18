@@ -2081,14 +2081,11 @@ ecran_intermediaire_pour_passer_level=(obj,next_action) => {
 	co(obj,next_action)
 	obj.alpha =1
 	obj.scale.setTo(0,0)
-	this.tween_alpha = game.add.tween(obj).to({angle:45},1100,Phaser.Easing.Elastic.Out,true,900)
-	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},1100,Phaser.Easing.Elastic.Out,true,900)
+	this.tween_rotate = game.add.tween(obj).to({angle:45},1100,Phaser.Easing.Elastic.Out,true,900)
+	this.tween_scale = game.add.tween(obj.scale).to({x:1.5,y:1.5},1100,Phaser.Easing.Elastic.Out,true,900)
 	this.tween_alpha = game.add.tween(obj).to({alpha:1},800,Phaser.Easing.Linear.None,true,1200)
-	this.tween_alpha.onComplete.add(this.next_tw,this)
-	this.next_tw = ()=>{
-		this.tween_scale = game.add.tween(obj.scale).to({x:0,y:0},2200,Phaser.Easing.Linear.None,true,3800)
-		this.tween_scale.onComplete.add(next_action)	
-	}
+	this.tween_scale2 = game.add.tween(obj.scale).to({x:0,y:0},2200,Phaser.Easing.Linear.None,true,5800)
+	this.tween_scale.onComplete.add(next_action)
 }
 
 var pass_level=()=>{
