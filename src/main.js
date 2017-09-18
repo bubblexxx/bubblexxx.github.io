@@ -34,10 +34,10 @@ function main(){
 	var p=[]
 	var d=[]
 	var level_name=[
-		"for beginners :)",
-		"let easy",
-		"oh it hurts",
-"beginners out !",
+		"1. for beginners :)",
+		"2. let easy",
+		"3. oh it hurts",
+"4. beginners out !",
 
 	]
 	var is_rewarded_video_completed=false
@@ -123,10 +123,8 @@ function main(){
 	_text.prototype.show2 = function() {
 		this.text.visible=true	
 		this.text.scale.setTo(1,0)
-		//this.tween1 = game.add.tween(this.text.scale).to({x:1,y:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_game_begin-400)
-		//this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_game_begin-400)
-		this.tween1 = game.add.tween(this.text.scale).to({x:1,y:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,0)
-		this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,0)
+		this.tween1 = game.add.tween(this.text.scale).to({x:1,y:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_game_begin-400)
+		this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_game_begin-400)
 	}
 
 	_text.prototype.hide = function() {
