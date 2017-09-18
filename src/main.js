@@ -27,6 +27,7 @@
 var is_mobile=true
 
 function main(){
+	alert('n')
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -1125,7 +1126,7 @@ function main(){
 			this.game.stage.backgroundColor = '#0d1018'
 			this.background=game.add.sprite(0,0,'background');
 			this.game.add.existing(this.background)
-			game.state.start("game_first_screen");
+			game.time.events.add(1000, ()=>{game.state.start("game_first_screen")});
 			//game.state.start("intermediate_screen");
 		},
 	}
@@ -2081,10 +2082,10 @@ ecran_intermediaire_pour_passer_level=(obj,next_action) => {
 	co(obj,next_action)
 	obj.alpha =1
 	obj.scale.setTo(0,0)
-	this.tween_alpha = game.add.tween(obj).to({angle:45},1100,Phaser.Easing.Elastic.Out,true,500)
-	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},1100,Phaser.Easing.Elastic.Out,true,500)
-	this.tween_alpha = game.add.tween(obj).to({alpha:1},800,Phaser.Easing.Linear.None,true,800)
-	this.tween_scale = game.add.tween(obj.scale).to({x:1,y:0},700,Phaser.Easing.Elastic.Out,true,1400)
+	this.tween_alpha = game.add.tween(obj).to({angle:45},1100,Phaser.Easing.Elastic.Out,true,900)
+	this.tween_alpha = game.add.tween(obj.scale).to({x:1.5,y:1.5},1100,Phaser.Easing.Elastic.Out,true,900)
+	this.tween_alpha = game.add.tween(obj).to({alpha:1},800,Phaser.Easing.Linear.None,true,1200)
+	this.tween_scale = game.add.tween(obj.scale).to({x:1,y:0},700,Phaser.Easing.Elastic.Out,true,1800)
 	this.tween_alpha.onComplete.add(next_action)	
 }
 
@@ -2114,7 +2115,7 @@ var intermediate_screen={
 		game.time.events.add(800,()=>{this.particlex.on=true})
 
 		let next_action = ()=>{
-			game.time.events.add(500,pass_level)	
+			game.time.events.add(1200,pass_level)	
 		}
 		ecran_intermediaire_pour_passer_level(text_passed_level.text,next_action)
 	},
