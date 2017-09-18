@@ -2117,7 +2117,7 @@ var intermediate_screen={
 		game.time.events.add(800,()=>{this.particlex.on=true})
 
 		let next_action = ()=>{
-			game.time.events.add(1200,pass_level)	
+			game.time.events.add(300,pass_level)	
 		}
 		ecran_intermediaire_pour_passer_level(text_passed_level.text,next_action)
 	},
