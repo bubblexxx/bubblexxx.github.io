@@ -102,7 +102,7 @@ function main(){
 	var adService;
 	var container;
 
-	var email=localStorage;
+	var email=console.log(localStorage);
 	//var email=JSON.stringify(localStorage);
 co(localStorage,'localStorage')
 	//class for text intitulé dans chaque level

@@ -6,11 +6,11 @@ var level_number=0
 function level_0 (params,num) {
 	return {
 		create: function () {
-			var _num_canon = 1  
-			var _num_asteroid = 1 
-			var _num_dalle_moving = 1  
-			var _num_pulsar = 1
-			var _num_dalle = 1 
+			let _num_canon = 1  
+			let _num_asteroid = 1 
+			let _num_dalle_moving = 1  
+			let _num_pulsar = 1
+			let _num_dalle = 1 
 			level_number=num
 			params.create_level(num)
 			create_canon=()=>{
@@ -95,11 +95,11 @@ function level_1 (params,num) {
 	return {
 		create: function () {
 			level_number=num
-			var _num_canon = 2  
-			var _num_asteroid = 0 
-			var _num_dalle_moving = 1  
-			var _num_pulsar = 0
-			var _num_dalle = 0 
+			let _num_canon = 2  
+			let _num_asteroid = 0 
+			let _num_dalle_moving = 1  
+			let _num_pulsar = 0
+			let _num_dalle = 0 
 			params.create_level(num)
 			create_canon=()=>{
 				co("create_canon") 
@@ -174,11 +174,11 @@ function level_2 (params,num) {
 	return {
 		create: function () {
 			level_number=num
-			var _num_canon = 3  
-			var _num_asteroid = 0 
-			var _num_dalle_moving = 0  
-			var _num_pulsar = 0
-			var _num_dalle = 0 
+			let _num_canon = 3  
+			let _num_asteroid = 0 
+			let _num_dalle_moving = 0  
+			let _num_pulsar = 0
+			let _num_dalle = 0 
 			params.create_level(num)
 			create_canon=()=>{
 				co("create_canon") 
@@ -258,11 +258,11 @@ function level_3 (params,num) {
 	return {
 		create: function () {
 			level_number=num
-			var _num_canon = 2  
-			var _num_asteroid = 0 
-			var _num_dalle_moving = 0  
-			var _num_pulsar = 0
-			var _num_dalle = 0 
+			let _num_canon = 2  
+			let _num_asteroid = 0 
+			let _num_dalle_moving = 0  
+			let _num_pulsar = 0
+			let _num_dalle = 0 
 			params.create_level(num)
 			create_canon=()=>{
 				co("create_canon") 
