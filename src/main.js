@@ -120,6 +120,12 @@ function main(){
 		this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,0)
 		this.tween1.onComplete.add(this.hide,this)	
 	}
+	_text.prototype.show2 = function() {
+		this.text.visible=true	
+		this.text.scale.setTo(1,0)
+		this.tween1 = game.add.tween(this.text.scale).to({x:1,y:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_game_begin-400)
+		this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_game_begin-400)
+	}
 
 	_text.prototype.hide = function() {
 		this.tween2 = game.add.tween(this.text.scale).to({x:1,y:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text)
@@ -1218,6 +1224,9 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		text_to_describe_level.alpha=0
 		text_to_describe_level.show()
 		text_to_number_level=new _text(level_number_adapt,w2,320,90);
+		text_to_number_level.alpha=0
+		text_to_number_level.visible=false
+		text_to_number_level.show2()
 	}
 
 	function logic(){
