@@ -27,6 +27,7 @@
 var is_mobile=true
 
 function main(){
+	alert('modif email')
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -101,8 +102,9 @@ function main(){
 	var adService;
 	var container;
 
-	var email=JSON.stringify(localStorage);
-
+	var email=localStorage;
+	//var email=JSON.stringify(localStorage);
+co(localStorage,'localStorage')
 	//class for text intitulé dans chaque level
 	_text=function(message,posx,posy,taille){
 		this.text=game.add.bitmapText(posx,posy,'police',message,taille);
