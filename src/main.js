@@ -2085,7 +2085,7 @@ ecran_intermediaire_pour_passer_level=(obj,next_action) => {
 	this.tween_scale = game.add.tween(obj.scale).to({x:1.5,y:1.5},1100,Phaser.Easing.Elastic.Out,true,900)
 	this.tween_alpha = game.add.tween(obj).to({alpha:1},800,Phaser.Easing.Linear.None,true,1200)
 	this.tween_scale2 = game.add.tween(obj.scale).to({x:0,y:0},2200,Phaser.Easing.Linear.None,true,5800)
-	this.tween_scale.onComplete.add(next_action)
+	this.tween_scale2.onComplete.add(next_action)
 }
 
 var pass_level=()=>{
