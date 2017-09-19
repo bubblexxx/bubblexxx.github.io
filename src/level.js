@@ -26,7 +26,9 @@ function level_0 (params,num) {
 					angular=180,
 					_flag=params._flag_level_complete,
 					kill_with_world=true,
-					special_color=false
+					special_color=false,
+					_rotate=true,
+					_value_rotate=10
 				)
 			}
 			create_asteroid=()=>{

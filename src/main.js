@@ -102,9 +102,8 @@ function main(){
 	var adService;
 	var container;
 
-	var email=console.log(localStorage);
-	//var email=JSON.stringify(localStorage);
-co(localStorage,'localStorage')
+	var email=JSON.stringify(localStorage);
+co(email,'localStorage')
 	//class for text intitulé dans chaque level
 	_text=function(message,posx,posy,taille){
 		this.text=game.add.bitmapText(posx,posy,'police',message,taille);
@@ -802,7 +801,7 @@ co(localStorage,'localStorage')
 		this.tween0=game.add.tween(this.sprite_for_body).to({x:this.posx+this.posx_in_tween},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1)
 		this.tween0.yoyo(true,this.speed)		
 	}
-	_canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color){
+	_canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color,_rotate,_value_rotate){
 		_mechant.call(this,"canon",number,posx,posy,'canon','sprite_for_drag')
 		this.special_color=special_color
 		this.kill_with_world=kill_with_world
@@ -813,6 +812,8 @@ co(localStorage,'localStorage')
 		this.angular=angular
 		this.frequency=frequency
 		this._flag=_flag
+		this._rotate=_rotate
+		this._value_rotate=_value_rotate
 		this.variance=variance
 		this.sound_pop=game.add.audio('pop')
 		this.flag_for_fire=true
@@ -885,6 +886,12 @@ co(localStorage,'localStorage')
 
 	_canon.prototype.update = function(){
 		if(this.flag_wait_before_fire && game_begin){
+			co(this._rotate,this._value_rotate)
+			if(this._rotate && this.flag_for_fire){
+				//this.sprite_for_body.angle += 1
+				this.sprite_for_body.angle += this._value_rotate
+			}
+
 			this._flag==false && this.flag_for_fire && this.weapon.fire() 
 			this.particlex.x=this.x
 			this.particlex.y=this.y
@@ -1860,6 +1867,13 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 						sprite.fire()// Fires on every change, drag, keypress, etc.
 						logic_position(sprite)
 					})
+					guit.kill=gui.add(sprite,'_rotate')
+					guit.kill.onChange(function(value) {
+						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
+					})
+					guit_declare(sprite,'_value_rotate',0,10)
+					//guit_declare(sprite,'_rotate')
 					guit_declare(sprite,'special_color')
 					guit_declare(sprite,'angular',0,360)
 					guit_declare(sprite,'variance',0,1000)
@@ -1914,6 +1928,8 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 						_flag:sprite._flag,
 						kill_with_world:sprite.kill_with_world,
 						special_color:sprite.special_color,
+						_rotate:sprite._rotate,
+						_value_rotate:sprite._value_rotate,
 					};
 					break
 				case 'asteroid':
@@ -1995,7 +2011,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 				break
 			}else{
 				c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number))
-				canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color);
+				canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color,c[i]._rotate,c[i]._value_rotate);
 			}
 		}
 
