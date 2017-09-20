@@ -1107,8 +1107,10 @@ co(email,'localStorage')
 			this.game.load.image("grid","assets/grid.png");
 			//audio
 			this.game.load.audio("game_over","sounds/loose/game_show_lose_08.ogg");
-			this.game.load.audio("launch","sounds/launch.ogg");
-			this.game.load.audio("coin","sounds/coin.ogg");
+			//this.game.load.audio("launch","sounds/launch.ogg");
+			this.game.load.audio("launch","sounds/launch/gum_drop_interface_53.ogg");
+			//this.game.load.audio("coin","sounds/coin.ogg");
+			this.game.load.audio("coin","sounds/win/magic_chime_alert_01.ogg");
 			this.game.load.audio("pop_minder","sounds/pop2.ogg");
 			this.game.load.audio("pop","sounds/pop2.ogg");
 			this.game.load.audio("click","sounds/button/glossy_click_25.ogg");
