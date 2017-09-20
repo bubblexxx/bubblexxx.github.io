@@ -332,6 +332,7 @@ co(email,'localStorage')
 		this.touch_button.alpha=0
 		this.touch_button.visible=true
 
+		this.sound_game_over=game.add.audio('game_over')
 		this.sound_launch=game.add.audio('launch')
 		this.sound_star=game.add.audio('coin')
 		this.sound_pop=game.add.audio('pop_minder')
@@ -418,6 +419,10 @@ co(email,'localStorage')
 		var SubjectVariable='bubblex'+current_level
 		var EmailVariable='espace3d@gmail.com'
 		window.location='mailto:'+EmailVariable+'?subject='+SubjectVariable+'&body='+email
+	}
+
+	character.prototype.audio_game_over = function() {
+		this.sound_game_over.play()
 	}
 
 	character.prototype.audio_star = function() {
@@ -622,6 +627,7 @@ co(email,'localStorage')
 	}
 
 	character.prototype.decide_if_show_button_restart_level = function() {
+		this.audio_game_over()
 		this.flag_hide_enemies=true
 		game.time.events.add( 1000,this.button_restart.show_button,this.button_restart )
 		is_preload_rewarded_video && game.time.events.add( 1000,this.button_video.show_button,this.button_video )
@@ -886,7 +892,6 @@ co(email,'localStorage')
 
 	_canon.prototype.update = function(){
 		if(this.flag_wait_before_fire && game_begin){
-			co(this._rotate,this._value_rotate)
 			if(this._rotate && this.flag_for_fire){
 				//this.sprite_for_body.angle += 1
 				this.sprite_for_body.angle += this._value_rotate
@@ -939,8 +944,9 @@ co(email,'localStorage')
 		}
 	}
 
-	_canon.prototype.transition = function() {
-		this.tween_characteristic = game.add.tween(this.canon).to({x:posx,y:posy},time,Phaser.Easing.Linear.None,true,delay)
+	_canon.prototype.transition = function(posx,posy,_time,delay) {
+		this.tween_characteristic = game.add.tween(this.sprite_for_body).to({x:posx,y:posy},_time,Phaser.Easing.Linear.None,true,delay)
+		this.tween_characteristic.yoyo(_time,true)
 	}
 	_canon.prototype.kill = function(){
 		this.explode_bullet(this.weapon.bullets)
@@ -1101,6 +1107,7 @@ co(email,'localStorage')
 			this.game.load.image("cible_shadow","assets/cible_shadow.png");
 			this.game.load.image("grid","assets/grid.png");
 			//audio
+			this.game.load.audio("game_over","sounds/loose/funky_lose_03.ogg");
 			this.game.load.audio("launch","sounds/launch.ogg");
 			this.game.load.audio("coin","sounds/coin.ogg");
 			this.game.load.audio("pop_minder","sounds/pop2.ogg");
@@ -1874,7 +1881,11 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 					})
 					guit_declare(sprite,'_value_rotate',0,10)
 					//guit_declare(sprite,'_rotate')
-					guit_declare(sprite,'special_color')
+					guit.kill=gui.add(sprite,'special_color')
+					guit.kill.onChange(function(value) {
+						sprite.fire()// Fires on every change, drag, keypress, etc.
+						logic_position(sprite)
+					})
 					guit_declare(sprite,'angular',0,360)
 					guit_declare(sprite,'variance',0,1000)
 					guit_declare(sprite,'kill')

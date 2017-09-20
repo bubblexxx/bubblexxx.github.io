@@ -19,7 +19,7 @@ function level_0 (params,num) {
 					number=0,
 					delay=0,
 					posx=400-200,
-					posy=100,
+					posy=500,
 					speed=900,
 					frequency=500,
 					variance=0,
@@ -27,9 +27,10 @@ function level_0 (params,num) {
 					_flag=params._flag_level_complete,
 					kill_with_world=true,
 					special_color=false,
-					_rotate=true,
+					_rotate=false,
 					_value_rotate=10
 				)
+				params.canon[0].transition(600,200,9000,4000)
 			}
 			create_asteroid=()=>{
 				params.asteroid[0]=new params.constructor_asteroid(
