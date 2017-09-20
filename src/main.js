@@ -1106,12 +1106,12 @@ co(email,'localStorage')
 			this.game.load.image("cible_shadow","assets/cible_shadow.png");
 			this.game.load.image("grid","assets/grid.png");
 			//audio
-			this.game.load.audio("game_over","sounds/loose/funky_lose_03.ogg");
+			this.game.load.audio("game_over","sounds/loose/game_show_lose_08.ogg");
 			this.game.load.audio("launch","sounds/launch.ogg");
 			this.game.load.audio("coin","sounds/coin.ogg");
 			this.game.load.audio("pop_minder","sounds/pop2.ogg");
 			this.game.load.audio("pop","sounds/pop2.ogg");
-			this.game.load.audio("click","sounds/button/glossy_click_06.ogg");
+			this.game.load.audio("click","sounds/button/glossy_click_25.ogg");
 			//this.game.load.audio("click","sounds/click.ogg");
 			//images_enemy
 			this.game.load.image("canon","assets/canon.png");
