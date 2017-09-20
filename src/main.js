@@ -27,7 +27,6 @@
 var is_mobile=true
 
 function main(){
-	alert('modif email')
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -1112,7 +1111,8 @@ co(email,'localStorage')
 			this.game.load.audio("coin","sounds/coin.ogg");
 			this.game.load.audio("pop_minder","sounds/pop2.ogg");
 			this.game.load.audio("pop","sounds/pop2.ogg");
-			this.game.load.audio("click","sounds/click.ogg");
+			this.game.load.audio("click","sounds/button/glossy_click_06.ogg");
+			//this.game.load.audio("click","sounds/click.ogg");
 			//images_enemy
 			this.game.load.image("canon","assets/canon.png");
 			this.game.load.image("asteroid","assets/asteroid.png");
