@@ -1035,7 +1035,7 @@ co(email,'localStorage')
 			|| navigator.userAgent.match(/Windows Phone/i)
 		){
 			if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
-				alert('Cocoon AdMob plugin not installed');
+				//alert('Cocoon AdMob plugin not installed');
 				return;
 			}
 			// nécessaire 
