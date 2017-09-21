@@ -333,8 +333,9 @@ co(email,'localStorage')
 
 		this.sound_game_over=game.add.audio('game_over')
 		this.sound_launch=game.add.audio('launch')
-		this.sound_star=game.add.audio('coin')
+		this.sound_star=game.add.audio('win')
 		this.sound_pop=game.add.audio('pop_minder')
+		this.sound_click=game.add.audio('click')
 		//TODO:publish
 		if (debug_position){
 			this.button_publish=new _button(w2,h2+800,'button_publish',this.send_data_mail)
@@ -351,10 +352,13 @@ co(email,'localStorage')
 		this.star.frame=2
 		this.star.visible=false
 		this.star.scale.setTo(0,0)
+		this.big_star=game.add.sprite(w2,h2-320,'big_star')
+		this.big_star.anchor.setTo(.5,.5)
+		this.big_star.visible=false
+		this.big_star.scale.setTo(0,0)
 		this._levelNumber = 1;
 		this.count_dead=0
 		this.anim_cible()
-		this.sound_click=game.add.audio('click')
 		is_mobile && this.preload_reward_video()
 		this.circle_timer = null;
 		this.counterMax = 100;
@@ -472,9 +476,14 @@ co(email,'localStorage')
 	}
 
 	character.prototype.show_star = function() {
+		this.big_star.visible=true
+		this.tween_big_star = game.add.tween(this.big_star.scale).to({x:1,y:1},200,Phaser.Easing.Linear.None,true,1000)
+		this.tween_big_star = game.add.tween(this.big_star).to({angle:45},200,Phaser.Easing.Linear.None,true,1000)
+		this.tween_big_star = game.add.tween(this.big_star).to({alpha:0},3200,Phaser.Easing.Exponential.Out,true,300)
+		//this.tween_big_star = game.add.tween(this.big_star).to({alpha:0},2000,Phaser.Easing.Quartic.Out,true,300)
 		this.star.visible=true	
 		this.tween5 = game.add.tween(this.star.scale).to({x:1,y:1},200,Phaser.Easing.Linear.None,true,1000)
-		this.tween5.onComplete.add(this.audio_star,this)
+		this.tween5.onComplete.add(() => {game.time.events.add(100,this.audio_star,this)})
 	}
 
 	character.prototype.wins=function(){
@@ -626,7 +635,7 @@ co(email,'localStorage')
 	}
 
 	character.prototype.decide_if_show_button_restart_level = function() {
-		this.audio_game_over()
+		game.time.events.add(1200,this.audio_game_over,this)
 		this.flag_hide_enemies=true
 		game.time.events.add( 1000,this.button_restart.show_button,this.button_restart )
 		is_preload_rewarded_video && game.time.events.add( 1000,this.button_video.show_button,this.button_video )
@@ -1101,6 +1110,7 @@ co(email,'localStorage')
 			this.game.load.image("button_back","assets/button_back.png");
 			this.game.load.image("title","assets/title.png");
 			this.game.load.spritesheet('star','assets/star.png', 300, 100);
+			this.game.load.image("big_star","assets/big_star.png");
 			this.game.load.image("levelselecticons","assets/levelselecticons.png");
 			this.game.load.image("cible","assets/cible2.png");
 			this.game.load.image("cible_shadow","assets/cible_shadow.png");
@@ -1110,10 +1120,11 @@ co(email,'localStorage')
 			//this.game.load.audio("launch","sounds/launch.ogg");
 			this.game.load.audio("launch","sounds/launch/gum_drop_interface_53.ogg");
 			//this.game.load.audio("coin","sounds/coin.ogg");
-			this.game.load.audio("coin","sounds/win/magic_chime_alert_01.ogg");
+			this.game.load.audio("win","sounds/win/magic_chime_alert_01.ogg");
 			this.game.load.audio("pop_minder","sounds/pop2.ogg");
 			this.game.load.audio("pop","sounds/pop2.ogg");
 			this.game.load.audio("click","sounds/button/glossy_click_25.ogg");
+			this.game.load.audio("menu_no","sounds/menu/pleasant_interface_37.ogg");
 			//this.game.load.audio("click","sounds/click.ogg");
 			//images_enemy
 			this.game.load.image("canon","assets/canon.png");
@@ -1659,6 +1670,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 			var icon1 = this.game.add.sprite(0, 0, 'levelselecticons', frame);
 			IconGroup.add(icon1);
 
+
 			// add stars, if needed
 			if (isLocked == false) {
 				var txt = this.game.add.bitmapText(137, 147, 'police', ''+levelnr, 100);
@@ -1679,12 +1691,16 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		},
 
 		onSpriteDown: function(sprite, pointer) {
+		this.sound_menu_no=game.add.audio('menu_no')
+		this.sound_click=game.add.audio('click')
+
 
 			// retrieve the iconlevel
 			var levelnr = sprite.health;
 
 			if (PLAYER_DATA[levelnr-1] < 0) {
 				// indicate it's locked by shaking left/right
+				this.sound_menu_no.play()
 				var IconGroup = this.holdicons[levelnr-1];
 				var xpos = IconGroup.xOrg;
 
@@ -1697,6 +1713,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 					.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
 					.start();
 			} else {
+				this.sound_click.play()
 				// simulate button press animation to indicate selection
 				var IconGroup = this.holdicons[levelnr-1];
 				var tween = this.game.add.tween(IconGroup.scale)
