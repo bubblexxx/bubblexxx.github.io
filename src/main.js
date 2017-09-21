@@ -425,7 +425,7 @@ co(email,'localStorage')
 	}
 
 	character.prototype.audio_game_over = function() {
-		this.sound_game_over.play()
+		!flag_level_complete && this.sound_game_over.play()
 	}
 
 	character.prototype.audio_star = function() {
@@ -449,7 +449,8 @@ co(email,'localStorage')
 
 	character.prototype.checkicharacterisloossomewhere2 = function(n) {
 		if(flag_level_complete==false){
-			this.explode(this.player[n].x,0,n)	
+			//this.explode(this.player[n].x,0,n)	
+			this.explode(n)	
 		}
 	}
 
@@ -606,8 +607,33 @@ co(email,'localStorage')
 		this.particle.start(true,3900,null,15)
 		game.time.events.add( 100,function(){this.particle.on=false},this )
 	}
+character.prototype.explode_all=function(){
+	co(this.player.length,'length')
+	for(var i=0; i<3 ;i++) {
+		this.explode(i);
+	}
 
-	character.prototype.explode=function(posx,posy,n){
+}
+	//character.prototype.explode=function(posx,posy,n){
+	//	if(this.player[n].is_exploding==false){
+	//		if(!flag_level_complete && n < 2){
+	//			this.reset_update_circle_timer()	
+	//		}
+	//		count_modif_obj(this.life.text,count_hero,2)
+	//		this.player[n].is_exploding=true
+	//		this.calculate_life_remaining(n)
+	//		this.audio_pop()
+	//		this.on_explode()
+	//		this.player[n].visible=false
+	//		this.particle.x=posx
+	//		this.particle.y=posy
+	//		this.particle.on=true
+	//		this.particle.start(true,3900,null,10)
+	//		game.time.events.add( 100,function(){this.particle.on=false},this )
+	//		this.player[n].body.enable=false
+	//	}
+	//}
+	character.prototype.explode=function(n){
 		if(this.player[n].is_exploding==false){
 			if(!flag_level_complete && n < 2){
 				this.reset_update_circle_timer()	
@@ -618,8 +644,8 @@ co(email,'localStorage')
 			this.audio_pop()
 			this.on_explode()
 			this.player[n].visible=false
-			this.particle.x=posx
-			this.particle.y=posy
+			this.particle.x=this.player[n].x
+			this.particle.y=this.player[n].y
 			this.particle.on=true
 			this.particle.start(true,3900,null,10)
 			game.time.events.add( 100,function(){this.particle.on=false},this )
@@ -644,6 +670,7 @@ co(email,'localStorage')
 
 	character.prototype.land=function(n){
 		flag_level_complete=true
+		this.explode_all()
 		this.cible.body.enable=false
 		this.player[n].body.enable=false
 		this.tween0=game.add.tween(this.player[n]).to({x:w2,y:300},500,Phaser.Easing.Linear.None,true,0)
@@ -1116,7 +1143,8 @@ co(email,'localStorage')
 			this.game.load.image("cible_shadow","assets/cible_shadow.png");
 			this.game.load.image("grid","assets/grid.png");
 			//audio
-			this.game.load.audio("game_over","sounds/loose/game_show_lose_08.ogg");
+			//this.game.load.audio("game_over","sounds/loose/game_show_lose_08.ogg");
+			this.game.load.audio("game_over","sounds/loose/funky_lose_03.ogg");
 			//this.game.load.audio("launch","sounds/launch.ogg");
 			this.game.load.audio("launch","sounds/launch/gum_drop_interface_53.ogg");
 			//this.game.load.audio("coin","sounds/coin.ogg");
@@ -1792,7 +1820,8 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 				if(obj[0]){
 					for (var i = 0; i < 3; i++){
 						for (var j = 0; j < obj.length; j++){
-							game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i);conditional_animate_touch()})
+							//game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i);conditional_animate_touch()})
+							game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(i);conditional_animate_touch()})
 
 						}
 					}
@@ -1805,7 +1834,8 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 						if(canon[j].special_color){
 							game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],hide_weapon,null,this)
 						}else{
-							game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
+							//game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
+							game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(i))
 						}
 					}
 				}
