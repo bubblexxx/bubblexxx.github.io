@@ -607,9 +607,10 @@ co(email,'localStorage')
 		this.particle.start(true,3900,null,15)
 		game.time.events.add( 100,function(){this.particle.on=false},this )
 	}
-character.prototype.explode_all=function(){
+character.prototype.explode_all=function(n){
 	co(this.player.length,'length')
-	for(var i=0; i<3 ;i++) {
+	n = n + 1
+	for(var i=n; i<3 ;i++) {
 		this.explode(i);
 	}
 
@@ -670,7 +671,7 @@ character.prototype.explode_all=function(){
 
 	character.prototype.land=function(n){
 		flag_level_complete=true
-		this.explode_all()
+		this.explode_all(n)
 		this.cible.body.enable=false
 		this.player[n].body.enable=false
 		this.tween0=game.add.tween(this.player[n]).to({x:w2,y:300},500,Phaser.Easing.Linear.None,true,0)
@@ -678,26 +679,23 @@ character.prototype.explode_all=function(){
 	}
 
 	character.prototype.calculate_star = function() {
-		switch(this.count){
-			case 0:
-				this.star.frame=3
-				break
+		co(count_hero,"coiyu")
+		switch(count_hero){
 			case 1:
 				this.star.frame=3
+				co(this.star.frame)
 				break
 			case 2:
 				this.star.frame=2
 				break
 			case 3:
-				this.star.frame=2
+				this.star.frame=1
 				break
 			case 4:
-				this.star.frame=1
-				break
-			case 5:
-				this.star.frame=1
+				this.star.frame=0
 				break
 			default:
+				this.star.frame=0
 				break
 		}
 	}
@@ -1144,7 +1142,8 @@ character.prototype.explode_all=function(){
 			this.game.load.image("grid","assets/grid.png");
 			//audio
 			//this.game.load.audio("game_over","sounds/loose/game_show_lose_08.ogg");
-			this.game.load.audio("game_over","sounds/loose/funky_lose_03.ogg");
+			//this.game.load.audio("game_over","sounds/loose/funky_lose_03.ogg");
+			this.game.load.audio("game_over","sounds/loose/melodic_lose_01.ogg");
 			//this.game.load.audio("launch","sounds/launch.ogg");
 			this.game.load.audio("launch","sounds/launch/gum_drop_interface_53.ogg");
 			//this.game.load.audio("coin","sounds/coin.ogg");
@@ -1593,7 +1592,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 			this.holdicons = [];
 			this.game.stage.backgroundColor = '#0d1018'
 			this.game.add.sprite(0,0,'background');
-			this.text=game.add.bitmapText(640,200,'police','SELECT A LEVEL!',100);
+			this.text=game.add.bitmapText(640,200,'police','Select a level!',100);
 			this.text.anchor.setTo(.5,.5)
 			this.createLevelIcons();
 			this.animateLevelIcons();
