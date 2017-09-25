@@ -110,27 +110,31 @@ function level_1 (params,num) {
 					number=0,
 					delay=0,
 					posx=400-200,
-					posy=100,
+					posy=500,
 					speed=900,
 					frequency=500,
 					variance=0,
 					angular=180,
 					_flag=params._flag_level_complete,
 					kill_with_world=true,
-					special_color=false
+					special_color=false,
+					_rotate=false,
+					_value_rotate=10
 				)
 				params.canon[1]=new params.constructor_canon(
 					number=1,
 					delay=0,
 					posx=400-200,
-					posy=400,
+					posy=500,
 					speed=900,
-					frequency=400,
+					frequency=500,
 					variance=0,
 					angular=180,
 					_flag=params._flag_level_complete,
 					kill_with_world=true,
-					special_color=false
+					special_color=false,
+					_rotate=false,
+					_value_rotate=10
 				)
 			}
 			create_asteroid=()=>{
@@ -190,40 +194,46 @@ function level_2 (params,num) {
 					number=0,
 					delay=0,
 					posx=400-200,
-					posy=100,
+					posy=800,
 					speed=900,
-					frequency=450,
+					frequency=500,
 					variance=0,
 					angular=180,
 					_flag=params._flag_level_complete,
 					kill_with_world=true,
-					special_color=false
+					special_color=false,
+					_rotate=false,
+					_value_rotate=10
 				)
 				params.canon[1]=new params.constructor_canon(
-					number=0,
+					number=1,
 					delay=0,
 					posx=400-200,
-					posy=500,
+					posy=100,
 					speed=900,
-					frequency=850,
+					frequency=500,
 					variance=0,
 					angular=180,
 					_flag=params._flag_level_complete,
 					kill_with_world=true,
-					special_color=false
+					special_color=false,
+					_rotate=false,
+					_value_rotate=10
 				)
 				params.canon[2]=new params.constructor_canon(
-					number=0,
+					number=2,
 					delay=0,
-					posx=400-100,
-					posy=600,
+					posx=400-200,
+					posy=400,
 					speed=900,
-					frequency=650,
+					frequency=500,
 					variance=0,
 					angular=180,
 					_flag=params._flag_level_complete,
 					kill_with_world=true,
-					special_color=false
+					special_color=false,
+					_rotate=false,
+					_value_rotate=10
 				)
 			}
 			create_asteroid=()=>{
@@ -274,27 +284,31 @@ function level_3 (params,num) {
 					number=0,
 					delay=0,
 					posx=400-200,
-					posy=100,
+					posy=200,
 					speed=900,
-					frequency=50,
+					frequency=500,
 					variance=0,
 					angular=180,
 					_flag=params._flag_level_complete,
 					kill_with_world=true,
-					special_color=false
+					special_color=false,
+					_rotate=false,
+					_value_rotate=10
 				)
 				params.canon[1]=new params.constructor_canon(
 					number=0,
 					delay=0,
 					posx=400-200,
-					posy=500,
+					posy=400,
 					speed=900,
-					frequency=50,
+					frequency=500,
 					variance=0,
 					angular=180,
 					_flag=params._flag_level_complete,
 					kill_with_world=true,
-					special_color=false
+					special_color=false,
+					_rotate=false,
+					_value_rotate=10
 				)
 
 			}

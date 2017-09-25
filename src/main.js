@@ -102,7 +102,7 @@ function main(){
 	var container;
 
 	var email=JSON.stringify(localStorage);
-co(email,'localStorage')
+	co(email,'localStorage')
 	//class for text intitulé dans chaque level
 	_text=function(message,posx,posy,taille){
 		this.text=game.add.bitmapText(posx,posy,'police',message,taille);
@@ -325,7 +325,7 @@ co(email,'localStorage')
 		this.score.anchor.setTo(.5,.5)
 		this.life = game.add.bitmapText(w2,1550,'police','3',120)
 		this.life.anchor.setTo(.5,.5)
-			this.life.visible=false
+		this.life.visible=false
 		this.touch_button = game.add.sprite(this.life.x,this.life.y-20,'touch')
 		this.touch_button.anchor.setTo(.5,.5)
 		this.touch_button.alpha=0
@@ -607,14 +607,14 @@ co(email,'localStorage')
 		this.particle.start(true,3900,null,15)
 		game.time.events.add( 100,function(){this.particle.on=false},this )
 	}
-character.prototype.explode_all=function(n){
-	co(this.player.length,'length')
-	n = n + 1
-	for(var i=n; i<3 ;i++) {
-		this.explode(i);
-	}
+	character.prototype.explode_all=function(n){
+		co(this.player.length,'length')
+		n = n + 1
+		for(var i=n; i<3 ;i++) {
+			this.explode(i);
+		}
 
-}
+	}
 	//character.prototype.explode=function(posx,posy,n){
 	//	if(this.player[n].is_exploding==false){
 	//		if(!flag_level_complete && n < 2){
@@ -1269,7 +1269,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		is_preload_rewarded_video=false
 		hero = new character() 
 		count_hero=0
-			game.time.events.add(delay_for_game_begin,()=>{hero.life.visible=true})
+		game.time.events.add(delay_for_game_begin,()=>{hero.life.visible=true})
 		game.time.events.add(delay_for_game_begin,()=>{animate_touch(hero.touch_button)})
 		level_number=num
 		level_number_adapt=level_number+1
@@ -1544,548 +1544,548 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 	//
 	//			this.create_dalle=function(){
 	//				dalle[0]=new _dalle(
-	//					number=0,
+//					number=0,
 	//					delay=100,
 	//					posx=100,
-	//					posy=440,
+//					posy=440,
 	//					speed=300
 	//				)
-	//				//	dalle[1]=new _dalle(
-	//				//		number=0,
-	//				//		delay=100,
-	//				//		posx=600,
-	//				//		posy=940,
-	//				//		speed=300,
-	//				//	)
-	//			}
-	//			if(debug_store){
-	//				check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
-	//
-	//			}else{
-	//				this.create_canon()
-	//				this.create_asteroid()
-	//				this.create_dalle_moving()
-	//				this.create_pulsar()
-	//				this.create_dalle()
-	//			}
-	//			logic()
-	//			return level_number
-	//		},
-	//		update:function(){
-	//			tap(this,hero)
-	//		},
-	//		render:function(){
-	//			logic_render()
-	//		},
-	//	}
-	var levsel={
-		// define needed variables for mygame.LevelSelect
-		preload: function() {
-			this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
-			this.game.load.bitmapFont('police','fonts/font.png', 'fonts/font.fnt');
-			this.game.load.image("background","assets/background.png");
+//				//	dalle[1]=new _dalle(
+//				//		number=0,
+//				//		delay=100,
+//				//		posx=600,
+//				//		posy=940,
+//				//		speed=300,
+//				//	)
+//			}
+//			if(debug_store){
+//				check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
+//
+//			}else{
+//				this.create_canon()
+//				this.create_asteroid()
+//				this.create_dalle_moving()
+//				this.create_pulsar()
+//				this.create_dalle()
+//			}
+//			logic()
+//			return level_number
+//		},
+//		update:function(){
+//			tap(this,hero)
+//		},
+//		render:function(){
+//			logic_render()
+//		},
+//	}
+var levsel={
+	// define needed variables for mygame.LevelSelect
+	preload: function() {
+		this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
+		this.game.load.bitmapFont('police','fonts/font.png', 'fonts/font.fnt');
+		this.game.load.image("background","assets/background.png");
 
-			this.initProgressData();
-		},
+		this.initProgressData();
+	},
 
-		create: function() {
-			this.holdicons = [];
-			this.game.stage.backgroundColor = '#0d1018'
-			this.game.add.sprite(0,0,'background');
-			this.text=game.add.bitmapText(640,200,'police','Select a level!',100);
-			this.text.anchor.setTo(.5,.5)
-			this.createLevelIcons();
-			this.animateLevelIcons();
-		},
+	create: function() {
+		this.holdicons = [];
+		this.game.stage.backgroundColor = '#0d1018'
+		this.game.add.sprite(0,0,'background');
+		this.text=game.add.bitmapText(640,200,'police','Select a level!',100);
+		this.text.anchor.setTo(.5,.5)
+		this.createLevelIcons();
+		this.animateLevelIcons();
+	},
 
-		update: function() {
-			// nothing to do but wait until player selects a level
-		},
+	update: function() {
+		// nothing to do but wait until player selects a level
+	},
 
-		render: function() {
-			// display some debug info..?
-		},
+	render: function() {
+		// display some debug info..?
+	},
 
-		initProgressData: function() {
+	initProgressData: function() {
 
-			// array might be undefined at first time start up
-			if (!PLAYER_DATA) {
-				// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
-				var str = window.localStorage.getItem('mygame_progress');
+		// array might be undefined at first time start up
+		if (!PLAYER_DATA) {
+			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
+			var str = window.localStorage.getItem('mygame_progress');
 
-				// error checking, localstorage might not exist yet at first time start up
-				try {
-					PLAYER_DATA = JSON.parse(str);
-				} catch(e){
-					PLAYER_DATA = []; //error in the above string(in this case,yes)!
-				};
-				// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
-				if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
-					PLAYER_DATA = [];
-				};
+			// error checking, localstorage might not exist yet at first time start up
+			try {
+				PLAYER_DATA = JSON.parse(str);
+			} catch(e){
+				PLAYER_DATA = []; //error in the above string(in this case,yes)!
 			};
-		},
+			// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
+			if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
+				PLAYER_DATA = [];
+			};
+		};
+	},
 
-		createLevelIcons: function() {
-			var levelnr = 0;
+	createLevelIcons: function() {
+		var levelnr = 0;
 
-			for (var y=0; y < 5; y++) {
-				for (var x=0; x < 4; x++) {
-					// next level
-					levelnr = levelnr + 1;
+		for (var y=0; y < 8; y++) {
+			for (var x=0; x < 4; x++) {
+				// next level
+				levelnr = levelnr + 1;
 
-					// check if array not yet initialised
-					if (typeof PLAYER_DATA[levelnr-1] !== 'number') {
-						// value is null or undefined, i.e. array not defined or too short between app upgrades with more levels
-						if (levelnr == 1) {
-							PLAYER_DATA[levelnr-1] = 0; // level 1 should never be locked
-						} else {
-							PLAYER_DATA[levelnr-1] = -1;
-						};
+				// check if array not yet initialised
+				if (typeof PLAYER_DATA[levelnr-1] !== 'number') {
+					// value is null or undefined, i.e. array not defined or too short between app upgrades with more levels
+					if (levelnr == 1) {
+						PLAYER_DATA[levelnr-1] = 0; // level 1 should never be locked
+					} else {
+						PLAYER_DATA[levelnr-1] = -1;
 					};
-
-					// player progress info for this level
-					var playdata = PLAYER_DATA[levelnr-1];
-					console.log("playdata",playdata);
-					// decide which icon
-					var isLocked = true; // locked
-					var stars = 0; // no stars
-
-					// check if level is unlocked
-					if (playdata > -1) {
-						isLocked = false; // unlocked
-						if (playdata < 4) {stars = playdata;}; // 0..3 stars
-					};
-
-					// calculate position on screen
-					var xpos = 60 + (x*300);
-					var ypos = 320 + (y*300);
-
-					// create icon
-					this.holdicons[levelnr-1] = this.createLevelIcon(xpos, ypos, levelnr, isLocked, stars);
-					var backicon = this.holdicons[levelnr-1].getAt(0);
-
-					// keep level nr, used in onclick method
-					backicon.health = levelnr;
-
-					// input handler
-					backicon.inputEnabled = true;
-					backicon.events.onInputDown.add(this.onSpriteDown, this);
 				};
+
+				// player progress info for this level
+				var playdata = PLAYER_DATA[levelnr-1];
+				console.log("playdata",playdata);
+				// decide which icon
+				var isLocked = true; // locked
+				var stars = 0; // no stars
+
+				// check if level is unlocked
+				if (playdata > -1) {
+					isLocked = false; // unlocked
+					if (playdata < 4) {stars = playdata;}; // 0..3 stars
+				};
+
+				// calculate position on screen
+				var xpos = 60 + (x*300);
+				var ypos = 320 + (y*300);
+
+				// create icon
+				this.holdicons[levelnr-1] = this.createLevelIcon(xpos, ypos, levelnr, isLocked, stars);
+				var backicon = this.holdicons[levelnr-1].getAt(0);
+
+				// keep level nr, used in onclick method
+				backicon.health = levelnr;
+
+				// input handler
+				backicon.inputEnabled = true;
+				backicon.events.onInputDown.add(this.onSpriteDown, this);
 			};
-		},
+		};
+	},
 
-		// -------------------------------------
-		// Add level icon buttons
-		// -------------------------------------
-		createLevelIcon: function(xpos, ypos, levelnr, isLocked, stars) {
+	// -------------------------------------
+	// Add level icon buttons
+	// -------------------------------------
+	createLevelIcon: function(xpos, ypos, levelnr, isLocked, stars) {
 
-			// create new group
-			var IconGroup = this.game.add.group();
-			IconGroup.x = xpos;
-			IconGroup.y = ypos;
+		// create new group
+		var IconGroup = this.game.add.group();
+		IconGroup.x = xpos;
+		IconGroup.y = ypos;
 
-			// keep original position, for restoring after certain tweens
-			IconGroup.xOrg = xpos;
-			IconGroup.yOrg = ypos;
+		// keep original position, for restoring after certain tweens
+		IconGroup.xOrg = xpos;
+		IconGroup.yOrg = ypos;
 
-			// determine background frame
-			var frame = 0;
-			if (isLocked == false) {frame = 1};
+		// determine background frame
+		var frame = 0;
+		if (isLocked == false) {frame = 1};
 
-			// add background
-			var icon1 = this.game.add.sprite(0, 0, 'levelselecticons', frame);
-			IconGroup.add(icon1);
+		// add background
+		var icon1 = this.game.add.sprite(0, 0, 'levelselecticons', frame);
+		IconGroup.add(icon1);
 
 
-			// add stars, if needed
-			if (isLocked == false) {
-				var txt = this.game.add.bitmapText(137, 147, 'police', ''+levelnr, 100);
-				txt.anchor.setTo(.5,.5)
-				var icon2 = this.game.add.sprite(0, 0, 'levelselecticons', (2+stars));
+		// add stars, if needed
+		if (isLocked == false) {
+			var txt = this.game.add.bitmapText(137, 147, 'police', ''+levelnr, 100);
+			txt.anchor.setTo(.5,.5)
+			var icon2 = this.game.add.sprite(0, 0, 'levelselecticons', (2+stars));
 
-				IconGroup.add(icon2);
-				IconGroup.add(txt);
-			}else{
-				var txt_locked = this.game.add.bitmapText(137, 147, 'police', ''+levelnr, 100);
-				txt_locked.anchor.setTo(.5,.5)
-				//txt_locked.tint=0x9a136b
-				IconGroup.add(txt_locked);
+			IconGroup.add(icon2);
+			IconGroup.add(txt);
+		}else{
+			var txt_locked = this.game.add.bitmapText(137, 147, 'police', ''+levelnr, 100);
+			txt_locked.anchor.setTo(.5,.5)
+			//txt_locked.tint=0x9a136b
+			IconGroup.add(txt_locked);
 
-			};
+		};
 
-			return IconGroup;
-		},
+		return IconGroup;
+	},
 
-		onSpriteDown: function(sprite, pointer) {
+	onSpriteDown: function(sprite, pointer) {
 		this.sound_menu_no=game.add.audio('menu_no')
 		this.sound_click=game.add.audio('click')
 
 
-			// retrieve the iconlevel
-			var levelnr = sprite.health;
+		// retrieve the iconlevel
+		var levelnr = sprite.health;
 
-			if (PLAYER_DATA[levelnr-1] < 0) {
-				// indicate it's locked by shaking left/right
-				this.sound_menu_no.play()
-				var IconGroup = this.holdicons[levelnr-1];
-				var xpos = IconGroup.xOrg;
+		if (PLAYER_DATA[levelnr-1] < 0) {
+			// indicate it's locked by shaking left/right
+			this.sound_menu_no.play()
+			var IconGroup = this.holdicons[levelnr-1];
+			var xpos = IconGroup.xOrg;
 
-				var tween = this.game.add.tween(IconGroup)
-					.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos+4 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos-3 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos+2 }, 20, Phaser.Easing.Linear.None)
-					.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
-					.start();
-			} else {
-				this.sound_click.play()
-				// simulate button press animation to indicate selection
-				var IconGroup = this.holdicons[levelnr-1];
-				var tween = this.game.add.tween(IconGroup.scale)
-					.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
-					.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
-					.start();
+			var tween = this.game.add.tween(IconGroup)
+				.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos+4 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos-3 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos+2 }, 20, Phaser.Easing.Linear.None)
+				.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
+				.start();
+		} else {
+			this.sound_click.play()
+			// simulate button press animation to indicate selection
+			var IconGroup = this.holdicons[levelnr-1];
+			var tween = this.game.add.tween(IconGroup.scale)
+				.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
+				.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
+				.start();
 
-				// it's a little tricky to pass selected levelnr to callback function, but this works:
-				this.onLevelSelected(levelnr-1)
-				//tween._lastChild.onComplete.add(function(){this.onLevelSelected(sprite.health);}, this);
-			};
-		},
+			// it's a little tricky to pass selected levelnr to callback function, but this works:
+			this.onLevelSelected(levelnr-1)
+			//tween._lastChild.onComplete.add(function(){this.onLevelSelected(sprite.health);}, this);
+		};
+	},
 
-		animateLevelIcons: function() {
+	animateLevelIcons: function() {
 
-			// slide all icons into screen
-			for (var i=0; i < this.holdicons.length; i++){
-				// get variables
-				var IconGroup = this.holdicons[i];
-				IconGroup.y = IconGroup.y + 600;
-				var y = IconGroup.y;
+		// slide all icons into screen
+		for (var i=0; i < this.holdicons.length; i++){
+			// get variables
+			var IconGroup = this.holdicons[i];
+			IconGroup.y = IconGroup.y + 600;
+			var y = IconGroup.y;
 
-				// tween animation
-				this.game.add.tween(IconGroup).to( {y: y-600}, 500, Phaser.Easing.Back.Out, true, (i*40));
-			};
-		},
+			// tween animation
+			this.game.add.tween(IconGroup).to( {y: y-600}, 500, Phaser.Easing.Back.Out, true, (i*40));
+		};
+	},
 
-		onLevelSelected: function(levelnr) {
-			console.log(levelnr,'rr');
-			this.number_level=levelnr
-			game.state.start('level'+this.number_level,true,false)
-		},
-	};
+	onLevelSelected: function(levelnr) {
+		console.log(levelnr,'rr');
+		this.number_level=levelnr
+		game.state.start('level'+this.number_level,true,false)
+	},
+};
 
 
 
-	var logic_add=function(){
-		game.add.existing(hero)
+var logic_add=function(){
+	game.add.existing(hero)
 
-		var logic_add_intenal=function(obj){
+	var logic_add_intenal=function(obj){
+		if(obj[0]){
+			for_each(obj,game.add.existing.bind(game));
+		}	
+	}
+
+	logic_add_intenal(canon)
+	logic_add_intenal(dalle)
+	logic_add_intenal(dalle_moving)
+	logic_add_intenal(pulsar)
+	logic_add_intenal(asteroid)
+}
+var logic_update=function(){
+	game.time.events.loop( 50,function(){ 
+
+		//debug_position && logic_position()
+		for (var j = 0; j < 3; j++){
+			game.physics.arcade.collide(hero.cible,hero.player[j],() => hero.land(j))
+		}
+
+		//si reussi niveau
+		flag_level_complete && flag_hide && flag_level_complete==false & console.log("ok") & game.time.events.add( 9,hide_weapon,this )
+
+		//si checkicharacterisloossomewhere
+		hero.flag_hide_enemies && flag_hide && hero.flag_hide_enemies==false & game.time.events.add( 300,hide_weapon,this )
+
+		if(canon[1]){
+			game.physics.arcade.collide(canon[0].weapon.bullets,canon[1].weapon.bullets,touch_between_enemies,null,this)
+		}
+
+		if(canon[2]){
+			game.physics.arcade.collide(canon[0].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
+			game.physics.arcade.collide(canon[1].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
+		}
+
+		var collide_function=function(obj){
 			if(obj[0]){
-				for_each(obj,game.add.existing.bind(game));
-			}	
-		}
-
-		logic_add_intenal(canon)
-		logic_add_intenal(dalle)
-		logic_add_intenal(dalle_moving)
-		logic_add_intenal(pulsar)
-		logic_add_intenal(asteroid)
-	}
-	var logic_update=function(){
-		game.time.events.loop( 50,function(){ 
-
-			//debug_position && logic_position()
-			for (var j = 0; j < 3; j++){
-				game.physics.arcade.collide(hero.cible,hero.player[j],() => hero.land(j))
-			}
-
-			//si reussi niveau
-			flag_level_complete && flag_hide && flag_level_complete==false & console.log("ok") & game.time.events.add( 9,hide_weapon,this )
-
-			//si checkicharacterisloossomewhere
-			hero.flag_hide_enemies && flag_hide && hero.flag_hide_enemies==false & game.time.events.add( 300,hide_weapon,this )
-
-			if(canon[1]){
-				game.physics.arcade.collide(canon[0].weapon.bullets,canon[1].weapon.bullets,touch_between_enemies,null,this)
-			}
-
-			if(canon[2]){
-				game.physics.arcade.collide(canon[0].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
-				game.physics.arcade.collide(canon[1].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this)
-			}
-
-			var collide_function=function(obj){
-				if(obj[0]){
-					for (var i = 0; i < 3; i++){
-						for (var j = 0; j < obj.length; j++){
-							//game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i);conditional_animate_touch()})
-							game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(i);conditional_animate_touch()})
-
-						}
-					}
-				}
-			}
-
-			if(canon[0]){
 				for (var i = 0; i < 3; i++){
-					for (var j = 0; j < canon.length; j++){
-						if(canon[j].special_color){
-							game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],hide_weapon,null,this)
-						}else{
-							//game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
-							game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(i))
-						}
+					for (var j = 0; j < obj.length; j++){
+						//game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i);conditional_animate_touch()})
+						game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(i);conditional_animate_touch()})
+
 					}
 				}
 			}
+		}
 
-			collide_function(dalle_moving)
-			collide_function(pulsar)
-			collide_function(asteroid)
-			collide_function(dalle)
-
-		})
-	}
-
-	var touch_between_enemies=function(){
-		console.log("touch");
-
-	}
-
-	var hide_weapon=function(){
-		if(flag_hide){
-			console.log("hide_weapon")
-			hero.touch_button.visible=false
-			flag_hide = false
-			console.log('hide')
-			if(canon[0]){
+		if(canon[0]){
+			for (var i = 0; i < 3; i++){
 				for (var j = 0; j < canon.length; j++){
-					canon[j].explode_bullet(canon[j].weapon.bullets)
-					canon[j].visible=false
-					canon[j].weapon.bullets.visible=false
-					canon[j].hide_explosion()
-					canon[j].destroy()
-					canon[j].weapon.bullets.forEach(function(item){
-						if(item.alive){	
-							item.body.enable=false
-						}})
+					if(canon[j].special_color){
+						game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],hide_weapon,null,this)
+					}else{
+						//game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
+						game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(i))
+					}
 				}
 			}
-			for_action(dalle,'hide')
-			for_action(canon,'hide')
-			for_action(dalle_moving,'hide')
-			for_action(asteroid,'hide')
-			for_action(pulsar,'hide')
 		}
-	}
 
-	var show_grid_on_logic_position=function(sprite){
-		console.log("logic_position")
-		debug_mode ? hero.grid.visible=true:hero.grid.visible=false	
-		logic_position(sprite)
+		collide_function(dalle_moving)
+		collide_function(pulsar)
+		collide_function(asteroid)
+		collide_function(dalle)
 
-		if(debug_position){
+	})
+}
 
-			gui && gui.destroy()
-			gui=new dat.GUI()
-			gui.start=true
-			var guit={}
+var touch_between_enemies=function(){
+	console.log("touch");
 
-			function guit_declare(...args){
-				let condition=args.length
-				//obligé ...ne sait pas pourquoi
-				let parameter=args[1]
-				if (condition> 2){	
-					guit.parameter=gui.add(args[0],args[1],args[2],args[3])
-					co(args[1],"args")
-					guit.parameter.onChange(function(value){
-						args[0].fire()
-						logic_position(args[0])
-					})
-				}else{
-					guit.parameter=gui.add(args[0],args[1])
-					guit.parameter.onChange(function(value){
-						args[0].kill()
-						logic_position(args[0])
-					})
-				}
-			}
+}
 
-			switch(sprite.name){
-				case "canon":
-					gui.add(sprite,'name')
-					guit_declare(sprite,'speed',0,5000)
-					guit_declare(sprite,'frequency',0,5000)
-					guit.kill=gui.add(sprite,'kill_with_world')
-					guit.kill.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
-					guit.kill=gui.add(sprite,'_rotate')
-					guit.kill.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
-					guit_declare(sprite,'_value_rotate',0,10)
-					//guit_declare(sprite,'_rotate')
-					guit.kill=gui.add(sprite,'special_color')
-					guit.kill.onChange(function(value) {
-						sprite.fire()// Fires on every change, drag, keypress, etc.
-						logic_position(sprite)
-					})
-					guit_declare(sprite,'angular',0,360)
-					guit_declare(sprite,'variance',0,1000)
-					guit_declare(sprite,'kill')
-					break
-				case "pulsar":
-					gui.add(sprite,'name')
-					guit_declare(sprite,'speed',300,9000)
-					guit_declare(sprite,'kill')
-					break;
-				case "asteroid":
-					gui.add(sprite,'name')
-					gui.add(sprite,'radius',100,500)
-					gui.add(sprite,'speed',0,.01)
-					guit_declare(sprite,'kill')
-					break;
-				case "dalle_moving":
-					gui.add(sprite,'name')
-					guit_declare(sprite,'speed',300,3000)
-					guit_declare(sprite,'posx_in_tween',-800,800)
-					guit_declare(sprite,'kill')
-					break;
-				case "dalle":
-					gui.add(sprite,'name')
-					guit_declare(sprite,'speed',300,3000);
-					guit_declare(sprite,'kill');
-					break;
-				default:
-					break;
+var hide_weapon=function(){
+	if(flag_hide){
+		console.log("hide_weapon")
+		hero.touch_button.visible=false
+		flag_hide = false
+		console.log('hide')
+		if(canon[0]){
+			for (var j = 0; j < canon.length; j++){
+				canon[j].explode_bullet(canon[j].weapon.bullets)
+				canon[j].visible=false
+				canon[j].weapon.bullets.visible=false
+				canon[j].hide_explosion()
+				canon[j].destroy()
+				canon[j].weapon.bullets.forEach(function(item){
+					if(item.alive){	
+						item.body.enable=false
+					}})
 			}
 		}
+		for_action(dalle,'hide')
+		for_action(canon,'hide')
+		for_action(dalle_moving,'hide')
+		for_action(asteroid,'hide')
+		for_action(pulsar,'hide')
 	}
+}
 
-	var logic_position=function(sprite){
-		if (debug_position){
-			hero.grid.visible=false	
-			var _table
-			var _name_json
-			switch(sprite.name){
-				case 'canon':
-					_table=c
-					_name_json='canon'
-					_table[sprite.number] = {
-						number:sprite.number,
-						delay:Math.round(sprite.delay),
-						x:Math.round(sprite.x),
-						y:Math.round(sprite.y),
-						speed:Math.round(sprite.speed),
-						frequency:Math.round(sprite.frequency),
-						variance:Math.round(sprite.variance),
-						angular:Math.round(sprite.angular),
-						_flag:sprite._flag,
-						kill_with_world:sprite.kill_with_world,
-						special_color:sprite.special_color,
-						_rotate:sprite._rotate,
-						_value_rotate:sprite._value_rotate,
-					};
-					break
-				case 'asteroid':
-					_table=a
-					_name_json='asteroid'
-					_table[sprite.number] = {
-						x:Math.round(sprite.x),
-						y:Math.round(sprite.y),
-						speed:sprite.speed,
-						radius:Math.round(sprite.radius),
-					};
-					break
-				case 'dalle_moving':
-					_table=n
-					_name_json='dalle_moving'
-					_table[sprite.number] = {
-						delay:Math.round(sprite.delay),
-						x:Math.round(sprite.x),
-						y:Math.round(sprite.y),
-						speed:Math.round(sprite.speed),
-						posx_in_tween:Math.round(sprite.posx_in_tween),
-					};
-					break
-				case 'pulsar':
-					_table=p
-					_name_json='pulsar'
-					_table[sprite.number] = {
-						delay:Math.round(sprite.delay),
-						time:Math.round(sprite.time),
-						x:Math.round(sprite.x),
-						y:Math.round(sprite.y),
-						speed:Math.round(sprite.speed),
-						scale_factor:sprite.scale_factor,
-					};
-					break
-				case 'dalle':
-					_table=d
-					_name_json='dalle'
-					_table[sprite.number] = {
-						delay:Math.round(sprite.delay),
-						x:Math.round(sprite.x),
-						y:Math.round(sprite.y),
-						speed:Math.round(sprite.speed),
-					};
-					break
-			}
-			this.level=level_number
-			this.name_level='lev'
-			this.combined_level=this.name_level+this.level
-			debug_store && localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]));
-		}
-	}
+var show_grid_on_logic_position=function(sprite){
+	console.log("logic_position")
+	debug_mode ? hero.grid.visible=true:hero.grid.visible=false	
+	logic_position(sprite)
 
-	var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
-		//var check_in_local_storage=function(obj,num,table){
-		//	for(var i=0;i<num;i++){
-		//		try {
-		//			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
-		//		} catch(e){
-		//			table[i]=[];
-		//		}
-		//	};
-		//}
-		var check_in_local_storage=function(obj,num,table){
-			for(var i=0;i<num;i++){
-				table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
-			};
-		}
+	if(debug_position){
 
-		check_in_local_storage("canon",num_canon,c)
-		check_in_local_storage("asteroid",num_asteroid,a)
-		check_in_local_storage("dalle_moving",num_dalle_moving,n)
-		check_in_local_storage("pulsar",num_pulsar,p)
-		check_in_local_storage("dalle",num_dalle,d)
+		gui && gui.destroy()
+		gui=new dat.GUI()
+		gui.start=true
+		var guit={}
 
-		for(var i=0;i<num_canon;i++){
-			if (c[i]===null){
-				_create_canon()
-				break
+		function guit_declare(...args){
+			let condition=args.length
+			//obligé ...ne sait pas pourquoi
+			let parameter=args[1]
+			if (condition> 2){	
+				guit.parameter=gui.add(args[0],args[1],args[2],args[3])
+				co(args[1],"args")
+				guit.parameter.onChange(function(value){
+					args[0].fire()
+					logic_position(args[0])
+				})
 			}else{
-				c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number))
-				canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color,c[i]._rotate,c[i]._value_rotate);
+				guit.parameter=gui.add(args[0],args[1])
+				guit.parameter.onChange(function(value){
+					args[0].kill()
+					logic_position(args[0])
+				})
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////////////////
-
-		for(var i=0;i<num_asteroid;i++){
-			if (a[i]===null){
-				_create_asteroid()
+		switch(sprite.name){
+			case "canon":
+				gui.add(sprite,'name')
+				guit_declare(sprite,'speed',0,5000)
+				guit_declare(sprite,'frequency',0,5000)
+				guit.kill=gui.add(sprite,'kill_with_world')
+				guit.kill.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
+				guit.kill=gui.add(sprite,'_rotate')
+				guit.kill.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
+				guit_declare(sprite,'_value_rotate',0,10)
+				//guit_declare(sprite,'_rotate')
+				guit.kill=gui.add(sprite,'special_color')
+				guit.kill.onChange(function(value) {
+					sprite.fire()// Fires on every change, drag, keypress, etc.
+					logic_position(sprite)
+				})
+				guit_declare(sprite,'angular',0,360)
+				guit_declare(sprite,'variance',0,1000)
+				guit_declare(sprite,'kill')
 				break
-			}else{
-				//asteroid = function(number,posx,posy,speed,radius)
-				asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius)
-			}
+			case "pulsar":
+				gui.add(sprite,'name')
+				guit_declare(sprite,'speed',300,9000)
+				guit_declare(sprite,'kill')
+				break;
+			case "asteroid":
+				gui.add(sprite,'name')
+				gui.add(sprite,'radius',100,500)
+				gui.add(sprite,'speed',0,.01)
+				guit_declare(sprite,'kill')
+				break;
+			case "dalle_moving":
+				gui.add(sprite,'name')
+				guit_declare(sprite,'speed',300,3000)
+				guit_declare(sprite,'posx_in_tween',-800,800)
+				guit_declare(sprite,'kill')
+				break;
+			case "dalle":
+				gui.add(sprite,'name')
+				guit_declare(sprite,'speed',300,3000);
+				guit_declare(sprite,'kill');
+				break;
+			default:
+				break;
 		}
-		///////////////////////////////////////////////////////////////////////////////////////////
+	}
+}
+
+var logic_position=function(sprite){
+	if (debug_position){
+		hero.grid.visible=false	
+		var _table
+		var _name_json
+		switch(sprite.name){
+			case 'canon':
+				_table=c
+				_name_json='canon'
+				_table[sprite.number] = {
+					number:sprite.number,
+					delay:Math.round(sprite.delay),
+					x:Math.round(sprite.x),
+					y:Math.round(sprite.y),
+					speed:Math.round(sprite.speed),
+					frequency:Math.round(sprite.frequency),
+					variance:Math.round(sprite.variance),
+					angular:Math.round(sprite.angular),
+					_flag:sprite._flag,
+					kill_with_world:sprite.kill_with_world,
+					special_color:sprite.special_color,
+					_rotate:sprite._rotate,
+					_value_rotate:sprite._value_rotate,
+				};
+				break
+			case 'asteroid':
+				_table=a
+				_name_json='asteroid'
+				_table[sprite.number] = {
+					x:Math.round(sprite.x),
+					y:Math.round(sprite.y),
+					speed:sprite.speed,
+					radius:Math.round(sprite.radius),
+				};
+				break
+			case 'dalle_moving':
+				_table=n
+				_name_json='dalle_moving'
+				_table[sprite.number] = {
+					delay:Math.round(sprite.delay),
+					x:Math.round(sprite.x),
+					y:Math.round(sprite.y),
+					speed:Math.round(sprite.speed),
+					posx_in_tween:Math.round(sprite.posx_in_tween),
+				};
+				break
+			case 'pulsar':
+				_table=p
+				_name_json='pulsar'
+				_table[sprite.number] = {
+					delay:Math.round(sprite.delay),
+					time:Math.round(sprite.time),
+					x:Math.round(sprite.x),
+					y:Math.round(sprite.y),
+					speed:Math.round(sprite.speed),
+					scale_factor:sprite.scale_factor,
+				};
+				break
+			case 'dalle':
+				_table=d
+				_name_json='dalle'
+				_table[sprite.number] = {
+					delay:Math.round(sprite.delay),
+					x:Math.round(sprite.x),
+					y:Math.round(sprite.y),
+					speed:Math.round(sprite.speed),
+				};
+				break
+		}
+		this.level=level_number
+		this.name_level='lev'
+		this.combined_level=this.name_level+this.level
+		debug_store && localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]));
+	}
+}
+
+var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
+	//var check_in_local_storage=function(obj,num,table){
+	//	for(var i=0;i<num;i++){
+	//		try {
+	//			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
+	//		} catch(e){
+	//			table[i]=[];
+	//		}
+	//	};
+	//}
+	var check_in_local_storage=function(obj,num,table){
+		for(var i=0;i<num;i++){
+			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
+		};
+	}
+
+	check_in_local_storage("canon",num_canon,c)
+	check_in_local_storage("asteroid",num_asteroid,a)
+	check_in_local_storage("dalle_moving",num_dalle_moving,n)
+	check_in_local_storage("pulsar",num_pulsar,p)
+	check_in_local_storage("dalle",num_dalle,d)
+
+	for(var i=0;i<num_canon;i++){
+		if (c[i]===null){
+			_create_canon()
+			break
+		}else{
+			c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number))
+			canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color,c[i]._rotate,c[i]._value_rotate);
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+for(var i=0;i<num_asteroid;i++){
+	if (a[i]===null){
+		_create_asteroid()
+		break
+	}else{
+		//asteroid = function(number,posx,posy,speed,radius)
+		asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius)
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////////////
 
 for(var i=0;i<num_dalle_moving;i++){
 	if (n[i]===null){
@@ -2116,7 +2116,6 @@ for(var i=0;i<num_dalle;i++){
 		dalle[i]=new _dalle(i,d[i].delay,d[i].x,d[i].y,d[i].speed)
 	}
 }
-
 }
 
 var logic_render=function(){
@@ -2200,7 +2199,7 @@ var intermediate_screen={
 		this.particlex.minRotation = 0
 		this.particlex.maxRotation = 0
 		this.particlex.on=false
-		
+
 		game.time.events.add(600,()=>{this.particlex.start(true,2950,null,5)})
 		game.time.events.add(800,()=>{this.particlex.on=true})
 
