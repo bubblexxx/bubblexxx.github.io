@@ -2248,6 +2248,6 @@ var detectmob=function(){
 		return true;
 	}
 }
-detectmob()
+//detectmob()
 
 
