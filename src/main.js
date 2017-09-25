@@ -1629,7 +1629,7 @@ var levsel={
 	createLevelIcons: function() {
 		var levelnr = 0;
 
-		for (var y=0; y < 8; y++) {
+		for (var y=0; y < 5; y++) {
 			for (var x=0; x < 4; x++) {
 				// next level
 				levelnr = levelnr + 1;
