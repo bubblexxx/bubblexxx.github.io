@@ -27,6 +27,7 @@
 var is_mobile=true
 
 function main(){
+	alert("mo")
 	var videoreward;
 	var c=[]
 	var a=[]
