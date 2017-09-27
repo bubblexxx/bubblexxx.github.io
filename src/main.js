@@ -25,9 +25,17 @@
 //body enbale false lorsque touché un projectile violet
 
 var is_mobile=true
-
+var bootstate
+var preloadstate
+var game_first_screen
+var intermediate_screen
+var level0
+var level1
+var level2
+var level3
+var levsel
 function main(){
-	alert("m")
+	//alert("m")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -54,7 +62,6 @@ function main(){
 	var number_pulsar=null 
 	var number_dalle=null 
 	var count_hero 
-	var level0
 	var level_number_adapt
 	var text_to_describe_level
 	var text_to_number_level
@@ -415,7 +422,7 @@ function main(){
 	}
 
 	character.prototype.back_to_menu = function() {
-		game.state.start("game_first_screen")
+		game.state.start("game_first_screen",game_first_screen)
 	}
 
 	character.prototype.send_data_mail = function(){
@@ -557,7 +564,7 @@ function main(){
 		};
 		window.chartboost.onRewardedVideoAdHidden = function(location) {
 			//alert('onRewardedVideoAdHidden: ' + location);
-			is_rewarded_video_completed && game.state.start('intermediate_screen');
+			is_rewarded_video_completed && game.state.start('intermediate_screen',intermediate_screen);
 		};
 		window.chartboost.onRewardedVideoAdCompleted = function(location) {
 			//alert('onRewardedVideoAdCompleted: ' + location);
@@ -1107,7 +1114,7 @@ function main(){
 		}
 	}
 
-	var bootstate= {
+	bootstate= {
 		preload: function(){
 			console.log("%cStarting Bubx", "color:white; background:#ff1fcd");
 			this.load.image("loading","assets/loading.png"); 
@@ -1119,11 +1126,11 @@ function main(){
 			this.scale.pageAlignVertically = true
 			this.scale.refresh()
 			this.game.stage.backgroundColor = '#0d1018'
-			this.state.start("preload");
+			game.state.start("preload",preloadstate);
 		},
 	}
 
-	var preloadstate = {
+	preloadstate = {
 		preload: function(){ 
 			//loadingBar
 			var loadingBar_back = this.add.sprite(w2,h2,"loading_back");
@@ -1187,12 +1194,12 @@ function main(){
 			this.game.stage.backgroundColor = '#0d1018'
 			this.background=game.add.sprite(0,0,'background');
 			this.game.add.existing(this.background)
-			game.time.events.add(1000, ()=>{game.state.start("game_first_screen")});
+			game.time.events.add(1000, ()=>{game.state.start("game_first_screen",game_first_screen)});
 			//game.state.start("intermediate_screen");
 		},
 	}
 
-	var game_first_screen = {
+	game_first_screen = {
 		create: function(){
 			this.game.stage.backgroundColor = '#0d1018'
 			this.title=new screen_first()
@@ -1545,24 +1552,24 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 	//
 	//			this.create_dalle=function(){
 	//				dalle[0]=new _dalle(
-//					number=0,
+	//					number=0,
 	//					delay=100,
 	//					posx=100,
-//					posy=440,
+	//					posy=440,
 	//					speed=300
 	//				)
-//				//	dalle[1]=new _dalle(
-//				//		number=0,
+	//				//	dalle[1]=new _dalle(
+	//				//		number=0,
 //				//		delay=100,
 //				//		posx=600,
-//				//		posy=940,
-//				//		speed=300,
-//				//	)
-//			}
+	//				//		posy=940,
+	//				//		speed=300,
+	//				//	)
+	//			}
 //			if(debug_store){
 //				check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
-//
-//			}else{
+	//
+	//			}else{
 //				this.create_canon()
 //				this.create_asteroid()
 //				this.create_dalle_moving()
@@ -1579,7 +1586,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 //			logic_render()
 //		},
 //	}
-var levsel={
+levsel={
 	// define needed variables for mygame.LevelSelect
 	preload: function() {
 		this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
@@ -2184,7 +2191,7 @@ var pass_level=()=>{
 	game.state.start('level'+next_niveau,true,false);
 }
 
-var intermediate_screen={
+intermediate_screen={
 	create:function(){
 
 		background_to_pass_level = game.add.sprite(0,0,'background')
@@ -2211,23 +2218,23 @@ var intermediate_screen={
 	},
 }
 
-var level0=level_0(level_config,0)
-var level1=level_1(level_config,1)
-var level2=level_2(level_config,2)
-var level3=level_3(level_config,3)
+level0=level_0(level_config,0)
+level1=level_1(level_config,1)
+level2=level_2(level_config,2)
+level3=level_3(level_config,3)
 
 
-game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
-game.state.add('boot',bootstate)
-game.state.add('preload',preloadstate)
-game.state.add('game_first_screen',game_first_screen)
-game.state.add('intermediate_screen',intermediate_screen)
-game.state.add('level0',level0)
-game.state.add('level1',level1)
-game.state.add('level2',level2)
-game.state.add('level3',level3)
-game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
-game.state.start('boot',bootstate)
+//game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
+//game.state.add('boot',bootstate)
+//game.state.add('preload',preloadstate)
+//game.state.add('game_first_screen',game_first_screen)
+//game.state.add('intermediate_screen',intermediate_screen)
+//game.state.add('level0',level0)
+//game.state.add('level1',level1)
+//game.state.add('level2',level2)
+//game.state.add('level3',level3)
+//game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
+//game.state.start('boot',bootstate)
 }
 
 var detectmob=function(){ 
@@ -2249,6 +2256,6 @@ var detectmob=function(){
 		return true;
 	}
 }
-//detectmob()
+detectmob()
 
 

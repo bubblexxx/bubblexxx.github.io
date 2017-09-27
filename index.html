@@ -1,8 +1,19 @@
-
-
 <!DOCTYPE HTML>
+
 <html>
 	 <head> 
+<style type="text/css">
+	body {
+		margin: auto;
+		display: table;
+		position: absolute;
+		border:0px;
+		top: 0px;
+		left: 0px;
+		padding: 0; margin: 0;
+		background-color: #0d1018
+	}
+</style>
 		<title>BubX</title>
 		<link rel="shortcut icon" href="assets/favicon.png" type="image/x-icon" />
 		<meta charset="utf-8">
@@ -27,23 +38,21 @@
 	<body>
 		<script type="text/javascript">
 (function() {
-	detectmob()
+	game = new Phaser.Game(1280,1920,Phaser.CANVAS,'' )
+		game.state.add('bootstate',bootstate);
+	game.state.add('preload',preloadstate);
+	game.state.add('game_first_screen',game_first_screen);
+	game.state.add('intermediate_screen',intermediate_screen);
+	game.state.add('level0',level0);
+	game.state.add('level1',level1);
+	game.state.add('level2',level2);
+	game.state.add('level3',level3);
+	game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
+game.state.start('bootstate');
 })();    
 
 		</script>
 
-<style>
-	body {
-		margin: auto;
-		display: table;
-		position: absolute;
-		border:0px;
-		top: 0px;
-		left: 0px;
-		padding: 0; margin: 0;
-		background-color: #0d1018
-	}
-</style>
 	</body>
 </html>
 
