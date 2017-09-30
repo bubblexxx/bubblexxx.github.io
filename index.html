@@ -1,19 +1,19 @@
 <!DOCTYPE HTML>
 
 <html>
-	 <head> 
-<style type="text/css">
-	body {
-		margin: auto;
-		display: table;
-		position: absolute;
-		border:0px;
-		top: 0px;
-		left: 0px;
-		padding: 0; margin: 0;
-		background-color: #0d1018
-	}
-</style>
+	<head> 
+		<style type="text/css">
+body {
+	margin: auto;
+	display: table;
+	position: absolute;
+	border:0px;
+	top: 0px;
+	left: 0px;
+	padding: 0; margin: 0;
+	background-color: #0d1018
+}
+		</style>
 		<title>BubX</title>
 		<link rel="shortcut icon" href="assets/favicon.png" type="image/x-icon" />
 		<meta charset="utf-8">
@@ -25,7 +25,6 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 		<meta name="apple-mobile-web-app-title" content="Phaser App"> 
 
-		<script src="cordova.js"></script>
 		<!--script src="cordova.js"></script-->
 		<!--script src="src/live.js"></script-->
 		<script src="src/dat.gui.min.js"></script>
@@ -34,7 +33,7 @@
 		<script src="src/util.js"></script>
 		<script src="src/level.js"></script>
 		<script src="src/main.js"></script>
-	 </head> 
+	</head> 
 	<body>
 		<script type="text/javascript">
 (function() {
@@ -60,12 +59,10 @@
 			|| navigator.userAgent.match(/BlackBerry/i)
 			|| navigator.userAgent.match(/Windows Phone/i)
 	  ){
-			document.addEventListener('deviceready',launch_phaser,false)
-			is_mobile=true
+		document.addEventListener('deviceready',launch_phaser,false)
 			return true;
 	} else {
 		console.log('not mobile')
-			is_mobile=false
 			launch_phaser()
 			return true;
 	}

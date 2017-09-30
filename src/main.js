@@ -1149,18 +1149,13 @@ function main(){
 			this.game.load.image("cible_shadow","assets/cible_shadow.png");
 			this.game.load.image("grid","assets/grid.png");
 			//audio
-			//this.game.load.audio("game_over","sounds/loose/game_show_lose_08.ogg");
-			//this.game.load.audio("game_over","sounds/loose/funky_lose_03.ogg");
 			this.game.load.audio("game_over","sounds/loose/melodic_lose_01.ogg");
-			//this.game.load.audio("launch","sounds/launch.ogg");
 			this.game.load.audio("launch","sounds/launch/gum_drop_interface_53.ogg");
-			//this.game.load.audio("coin","sounds/coin.ogg");
 			this.game.load.audio("win","sounds/win/magic_chime_alert_01.ogg");
 			this.game.load.audio("pop_minder","sounds/pop2.ogg");
 			this.game.load.audio("pop","sounds/pop2.ogg");
 			this.game.load.audio("click","sounds/button/glossy_click_25.ogg");
 			this.game.load.audio("menu_no","sounds/menu/pleasant_interface_37.ogg");
-			//this.game.load.audio("click","sounds/click.ogg");
 			//images_enemy
 			this.game.load.image("canon","assets/canon.png");
 			this.game.load.image("asteroid","assets/asteroid.png");
@@ -1356,236 +1351,6 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		}
 	}
 
-	//var level0 = level_0(0,create_level,_tap,this,canon,_canon,logic,flag_level_complete)
-
-	//			
-	//			
-	//
-	//			//ne peut pas bouger
-	//			count_hero=0
-	//			//indication du level
-	//			create_level(0)
-	//			number_canon=1
-	//			number_asteroid=1
-	//			number_dalle_moving=0
-	//			number_pulsar=1
-	//			number_dalle=1
-	//
-	//			//function create_obj_internal(obj,tableau){
-	//			//obj=new _canon(tableau)	
-	//			//}
-	//
-	//			this.create_canon=function(){
-	//				canon[0]=new _canon(
-	//					number=0,
-	//					delay=0,
-	//					posx=w-200,
-	//					posy=100,
-	//					speed=900,
-	//					frequency=90,
-	//					variance=0,
-	//					angular=180,
-	//					_flag=flag_level_complete,
-	//					kill_with_world=true,
-	//					special_color=false
-	//				)
-	//				//canon[1]=new _canon(
-	//				//	number=1,
-	//				//	delay=0,
-	//				//	posx=0,
-	//				//	posy=1200,
-	//				//	speed=400,
-	//				//	frequency=900,
-	//				//	variance=0,
-	//				//	angular=0,
-	//				//	_flag=flag_level_complete,
-	//				//	kill_with_world=true,
-	//				//	special_color=false
-	//				//)
-	//			}
-	//			this.create_asteroid=function(){
-	//				asteroid[0]=new _asteroid(
-	//					number=0,
-	//					posx=100,
-	//					posy=240,
-	//					speed=.008,
-	//					radius=100
-	//				)
-	//			}
-	//
-	//			this.create_dalle_moving=function(){
-	//				//dalle_moving[0]=new _dalle_moving(
-	//				//	number=0,
-	//				//	delay=100,
-	//				//	posx=240,
-	//				//	posy=h2+100,
-	//				//	speed=300,
-	//				//	posx_in_tween=300
-	//				//)
-	//			}
-	//
-	//			this.create_pulsar=function(){
-	//				pulsar[0]=new _pulsar(
-	//					number=0,
-	//					delay=100,
-	//					time=800,
-	//					posx=w2,
-	//					posy=840,
-	//					speed=2000,
-	//					scale_factor=2
-	//				)
-	//			}
-	//
-	//			this.create_dalle=function(){
-	//				dalle[0]=new _dalle(
-	//					number=0,
-	//					delay=100,
-	//					posx=100,
-	//					posy=440,
-	//					speed=300
-	//				)
-	//				//	dalle[1]=new _dalle(
-	//				//		number=0,
-	//				//		delay=100,
-	//				//		posx=600,
-	//				//		posy=940,
-	//				//		speed=300,
-	//				//	)
-	//			}
-	//
-	//			if(debug_store){
-	//				check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
-	//
-	//			}else{
-	//				this.create_canon()
-	//				this.create_asteroid()
-	//				this.create_dalle_moving()
-	//				this.create_pulsar()
-	//				this.create_dalle()
-	//			}
-	//			logic()
-	//			return level_number
-	//},
-	//update:function(){
-	//tap(this,hero)
-	//_tap(this)
-	//},
-	//render:function(){
-	//logic_render()
-	//},
-	//}
-	//	var level1 = {
-	//		create: function(){
-	//			//indication du level
-	//			create_level(1)
-	//
-	//			number_canon=1
-	//			number_asteroid=1
-	//			number_dalle_moving=0
-	//			number_pulsar=1
-	//			number_dalle=1
-	//
-	//			//function create_obj_internal(obj,tableau){
-	//			//obj=new _canon(tableau)	
-	//			//}
-	//
-	//			this.create_canon=function(){
-	//				canon[0]=new _canon(
-	//					number=0,
-	//					delay=0,
-	//					posx=w-200,
-	//					posy=100,
-	//					speed=900,
-	//					frequency=90,
-	//					variance=0,
-	//					angular=180,
-	//					_flag=flag_level_complete,
-	//					kill_with_world=true,
-	//					special_color=false
-	//				)
-	//				//canon[1]=new _canon(
-	//				//	number=1,
-	//				//	delay=0,
-	//				//	posx=0,
-	//				//	posy=1200,
-	//				//	speed=400,
-	//				//	frequency=900,
-	//				//	variance=0,
-	//				//	angular=0,
-	//				//	_flag=flag_level_complete,
-	//				//	kill_with_world=true,
-	//				//	special_color=false
-	//				//)
-	//			}
-	//			this.create_asteroid=function(){
-	//				asteroid[0]=new _asteroid(
-	//					number=0,
-	//					posx=100,
-	//					posy=240,
-	//					speed=.008,
-	//					radius=100
-	//				)
-	//			}
-	//
-	//			this.create_dalle_moving=function(){
-	//				//dalle_moving[0]=new _dalle_moving(
-	//				//	number=0,
-	//				//	delay=100,
-	//				//	posx=240,
-	//				//	posy=h2+100,
-	//				//	speed=300,
-	//				//	posx_in_tween=300
-	//				//)
-	//			}
-	//
-	//			this.create_pulsar=function(){
-	//				pulsar[0]=new _pulsar(
-	//					number=0,
-	//					delay=100,
-	//					time=100,
-	//					posx=w2,
-	//					posy=840,
-	//					speed=2000,
-	//					scale_factor=2
-	//				)
-	//			}
-	//
-	//			this.create_dalle=function(){
-	//				dalle[0]=new _dalle(
-	//					number=0,
-	//					delay=100,
-	//					posx=100,
-	//					posy=440,
-	//					speed=300
-	//				)
-	//				//	dalle[1]=new _dalle(
-	//				//		number=0,
-//				//		delay=100,
-//				//		posx=600,
-	//				//		posy=940,
-	//				//		speed=300,
-	//				//	)
-	//			}
-//			if(debug_store){
-//				check_storage(this.create_canon,this.create_asteroid,this.create_dalle_moving,this.create_pulsar,this.create_dalle,number_canon,number_asteroid,number_dalle_moving,number_pulsar,number_dalle)
-	//
-	//			}else{
-//				this.create_canon()
-//				this.create_asteroid()
-//				this.create_dalle_moving()
-//				this.create_pulsar()
-//				this.create_dalle()
-//			}
-//			logic()
-//			return level_number
-//		},
-//		update:function(){
-//			tap(this,hero)
-//		},
-//		render:function(){
-//			logic_render()
-//		},
-//	}
 levsel={
 	// define needed variables for mygame.LevelSelect
 	preload: function() {
@@ -1827,7 +1592,6 @@ var logic_update=function(){
 			if(obj[0]){
 				for (var i = 0; i < 3; i++){
 					for (var j = 0; j < obj.length; j++){
-						//game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(hero.player[i].body.x,hero.player[i].body.y,i);conditional_animate_touch()})
 						game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],() => {hero.explode(i);conditional_animate_touch()})
 
 					}
@@ -1841,7 +1605,6 @@ var logic_update=function(){
 					if(canon[j].special_color){
 						game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],hide_weapon,null,this)
 					}else{
-						//game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(hero.player[i].body.x,hero.player[i].body.y,i))
 						game.physics.arcade.collide(canon[j].weapon.bullets,hero.player[i],() => hero.explode(i))
 					}
 				}
@@ -2222,7 +1985,6 @@ level0=level_0(level_config,0)
 level1=level_1(level_config,1)
 level2=level_2(level_config,2)
 level3=level_3(level_config,3)
-
 
 //game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 //game.state.add('boot',bootstate)
