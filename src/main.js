@@ -23,10 +23,17 @@
 //regler particle canon en fonction de l'inclinaison
 //mettre icone button_back à la place de publish
 //body enbale false lorsque touché un projectile violet
-
+var boot
+var preloadstate
+var intermediate_screen
+var game_first_screen
+var level_0
+var level_1
+var level_2
+var level_3
 var is_mobile=true
-//function main(){
-	alert("m")
+function main(){
+	//alert("m")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -246,10 +253,10 @@ var is_mobile=true
 
 	//var level={}
 	screen_first = function(){
-		Phaser.Sprite.call(this,game,w2,450,'title')
+		Phaser.Sprite.call(this,game,game.world.centerX,450,'title')
 		this.anchor.setTo(.5,.5)
-		this.button_menu=new _button(w2,h2+400,'button_menu',this.next_menu)
-		this.button_next=new _button(w2,h2,'button_play',this.next_level)
+		this.button_menu=new _button(game.world.centerX,game.world.centerY+400,'button_menu',this.next_menu)
+		this.button_next=new _button(game.world.centerX,game.world.centerY,'button_play',this.next_level)
 		game.time.events.loop( 500,this.explosion,this )
 		game.time.events.add( 200,this.button_menu.show_button,this.button_menu )
 		game.time.events.add( 200,this.button_next.show_button,this.button_next )
@@ -291,17 +298,17 @@ var is_mobile=true
 
 
 	character = function(){
-		Phaser.Sprite.call(this,game,w2,h+500,'particle_character')
+		Phaser.Sprite.call(this,game,game.world.centerX,h+500,'particle_character')
 		this.flag_mouse=true
 		this.flag_show_button=true
-		this.cible_shadow=game.add.sprite(w2,300,'cible_shadow')
+		this.cible_shadow=game.add.sprite(game.world.centerX,300,'cible_shadow')
 		this.cible_shadow.anchor.setTo(.5,.5)
 		this.cible_shadow.scale.setTo(1.5,1.5)
 		this.cible_shadow.alpha=.15
 		this.grid=game.add.sprite(0,0,'grid')
 		this.grid.visible=false
 		//cible
-		this.cible=game.add.sprite(w2,300,'cible')
+		this.cible=game.add.sprite(game.world.centerX,300,'cible')
 		this.cible.anchor.setTo(.5,.5)
 		game.physics.arcade.enable(this.cible,Phaser.Physics.ARCADE)
 		this.cible.body.immovable=true
@@ -313,16 +320,16 @@ var is_mobile=true
 		this.count=-1
 		this.player={}
 		for (var i = 0; i < 3; i++){
-			this.player[i]=game.add.sprite(w2,1980,'particle_character')	
+			this.player[i]=game.add.sprite(game.world.centerX,1980,'particle_character')	
 			game.physics.arcade.enable(this.player[i],Phaser.Physics.ARCADE)
 			this.player[i].anchor.setTo(.5,.5)
 			this.player[i].body.enable=false
 			this.player[i].flag_check=true
 			this.player[i].is_exploding=false
 		} 
-		this.score = game.add.bitmapText(w2,300,'police','',100)
+		this.score = game.add.bitmapText(game.world.centerX,300,'police','',100)
 		this.score.anchor.setTo(.5,.5)
-		this.life = game.add.bitmapText(w2,1550,'police','3',120)
+		this.life = game.add.bitmapText(game.world.centerX,1550,'police','3',120)
 		this.life.anchor.setTo(.5,.5)
 		this.life.visible=false
 		this.touch_button = game.add.sprite(this.life.x,this.life.y-20,'touch')
@@ -337,21 +344,21 @@ var is_mobile=true
 		this.sound_click=game.add.audio('click')
 		//TODO:publish
 		if (debug_position){
-			this.button_publish=new _button(w2,h2+800,'button_publish',this.send_data_mail)
+			this.button_publish=new _button(game.world.centerX,game.world.centerY+800,'button_publish',this.send_data_mail)
 		}else{
-			this.button_publish=new _button(w2,h2+800,'button_back',this.back_to_menu)
+			this.button_publish=new _button(game.world.centerX,game.world.centerY+800,'button_back',this.back_to_menu)
 		}
 
-		this.button_restart=new _button(w2,h2,'button_restart',this.restart_level)
-		this.button_next=new _button(w2,this.cible.y,'button_next',this.next_level)
-		this.button_video=new _button(w2,h2+400,'button_video',this.show_reward_video)
+		this.button_restart=new _button(game.world.centerX,game.world.centerY,'button_restart',this.restart_level)
+		this.button_next=new _button(game.world.centerX,this.cible.y,'button_next',this.next_level)
+		this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.show_reward_video)
 		//TODO
-		this.star= this.game.add.sprite(w2, h2-320, 'star', 0);
+		this.star= this.game.add.sprite(game.world.centerX, game.world.centerY-320, 'star', 0);
 		this.star.anchor.setTo(.5,.5)
 		this.star.frame=2
 		this.star.visible=false
 		this.star.scale.setTo(0,0)
-		this.big_star=game.add.sprite(w2,h2-320,'big_star')
+		this.big_star=game.add.sprite(game.world.centerX,game.world.centerY-320,'big_star')
 		this.big_star.anchor.setTo(.5,.5)
 		this.big_star.visible=false
 		this.big_star.scale.setTo(0,0)
@@ -673,7 +680,7 @@ var is_mobile=true
 		this.explode_all(n)
 		this.cible.body.enable=false
 		this.player[n].body.enable=false
-		this.tween0=game.add.tween(this.player[n]).to({x:w2,y:300},500,Phaser.Easing.Linear.None,true,0)
+		this.tween0=game.add.tween(this.player[n]).to({x:game.world.centerX,y:300},500,Phaser.Easing.Linear.None,true,0)
 		this.tween0.onComplete.add(() => this.scale_x(n),this)	
 	}
 
@@ -856,7 +863,7 @@ var is_mobile=true
 		this.sound_pop=game.add.audio('pop')
 		this.flag_for_fire=true
 		this._flag=true
-		if(this.x < w2){
+		if(this.x < game.world.centerX){
 			this.particlex = game.add.emitter(this.x+40,this.y)
 			this.particlex.makeParticles("particle_canon")
 			this.particlex.minParticleSpeed.setTo(100,-120)
@@ -1105,7 +1112,7 @@ var is_mobile=true
 		}
 	}
 
-	var bootstate= {
+	bootstate= {
 		preload: function(){
 			console.log("%cStarting Bubx", "color:white; background:#ff1fcd");
 			this.load.image("loading","assets/loading.png"); 
@@ -1121,12 +1128,12 @@ var is_mobile=true
 		},
 	}
 
-	var preloadstate = {
+	preloadstate = {
 		preload: function(){ 
 			//loadingBar
-			var loadingBar_back = this.add.sprite(w2,h2,"loading_back");
+			var loadingBar_back = this.add.sprite(game.world.centerX,game.world.centerY,"loading_back");
 			loadingBar_back.anchor.setTo(0.5,0.5);
-			var loadingBar = this.add.sprite(w2,h2,"loading");
+			var loadingBar = this.add.sprite(game.world.centerX,game.world.centerY,"loading");
 			loadingBar.anchor.setTo(0.5,0.5);
 			this.load.setPreloadSprite(loadingBar);
 			//interface
@@ -1185,7 +1192,7 @@ var is_mobile=true
 		},
 	}
 
-	var game_first_screen = {
+	game_first_screen = {
 		create: function(){
 			this.game.stage.backgroundColor = '#0d1018'
 			this.title=new screen_first()
@@ -1268,11 +1275,11 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 		level_number=num
 		level_number_adapt=level_number+1
 		var _level_name=level_name[level_number]
-		text_to_describe_level=new _text(_level_name,w2,h2,100)
+		text_to_describe_level=new _text(_level_name,game.world.centerX,game.world.centerY,100)
 		text_to_describe_level.visible=false
 		text_to_describe_level.alpha=0
 		text_to_describe_level.show()
-		text_to_number_level=new _text(level_number_adapt,w2,320,90);
+		text_to_number_level=new _text(level_number_adapt,game.world.centerX,320,90);
 		text_to_number_level.alpha=0
 		text_to_number_level.visible=false
 		text_to_number_level.show2()
@@ -1945,12 +1952,12 @@ var pass_level=function(){
 	this.game.state.start('level'+next_niveau,true,false);
 }
 
-var intermediate_screen={
+intermediate_screen={
 	create:function(){
 
 		background_to_pass_level = game.add.sprite(0,0,'background')
 		background_to_pass_level.alpha = 1
-		text_passed_level = new _text("level passed",w2,h2,100)
+		text_passed_level = new _text("level passed",game.world.centerX,game.world.centerY,100)
 		this.particlex = game.add.emitter(text_passed_level.text.x,text_passed_level.text.y)
 		this.particlex.makeParticles("particle_canon")
 		this.particlex.minParticleSpeed.setTo(-900,900)
@@ -1972,10 +1979,10 @@ var intermediate_screen={
 	},
 }
 
-var level0=level_0(level_config,0)
-var level1=level_1(level_config,1)
-var level2=level_2(level_config,2)
-var level3=level_3(level_config,3)
+level0=level_0(level_config,0)
+level1=level_1(level_config,1)
+level2=level_2(level_config,2)
+level3=level_3(level_config,3)
 
 //game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 //game.state.add('boot',bootstate)
@@ -1988,7 +1995,7 @@ var level3=level_3(level_config,3)
 //game.state.add('level3',level3)
 //game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
 //game.state.start('boot',bootstate)
-//}
+}
 
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i)
@@ -1999,13 +2006,13 @@ var detectmob=function(){
 		|| navigator.userAgent.match(/BlackBerry/i)
 		|| navigator.userAgent.match(/Windows Phone/i)
 	){
-		//document.addEventListener('deviceready',main,false)
+		document.addEventListener('deviceready',main,false)
 		is_mobile=true
 		return true;
 	} else {
 		console.log('not mobile')
 		is_mobile=false
-		//main()
+		main()
 		return true;
 	}
 }
