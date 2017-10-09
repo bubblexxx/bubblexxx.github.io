@@ -13,7 +13,7 @@ function level_0 (params,num) {
 			let _num_dalle = 1 
 			level_number=num
 			params.create_level(num)
-			create_canon=()=>{
+			create_canon=function(){
 				co("create_canon") 
 				params.canon[0]=new params.constructor_canon(
 					number=0,
@@ -32,7 +32,7 @@ function level_0 (params,num) {
 				)
 				params.canon[0].transition(600,200,9000,4000)
 			}
-			create_asteroid=()=>{
+			create_asteroid=function(){
 				params.asteroid[0]=new params.constructor_asteroid(
 					number=0,
 					posx=100,
@@ -41,7 +41,7 @@ function level_0 (params,num) {
 					radius=100
 				)
 			}
-			create_dalle_moving=()=>{
+			create_dalle_moving=function(){
 				params.dalle_moving[0]=new params.constructor_dalle_moving(
 					number=0,
 					delay=100,
@@ -51,7 +51,7 @@ function level_0 (params,num) {
 					posx_in_tween=300
 				)
 			}
-			create_pulsar=()=>{
+			create_pulsar=function(){
 				params.pulsar[0]=new params.constructor_pulsar(
 					number=0,
 					delay=100,
@@ -62,7 +62,7 @@ function level_0 (params,num) {
 					scale_factor=2
 				)
 			}
-			create_dalle=()=>{
+			create_dalle=function(){
 				params.dalle[0]=new params.constructor_dalle(
 					number=0,
 					delay=100,
@@ -104,7 +104,7 @@ function level_1 (params,num) {
 			let _num_pulsar = 0
 			let _num_dalle = 0 
 			params.create_level(num)
-			create_canon=()=>{
+			create_canon=function(){
 				co("create_canon") 
 				params.canon[0]=new params.constructor_canon(
 					number=0,
@@ -137,9 +137,9 @@ function level_1 (params,num) {
 					_value_rotate=10
 				)
 			}
-			create_asteroid=()=>{
+			create_asteroid=function(){
 			}
-			create_dalle_moving=()=>{
+			create_dalle_moving=function(){
 				params.dalle_moving[0]=new params.constructor_dalle_moving(
 					number=0,
 					delay=100,
@@ -149,9 +149,9 @@ function level_1 (params,num) {
 					posx_in_tween=300
 				)
 			}
-			create_pulsar=()=>{
+			create_pulsar=function(){
 			}
-			create_dalle=()=>{
+			create_dalle=function(){
 			}
 
 			if(params.debug_store){
@@ -187,7 +187,7 @@ function level_2 (params,num) {
 			let _num_pulsar = 0
 			let _num_dalle = 0 
 			params.create_level(num)
-			create_canon=()=>{
+			create_canon=function(){
 				co("create_canon") 
 
 				params.canon[0]=new params.constructor_canon(
@@ -236,13 +236,13 @@ function level_2 (params,num) {
 					_value_rotate=10
 				)
 			}
-			create_asteroid=()=>{
+			create_asteroid=function(){
 			}
-			create_dalle_moving=()=>{
+			create_dalle_moving=function(){
 			}
-			create_pulsar=()=>{
+			create_pulsar=function(){
 			}
-			create_dalle=()=>{
+			create_dalle=function(){
 			}
 
 			if(params.debug_store){
@@ -277,7 +277,7 @@ function level_3 (params,num) {
 			let _num_pulsar = 0
 			let _num_dalle = 0 
 			params.create_level(num)
-			create_canon=()=>{
+			create_canon=function(){
 				co("create_canon") 
 
 				params.canon[0]=new params.constructor_canon(
@@ -312,13 +312,13 @@ function level_3 (params,num) {
 				)
 
 			}
-			create_asteroid=()=>{
+			create_asteroid=function(){
 			}
-			create_dalle_moving=()=>{
+			create_dalle_moving=function(){
 			}
-			create_pulsar=()=>{
+			create_pulsar=function(){
 			}
-			create_dalle=()=>{
+			create_dalle=function(){
 			}
 
 			if(params.debug_store){
@@ -353,7 +353,7 @@ function level_3 (params,num) {
 //		let num_dalle_moving = 0
 //		let num_pulsar = 0
 //		let num_dalle = 0
-//		create_obj=()=>{
+//		create_obj=function(){
 //			create_canon=(_ca)=>{
 //				_ca[0]=new _canon(
 //					number=0,
@@ -378,7 +378,7 @@ function level_3 (params,num) {
 //			create_dalle=(_da)=>{
 //			}
 //		}
-//		test_storage_or_create=()=>{
+//		test_storage_or_create=function(){
 //			if(debug_store){
 //				_check_storage(create_canon(_ca),create_asteroid(_as),create_dalle_moving(_dam),create_pulsar(_pu),create_dalle(_da),num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle)
 //

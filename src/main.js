@@ -33,7 +33,7 @@ var level_2
 var level_3
 var is_mobile=true
 function main(){
-	//alert("m")
+	alert("m")
 	var videoreward;
 	var c=[]
 	var a=[]
