@@ -2006,7 +2006,8 @@ var detectmob=function(){
 		|| navigator.userAgent.match(/BlackBerry/i)
 		|| navigator.userAgent.match(/Windows Phone/i)
 	){
-		document.addEventListener('deviceready',main,false)
+		//document.addEventListener('deviceready',main,false)
+		document.addEventListener('deviceready',main,true)
 		is_mobile=true
 		return true;
 	} else {
