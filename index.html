@@ -1,8 +1,11 @@
-<!DOCTYPE HTML>
-
+<!DOCTYPE html>
 <html>
-	<head> 
-		<style type="text/css">
+
+<head>
+<meta charset="utf-8" />
+<title>example_test_scale</title>
+<link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+<style>
 body {
 	margin: auto;
 	display: table;
@@ -13,64 +16,77 @@ body {
 	padding: 0; margin: 0;
 	background-color: #0d1018
 }
-		</style>
-		<title>BubX</title>
-		<link rel="shortcut icon" href="assets/favicon.png" type="image/x-icon" />
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="chrome=1, IE=9">
-		<meta name="format-detection" content="telephone=no">
-		<meta name="HandheldFriendly" content="true" />
-		<meta name="robots" content="noindex,nofollow" />
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-		<meta name="apple-mobile-web-app-title" content="Phaser App"> 
+</style>
+<title>BubX</title>
+<link rel="shortcut icon" href="assets/favicon.png" type="image/x-icon" />
+<meta http-equiv="X-UA-Compatible" content="chrome=1, IE=9">
+<meta name="format-detection" content="telephone=no">
+<meta name="HandheldFriendly" content="true" />
+<meta name="robots" content="noindex,nofollow" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="apple-mobile-web-app-title" content="Phaser App"> 
 
-		<!--script src="cordova.js"></script-->
-		<!--script src="src/live.js"></script-->
-		<script src="src/dat.gui.min.js"></script>
-		<script src="phaser.min.js"></script>
-		<script src="src/other.js"></script>
-		<script src="src/util.js"></script>
-		<script src="src/level.js"></script>
-		<script src="src/main.js"></script>
-	</head> 
-	<body>
-		<script type="text/javascript">
+<!--script src="cordova.js"></script-->
+<!--script src="src/live.js"></script-->
+<script src="src/dat.gui.min.js"></script>
+<script src="phaser.min.js"></script>
+<script src="src/other.js"></script>
+<script src="src/util.js"></script>
+<script src="src/level.js"></script>
+<script src="src/main.js"></script>
+</head> 
+<body>
+</body>
+<script>
+document.addEventListener("deviceready", function() {
+		setTimeout(function() {
+				navigator.splashscreen.hide();
+				}, 5000, false);
+		});
 (function() {
-	launch_phaser=()=>{
-		game = new Phaser.Game(1280,1920,Phaser.CANVAS,'' )
-			game.state.add('bootstate',bootstate);
-		game.state.add('preload',preloadstate);
-		game.state.add('game_first_screen',game_first_screen);
-		game.state.add('intermediate_screen',intermediate_screen);
-		game.state.add('level0',level0);
-		game.state.add('level1',level1);
-		game.state.add('level2',level2);
-		game.state.add('level3',level3);
-		game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
-		game.state.start('bootstate');
-		return game
-	}
-	if( navigator.userAgent.match(/Android/i)
-			|| navigator.userAgent.match(/webOS/i)
-			|| navigator.userAgent.match(/iPhone/i)
-			|| navigator.userAgent.match(/iPad/i)
-			|| navigator.userAgent.match(/iPod/i)
-			|| navigator.userAgent.match(/BlackBerry/i)
-			|| navigator.userAgent.match(/Windows Phone/i)
-	  ){
-		document.addEventListener('deviceready',launch_phaser,false)
-			return true;
-	} else {
-		console.log('not mobile')
-			launch_phaser()
-			return true;
-	}
-})();    
+ //start with a game with these resolution : 1280-1920
+ // personnaly i find it offers the best graphics for all devices but may slow some devices.
+ // after put a safe zone 
+ //1280+200 > 1480
+ //1920 +350 > 2270 (350 is 200*1.5 > ratio from 1920/1280)
+ var safe_zone_width=1480
+ var safe_zone_height=2270
+ var w = window.innerWidth ;//* pixelRatio,
+ var h = window.innerHeight ;//* pixelRatio;
+ var lw, lh; 
+ if ( h > w ) {
+ lw = h;
+ lh = w;
+ } else {
+ lw = w;
+ lh = h;
+ }
+ var aspect_ratio_device = lw/lh;
 
-		</script>
+ var aspect_ratio_safe_zone = safe_zone_height / safe_zone_width;
+ var extra_height = 0, extra_width = 0;
+ if (aspect_ratio_safe_zone < aspect_ratio_device) {
+	 // have to add game pixels horizontally in order to fill the device screen
+	 extra_height = aspect_ratio_device * safe_zone_width - safe_zone_height;
+ } else {
+	 // have to add game pixels vertically
+	 extra_width = safe_zone_height / aspect_ratio_device - safe_zone_width;
+ }
+ game = new Phaser.Game( safe_zone_width + extra_width, safe_zone_height + extra_height, Phaser.CANVAS, 'game');
+ game.state.add('bootstate',bootstate);
+ game.state.add('preload',preloadstate);
+ game.state.add('game_first_screen',game_first_screen);
+ game.state.add('intermediate_screen',intermediate_screen);
+ game.state.add('level0',level0);
+ game.state.add('level1',level1);
+ game.state.add('level2',level2);
+ game.state.add('level3',level3);
+ game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
+ game.state.start('bootstate');
+})();
+</script>
 
-	</body>
 </html>
 
 

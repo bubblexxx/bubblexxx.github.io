@@ -25,17 +25,8 @@
 //body enbale false lorsque touché un projectile violet
 
 var is_mobile=true
-var bootstate
-var preloadstate
-var game_first_screen
-var intermediate_screen
-var level0
-var level1
-var level2
-var level3
-var levsel
-function main(){
-	//alert("m")
+//function main(){
+	alert("m")
 	var videoreward;
 	var c=[]
 	var a=[]
@@ -140,7 +131,7 @@ function main(){
 	}
 
 	//class for mechant
-	_mechant = function(name,number,posx,posy,image_body,image_drag){
+	_mechant = function(game,name,number,posx,posy,image_body,image_drag){
 		//this = this.sprite_for_drag
 		this.visible=true
 		this.name=name
@@ -285,11 +276,11 @@ function main(){
 		this.sound_click.play()
 	}
 	screen_first.prototype.next_level = function(){
-		game.state.start("level"+level_number)
+		this.game.state.start("level"+level_number)
 	}
 
 	screen_first.prototype.next_menu = function(){
-		game.state.start("levsel")
+		this.game.state.start("levsel")
 	}
 
 	screen_first.prototype.explosion = function(){
@@ -422,7 +413,7 @@ function main(){
 	}
 
 	character.prototype.back_to_menu = function() {
-		game.state.start("game_first_screen",game_first_screen)
+		this.game.state.start("game_first_screen")
 	}
 
 	character.prototype.send_data_mail = function(){
@@ -514,12 +505,12 @@ function main(){
 	}
 	character.prototype.restart_level = function() {
 		this.next_niveau=level_number
-		game.state.start('level'+this.next_niveau,true,false);
+		this.game.state.start('level'+this.next_niveau,true,false);
 	}
 
 	character.prototype.next_level = function() {
 		let next_niveau=level_number+1
-		game.state.start('level'+next_niveau,true,false);
+		this.game.state.start('level'+next_niveau,true,false);
 	}
 
 	character.prototype.preload_reward_video=function(){
@@ -564,7 +555,7 @@ function main(){
 		};
 		window.chartboost.onRewardedVideoAdHidden = function(location) {
 			//alert('onRewardedVideoAdHidden: ' + location);
-			is_rewarded_video_completed && game.state.start('intermediate_screen',intermediate_screen);
+			is_rewarded_video_completed && this.game.state.start('intermediate_screen');
 		};
 		window.chartboost.onRewardedVideoAdCompleted = function(location) {
 			//alert('onRewardedVideoAdCompleted: ' + location);
@@ -595,7 +586,7 @@ function main(){
 		else {
 			console.log('not mobile')
 			this.next_niveau=level_number+1
-			game.state.start('level'+this.next_niveau,true,false);
+			this.game.state.start('level'+this.next_niveau,true,false);
 		}
 	}
 
@@ -733,20 +724,20 @@ function main(){
 	}
 
 	_asteroid = function(number,posx,posy,speed,radius){
-		_mechant.call(this,"asteroid",number,posx,posy,'asteroid','sprite_for_drag_asteroid')
+		_mechant.call(this,game,"asteroid",number,posx,posy,'asteroid','sprite_for_drag_asteroid')
 		this.radius=radius
 		this.speed=speed
-		this.particle = game.add.emitter(this.sprite_for_body.x, this.sprite_for_body.y-25)
-		this.particle.makeParticles("particle_bullet_color")
-		this.particle.setXSpeed(-100,100)
-		this.particle.setYSpeed(100,-100)
-		this.particle.minParticleAlpha=.3
-		this.particle.minParticleScale = .1
-		this.particle.maxParticleScale = .7
-		this.particle.minRotation = 0
-		this.particle.maxRotation = 0
-		this.particle.on=false
-		game.time.events.add(delay_for_game_begin,()=>{this.particle.on=true;this.particle.start(true,500,5)})
+		//this.particle = game.add.emitter(this.sprite_for_body.x, this.sprite_for_body.y-25)
+		//this.particle.makeParticles("particle_bullet_color")
+		//this.particle.setXSpeed(-100,100)
+		//this.particle.setYSpeed(100,-100)
+		//this.particle.minParticleAlpha=.3
+		//this.particle.minParticleScale = .1
+		//this.particle.maxParticleScale = .7
+		//this.particle.minRotation = 0
+		//this.particle.maxRotation = 0
+		//this.particle.on=false
+		//game.time.events.add(delay_for_game_begin,function(){this.particle.on=true;this.particle.start(true,500,5)})
 		game.time.events.loop(16,this.update2,this)
 	}
 
@@ -770,7 +761,7 @@ function main(){
 	}
 
 	_pulsar=function(number,delay,time,posx,posy,speed,scale_factor){
-		_mechant.call(this,"pulsar",number,posx,posy,'pulsar','sprite_for_drag')
+		_mechant.call(this,game,"pulsar",number,posx,posy,'pulsar','sprite_for_drag')
 		this.number=number
 		this.delay=delay
 		this.time=time
@@ -797,7 +788,7 @@ function main(){
 	}
 
 	_dalle = function(number,delay,posx,posy,speed){
-		_mechant.call(this,"dalle",number,posx,posy,'dalle','sprite_for_drag')
+		_mechant.call(this,game,"dalle",number,posx,posy,'dalle','sprite_for_drag')
 		this.delay=delay
 		this.speed=speed
 		this.sprite_for_body.alpha=0
@@ -823,7 +814,7 @@ function main(){
 	}
 
 	_dalle_moving = function(number,delay,posx,posy,speed,posx_in_tween){
-		_mechant.call(this,"dalle_moving",number,posx,posy,'dalle_moving','sprite_for_drag_dalle_moving')
+		_mechant.call(this,game,"dalle_moving",number,posx,posy,'dalle_moving','sprite_for_drag_dalle_moving')
 		this.posx_in_tween=posx_in_tween
 		this.delay=delay
 		this.speed=speed
@@ -849,7 +840,7 @@ function main(){
 		this.tween0.yoyo(true,this.speed)		
 	}
 	_canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,kill_with_world,special_color,_rotate,_value_rotate){
-		_mechant.call(this,"canon",number,posx,posy,'canon','sprite_for_drag')
+		_mechant.call(this,game,"canon",number,posx,posy,'canon','sprite_for_drag')
 		this.special_color=special_color
 		this.kill_with_world=kill_with_world
 		this.delay=delay
@@ -1114,7 +1105,7 @@ function main(){
 		}
 	}
 
-	bootstate= {
+	var bootstate= {
 		preload: function(){
 			console.log("%cStarting Bubx", "color:white; background:#ff1fcd");
 			this.load.image("loading","assets/loading.png"); 
@@ -1126,11 +1117,11 @@ function main(){
 			this.scale.pageAlignVertically = true
 			this.scale.refresh()
 			this.game.stage.backgroundColor = '#0d1018'
-			game.state.start("preload",preloadstate);
+			this.game.state.start("preload");
 		},
 	}
 
-	preloadstate = {
+	var preloadstate = {
 		preload: function(){ 
 			//loadingBar
 			var loadingBar_back = this.add.sprite(w2,h2,"loading_back");
@@ -1187,14 +1178,14 @@ function main(){
 
 		create: function(){
 			this.game.stage.backgroundColor = '#0d1018'
-			this.background=game.add.sprite(0,0,'background');
-			this.game.add.existing(this.background)
-			game.time.events.add(1000, ()=>{game.state.start("game_first_screen",game_first_screen)});
+			//this.background=game.add.sprite(0,0,'background');
+			//this.game.add.existing(this.background)
+			this.game.time.events.add(1000,function(){this.game.state.start("game_first_screen")},this);
 			//game.state.start("intermediate_screen");
 		},
 	}
 
-	game_first_screen = {
+	var game_first_screen = {
 		create: function(){
 			this.game.stage.backgroundColor = '#0d1018'
 			this.title=new screen_first()
@@ -1258,7 +1249,7 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 	}
 
 	animate_touch = start_tw
-	var conditional_animate_touch = ()=>{!flag_tween_en_cours && animate_touch(hero.touch_button)}
+	var conditional_animate_touch = function(){!flag_tween_en_cours && animate_touch(hero.touch_button)}
 
 
 	function create_level(num){ 
@@ -1267,13 +1258,13 @@ ensuite via accion dans clic l'incrementation se fait automatiquement
 
 		game.time.events.add(delay_for_game_begin,function(){flag_hide=true})
 		game.time.events.add(delay_for_game_begin,function(){game_begin=true})
-		game.time.events.add(delay_for_game_begin,()=>{flag_level_complete=false})
+		game.time.events.add(delay_for_game_begin,function(){flag_level_complete=false})
 		is_rewarded_video_completed=false
 		is_preload_rewarded_video=false
 		hero = new character() 
 		count_hero=0
-		game.time.events.add(delay_for_game_begin,()=>{hero.life.visible=true})
-		game.time.events.add(delay_for_game_begin,()=>{animate_touch(hero.touch_button)})
+		game.time.events.add(delay_for_game_begin,function(){hero.life.visible=true})
+		game.time.events.add(delay_for_game_begin,function(){animate_touch(hero.touch_button)})
 		level_number=num
 		level_number_adapt=level_number+1
 		var _level_name=level_name[level_number]
@@ -1544,7 +1535,7 @@ levsel={
 	onLevelSelected: function(levelnr) {
 		console.log(levelnr,'rr');
 		this.number_level=levelnr
-		game.state.start('level'+this.number_level,true,false)
+		this.game.state.start('level'+this.number_level,true,false)
 	},
 };
 
@@ -1939,7 +1930,7 @@ ecran_intermediaire_pour_passer_level=(obj,next_action) => {
 	co(obj,next_action)
 	obj.alpha =1
 	obj.scale.setTo(0,0)
-	next_tw=()=>{
+	next_tw=function(){
 		this.tween_scale2 = game.add.tween(obj.scale).to({x:0,y:0},600,Phaser.Easing.Elastic.In,true,100)
 		this.tween_scale2.onComplete.add(next_action)
 	}
@@ -1949,12 +1940,12 @@ ecran_intermediaire_pour_passer_level=(obj,next_action) => {
 	this.tween_alpha.onComplete.add(next_tw,this)
 }
 
-var pass_level=()=>{
+var pass_level=function(){
 	let next_niveau=level_number+1
-	game.state.start('level'+next_niveau,true,false);
+	this.game.state.start('level'+next_niveau,true,false);
 }
 
-intermediate_screen={
+var intermediate_screen={
 	create:function(){
 
 		background_to_pass_level = game.add.sprite(0,0,'background')
@@ -1971,20 +1962,20 @@ intermediate_screen={
 		this.particlex.maxRotation = 0
 		this.particlex.on=false
 
-		game.time.events.add(600,()=>{this.particlex.start(true,2950,null,5)})
-		game.time.events.add(800,()=>{this.particlex.on=true})
+		game.time.events.add(600,function(){this.particlex.start(true,2950,null,5)})
+		game.time.events.add(800,function(){this.particlex.on=true})
 
-		let next_action = ()=>{
+		let next_action = function(){
 			game.time.events.add(300,pass_level)	
 		}
 		ecran_intermediaire_pour_passer_level(text_passed_level.text,next_action)
 	},
 }
 
-level0=level_0(level_config,0)
-level1=level_1(level_config,1)
-level2=level_2(level_config,2)
-level3=level_3(level_config,3)
+var level0=level_0(level_config,0)
+var level1=level_1(level_config,1)
+var level2=level_2(level_config,2)
+var level3=level_3(level_config,3)
 
 //game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 //game.state.add('boot',bootstate)
@@ -1997,7 +1988,7 @@ level3=level_3(level_config,3)
 //game.state.add('level3',level3)
 //game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
 //game.state.start('boot',bootstate)
-}
+//}
 
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i)
@@ -2008,13 +1999,13 @@ var detectmob=function(){
 		|| navigator.userAgent.match(/BlackBerry/i)
 		|| navigator.userAgent.match(/Windows Phone/i)
 	){
-		document.addEventListener('deviceready',main,false)
+		//document.addEventListener('deviceready',main,false)
 		is_mobile=true
 		return true;
 	} else {
 		console.log('not mobile')
 		is_mobile=false
-		main()
+		//main()
 		return true;
 	}
 }
