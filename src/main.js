@@ -24,7 +24,7 @@
 //mettre icone button_back à la place de publish
 //body enbale false lorsque touché un projectile violet
 var is_mobile=true
-alert("m")
+//alert("m")
 var videoreward;
 var c=[]
 var a=[]
@@ -1104,19 +1104,19 @@ var createBanner= function(){
 }
 
 var boot= {
-	preload: function(){
+	preload: function(game){
 		console.log("%cStarting Bubx", "color:white; background:#ff1fcd");
 		this.load.image("loading","assets/loading.png"); 
 		this.load.image("loading_back","assets/loading_back.png"); 
 	},
-	create: function(){
+	create: function(game){
 		this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
 		this.scale.pageAlignHorizontally = true
 		this.scale.pageAlignVertically = true
 		this.scale.refresh()
 		this.game.stage.backgroundColor = '#0d1018'
 		this.game.state.start("preload");
-	},
+	}
 }
 
 var preloadstate = {
@@ -1180,7 +1180,7 @@ var preloadstate = {
 		//this.game.add.existing(this.background)
 		this.game.time.events.add(1000,function(){this.game.state.start("game_first_screen")},this);
 		//game.state.start("intermediate_screen");
-	},
+	}
 }
 
 var game_first_screen = {
@@ -1211,7 +1211,7 @@ var game_first_screen = {
 				PLAYER_DATA = [];
 			};
 		};
-	},
+	}
 }
 
 
@@ -1534,7 +1534,7 @@ var levsel={
 		console.log(levelnr,'rr');
 		this.number_level=levelnr
 		this.game.state.start('level'+this.number_level,true,false)
-	},
+	}
 };
 
 
@@ -1967,7 +1967,7 @@ var intermediate_screen={
 			game.time.events.add(300,pass_level)	
 		}
 		ecran_intermediaire_pour_passer_level(text_passed_level.text,next_action)
-	},
+	}
 }
 
 var level0=level_0(level_config,0)
