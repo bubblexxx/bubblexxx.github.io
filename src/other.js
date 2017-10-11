@@ -1,4 +1,4 @@
-if_undefined = (obj,action) => {
+if_undefined = function(obj,action){
 	if( obj == null ){
 		action();
 	}
@@ -20,13 +20,13 @@ if_undefined = (obj,action) => {
 //initier une transition et y mettre fin
 //////////////////////////////////////////////////////////////////////////////////////////
 //foreach >> for_action
-function for_each(tableau,action){
+for_each=function(tableau,action){
 	for(var i=0; i<tableau.length ;i++) {
 		action(tableau[i]);
 	}
 }
 
-count_modif_obj = (obj,i,num_max) => {
+count_modif_obj = function(obj,i,num_max){
 	i++
 	if (i > num_max){
 		obj = ''
@@ -35,23 +35,23 @@ count_modif_obj = (obj,i,num_max) => {
 	}
 }
 
-function run (...args) {
-	const data = args.shift()
-	let i = data.length
-	while (--i >= 0) {
-		args.forEach(fn => fn(data[i]))
-	}
-}
+//run=function (...args){
+	//const data = args.shift()
+	//let i = data.length
+	//while (--i >= 0) {
+		//args.forEach(fn(){fn(data[i])})
+	//}
+//}
 
-const hide_enemies = (enemies, actionString) => enemies.forEach( (enemy) => enemy.actionString() );
+const hide_enemies =function(enemies, actionString){enemies.forEach( function(enemy){enemy.actionString()})};
 
-const for_action=(obj,action) => obj.forEach((item) => item[action]());
+const for_action=function(obj,action){obj.forEach(function(item){item[action]()})};
 
-function al(message){
+al=function(message){
 	alert(message)
 }
 
-countor=(x)=>{
+countor=function(x){
 	x++
 	return x
 } 
