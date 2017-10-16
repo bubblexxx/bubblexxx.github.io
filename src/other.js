@@ -14,9 +14,9 @@ for_each=function(tableau,action){
 count_modif_obj = function(obj,i,num_max){
 	i++
 	if (i > num_max){
-		obj = ''
+		obj = '';
 	}else{
-		obj = i
+		obj = i;
 	}
 }
 
@@ -25,12 +25,12 @@ const hide_enemies =function(enemies, actionString){enemies.forEach( function(en
 const for_action=function(obj,action){obj.forEach(function(item){item[action]()})};
 
 al=function(message){
-	alert(message)
+	alert(message);
 }
 
 countor=function(x){
-	x++
-	return x
+	x++;
+	return x;
 } 
 //console.log
 
