@@ -42,9 +42,14 @@ var is_preload_rewarded_video=false;
 var text_passed_level;
 var background_to_pass_level;
 var game_begin=false;
-var delay_for_show_describe_text=400;
+//var delay_for_show_describe_text=400;
+var delay_for_show_describe_text=3000;
 var time_to_show_describe_text = 100;
-var delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+800;
+var additional_time=800;
+
+var delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+additional_time;
+var time_appears_enemies=800;
+var time_hide=500;
 var number_canon=null ;
 var number_asteroid=null ;
 var number_dalle_moving=null ;
@@ -66,8 +71,6 @@ var PLAYER_DATA ;
 var ratio_device=window.screen.width/window.screen.height;
 var h=1920;
 var w=1280;
-var time_appears_enemies=800;
-var time_hide=500;
 var h2=h*.5;
 var w2=640;
 var debug_mode=false;
@@ -110,11 +113,12 @@ _text=function(message,posx,posy,taille){
 _text.prototype=Object.create(_text.prototype)
 
 _text.prototype.show = function() {
-	this.text.visible=true;
+	//this.text.visible=true;
 	this.text.scale.setTo(0,0);
-	this.tween1 = game.add.tween(this.text.scale).to({x:1,y:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,0);
-	this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,0);
+	this.tween1 = game.add.tween(this.text.scale).to({x:1,y:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text);
+	this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text);
 	this.tween1.onComplete.add(this.hide,this);
+	this.tween1.onStart.add(function(){this.text.visible=true},this)
 }
 _text.prototype.show2 = function() {
 	this.text.visible=true;
@@ -311,7 +315,7 @@ character = function(){
 	this.count=-1;
 	this.player={};
 	for (var i = 0; i < 3; i++){
-		this.player[i]=game.add.sprite(game.world.centerX,2270+500,'particle_character')	;
+		this.player[i]=game.add.sprite(game.world.centerX,1920+220,'particle_character')	;
 		game.physics.arcade.enable(this.player[i],Phaser.Physics.ARCADE);
 		this.player[i].anchor.setTo(.5,.5);
 		this.player[i].body.enable=false;
@@ -377,10 +381,47 @@ character = function(){
 	this.particle.minRotation = 0;
 	this.particle.maxRotation = 0;
 	this.particle.on=false;
-}
+	this.tuto=[]
+	this.tuto.hand=game.add.sprite(w2+15,h2+200,'hand_tuto')
+	this.tuto.hand.anchor.setTo(.5,.5)
+	this.tuto.hand.alpha=0
+	this.tuto.little_circle=[]
+	for (var i=0; i < 4; i++) {
+		this.tuto.little_circle[i]=game.add.sprite(w2,h2-i*150,'little_circle_tuto')
+		this.tuto.little_circle[i].anchor.setTo(.5,.5)
+		this.tuto.little_circle[i].alpha=0
+	}
+	this.tuto.circle=game.add.sprite(this.cible.x,this.cible.y,'circle_tuto')
+	this.tuto.circle.anchor.setTo(.5,.5)
+	this.tuto.circle.alpha=0
+	if(level_number ==0){
+		this.show_tuto()
+	}
+	}
 
 character.prototype = Object.create(Phaser.Sprite.prototype);
 character.prototype.constructor = character;
+
+character.prototype.show_tuto = function() {
+	this.tw_0 = game.add.tween(this.tuto.hand).to({alpha:1},750,Phaser.Easing.Linear.None,true,0);
+	this.tw_1 = game.add.tween(this.tuto.hand.scale).to({x:1.2,y:1.2},750,Phaser.Easing.Linear.None,true,0,-1);
+	//this.tw_1.yoyo(350,true)
+	for (var i=0; i < 4; i++) {
+		game.add.tween(this.tuto.little_circle[i]).to({alpha:1},750,Phaser.Easing.Linear.None,true,i*200);
+	}
+	this.tw_2 = game.add.tween(this.tuto.circle).to({alpha:.4},750,Phaser.Easing.Linear.None,true,1000);
+	this.tw_2.onComplete.add(this.hide_tuto,this)
+}
+character.prototype.hide_tuto = function() {
+		game.add.tween(this.tuto.hand).to({alpha:0},750,Phaser.Easing.Linear.None,true,800);
+	for (var i=0; i < 4; i++) {
+		game.add.tween(this.tuto.little_circle[i]).to({alpha:0},750,Phaser.Easing.Linear.None,true,i*200);
+	}
+	//for (var i=0; i < 4; i++) {
+		//this.tuto.little_circle[i].alpha=0;
+	//}
+		game.add.tween(this.tuto.circle).to({alpha:0},750,Phaser.Easing.Linear.None,true,800);
+}
 
 character.prototype.update_circle_timer = function() {
 	this.counter--;
@@ -1115,7 +1156,7 @@ var boot= {
 		this.scale.refresh();
 		this.game.stage.backgroundColor = '#0d1018';
 		this.game.state.start("preload");
-	},
+	}
 }
 
 var preloadstate = {
@@ -1126,6 +1167,10 @@ var preloadstate = {
 		var loadingBar = this.add.sprite(game.world.centerX,game.world.centerY,"loading");
 		loadingBar.anchor.setTo(0.5,0.5);
 		this.load.setPreloadSprite(loadingBar);
+		//tuto
+		this.game.load.image("hand_tuto","assets/hand_tuto.png");
+		this.game.load.image("little_circle_tuto","assets/little_circle_tuto.png");
+		this.game.load.image("circle_tuto","assets/circle_tuto.png");
 		//interface
 		this.game.load.image("background","assets/background.png");
 		this.game.load.image("button_back","assets/button_back.png");
@@ -1802,6 +1847,17 @@ var logic_position=function(sprite){
 }
 
 var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
+
+if(level_number==0){
+	delay_for_show_describe_text=3000
+	additional_time=3500
+}else{
+	delay_for_show_describe_text=400
+	additional_time=800
+}
+
+delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+additional_time;
+	
 	//var check_in_local_storage=function(obj,num,table){
 	//	for(var i=0;i<num;i++){
 	//		try {
