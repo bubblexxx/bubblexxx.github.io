@@ -1361,6 +1361,7 @@ function logic(){
 	logic_update();
 }
 
+
 is_clic_valid =function(count,f){
 	let condition = function(count){
 		switch(count){
@@ -1960,33 +1961,6 @@ for(var i=0;i<num_dalle;i++){
 }
 }
 
-var logic_render=function(){
-	if(debug_mode){
-		game.debug.body(hero.cible_shadow);
-		game.debug.body(hero.cible);
-
-		//ne sait pas appliquer foreach car this.hero.player renvoit Object[Object,Object,Object]
-		for (var i = 0; i < 3;i++){
-			game.debug.body(hero.player[i]);
-		}
-
-		var debug_obj=function(obj){
-			if (obj[0]){
-				for_each(obj,game.debug.body);
-			}
-		}
-		debug_obj(dalle);
-		debug_obj(dalle_moving);
-		debug_obj(pulsar);
-		debug_obj(asteroid);
-		//encore à peaufiner check dernier
-		if(canon[0]){
-			for (var i = 0; i < canon.length;i++){
-				canon[i].weapon.bullets.forEach(function(item){game.debug.body(item)});
-			}
-		}
-	}
-}
 
 const level_config={
 	constructor_canon:_canon,

@@ -3,13 +3,44 @@ var w=1280
 var h2=h*.5
 var w2=640
 var level_number=0
+
+var logic_render=function(){
+	if(debug_mode){
+		game.debug.body(hero.cible_shadow);
+		game.debug.body(hero.cible);
+
+		//ne sait pas appliquer foreach car this.hero.player renvoit Object[Object,Object,Object]
+		for (var i = 0; i < 3;i++){
+			game.debug.body(hero.player[i]);
+		}
+
+		var debug_obj=function(obj){
+			if (obj[0]){
+				for (var i = 0; i < obj.length;i++){
+					//game.debug.body(obj[i])
+					game.debug.body(obj[i].sprite_for_body)
+				}
+			}
+		}
+		debug_obj(dalle);
+		debug_obj(dalle_moving);
+		debug_obj(pulsar);
+		debug_obj(asteroid);
+		//encore à peaufiner check dernier
+		if(canon[0]){
+			for (var i = 0; i < canon.length;i++){
+				canon[i].weapon.bullets.forEach(function(item){game.debug.body(item)});
+			}
+		}
+	}
+}
 function level_0 (params,num) {
 	return {
 		create: function () {
 			let _num_canon = 1  ;
 			let _num_asteroid = 1 ;
 			let _num_dalle_moving = 0  ;
-			let _num_pulsar = 0;
+			let _num_pulsar = 1;
 			let _num_dalle = 0 ;
 			level_number=num;
 			params.create_level(num);
@@ -52,15 +83,15 @@ function level_0 (params,num) {
 				//);
 			}
 			create_pulsar=function(){
-				//params.pulsar[0]=new params.constructor_pulsar(
-				//	number=0,
-				//	delay=100,
-				//	time=100,
-				//	posx=w2,
-				//	posy=840,
-				//	speed=2000,
-				//	scale_factor=2
-				//);
+				params.pulsar[0]=new params.constructor_pulsar(
+					number=0,
+					delay=100,
+					time=100,
+					posx=w2,
+					posy=840,
+					speed=2000,
+					scale_factor=2
+				);
 			}
 			create_dalle=function(){
 				//params.dalle[0]=new params.constructor_dalle(
@@ -91,6 +122,8 @@ function level_0 (params,num) {
 		},
 
 		render: function () {
+			logic_render()
+			//game.debug.body(pulsar[0].sprite_for_body)
 		}
 	};
 }
@@ -174,6 +207,7 @@ function level_1 (params,num) {
 		},
 
 		render: function () {
+			logic_render()
 		}
 	};
 }
@@ -264,6 +298,7 @@ function level_2 (params,num) {
 		},
 
 		render: function () {
+			logic_render()
 		}
 	};
 }
@@ -340,6 +375,7 @@ function level_3 (params,num) {
 		},
 
 		render: function () {
+			logic_render()
 		}
 	};
 }
