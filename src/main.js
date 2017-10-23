@@ -42,14 +42,31 @@ var is_preload_rewarded_video=false;
 var text_passed_level;
 var background_to_pass_level;
 var game_begin=false;
-//var delay_for_show_describe_text=400;
-var delay_for_show_describe_text=3000;
-var time_to_show_describe_text = 100;
-var additional_time=800;
+var delay_for_show_describe_text;
+var delay_for_hide_describe_text;
+var time_to_show_describe_text;
+var additional_time;
+var delay_for_game_begin;
+var time_appears_enemies;
+var time_hide;
+var level_number=0
+var initialise_time_and_delay=function(){
+additional_time=800;
+delay_for_hide_describe_text=400
+time_to_show_describe_text = 100;
+time_appears_enemies=800;
+time_hide=500;
+	if(level_number==0){
+		delay_for_show_describe_text=3000
+		additional_time=1000
+	}else{
+		delay_for_show_describe_text=400
+		additional_time=800
+	}
 
-var delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+additional_time;
-var time_appears_enemies=800;
-var time_hide=500;
+	delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+additional_time;
+}
+initialise_time_and_delay()
 var number_canon=null ;
 var number_asteroid=null ;
 var number_dalle_moving=null ;
@@ -73,7 +90,8 @@ var h=1920;
 var w=1280;
 var h2=h*.5;
 var w2=640;
-var debug_mode=false;
+// pour montrer la grille snap des enemis
+var debug_mode=true;
 //si false pas de possibilité de déplacer les enemis et de publier les levels;
 var debug_position=true;
 // si false pas de localStorage;
@@ -128,8 +146,9 @@ _text.prototype.show2 = function() {
 }
 
 _text.prototype.hide = function() {
-	this.tween2 = game.add.tween(this.text.scale).to({x:1,y:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text);
-	this.tween2 = game.add.tween(this.text).to({alpha:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text);
+	this.tween2 = game.add.tween(this.text.scale).to({x:1,y:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_hide_describe_text
+	);
+	this.tween2 = game.add.tween(this.text).to({alpha:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_hide_describe_text);
 }
 
 //class for mechant
@@ -145,7 +164,7 @@ _mechant = function(game,name,number,posx,posy,image_body,image_drag){
 	this.flag=true;
 	Phaser.Sprite.call(this,game,this.posx,this.posy,this.image_drag);
 	this.scale.setTo(0,0);
-	debug_position ? this.alpha=0 : this.alpha=0;
+	debug_position ? this.alpha=.05 : this.alpha=0;
 	this.anchor.setTo(.5,.5);
 	this.inputEnabled=true;
 	this.input.enableDrag(true);
@@ -159,6 +178,7 @@ _mechant = function(game,name,number,posx,posy,image_body,image_drag){
 	this.sprite_for_body.scale.setTo(0,0);
 	this.sprite_for_body.visible=true;
 	this.sprite_for_body.alpha=1;
+	//particle pour apparaitre et die
 	this.particle = game.add.emitter(this._x,this._y);
 	this.particle.makeParticles("particle_character");
 	this.particle.minParticleSpeed.setTo(-600,-600);
@@ -171,13 +191,14 @@ _mechant = function(game,name,number,posx,posy,image_body,image_drag){
 	this.particle.on=false;
 	this.show();
 	this.flag_wait_before_fire=false;
-	game.time.events.add( time_appears_enemies,function(){this.flag_wait_before_fire=true});
+	game.time.events.add( time_appears_enemies,function(){this.flag_wait_before_fire=true},this);
 }
 
 
 _mechant.prototype=Object.create(Phaser.Sprite.prototype)
 
 _mechant.prototype.hide=function(){
+	co("hide")
 	this.tween1=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0);
 	this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0);
 	this.sprite_for_body.enable=false;
@@ -186,6 +207,7 @@ _mechant.prototype.hide=function(){
 }
 
 _mechant.prototype.show=function(){
+	co("show")
 	game.time.events.add( delay_for_game_begin,this.particle_show,this );
 	this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_appears_enemies,Phaser.Easing.Elastic.Out,true,delay_for_game_begin);
 	this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_appears_enemies,Phaser.Easing.Elastic.Out,true,delay_for_game_begin);
@@ -301,7 +323,8 @@ character = function(){
 	this.cible_shadow.scale.setTo(1.5,1.5);
 	this.cible_shadow.alpha=.15;
 	this.grid=game.add.sprite(0,0,'grid');
-	this.grid.visible=false;
+	debug_mode ? this.grid.visible=true:this.grid.visible=false	;
+	//this.grid.visible=false;
 	//cible;
 	this.cible=game.add.sprite(game.world.centerX,300,'cible');
 	this.cible.anchor.setTo(.5,.5);
@@ -645,7 +668,6 @@ character.prototype.explode_cible=function(){
 	game.time.events.add( 100,function(){this.particle.on=false},this );
 }
 character.prototype.explode_all=function(n){
-	co(this.player.length,'length');
 	n = n + 1;
 	for(var i=n; i<3 ;i++) {
 		this.explode(i);
@@ -765,17 +787,18 @@ _asteroid = function(number,posx,posy,speed,radius){
 	_mechant.call(this,game,"asteroid",number,posx,posy,'asteroid','sprite_for_drag_asteroid');
 	this.radius=radius;
 	this.speed=speed;
-	//this.particle = game.add.emitter(this.sprite_for_body.x, this.sprite_for_body.y-25)
-	//this.particle.makeParticles("particle_bullet_color")
-	//this.particle.setXSpeed(-100,100)
-	//this.particle.setYSpeed(100,-100)
-	//this.particle.minParticleAlpha=.3
-	//this.particle.minParticleScale = .1
-	//this.particle.maxParticleScale = .7
-	//this.particle.minRotation = 0
-	//this.particle.maxRotation = 0
-	//this.particle.on=false
-	//game.time.events.add(delay_for_game_begin,function(){this.particle.on=true;this.particle.start(true,500,5)})
+	this.particlex = game.add.emitter(this.sprite_for_body.x, this.sprite_for_body.y-25)
+	this.particlex.makeParticles("particle_bullet_color")
+	this.particlex.setXSpeed(-100,100)
+	this.particlex.setYSpeed(100,-100)
+	this.particlex.minParticleAlpha=.3
+	this.particlex.minParticleScale = .1
+	this.particlex.maxParticleScale = .7
+	this.particlex.minRotation = 0
+	this.particlex.maxRotation = 0
+	this.particlex.on=false
+	game.time.events.add(delay_for_game_begin,function(){this.particlex.on=true;this.particlex.start(true,500,5)},this)
+	//game.time.events.add(delay_for_game_begin,function(){this.particlex.on=true},this);
 	game.time.events.loop(16,this.update2,this);
 }
 
@@ -786,8 +809,8 @@ _asteroid.prototype.update = function() {
 		var period = game.time.now * this.speed;
 		this.sprite_for_body.x = this.x + Math.cos(period) * this.radius;
 		this.sprite_for_body.y = this.y + Math.sin(period) * this.radius;
-		this.particle.x=this.sprite_for_body.x;
-		this.particle.y=this.sprite_for_body.y;
+		this.particlex.x=this.sprite_for_body.x;
+		this.particlex.y=this.sprite_for_body.y;
 	}
 }
 
@@ -797,6 +820,15 @@ _asteroid.prototype.fire = function(){
 	this.sprite_for_body.y = this.sprite_for_body.y ;
 	this.radius.y=this.radius;
 }
+_asteroid.prototype.hide=function(){
+	this.tween1=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0);
+	this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0);
+	this.sprite_for_body.enable=false;
+	this.tween1.onComplete.add(function(){this.visible=false;this.inputEnabled=false},this);
+	this.tween2.onComplete.add(function(){this.sprite_for_body.visible=false},this);
+	this.particlex.on=false
+}
+
 
 _pulsar=function(number,delay,time,posx,posy,speed,scale_factor){
 	_mechant.call(this,game,"pulsar",number,posx,posy,'pulsar','sprite_for_drag');
@@ -922,7 +954,7 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	this.special_color ? this.weapon=game.add.weapon(9,'bullet_color'):this.weapon=game.add.weapon(9,'bullet');
 
 	if(this.kill_with_world){
-		this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUND;
+		this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
 	}else{
 		for (var i = 0; i <  9; i++) {
 			this.weapon.bulletCollideWorldBounds=true;
@@ -948,6 +980,7 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	this.ratio_time=8;
 	this.frequency > (this.ratio_time*100) ? this.time_total=Math.round(this.frequency*.01):this.time_total=8;
 	this.time_part=Math.round(this.time_total/this.ratio_time);
+	// pour animer le retour du canon
 	this.flag_for_time_count=true;
 	game.time.events.loop( this.frequency,function(){this.flag_for_time_count=true},this) ;
 	game.time.events.loop(16,this.update2,this);
@@ -991,7 +1024,7 @@ _canon.prototype.update = function(){
 					this.explosion();
 					break;
 				case this.time_part*5:
-					this.x=thi;s.x-2	
+					this.x=this.x-2	
 					this.scale.y=1.3;
 					break;
 				case this.time_part*6:
@@ -1295,6 +1328,8 @@ var conditional_animate_touch = function(){!flag_tween_en_cours && animate_touch
 
 
 function create_level(num){ 
+	initialise_time_and_delay()
+
 	game_begin=false;
 	flag_hide=false;
 
@@ -1313,6 +1348,7 @@ function create_level(num){
 	text_to_describe_level=new _text(_level_name,game.world.centerX,game.world.centerY,100);
 	text_to_describe_level.visible=false;
 	text_to_describe_level.alpha=0;
+	console.log(delay_for_show_describe_text,"delay_for_show_describe_text",level_number)
 	text_to_describe_level.show();
 	text_to_number_level=new _text(level_number_adapt,game.world.centerX,320,90);
 	text_to_number_level.alpha=0;
@@ -1686,11 +1722,11 @@ var hide_weapon=function(){
 
 var show_grid_on_logic_position=function(sprite){
 	console.log("logic_position");
-	debug_mode ? hero.grid.visible=true:hero.grid.visible=false	;
+	co(debug_mode,hero.grid.visible)
 	logic_position(sprite);
 
 	if(debug_position){
-
+		hero.grid.visible=true
 		gui && gui.destroy();
 		gui=new dat.GUI();
 		gui.start=true;
@@ -1848,15 +1884,6 @@ var logic_position=function(sprite){
 
 var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
 
-if(level_number==0){
-	delay_for_show_describe_text=3000
-	additional_time=3500
-}else{
-	delay_for_show_describe_text=400
-	additional_time=800
-}
-
-delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+additional_time;
 	
 	//var check_in_local_storage=function(obj,num,table){
 	//	for(var i=0;i<num;i++){

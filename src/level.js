@@ -8,9 +8,9 @@ function level_0 (params,num) {
 		create: function () {
 			let _num_canon = 1  ;
 			let _num_asteroid = 1 ;
-			let _num_dalle_moving = 1  ;
-			let _num_pulsar = 1;
-			let _num_dalle = 1 ;
+			let _num_dalle_moving = 0  ;
+			let _num_pulsar = 0;
+			let _num_dalle = 0 ;
 			level_number=num;
 			params.create_level(num);
 			create_canon=function(){
@@ -30,7 +30,7 @@ function level_0 (params,num) {
 					_rotate=false,
 					_value_rotate=10
 				);
-				params.canon[0].transition(600,200,9000,4000);
+				//params.canon[0].transition(600,200,9000,4000);
 			}
 			create_asteroid=function(){
 				params.asteroid[0]=new params.constructor_asteroid(
@@ -42,34 +42,34 @@ function level_0 (params,num) {
 				);
 			}
 			create_dalle_moving=function(){
-				params.dalle_moving[0]=new params.constructor_dalle_moving(
-					number=0,
-					delay=100,
-					posx=240,
-					posy=h2+100,
-					speed=300,
-					posx_in_tween=300
-				);
+				//params.dalle_moving[0]=new params.constructor_dalle_moving(
+				//	number=0,
+				//	delay=100,
+				//	posx=240,
+				//	posy=h2+100,
+				//	speed=300,
+				//	posx_in_tween=300
+				//);
 			}
 			create_pulsar=function(){
-				params.pulsar[0]=new params.constructor_pulsar(
-					number=0,
-					delay=100,
-					time=100,
-					posx=w2,
-					posy=840,
-					speed=2000,
-					scale_factor=2
-				);
+				//params.pulsar[0]=new params.constructor_pulsar(
+				//	number=0,
+				//	delay=100,
+				//	time=100,
+				//	posx=w2,
+				//	posy=840,
+				//	speed=2000,
+				//	scale_factor=2
+				//);
 			}
 			create_dalle=function(){
-				params.dalle[0]=new params.constructor_dalle(
-					number=0,
-					delay=100,
-					posx=100,
-					posy=440,
-					speed=300
-				);
+				//params.dalle[0]=new params.constructor_dalle(
+				//	number=0,
+				//	delay=100,
+				//	posx=100,
+				//	posy=440,
+				//	speed=300
+				//);
 			}
 
 			if(params.debug_store){
@@ -100,7 +100,7 @@ function level_1 (params,num) {
 			level_number=num;
 			let _num_canon = 2  ;
 			let _num_asteroid = 0 ;
-			let _num_dalle_moving = 1  ;
+			let _num_dalle_moving = 0  ;
 			let _num_pulsar = 0;
 			let _num_dalle = 0 ;
 			params.create_level(num);
@@ -140,14 +140,14 @@ function level_1 (params,num) {
 			create_asteroid=function(){
 			}
 			create_dalle_moving=function(){
-				params.dalle_moving[0]=new params.constructor_dalle_moving(
-					number=0,
-					delay=100,
-					posx=240,
-					posy=h2+100,
-					speed=300,
-					posx_in_tween=300
-				);
+			//	params.dalle_moving[0]=new params.constructor_dalle_moving(
+			//		number=0,
+			//		delay=100,
+			//		posx=240,
+			//		posy=h2+100,
+			//		speed=300,
+			//		posx_in_tween=300
+			//	);
 			}
 			create_pulsar=function(){
 			}
