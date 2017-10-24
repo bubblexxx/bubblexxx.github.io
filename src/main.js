@@ -118,10 +118,20 @@ var button1Texture;
 var button2Texture;
 var adService;
 var container;
+var boot;
+var preloadstate;
+var game_first_screen;
+var levsel;
+var intermediate_screen;
+var level0;
+var level1;
+var level2;
+var level3;
 
 var email=JSON.stringify(localStorage);
 //co(email,'localStorage')
 //class for text intitulé dans chaque level
+var main=function(){
 _text=function(message,posx,posy,taille){
 	this.text=game.add.bitmapText(posx,posy,'police',message,taille);
 	this.text.anchor.setTo(.5,.5);
@@ -1176,7 +1186,7 @@ var createBanner= function(){
 	//		}
 }
 
-var boot= {
+boot= {
 	preload: function(game){
 		console.log("%cStarting Bubx", "color:white; background:#ff1fcd");
 		this.load.image("loading","assets/loading.png"); 
@@ -1192,7 +1202,7 @@ var boot= {
 	}
 }
 
-var preloadstate = {
+preloadstate = {
 	preload: function(){ 
 		//loadingBar
 		var loadingBar_back = this.add.sprite(game.world.centerX,game.world.centerY,"loading_back");
@@ -1260,7 +1270,7 @@ var preloadstate = {
 	}
 }
 
-var game_first_screen = {
+game_first_screen = {
 	create: function(){
 		this.game.stage.backgroundColor = '#0d1018';
 		this.title=new screen_first();
@@ -1421,7 +1431,7 @@ _tap = function(){
 	}
 }
 
-var levsel={
+levsel={
 	// define needed variables for mygame.LevelSelect
 	preload: function() {
 		this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
@@ -1999,7 +2009,7 @@ var pass_level=function(){
 	this.game.state.start('level'+next_niveau,true,false);
 }
 
-var intermediate_screen={
+intermediate_screen={
 	create:function(){
 
 		background_to_pass_level = game.add.sprite(0,0,'background');
@@ -2026,10 +2036,10 @@ var intermediate_screen={
 	}
 }
 
-var level0=level_0(level_config,0);
-var level1=level_1(level_config,1);
-var level2=level_2(level_config,2);
-var level3=level_3(level_config,3);
+level0=level_0(level_config,0);
+level1=level_1(level_config,1);
+level2=level_2(level_config,2);
+level3=level_3(level_config,3);
 
 //game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 //game.state.add('boot',bootstate)
@@ -2043,7 +2053,7 @@ var level3=level_3(level_config,3);
 //game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
 //game.state.start('boot',bootstate)
 
-
+}
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i)
 		|| navigator.userAgent.match(/webOS/i)
@@ -2053,14 +2063,14 @@ var detectmob=function(){
 		|| navigator.userAgent.match(/BlackBerry/i)
 		|| navigator.userAgent.match(/Windows Phone/i)
 	){
-		//document.addEventListener('deviceready',main,false)
+		document.addEventListener('deviceready',main,false)
 		//document.addEventListener('deviceready',main,true)
 		is_mobile=true
 		return true;
 	} else {
 		console.log('not mobile')
 		is_mobile=false
-		//main()
+		main()
 		return true;
 	}
 }
