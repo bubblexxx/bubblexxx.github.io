@@ -2044,26 +2044,26 @@ var level3=level_3(level_config,3);
 //game.state.start('boot',bootstate)
 
 
-//var detectmob=function(){ 
-//	if( navigator.userAgent.match(/Android/i)
-//		|| navigator.userAgent.match(/webOS/i)
-//		|| navigator.userAgent.match(/iPhone/i)
-//		|| navigator.userAgent.match(/iPad/i)
-//		|| navigator.userAgent.match(/iPod/i)
-//		|| navigator.userAgent.match(/BlackBerry/i)
-//		|| navigator.userAgent.match(/Windows Phone/i)
-//	){
-//		//document.addEventListener('deviceready',main,false)
-//		document.addEventListener('deviceready',main,true)
-//		is_mobile=true
-//		return true;
-//	} else {
-//		console.log('not mobile')
-//		is_mobile=false
-//		main()
-//		return true;
-//	}
-//}
-//detectmob()
+var detectmob=function(){ 
+	if( navigator.userAgent.match(/Android/i)
+		|| navigator.userAgent.match(/webOS/i)
+		|| navigator.userAgent.match(/iPhone/i)
+		|| navigator.userAgent.match(/iPad/i)
+		|| navigator.userAgent.match(/iPod/i)
+		|| navigator.userAgent.match(/BlackBerry/i)
+		|| navigator.userAgent.match(/Windows Phone/i)
+	){
+		//document.addEventListener('deviceready',main,false)
+		//document.addEventListener('deviceready',main,true)
+		is_mobile=true
+		return true;
+	} else {
+		console.log('not mobile')
+		is_mobile=false
+		//main()
+		return true;
+	}
+}
+detectmob()
 
 
