@@ -575,61 +575,61 @@ character.prototype.next_level = function() {
 }
 
 character.prototype.preload_reward_video=function(){
-	//		var appId = "593f9e2504b0160769416382";
-	//		var appSignature = "41fd9a8fc8adea90df03e94772ffa7e5373afcc6";
-	//		window.chartboost.setUp(appId, appSignature);
-	//
-	//		window.chartboost.onInterstitialAdPreloaded = function(location) {
-	//			alert('onInterstitialAdPreloaded: ' + location);
-	//		};
-	//		window.chartboost.onInterstitialAdLoaded = function(location) {
-	//			alert('onInterstitialAdLoaded: ' + location);
-	//		};
-	//		window.chartboost.onInterstitialAdShown = function(location) {
-	//			alert('onInterstitialAdShown: ' + location);
-	//		};
-	//		window.chartboost.onInterstitialAdHidden = function(location) {
-	//			alert('onInterstitialAdHidden: ' + location);
-	//		};
-	//		window.chartboost.onMoreAppsAdPreloaded = function(location) {
-	//			alert('onMoreAppsAdPreloaded: ' + location);
-	//		};
-	//		window.chartboost.onMoreAppsAdLoaded = function(location) {
-	//			alert('onMoreAppsAdLoaded: ' + location);
-	//		};
-	//		window.chartboost.onMoreAppsAdShown = function(location) {
-	//			alert('onMoreAppsAdShown: ' + location);
-	//		};
-	//		window.chartboost.onMoreAppsAdHidden = function(location) {
-	//			alert('onMoreAppsAdHidden: ' + location);
-	//		};
-	//		//
-	//		window.chartboost.onRewardedVideoAdPreloaded = function(location) {
-	//			is_preload_rewarded_video=true
-	//			//alert('onRewardedVideoAdPreloaded: ' + location);
-	//		};
-	//		window.chartboost.onRewardedVideoAdLoaded = function(location) {
-	//			//alert('onRewardedVideoAdLoaded: ' + location);
-	//		};
-	//		window.chartboost.onRewardedVideoAdShown = function(location) {
-	//			//alert('onRewardedVideoAdShown: ' + location);
-	//		};
-	//		window.chartboost.onRewardedVideoAdHidden = function(location) {
-	//			//alert('onRewardedVideoAdHidden: ' + location);
-	//			is_rewarded_video_completed && this.game.state.start('intermediate_screen');
-	//		};
-	//		window.chartboost.onRewardedVideoAdCompleted = function(location) {
-	//			//alert('onRewardedVideoAdCompleted: ' + location);
-	//			//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
-	//			//this.next_niveau=level_number+1
-	//			is_rewarded_video_completed=true
-	//			//game.state.start('intermediate_screen');
-	//		};
-	//		window.chartboost.preloadRewardedVideoAd('Default')
+			var appId = "593f9e2504b0160769416382";
+			var appSignature = "41fd9a8fc8adea90df03e94772ffa7e5373afcc6";
+			window.chartboost.setUp(appId, appSignature);
+	
+			window.chartboost.onInterstitialAdPreloaded = function(location) {
+				alert('onInterstitialAdPreloaded: ' + location);
+			};
+			window.chartboost.onInterstitialAdLoaded = function(location) {
+				alert('onInterstitialAdLoaded: ' + location);
+			};
+			window.chartboost.onInterstitialAdShown = function(location) {
+				alert('onInterstitialAdShown: ' + location);
+			};
+			window.chartboost.onInterstitialAdHidden = function(location) {
+				alert('onInterstitialAdHidden: ' + location);
+			};
+			window.chartboost.onMoreAppsAdPreloaded = function(location) {
+				alert('onMoreAppsAdPreloaded: ' + location);
+			};
+			window.chartboost.onMoreAppsAdLoaded = function(location) {
+				alert('onMoreAppsAdLoaded: ' + location);
+			};
+			window.chartboost.onMoreAppsAdShown = function(location) {
+				alert('onMoreAppsAdShown: ' + location);
+			};
+			window.chartboost.onMoreAppsAdHidden = function(location) {
+				alert('onMoreAppsAdHidden: ' + location);
+			};
+			//
+			window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+				is_preload_rewarded_video=true
+				//alert('onRewardedVideoAdPreloaded: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdLoaded = function(location) {
+				//alert('onRewardedVideoAdLoaded: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdShown = function(location) {
+				//alert('onRewardedVideoAdShown: ' + location);
+			};
+			window.chartboost.onRewardedVideoAdHidden = function(location) {
+				//alert('onRewardedVideoAdHidden: ' + location);
+				is_rewarded_video_completed && this.game.state.start('intermediate_screen');
+			};
+			window.chartboost.onRewardedVideoAdCompleted = function(location) {
+				//alert('onRewardedVideoAdCompleted: ' + location);
+				//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
+				//this.next_niveau=level_number+1
+				is_rewarded_video_completed=true
+				//game.state.start('intermediate_screen');
+			};
+			window.chartboost.preloadRewardedVideoAd('Default')
 }
 character.prototype.show_reward_video = function() {
 	co("show_reward_video");
-	//is_mobile && window.chartboost.showRewardedVideoAd('Default')
+	is_mobile && window.chartboost.showRewardedVideoAd('Default')
 }
 
 character.prototype.next_level_with_video = function() {
