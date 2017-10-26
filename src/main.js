@@ -23,7 +23,7 @@
 //regler particle canon en fonction de l'inclinaison
 //mettre icone button_back à la place de publish
 //body enbale false lorsque touché un projectile violet
-var is_mobile=true;
+var is_mobile;
 //alert("m")
 var videoreward;
 var c=[];
@@ -49,13 +49,13 @@ var additional_time;
 var delay_for_game_begin;
 var time_appears_enemies;
 var time_hide;
-var level_number=0
+var level_number=0;
 var initialise_time_and_delay=function(){
-additional_time=800;
-delay_for_hide_describe_text=400
-time_to_show_describe_text = 100;
-time_appears_enemies=800;
-time_hide=500;
+	additional_time=800;
+	delay_for_hide_describe_text=400
+	time_to_show_describe_text = 100;
+	time_appears_enemies=800;
+	time_hide=500;
 	if(level_number==0){
 		delay_for_show_describe_text=3000
 		additional_time=1000
@@ -76,12 +76,12 @@ var count_hero ;
 var level_number_adapt;
 var text_to_describe_level;
 var text_to_number_level;
-;
+
 var animate_touch;
 var tw_name;
 var flag_tween_en_cours=true;
 var delay_circle_timer = 2400;
-;
+
 this.some_value=4;
 var gui;
 var PLAYER_DATA ;
@@ -90,8 +90,8 @@ var h=1920;
 var w=1280;
 var h2=h*.5;
 var w2=640;
-// pour montrer la grille snap des enemis
-var debug_mode=true;
+// pour montrer la grille snap des enemis et render debug
+var debug_mode=false;
 //si false pas de possibilité de déplacer les enemis et de publier les levels;
 var debug_position=true;
 // si false pas de localStorage;
@@ -118,20 +118,41 @@ var button1Texture;
 var button2Texture;
 var adService;
 var container;
-var boot;
-var preloadstate;
-var game_first_screen;
-var levsel;
-var intermediate_screen;
-var level0;
-var level1;
-var level2;
-var level3;
+//var boot;
+//var preloadstate;
+//var game_first_screen;
+//var levsel;
+//var intermediate_screen;
+//var level0;
+//var level1;
+//var level2;
+//var level3;
+
+var detectmob=function(){ 
+	co('detectmob')
+	if( navigator.userAgent.match(/Android/i)
+		|| navigator.userAgent.match(/webOS/i)
+		|| navigator.userAgent.match(/iPhone/i)
+		|| navigator.userAgent.match(/iPad/i)
+		|| navigator.userAgent.match(/iPod/i)
+		|| navigator.userAgent.match(/BlackBerry/i)
+		|| navigator.userAgent.match(/Windows Phone/i)
+	){
+		alert('mobile')
+		//document.addEventListener('deviceready',main,false)
+		//document.addEventListener('deviceready',main,true)
+		is_mobile=true
+	} else {
+		alert('not mobile')
+		console.log('not mobile')
+		is_mobile=false
+	}
+}
+detectmob();
 
 var email=JSON.stringify(localStorage);
 //co(email,'localStorage')
 //class for text intitulé dans chaque level
-var main=function(){
 _text=function(message,posx,posy,taille){
 	this.text=game.add.bitmapText(posx,posy,'police',message,taille);
 	this.text.anchor.setTo(.5,.5);
@@ -287,7 +308,7 @@ screen_first = function(){
 	game.time.events.loop( 500,this.explosion,this );
 	game.time.events.add( 200,this.button_menu.show_button,this.button_menu );
 	game.time.events.add( 200,this.button_next.show_button,this.button_next );
-;
+	
 	this._x=game.rnd.integerInRange(0,w);
 	this._y=game.rnd.integerInRange(0,h);
 	this.particle = game.add.emitter(this._x,this._y);
@@ -430,7 +451,7 @@ character = function(){
 	if(level_number ==0){
 		this.show_tuto()
 	}
-	}
+}
 
 character.prototype = Object.create(Phaser.Sprite.prototype);
 character.prototype.constructor = character;
@@ -446,14 +467,14 @@ character.prototype.show_tuto = function() {
 	this.tw_2.onComplete.add(this.hide_tuto,this)
 }
 character.prototype.hide_tuto = function() {
-		game.add.tween(this.tuto.hand).to({alpha:0},750,Phaser.Easing.Linear.None,true,800);
+	game.add.tween(this.tuto.hand).to({alpha:0},750,Phaser.Easing.Linear.None,true,800);
 	for (var i=0; i < 4; i++) {
 		game.add.tween(this.tuto.little_circle[i]).to({alpha:0},750,Phaser.Easing.Linear.None,true,i*200);
 	}
 	//for (var i=0; i < 4; i++) {
-		//this.tuto.little_circle[i].alpha=0;
+	//this.tuto.little_circle[i].alpha=0;
 	//}
-		game.add.tween(this.tuto.circle).to({alpha:0},750,Phaser.Easing.Linear.None,true,800);
+	game.add.tween(this.tuto.circle).to({alpha:0},750,Phaser.Easing.Linear.None,true,800);
 }
 
 character.prototype.update_circle_timer = function() {
@@ -583,63 +604,68 @@ character.prototype.next_level = function() {
 	let next_niveau=level_number+1;
 	this.game.state.start('level'+next_niveau,true,false);
 }
-
 character.prototype.preload_reward_video=function(){
-			var appId = "593f9e2504b0160769416382";
-			var appSignature = "41fd9a8fc8adea90df03e94772ffa7e5373afcc6";
-			window.chartboost.setUp(appId, appSignature);
-	
-			window.chartboost.onInterstitialAdPreloaded = function(location) {
-				alert('onInterstitialAdPreloaded: ' + location);
-			};
-			window.chartboost.onInterstitialAdLoaded = function(location) {
-				alert('onInterstitialAdLoaded: ' + location);
-			};
-			window.chartboost.onInterstitialAdShown = function(location) {
-				alert('onInterstitialAdShown: ' + location);
-			};
-			window.chartboost.onInterstitialAdHidden = function(location) {
-				alert('onInterstitialAdHidden: ' + location);
-			};
-			window.chartboost.onMoreAppsAdPreloaded = function(location) {
-				alert('onMoreAppsAdPreloaded: ' + location);
-			};
-			window.chartboost.onMoreAppsAdLoaded = function(location) {
-				alert('onMoreAppsAdLoaded: ' + location);
-			};
-			window.chartboost.onMoreAppsAdShown = function(location) {
-				alert('onMoreAppsAdShown: ' + location);
-			};
-			window.chartboost.onMoreAppsAdHidden = function(location) {
-				alert('onMoreAppsAdHidden: ' + location);
-			};
-			//
-			window.chartboost.onRewardedVideoAdPreloaded = function(location) {
-				is_preload_rewarded_video=true
-				//alert('onRewardedVideoAdPreloaded: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdLoaded = function(location) {
-				//alert('onRewardedVideoAdLoaded: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdShown = function(location) {
-				//alert('onRewardedVideoAdShown: ' + location);
-			};
-			window.chartboost.onRewardedVideoAdHidden = function(location) {
-				//alert('onRewardedVideoAdHidden: ' + location);
-				is_rewarded_video_completed && this.game.state.start('intermediate_screen');
-			};
-			window.chartboost.onRewardedVideoAdCompleted = function(location) {
-				//alert('onRewardedVideoAdCompleted: ' + location);
-				//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
-				//this.next_niveau=level_number+1
-				is_rewarded_video_completed=true
-				//game.state.start('intermediate_screen');
-			};
-			window.chartboost.preloadRewardedVideoAd('Default')
+	// du site de chartboost
+		var appId = "50ae12d715ba47c00d01000c";
+		var appSignature = "95fb313c08717042903819d76f65d64d2347ac44";
+
+
+
+	// ancien identifiant
+		//var appId = "593f9e2504b0160769416382";
+		//var appSignature = "41fd9a8fc8adea90df03e94772ffa7e5373afcc6";
+	window.chartboost.setUp(appId, appSignature);
+
+	window.chartboost.onInterstitialAdPreloaded = function(location) {
+		alert('onInterstitialAdPreloaded: ' + location);
+	};
+	window.chartboost.onInterstitialAdLoaded = function(location) {
+		alert('onInterstitialAdLoaded: ' + location);
+	};
+	window.chartboost.onInterstitialAdShown = function(location) {
+		alert('onInterstitialAdShown: ' + location);
+	};
+	window.chartboost.onInterstitialAdHidden = function(location) {
+		alert('onInterstitialAdHidden: ' + location);
+	};
+	window.chartboost.onMoreAppsAdPreloaded = function(location) {
+		alert('onMoreAppsAdPreloaded: ' + location);
+	};
+	window.chartboost.onMoreAppsAdLoaded = function(location) {
+		alert('onMoreAppsAdLoaded: ' + location);
+	};
+	window.chartboost.onMoreAppsAdShown = function(location) {
+		alert('onMoreAppsAdShown: ' + location);
+	};
+	window.chartboost.onMoreAppsAdHidden = function(location) {
+		alert('onMoreAppsAdHidden: ' + location);
+	};
+	//
+	window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+		is_preload_rewarded_video=true
+		//alert('onRewardedVideoAdPreloaded: ' + location);
+	};
+	window.chartboost.onRewardedVideoAdLoaded = function(location) {
+		//alert('onRewardedVideoAdLoaded: ' + location);
+	};
+	window.chartboost.onRewardedVideoAdShown = function(location) {
+		//alert('onRewardedVideoAdShown: ' + location);
+	};
+	window.chartboost.onRewardedVideoAdHidden = function(location) {
+		//alert('onRewardedVideoAdHidden: ' + location);
+		is_rewarded_video_completed && this.game.state.start('intermediate_screen');
+	};
+	window.chartboost.onRewardedVideoAdCompleted = function(location) {
+		//alert('onRewardedVideoAdCompleted: ' + location);
+		//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
+		//this.next_niveau=level_number+1
+		is_rewarded_video_completed=true
+		//game.state.start('intermediate_screen');
+	};
+	is_mobile && window.chartboost.preloadRewardedVideoAd('Default')
 }
 character.prototype.show_reward_video = function() {
-	co("show_reward_video");
-	is_mobile && window.chartboost.showRewardedVideoAd('Default')
+	window.chartboost.showRewardedVideoAd('Default')
 }
 
 character.prototype.next_level_with_video = function() {
@@ -1186,7 +1212,7 @@ var createBanner= function(){
 	//		}
 }
 
-boot= {
+var boot= {
 	preload: function(game){
 		console.log("%cStarting Bubx", "color:white; background:#ff1fcd");
 		this.load.image("loading","assets/loading.png"); 
@@ -1202,7 +1228,7 @@ boot= {
 	}
 }
 
-preloadstate = {
+var preloadstate = {
 	preload: function(){ 
 		//loadingBar
 		var loadingBar_back = this.add.sprite(game.world.centerX,game.world.centerY,"loading_back");
@@ -1270,7 +1296,7 @@ preloadstate = {
 	}
 }
 
-game_first_screen = {
+var game_first_screen = {
 	create: function(){
 		this.game.stage.backgroundColor = '#0d1018';
 		this.title=new screen_first();
@@ -1431,7 +1457,7 @@ _tap = function(){
 	}
 }
 
-levsel={
+var levsel={
 	// define needed variables for mygame.LevelSelect
 	preload: function() {
 		this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
@@ -1895,7 +1921,7 @@ var logic_position=function(sprite){
 
 var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
 
-	
+
 	//var check_in_local_storage=function(obj,num,table){
 	//	for(var i=0;i<num;i++){
 	//		try {
@@ -1929,46 +1955,46 @@ var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-for(var i=0;i<num_asteroid;i++){
-	if (a[i]===null){
-		_create_asteroid();
-		break;
-	}else{
-		//asteroid = function(number,posx,posy,speed,radius)
-		asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius);
+	for(var i=0;i<num_asteroid;i++){
+		if (a[i]===null){
+			_create_asteroid();
+			break;
+		}else{
+			//asteroid = function(number,posx,posy,speed,radius)
+			asteroid[i]=new _asteroid(i,a[i].x,a[i].y,a[i].speed,a[i].radius);
+		}
 	}
-}
-///////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
 
-for(var i=0;i<num_dalle_moving;i++){
-	if (n[i]===null){
-		_create_dalle_moving();
-		break;
-	}else{
-		//dalle_moving = function(number,delay,posx,posy,speed)
-		dalle_moving[i]=new _dalle_moving(i,n[i].delay,n[i].x,n[i].y,n[i].speed,n[i].posx_in_tween);
+	for(var i=0;i<num_dalle_moving;i++){
+		if (n[i]===null){
+			_create_dalle_moving();
+			break;
+		}else{
+			//dalle_moving = function(number,delay,posx,posy,speed)
+			dalle_moving[i]=new _dalle_moving(i,n[i].delay,n[i].x,n[i].y,n[i].speed,n[i].posx_in_tween);
+		}
 	}
-}
-///////////////////////////////////////////////////////////////////////////////////////////
-for(var i=0;i<num_pulsar;i++){
-	if (p[i]===null){
-		_create_pulsar();
-		break;
-	}else{
-		//pulsar = function(number,delay,time,posx,posy,speed,scale_factor)
-		pulsar[i]=new _pulsar(i,p[i].delay,p[i].time,p[i].x,p[i].y,p[i].speed,p[i].scale_factor);
+	///////////////////////////////////////////////////////////////////////////////////////////
+	for(var i=0;i<num_pulsar;i++){
+		if (p[i]===null){
+			_create_pulsar();
+			break;
+		}else{
+			//pulsar = function(number,delay,time,posx,posy,speed,scale_factor)
+			pulsar[i]=new _pulsar(i,p[i].delay,p[i].time,p[i].x,p[i].y,p[i].speed,p[i].scale_factor);
+		}
 	}
-}
 
-for(var i=0;i<num_dalle;i++){
-	if (d[i]===null){
-		_create_dalle();
-		break;
-	}else{
-		//dalle = function(number,delay,posx,posy,speed)
-		dalle[i]=new _dalle(i,d[i].delay,d[i].x,d[i].y,d[i].speed);
+	for(var i=0;i<num_dalle;i++){
+		if (d[i]===null){
+			_create_dalle();
+			break;
+		}else{
+			//dalle = function(number,delay,posx,posy,speed)
+			dalle[i]=new _dalle(i,d[i].delay,d[i].x,d[i].y,d[i].speed);
+		}
 	}
-}
 }
 
 
@@ -2009,7 +2035,7 @@ var pass_level=function(){
 	this.game.state.start('level'+next_niveau,true,false);
 }
 
-intermediate_screen={
+var intermediate_screen={
 	create:function(){
 
 		background_to_pass_level = game.add.sprite(0,0,'background');
@@ -2036,10 +2062,10 @@ intermediate_screen={
 	}
 }
 
-level0=level_0(level_config,0);
-level1=level_1(level_config,1);
-level2=level_2(level_config,2);
-level3=level_3(level_config,3);
+var level0=level_0(level_config,0);
+var level1=level_1(level_config,1);
+var level2=level_2(level_config,2);
+var level3=level_3(level_config,3);
 
 //game = new Phaser.Game(1280,1920,Phaser.CANVAS,'game' )
 //game.state.add('boot',bootstate)
@@ -2053,27 +2079,5 @@ level3=level_3(level_config,3);
 //game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
 //game.state.start('boot',bootstate)
 
-}
-var detectmob=function(){ 
-	if( navigator.userAgent.match(/Android/i)
-		|| navigator.userAgent.match(/webOS/i)
-		|| navigator.userAgent.match(/iPhone/i)
-		|| navigator.userAgent.match(/iPad/i)
-		|| navigator.userAgent.match(/iPod/i)
-		|| navigator.userAgent.match(/BlackBerry/i)
-		|| navigator.userAgent.match(/Windows Phone/i)
-	){
-		document.addEventListener('deviceready',main,false)
-		//document.addEventListener('deviceready',main,true)
-		is_mobile=true
-		return true;
-	} else {
-		console.log('not mobile')
-		is_mobile=false
-		main()
-		return true;
-	}
-}
-detectmob()
 
 
