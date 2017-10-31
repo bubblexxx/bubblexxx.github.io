@@ -1,8 +1,8 @@
-var h=1920
-var w=1280
-var h2=h*.5
-var w2=640
-var level_number=0
+var h=1920;
+var w=1280;
+var h2=h*.5;
+var w2=640;
+var level_number=0;
 
 var logic_render=function(){
 	if(debug_mode){
@@ -18,7 +18,7 @@ var logic_render=function(){
 			if (obj[0]){
 				for (var i = 0; i < obj.length;i++){
 					//game.debug.body(obj[i])
-					game.debug.body(obj[i].sprite_for_body)
+					game.debug.body(obj[i].sprite_for_body);
 				}
 			}
 		}
@@ -43,11 +43,11 @@ function level_constructor (params,num) {
 			let _num_dalle_moving;
 			let _num_asteroid;
 			//test des valeurs
-			l[num].canon[0] ? _num_canon=l[num].canon.length : _num_canon=0
-			l[num].dalle[0] ? _num_dalle=l[num].dalle.length : _num_dalle=0
-			l[num].pulsar[0] ? _num_pulsar=l[num].pulsar.length : _num_pulsar=0
-			l[num].dalle_moving[0] ? _num_dalle_moving=l[num].dalle_moving.length : _num_dalle_moving=0
-			l[num].asteroid[0] ? _num_asteroid=l[num].asteroid.length : _num_asteroid=0
+			l[num].canon[0] ? _num_canon=l[num].canon.length : _num_canon=0;
+			l[num].dalle[0] ? _num_dalle=l[num].dalle.length : _num_dalle=0;
+			l[num].pulsar[0] ? _num_pulsar=l[num].pulsar.length : _num_pulsar=0;
+			l[num].dalle_moving[0] ? _num_dalle_moving=l[num].dalle_moving.length : _num_dalle_moving=0;
+			l[num].asteroid[0] ? _num_asteroid=l[num].asteroid.length : _num_asteroid=0;
 
 			level_number=num;
 			params.create_level(num);
@@ -141,12 +141,12 @@ function level_constructor (params,num) {
 		},
 
 		update: function () {
-			params.tap() ;
+			params.tap();
 		},
 
 		render: function () {
-			logic_render()
+			logic_render();
 		}
-	};
+	}
 }
 

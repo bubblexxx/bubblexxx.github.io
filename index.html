@@ -52,8 +52,8 @@ document.addEventListener("deviceready", function() {
  // after put a safe zone 
  //1280+200 > 1480
  //1920 +350 > 2270 (350 is 200*1.5 > ratio from 1920/1280)
- var safe_zone_width=1480
- var safe_zone_height=2270
+ var safe_zone_width=1480;
+ var safe_zone_height=2270;
  var w = window.innerWidth ;//* pixelRatio,
  var h = window.innerHeight ;//* pixelRatio;
  var lw, lh; 
@@ -102,9 +102,9 @@ document.addEventListener("deviceready", function() {
 // game.state.add('level18',level18);
 // game.state.add('level19',level19);
  for (var i=0; i < 20; i++) {
-	 console.log('level'+i)
- game.state.add('level'+ i,level_state[i])
- };
+	 console.log('level'+i);
+ game.state.add('level'+ i,level_state[i]);
+ }
  game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
  game.state.start('boot',boot);
 })();

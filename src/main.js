@@ -57,22 +57,22 @@ var initialise_time_and_delay=function(){
 	time_appears_enemies=800;
 	time_hide=500;
 	if(level_number==0){
-		delay_for_show_describe_text=3000
-		additional_time=1000
+		delay_for_show_describe_text=3000;
+		additional_time=1000;
 	}else{
-		delay_for_show_describe_text=400
-		additional_time=800
+		delay_for_show_describe_text=400;
+		additional_time=800;
 	}
 
 	delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+additional_time;
 }
-initialise_time_and_delay()
-var number_canon=null ;
-var number_asteroid=null ;
-var number_dalle_moving=null ;
-var number_pulsar=null ;
-var number_dalle=null ;
-var count_hero ;
+initialise_time_and_delay();
+var number_canon=null;
+var number_asteroid=null;
+var number_dalle_moving=null;
+var number_pulsar=null;
+var number_dalle=null;
+var count_hero;
 var level_number_adapt;
 var text_to_describe_level;
 var text_to_number_level;
@@ -138,14 +138,14 @@ var detectmob=function(){
 		|| navigator.userAgent.match(/BlackBerry/i)
 		|| navigator.userAgent.match(/Windows Phone/i)
 	){
-		alert('mobile')
+		alert('mobile');
 		//document.addEventListener('deviceready',main,false)
 		//document.addEventListener('deviceready',main,true)
-		is_mobile=true
+		is_mobile=true;
 	} else {
-		alert('not mobile')
-		console.log('not mobile')
-		is_mobile=false
+		alert('not mobile');
+		console.log('not mobile');
+		is_mobile=false;
 	}
 }
 detectmob();
@@ -2064,7 +2064,7 @@ var intermediate_screen={
 
 var level_state=[];
 for (var i=0; i < 20; i++) {
-	level_state[i]=level_constructor(level_config,i)
+	level_state[i]=level_constructor(level_config,i);
 }
 //var level0=level_constructor(level_config,0);
 //var level1=level_constructor(level_config,1);
