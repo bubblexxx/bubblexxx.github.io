@@ -129,7 +129,6 @@ var container;
 //var level3;
 
 var detectmob=function(){ 
-	co('detectmob')
 	if( navigator.userAgent.match(/Android/i)
 		|| navigator.userAgent.match(/webOS/i)
 		|| navigator.userAgent.match(/iPhone/i)
@@ -167,7 +166,7 @@ _text.prototype.show = function() {
 	this.tween1 = game.add.tween(this.text.scale).to({x:1,y:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text);
 	this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text);
 	this.tween1.onComplete.add(this.hide,this);
-	this.tween1.onStart.add(function(){this.text.visible=true},this)
+	this.tween1.onStart.add(function(){this.text.visible=true},this);
 }
 _text.prototype.show2 = function() {
 	this.text.visible=true;
@@ -177,8 +176,7 @@ _text.prototype.show2 = function() {
 }
 
 _text.prototype.hide = function() {
-	this.tween2 = game.add.tween(this.text.scale).to({x:1,y:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_hide_describe_text
-	);
+	this.tween2 = game.add.tween(this.text.scale).to({x:1,y:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_hide_describe_text);
 	this.tween2 = game.add.tween(this.text).to({alpha:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_hide_describe_text);
 }
 
@@ -229,7 +227,6 @@ _mechant = function(game,name,number,posx,posy,image_body,image_drag){
 _mechant.prototype=Object.create(Phaser.Sprite.prototype)
 
 _mechant.prototype.hide=function(){
-	co("hide")
 	this.tween1=game.add.tween(this.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0);
 	this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:0,y:0},time_hide,Phaser.Easing.Bounce.In,true,0);
 	this.sprite_for_body.enable=false;
@@ -238,7 +235,6 @@ _mechant.prototype.hide=function(){
 }
 
 _mechant.prototype.show=function(){
-	co("show")
 	game.time.events.add( delay_for_game_begin,this.particle_show,this );
 	this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_appears_enemies,Phaser.Easing.Elastic.Out,true,delay_for_game_begin);
 	this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_appears_enemies,Phaser.Easing.Elastic.Out,true,delay_for_game_begin);
@@ -354,7 +350,7 @@ character = function(){
 	this.cible_shadow.scale.setTo(1.5,1.5);
 	this.cible_shadow.alpha=.15;
 	this.grid=game.add.sprite(0,0,'grid');
-	debug_mode ? this.grid.visible=true:this.grid.visible=false	;
+	debug_mode ? this.grid.visible=true:this.grid.visible=false;
 	//this.grid.visible=false;
 	//cible;
 	this.cible=game.add.sprite(game.world.centerX,300,'cible');
@@ -435,21 +431,21 @@ character = function(){
 	this.particle.minRotation = 0;
 	this.particle.maxRotation = 0;
 	this.particle.on=false;
-	this.tuto=[]
-	this.tuto.hand=game.add.sprite(w2+15,h2+200,'hand_tuto')
-	this.tuto.hand.anchor.setTo(.5,.5)
-	this.tuto.hand.alpha=0
-	this.tuto.little_circle=[]
+	this.tuto=[];
+	this.tuto.hand=game.add.sprite(w2+15,h2+200,'hand_tuto');
+	this.tuto.hand.anchor.setTo(.5,.5);
+	this.tuto.hand.alpha=0;
+	this.tuto.little_circle=[];
 	for (var i=0; i < 4; i++) {
-		this.tuto.little_circle[i]=game.add.sprite(w2,h2-i*150,'little_circle_tuto')
-		this.tuto.little_circle[i].anchor.setTo(.5,.5)
-		this.tuto.little_circle[i].alpha=0
+		this.tuto.little_circle[i]=game.add.sprite(w2,h2-i*150,'little_circle_tuto');
+		this.tuto.little_circle[i].anchor.setTo(.5,.5);
+		this.tuto.little_circle[i].alpha=0;
 	}
-	this.tuto.circle=game.add.sprite(this.cible.x,this.cible.y,'circle_tuto')
-	this.tuto.circle.anchor.setTo(.5,.5)
-	this.tuto.circle.alpha=0
+	this.tuto.circle=game.add.sprite(this.cible.x,this.cible.y,'circle_tuto');
+	this.tuto.circle.anchor.setTo(.5,.5);
+	this.tuto.circle.alpha=0;
 	if(level_number ==0){
-		this.show_tuto()
+		this.show_tuto();
 	}
 }
 
@@ -464,7 +460,7 @@ character.prototype.show_tuto = function() {
 		game.add.tween(this.tuto.little_circle[i]).to({alpha:1},750,Phaser.Easing.Linear.None,true,i*200);
 	}
 	this.tw_2 = game.add.tween(this.tuto.circle).to({alpha:.4},750,Phaser.Easing.Linear.None,true,1000);
-	this.tw_2.onComplete.add(this.hide_tuto,this)
+	this.tw_2.onComplete.add(this.hide_tuto,this);
 }
 character.prototype.hide_tuto = function() {
 	game.add.tween(this.tuto.hand).to({alpha:0},750,Phaser.Easing.Linear.None,true,800);
@@ -662,10 +658,10 @@ character.prototype.preload_reward_video=function(){
 		is_rewarded_video_completed=true
 		//game.state.start('intermediate_screen');
 	};
-	is_mobile && window.chartboost.preloadRewardedVideoAd('Default')
+	is_mobile && window.chartboost.preloadRewardedVideoAd('Default');
 }
 character.prototype.show_reward_video = function() {
-	window.chartboost.showRewardedVideoAd('Default')
+	window.chartboost.showRewardedVideoAd('Default');
 }
 
 character.prototype.next_level_with_video = function() {
@@ -823,17 +819,17 @@ _asteroid = function(number,posx,posy,speed,radius){
 	_mechant.call(this,game,"asteroid",number,posx,posy,'asteroid','sprite_for_drag_asteroid');
 	this.radius=radius;
 	this.speed=speed;
-	this.particlex = game.add.emitter(this.sprite_for_body.x, this.sprite_for_body.y-25)
-	this.particlex.makeParticles("particle_bullet_color")
-	this.particlex.setXSpeed(-100,100)
-	this.particlex.setYSpeed(100,-100)
-	this.particlex.minParticleAlpha=.3
-	this.particlex.minParticleScale = .1
-	this.particlex.maxParticleScale = .7
-	this.particlex.minRotation = 0
-	this.particlex.maxRotation = 0
-	this.particlex.on=false
-	game.time.events.add(delay_for_game_begin,function(){this.particlex.on=true;this.particlex.start(true,500,5)},this)
+	this.particlex = game.add.emitter(this.sprite_for_body.x, this.sprite_for_body.y-25);
+	this.particlex.makeParticles("particle_bullet_color");
+	this.particlex.setXSpeed(-100,100);
+	this.particlex.setYSpeed(100,-100);
+	this.particlex.minParticleAlpha=.3;
+	this.particlex.minParticleScale = .1;
+	this.particlex.maxParticleScale = .7;
+	this.particlex.minRotation = 0;
+	this.particlex.maxRotation = 0;
+	this.particlex.on=false;
+	game.time.events.add(delay_for_game_begin,function(){this.particlex.on=true;this.particlex.start(true,500,5)},this);
 	//game.time.events.add(delay_for_game_begin,function(){this.particlex.on=true},this);
 	game.time.events.loop(16,this.update2,this);
 }
@@ -862,7 +858,7 @@ _asteroid.prototype.hide=function(){
 	this.sprite_for_body.enable=false;
 	this.tween1.onComplete.add(function(){this.visible=false;this.inputEnabled=false},this);
 	this.tween2.onComplete.add(function(){this.sprite_for_body.visible=false},this);
-	this.particlex.on=false
+	this.particlex.on=false;
 }
 
 
@@ -1043,15 +1039,15 @@ _canon.prototype.update = function(){
 			this.time_for_count=this.time_for_count+1
 			switch(this.time_for_count){
 				case this.time_part:
-					this.x=this.x+2	;
+					this.x=this.x+2;
 					this.scale.y=1.1;
 					break;
 				case this.time_part*2:
-					this.x=this.x+4	;
+					this.x=this.x+4;
 					this.scale.y=1.2;
 					break;
 				case this.time_part*3:
-					this.x=this.x+6	;
+					this.x=this.x+6;
 					this.scale.y=1.3;
 					break;
 				case this.time_part*4:
@@ -1060,19 +1056,19 @@ _canon.prototype.update = function(){
 					this.explosion();
 					break;
 				case this.time_part*5:
-					this.x=this.x-2	
+					this.x=this.x-2;	
 					this.scale.y=1.3;
 					break;
 				case this.time_part*6:
-					this.x=this.x-4	;
+					this.x=this.x-4;
 					this.scale.y=1.2;
 					break;
 				case this.time_part*7:
-					this.x=this.x-6	;
+					this.x=this.x-6;
 					this.scale.y=1.1;
 					break;
 				case this.time_total:
-					this.x=this.x-8	;
+					this.x=this.x-8;
 					this.scale.y=1.0;
 					this.time_for_count=0;
 					this.flag_for_time_count=false;
@@ -1364,7 +1360,7 @@ var conditional_animate_touch = function(){!flag_tween_en_cours && animate_touch
 
 
 function create_level(num){ 
-	initialise_time_and_delay()
+	initialise_time_and_delay();
 
 	game_begin=false;
 	flag_hide=false;
@@ -1384,7 +1380,6 @@ function create_level(num){
 	text_to_describe_level=new _text(_level_name,game.world.centerX,game.world.centerY,100);
 	text_to_describe_level.visible=false;
 	text_to_describe_level.alpha=0;
-	console.log(delay_for_show_describe_text,"delay_for_show_describe_text",level_number)
 	text_to_describe_level.show();
 	text_to_number_level=new _text(level_number_adapt,game.world.centerX,320,90);
 	text_to_number_level.alpha=0;
@@ -1759,11 +1754,10 @@ var hide_weapon=function(){
 
 var show_grid_on_logic_position=function(sprite){
 	console.log("logic_position");
-	co(debug_mode,hero.grid.visible)
 	logic_position(sprite);
 
 	if(debug_position){
-		hero.grid.visible=true
+		hero.grid.visible=true;
 		gui && gui.destroy();
 		gui=new dat.GUI();
 		gui.start=true;
