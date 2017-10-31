@@ -1,13 +1,18 @@
-var h=1920
-var w=1280
-var h2=h*.5
-var w2=640
+var h=1920;
+var w=1280;
+var h2=h*.5;
+var w2=640;
 ////////////////////////////////////////////////////////////////////////////
 //LEVEL 0///////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
+//pour peupler les levels
+var l=[];
+for (var i = 0; i < 20; i++){
+	l.push({canon:[],asteroid:[],dalle_moving:[],pulsar:[],dalle:[]})
+};
 
 // canon example
-var ca0={
+var ca0_l0={
 	number:0,
 	delay:0,
 	posx:400-200,
@@ -22,7 +27,7 @@ var ca0={
 	value_rotate:10
 }
 // asteroid example
-var as0={
+var as0_l0={
 	number:0,
 	radius:0,
 	posx:400-200,
@@ -30,7 +35,7 @@ var as0={
 	speed:900
 }
 // dalle example
-var da0={
+var da0_l0={
 	number:0,
 	delay:0,
 	posx:400-200,
@@ -38,7 +43,7 @@ var da0={
 	speed:900
 }
 // dalle_moving example
-var dm0={
+var dm0_l0={
 	number:0,
 	delay:100,
 	posx:240,
@@ -47,7 +52,7 @@ var dm0={
 	speed:300
 }
 // pulsar example
-var pu0={
+var pu0_l0={
 	number:0,
 	delay:100,
 	time:100,
@@ -58,14 +63,14 @@ var pu0={
 }
 //
 //on ajoute le canon au level concerné
-l[0].canon.push(ca0)
+l[0].canon.push(ca0_l0)
 //////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 //LEVEL 1///////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 
 // canon example
-var ca0={
+var ca0_l1={
 	number:0,
 	delay:0,
 	posx:400-200,
@@ -80,7 +85,7 @@ var ca0={
 	value_rotate:10
 }
 
-var ca1={
+var ca1_l1={
 	number:1,
 	delay:100,
 	posx:100,
@@ -96,7 +101,7 @@ var ca1={
 }
 //
 //on ajoute le canon au level concerné
-l[1].canon.push(ca0)
-l[1].canon.push(ca1)
+l[1].canon.push(ca0_l0)
+l[1].canon.push(ca1_l1)
 //////////////////////////////////////////////////////////////////////////////
 

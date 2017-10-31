@@ -2062,11 +2062,30 @@ var intermediate_screen={
 	}
 }
 
-var level_state=[]
-	for (var i=0; i < 20; i++) {
-		level_state[i]=level_constructor(level_config,i)
-	}
-
+var level_state=[];
+for (var i=0; i < 20; i++) {
+	level_state[i]=level_constructor(level_config,i)
+}
+//var level0=level_constructor(level_config,0);
+//var level1=level_constructor(level_config,1);
+//var level2=level_constructor(level_config,2);
+//var level3=level_constructor(level_config,3);
+//var level4=level_constructor(level_config,4);
+//var level5=level_constructor(level_config,5);
+//var level6=level_constructor(level_config,6);
+//var level7=level_constructor(level_config,7);
+//var level8=level_constructor(level_config,8);
+//var level9=level_constructor(level_config,9);
+//var level10=level_constructor(level_config,10);
+//var level11=level_constructor(level_config,11);
+//var level12=level_constructor(level_config,12);
+//var level13=level_constructor(level_config,13);
+//var level14=level_constructor(level_config,14);
+//var level15=level_constructor(level_config,15);
+//var level16=level_constructor(level_config,16);
+//var level17=level_constructor(level_config,17);
+//var level18=level_constructor(level_config,18);
+//var level19=level_constructor(level_config,19);
 
 
 

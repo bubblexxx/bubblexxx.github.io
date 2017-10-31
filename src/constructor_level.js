@@ -3,11 +3,6 @@ var w=1280
 var h2=h*.5
 var w2=640
 var level_number=0
-//pour peupler les levels
-var l=[]
-for (var i = 0; i < 20; i++){
-	l.push({canon:[],asteroid:[],dalle_moving:[],pulsar:[],dalle:[]})
-}
 
 var logic_render=function(){
 	if(debug_mode){
@@ -72,7 +67,7 @@ function level_constructor (params,num) {
 							kill_with_world=l[num].canon[i].kill_with_world,
 							special_color=l[num].canon[i].special_color,
 							_rotate=l[num].canon[i].rotate,
-							_value_rotate=l[num].canon[i].value_rotate,
+							_value_rotate=l[num].canon[i].value_rotate
 						);
 					}
 				}
