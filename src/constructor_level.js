@@ -33,7 +33,7 @@ var logic_render=function(){
 		}
 	}
 }
-function level_constructor (params,num) {
+var level_constructor=function (params,num) {
 
 	return {
 		create: function () {
