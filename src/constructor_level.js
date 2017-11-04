@@ -1,6 +1,8 @@
+/* jshint expr: true */
+/* jshint esnext: true */
 var h=1920;
 var w=1280;
-var h2=h*.5;
+var h2=h*0.05;
 var w2=640;
 var level_number=0;
 
@@ -21,27 +23,27 @@ var logic_render=function(){
 					game.debug.body(obj[i].sprite_for_body);
 				}
 			}
-		}
+		};
 		debug_obj(dalle);
 		debug_obj(dalle_moving);
 		debug_obj(pulsar);
 		debug_obj(asteroid);
 		if(canon[0]){
-			for (var i = 0; i < canon.length;i++){
-				canon[i].weapon.bullets.forEach(function(item){game.debug.body(item)});
+			for (var j = 0; j < canon.length;j++){
+				canon[j].weapon.bullets.forEach(function(item){game.debug.body(item);});
 			}
 		}
 	}
-}
+};
 var level_constructor=function (params,num) {
 
 	return {
 		create: function () {
-			let _num_canon;
-			let _num_dalle;
-			let _num_pulsar;
-			let _num_dalle_moving;
-			let _num_asteroid;
+			var _num_canon;
+			var _num_dalle;
+			var _num_pulsar;
+			var _num_dalle_moving;
+			var _num_asteroid;
 			//test des valeurs
 			l[num].canon[0] ? _num_canon=l[num].canon.length : _num_canon=0;
 			l[num].dalle[0] ? _num_dalle=l[num].dalle.length : _num_dalle=0;
@@ -71,7 +73,7 @@ var level_constructor=function (params,num) {
 						);
 					}
 				}
-			}
+			};
 			create_asteroid=function(){
 				if (_num_asteroid != 0){
 					for (var i = 0; i < l[num].asteroid.length; i++){
@@ -84,7 +86,7 @@ var level_constructor=function (params,num) {
 						);
 					}
 				}
-			}
+			};
 			create_dalle_moving=function(){
 				if (_num_dalle_moving != 0){
 					for (var i = 0; i < l[num].dalle_moving.length; i++){
@@ -98,7 +100,7 @@ var level_constructor=function (params,num) {
 						);
 					}
 				}
-			}
+			};
 			create_pulsar=function(){
 				if (_num_pulsar != 0){
 					for (var i = 0; i < l[num].pulsar.length; i++){
@@ -113,7 +115,7 @@ var level_constructor=function (params,num) {
 						);
 					}
 				}
-			}
+			};
 			create_dalle=function(){
 				if (_num_dalle != 0){
 					for (var i = 0; i < l[num].dalle.length; i++){
@@ -126,7 +128,7 @@ var level_constructor=function (params,num) {
 						);
 					}
 				}
-			}
+			};
 
 			if(params.debug_store){
 				params._check_storage(create_canon,create_asteroid,create_dalle_moving,create_pulsar,create_dalle,_num_canon,_num_asteroid,_num_dalle_moving,_num_pulsar,_num_dalle);
@@ -147,6 +149,6 @@ var level_constructor=function (params,num) {
 		render: function () {
 			logic_render();
 		}
-	}
-}
+	};
+};
 

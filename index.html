@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8" />
 <title>example_test_scale</title>
-<link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+<!--link rel="shortcut icon" href="favicon.png" type="image/x-icon" /-->
 <style>
 body {
 	margin: auto;
@@ -18,7 +18,6 @@ body {
 }
 </style>
 <title>BubX</title>
-<link rel="shortcut icon" href="assets/favicon.png" type="image/x-icon" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1, IE=9">
 <meta name="format-detection" content="telephone=no">
 <meta name="HandheldFriendly" content="true" />
@@ -28,7 +27,8 @@ body {
 <meta name="apple-mobile-web-app-title" content="Phaser App"> 
 <meta name="msapplication-tap-highlight" content="no" />
 <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+<!--meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" /-->
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
 <script src="cordova.js"></script>
 <!--script src="src/live.js"></script-->
 <script src="src/dat.gui.min.js"></script>
@@ -43,8 +43,8 @@ body {
 <script>
 document.addEventListener("deviceready", function() {
 		setTimeout(function() {
-				navigator.splashscreen.hide();
-				}, 5000, false);
+		navigator.splashscreen.hide();
+		}, 5000, false);
 		});
 (function() {
  //start with a game with these resolution : 1280-1920
@@ -78,35 +78,35 @@ document.addEventListener("deviceready", function() {
  //game = new Phaser.Game( safe_zone_width + extra_width, safe_zone_height + extra_height, Phaser.CANVAS, 'game');
  game = new Phaser.Game( 1280,1920, Phaser.CANVAS, 'game');
  game.state.add('boot',boot);
- game.state.add('preload',preloadstate);
+ game.state.add('preloader',preloadstate);
  game.state.add('game_first_screen',game_first_screen);
  game.state.add('intermediate_screen',intermediate_screen);
-// game.state.add('levelbe0',level0);
-// game.state.add('level1',level1);
-// game.state.add('level2',level2);
-// game.state.add('level3',level3);
-// game.state.add('level4',level4);
-// game.state.add('level5',level5);
-// game.state.add('level6',level6);
-// game.state.add('level7',level7);
-// game.state.add('level8',level8);
-// game.state.add('level9',level9);
-// game.state.add('level10',level10);
-// game.state.add('level11',level11);
-// game.state.add('level12',level12);
-// game.state.add('level13',level13);
-// game.state.add('level14',level14);
-// game.state.add('level15',level15);
-// game.state.add('level16',level16);
-// game.state.add('level17',level17);
-// game.state.add('level18',level18);
-// game.state.add('level19',level19);
+ // game.state.add('levelbe0',level0);
+ // game.state.add('level1',level1);
+ // game.state.add('level2',level2);
+ // game.state.add('level3',level3);
+ // game.state.add('level4',level4);
+ // game.state.add('level5',level5);
+ // game.state.add('level6',level6);
+ // game.state.add('level7',level7);
+ // game.state.add('level8',level8);
+ // game.state.add('level9',level9);
+ // game.state.add('level10',level10);
+ // game.state.add('level11',level11);
+ // game.state.add('level12',level12);
+ // game.state.add('level13',level13);
+ // game.state.add('level14',level14);
+ // game.state.add('level15',level15);
+ // game.state.add('level16',level16);
+ // game.state.add('level17',level17);
+ // game.state.add('level18',level18);
+ // game.state.add('level19',level19);
  for (var i=0; i < 20; i++) {
 	 console.log('level'+i);
- game.state.add('level'+ i,level_state[i]);
+	 game.state.add('level'+ i,level_state[i]);
  }
  game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
- game.state.start('boot',boot);
+ game.state.start('boot');
 })();
 </script>
 
