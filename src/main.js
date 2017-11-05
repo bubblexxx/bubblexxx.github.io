@@ -42,7 +42,7 @@ var level_name=[
 var is_rewarded_video_completed=false;
 var is_preload_rewarded_video=false;
 var text_passed_level;
-var background_to_pass_level;
+//var background_to_pass_level;
 var game_begin=false;
 var delay_for_show_describe_text;
 var delay_for_hide_describe_text;
@@ -95,7 +95,7 @@ var ratio_device=window.screen.width/window.screen.height;
 var h=2270;
 var w=1480;
 var h2=h*0.5;
-var w2=w*0.5-100;
+var w2=w*0.5;
 // pour montrer la grille snap des enemis et render debug
 var debug_mode=false;
 //si false pas de possibilité de déplacer les enemis et de publier les levels;
@@ -119,7 +119,7 @@ var interstitialStatus;
 var banner;
 var interstitial;
 var demoPosition;
-var backgroundTexture;
+//var backgroundTexture;
 var button1Texture;
 var button2Texture;
 var adService;
@@ -363,7 +363,7 @@ character = function(){
 	this.count=-1;
 	this.player={};
 	for (var i = 0; i < 3; i++){
-		this.player[i]=game.add.sprite(game.world.centerX,1920+220,'particle_character')	;
+		this.player[i]=game.add.sprite(game.world.centerX,h+420,'particle_character')	;
 		game.physics.arcade.enable(this.player[i],Phaser.Physics.ARCADE);
 		this.player[i].anchor.setTo(0.5,0.5);
 		this.player[i].body.enable=false;
@@ -372,7 +372,7 @@ character = function(){
 	} 
 	this.score = game.add.bitmapText(game.world.centerX,300,'police','',100);
 	this.score.anchor.setTo(0.5,0.5);
-	this.life = game.add.bitmapText(game.world.centerX,1550,'police','3',120);
+	this.life = game.add.bitmapText(game.world.centerX,2200,'police','3',120);
 	this.life.anchor.setTo(0.5,0.5);
 	this.life.visible=false;
 	this.touch_button = game.add.sprite(this.life.x,this.life.y-20,'touch');
@@ -431,7 +431,7 @@ character = function(){
 	this.particle.on=false;
 	this.tuto=[];
 	//this.tuto.hand=game.add.sprite(w2+(15*1.5),h2+200,'hand_tuto');
-	this.tuto.hand=game.add.sprite(w2,h2+200,'hand_tuto');
+	this.tuto.hand=game.add.sprite(w2,h2+350,'hand_tuto');
 	this.tuto.hand.anchor.setTo(0.3,0.5);
 	this.tuto.hand.alpha=0;
 	this.tuto.little_circle=[];
@@ -1211,7 +1211,8 @@ var boot = {
 		//red color to see the background of the game itself
 		// you must change the background in the index.html to have the same color in the background game 
 		// > change the yellow in red it's only to see how the game is scalling
-		this.game.stage.backgroundColor = '#0d1018';
+		//this.game.stage.backgroundColor = '#0d1018';
+		this.game.stage.backgroundColor = '#1f1d24';
 		this.game.scale.refresh();
 		this.game.state.start('preloader');
 	},
@@ -1233,7 +1234,7 @@ var boot = {
 //	}
 //};
 
-var preloadstate = {
+var preloader = {
 	preload: function(){ 
 		//loadingBar
 		//var loadingBar_back = this.add.sprite(game.world.centerX,game.world.centerY,"assets/loading_back.png");
@@ -1246,7 +1247,7 @@ var preloadstate = {
 		this.game.load.image("little_circle_tuto","assets/little_circle_tuto.png");
 		this.game.load.image("circle_tuto","assets/circle_tuto.png");
 		//interface
-		this.game.load.image("background","assets/background.png");
+		//this.game.load.image("background","assets/background.png");
 		this.game.load.image("button_back","assets/button_back.png");
 		this.game.load.image("title","assets/title.png");
 		this.game.load.spritesheet('star','assets/star.png', 300, 100);
@@ -1293,7 +1294,7 @@ var preloadstate = {
 	},
 
 	create: function(){
-		this.game.stage.backgroundColor = '#0d1018';
+		//this.game.stage.backgroundColor = '#0d1018';
 		//this.background=game.add.sprite(0,0,'background');
 		//this.game.add.existing(this.background)
 		this.game.time.events.add(1000,function(){this.game.state.start("game_first_screen");},this);
@@ -1303,13 +1304,19 @@ var preloadstate = {
 
 var game_first_screen = {
 	create: function(){
-		this.game.stage.backgroundColor = '#0d1018';
+
+		//this.game.stage.backgroundColor = '#0d1018';
 		this.title=new screen_first();
 		game.add.existing(this.title);
 		this.initProgressData();
 		//ICI ENLEVER;
 		createBanner();
 	},
+
+
+
+
+
 
 	initProgressData: function() {
 
@@ -1466,16 +1473,16 @@ var levsel={
 	preload: function() {
 		this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
 		this.game.load.bitmapFont('police','fonts/font.png', 'fonts/font.fnt');
-		this.game.load.image("background","assets/background.png");
+		//this.game.load.image("background","assets/background.png");
 
 		this.initProgressData();
 	},
 
 	create: function() {
 		this.holdicons = [];
-		this.game.stage.backgroundColor = '#0d1018';
-		this.back=game.add.sprite(0,0,'background');
-		this.back.anchor.setTo(0.5,0.5);
+		//this.game.stage.backgroundColor = '#0d1018';
+		//this.back=game.add.sprite(0,0,'background');
+		//this.back.anchor.setTo(0.5,0.5);
 		this.text=game.add.bitmapText(640,200,'police','Select a level!',100);
 		this.text.anchor.setTo(0.5,0.5);
 		this.createLevelIcons();
@@ -2042,8 +2049,8 @@ var pass_level=function(){
 var intermediate_screen={
 	create:function(){
 
-		background_to_pass_level = game.add.sprite(0,0,'background');
-		background_to_pass_level.alpha = 1;
+		//background_to_pass_level = game.add.sprite(0,0,'background');
+		//background_to_pass_level.alpha = 1;
 		text_passed_level = new _text("level passed",game.world.centerX,game.world.centerY,100);
 		this.particlex = game.add.emitter(text_passed_level.text.x,text_passed_level.text.y);
 		this.particlex.makeParticles("particle_canon");
