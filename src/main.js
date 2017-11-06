@@ -431,18 +431,21 @@ character = function(){
 	this.particle.on=false;
 	this.tuto=[];
 	//this.tuto.hand=game.add.sprite(w2+(15*1.5),h2+200,'hand_tuto');
-	this.tuto.hand=game.add.sprite(w2,h2+350,'hand_tuto');
+	this.tuto.hand=game.add.sprite(w2,h2+550,'hand_tuto');
 	this.tuto.hand.anchor.setTo(0.3,0.5);
 	this.tuto.hand.alpha=0;
 	this.tuto.little_circle=[];
-	for (var j=0; j < 4; j++) {
-		this.tuto.little_circle[j]=game.add.sprite(w2,h2-j*150,'little_circle_tuto');
+	for (var j=0; j < 5; j++) {
+		this.tuto.little_circle[j]=game.add.sprite(w2,h2+200-j*150,'little_circle_tuto');
 		this.tuto.little_circle[j].anchor.setTo(0.5,0.5);
 		this.tuto.little_circle[j].alpha=0;
 	}
 	this.tuto.circle=game.add.sprite(this.cible.x,this.cible.y,'circle_tuto');
 	this.tuto.circle.anchor.setTo(0.5,0.5);
 	this.tuto.circle.alpha=0;
+	this.tuto.hand_level_win=game.add.sprite(w2,this.cible.y+90,'hand_tuto');
+	this.tuto.hand_level_win.angle=45
+	this.tuto.hand_level_win.alpha=0;
 	if(level_number ==0){
 		this.show_tuto();
 	}
@@ -455,16 +458,20 @@ character.prototype.show_tuto = function() {
 	this.tw_0 = game.add.tween(this.tuto.hand).to({alpha:1},750,Phaser.Easing.Linear.None,true,0);
 	this.tw_1 = game.add.tween(this.tuto.hand.scale).to({x:1.2,y:1.2},750,Phaser.Easing.Linear.None,true,0,-1);
 	//this.tw_1.yoyo(350,true)
-	for (var i=0; i < 4; i++) {
+	for (var i=0; i < this.tuto.little_circle.length; i++) {
 		game.add.tween(this.tuto.little_circle[i]).to({alpha:1},750,Phaser.Easing.Linear.None,true,i*200);
 	}
 	this.tw_2 = game.add.tween(this.tuto.circle).to({alpha:0.4},750,Phaser.Easing.Linear.None,true,1000);
 	this.tw_2.onComplete.add(this.hide_tuto,this);
 };
+character.prototype.show_tuto_for_win = function() {
+	this.tw_3 = game.add.tween(this.tuto.hand_level_win).to({alpha:1},750,Phaser.Easing.Linear.None,true,0);
+	this.tw_4 = game.add.tween(this.tuto.hand_level_win.scale).to({x:1.2,y:1.2},750,Phaser.Easing.Linear.None,true,0,-1);
+};
 character.prototype.hide_tuto = function() {
-	game.add.tween(this.tuto.hand).to({alpha:0},750,Phaser.Easing.Linear.None,true,800);
-	for (var i=0; i < 4; i++) {
-		game.add.tween(this.tuto.little_circle[i]).to({alpha:0},750,Phaser.Easing.Linear.None,true,i*200);
+	game.add.tween(this.tuto.hand).to({alpha:0},700,Phaser.Easing.Linear.None,true,800);
+	for (var i=0; i < this.tuto.little_circle.length; i++) {
+		game.add.tween(this.tuto.little_circle[i]).to({alpha:0},500,Phaser.Easing.Linear.None,true,i*200);
 	}
 	//for (var i=0; i < 4; i++) {
 	//this.tuto.little_circle[i].alpha=0;
@@ -574,6 +581,9 @@ character.prototype.show_star = function() {
 };
 
 character.prototype.wins=function(){
+	if(level_number ==0){
+		this.show_tuto_for_win();
+	}
 	this._levelNumber=level_number+1;
 	// just testing, award random nr of stars;
 	//var randstars = this.game.rnd.integerInRange(1, 3);
@@ -791,6 +801,7 @@ character.prototype.scale_x = function(n){
 	this.calculate_star();
 	this.show_star();
 	this.wins();
+	text_to_number_level.hide()
 	this.button_publish.show_button();
 };
 
@@ -1005,9 +1016,10 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	this.frequency > (this.ratio_time*100) ? this.time_total=Math.round(this.frequency*0.01):this.time_total=8;
 	this.time_part=Math.round(this.time_total/this.ratio_time);
 	// pour animer le retour du canon
-	this.flag_for_time_count=true;
-	game.time.events.loop( this.frequency,function(){this.flag_for_time_count=true;},this) ;
 	game.time.events.loop(16,this.update2,this);
+	this.signal_fire=false
+	this.weapon.onFire.add(this.explosion,this)
+	this.weapon.onFire.add(this.hide_explosion,this)
 
 };
 
@@ -1016,6 +1028,7 @@ _canon.prototype=Object.create(_mechant.prototype);
 _canon.prototype.audio_pop = function() {
 	this.sound_pop.play();
 };
+
 
 _canon.prototype.update = function(){
 	if(this.flag_wait_before_fire && game_begin){
@@ -1027,7 +1040,7 @@ _canon.prototype.update = function(){
 		this._flag==false && this.flag_for_fire && this.weapon.fire();
 		this.particlex.x=this.x;
 		this.particlex.y=this.y;
-		if(this.flag_for_time_count){
+		if(this.signal_fire){
 			this.time_for_count=this.time_for_count+1;
 			switch(this.time_for_count){
 				case this.time_part:
@@ -1045,7 +1058,7 @@ _canon.prototype.update = function(){
 				case this.time_part*4:
 					this.x=this.x+8	;
 					this.scale.y=1.4;
-					this.explosion();
+					//this.explosion();
 					break;
 				case this.time_part*5:
 					this.x=this.x-2;	
@@ -1063,8 +1076,8 @@ _canon.prototype.update = function(){
 					this.x=this.x-8;
 					this.scale.y=1.0;
 					this.time_for_count=0;
-					this.flag_for_time_count=false;
-					this.hide_explosion();
+					this.signal_fire=false
+					//this.hide_explosion();
 					break;
 			}
 		}
@@ -1097,12 +1110,13 @@ _canon.prototype.fire = function() {
 
 _canon.prototype.explosion = function() {
 	if(this.visible && game_begin){
+		this.signal_fire=true
 		this.particlex.on=true;
 		this.particlex.start(true,450,null,1);
 	}
 };
 _canon.prototype.hide_explosion = function() {
-	this.particlex.on=false;
+	game.time.events.add(20,function(){this.particlex.on=false;},this)
 };
 
 
@@ -1211,8 +1225,7 @@ var boot = {
 		//red color to see the background of the game itself
 		// you must change the background in the index.html to have the same color in the background game 
 		// > change the yellow in red it's only to see how the game is scalling
-		//this.game.stage.backgroundColor = '#0d1018';
-		this.game.stage.backgroundColor = '#1f1d24';
+		this.game.stage.backgroundColor = '#0d1018';
 		this.game.scale.refresh();
 		this.game.state.start('preloader');
 	},
@@ -1229,7 +1242,6 @@ var boot = {
 //		this.game.scale.pageAlignHorizontally = true;
 //		this.game.scale.pageAlignVertically = true;
 //		//this.scale.refresh();
-//		this.game.stage.backgroundColor = '#0d1018';
 //		this.game.state.start("preload");
 //	}
 //};
@@ -1250,7 +1262,7 @@ var preloader = {
 		//this.game.load.image("background","assets/background.png");
 		this.game.load.image("button_back","assets/button_back.png");
 		this.game.load.image("title","assets/title.png");
-		this.game.load.spritesheet('star','assets/star.png', 300, 100);
+		this.game.load.spritesheet('star','assets/star.png', 450, 150);
 		this.game.load.image("big_star","assets/big_star.png");
 		this.game.load.image("levelselecticons","assets/levelselecticons.png");
 		this.game.load.image("cible","assets/cible2.png");
@@ -1294,9 +1306,6 @@ var preloader = {
 	},
 
 	create: function(){
-		//this.game.stage.backgroundColor = '#0d1018';
-		//this.background=game.add.sprite(0,0,'background');
-		//this.game.add.existing(this.background)
 		this.game.time.events.add(1000,function(){this.game.state.start("game_first_screen");},this);
 		//game.state.start("intermediate_screen");
 	}
@@ -1305,7 +1314,6 @@ var preloader = {
 var game_first_screen = {
 	create: function(){
 
-		//this.game.stage.backgroundColor = '#0d1018';
 		this.title=new screen_first();
 		game.add.existing(this.title);
 		this.initProgressData();
@@ -1397,7 +1405,7 @@ function create_level(num){
 	text_to_describe_level.visible=false;
 	text_to_describe_level.alpha=0;
 	text_to_describe_level.show();
-	text_to_number_level=new _text(level_number_adapt,game.world.centerX,320,90);
+	text_to_number_level=new _text(level_number_adapt,game.world.centerX,320,140);
 	text_to_number_level.alpha=0;
 	text_to_number_level.visible=false;
 	text_to_number_level.show2();
@@ -1480,9 +1488,6 @@ var levsel={
 
 	create: function() {
 		this.holdicons = [];
-		//this.game.stage.backgroundColor = '#0d1018';
-		//this.back=game.add.sprite(0,0,'background');
-		//this.back.anchor.setTo(0.5,0.5);
 		this.text=game.add.bitmapText(640,200,'police','Select a level!',100);
 		this.text.anchor.setTo(0.5,0.5);
 		this.createLevelIcons();
@@ -1770,88 +1775,88 @@ var hide_weapon=function(){
 };
 
 var show_grid_on_logic_position=function(sprite){
-//	console.log("logic_position");
-//	logic_position(sprite);
-//
-//	if(debug_position){
-//		hero.grid.visible=true;
-//		gui && gui.destroy();
-//		gui=new dat.GUI();
-//		gui.start=true;
-//		var guit={};
-//
-//		var guit_declare=function(...args){
-//			var condition=args.length;
-//			//obligé ...ne sait pas pourquoi
-//			var parameter=args[1];
-//			if (condition> 2){	
-//				guit.parameter=gui.add(args[0],args[1],args[2],args[3]);
-//				co(args[1],"args");
-//				guit.parameter.onChange(function(value){
-//					args[0].fire();
-//					logic_position(args[0]);
-//				});
-//			}else{
-//				guit.parameter=gui.add(args[0],args[1]);
-//				guit.parameter.onChange(function(value){
-//					args[0].kill();
-//					logic_position(args[0]);
-//				});
-//			}
-//		};
-//
-//		switch(sprite.name){
-//			case "canon":
-//				gui.add(sprite,'name');
-//				guit_declare(sprite,'speed',0,5000);
-//				guit_declare(sprite,'frequency',0,5000);
-//				guit.kill=gui.add(sprite,'kill_with_world');
-//				guit.kill.onChange(function(value) {
-//					sprite.fire();// Fires on every change, drag, keypress, etc.;
-//					logic_position(sprite);
-//				});
-//				guit.kill=gui.add(sprite,'_rotate');
-//				guit.kill.onChange(function(value) {
-//					sprite.fire();// Fires on every change, drag, keypress, etc.;
-//					logic_position(sprite);
-//				});
-//				guit_declare(sprite,'_value_rotate',0,10);
-//				//guit_declare(sprite,'_rotate')
-//				guit.kill=gui.add(sprite,'special_color');
-//				guit.kill.onChange(function(value) {
-//					sprite.fire();// Fires on every change, drag, keypress, etc.;
-//					logic_position(sprite);
-//				});
-//				guit_declare(sprite,'angular',0,360);
-//				guit_declare(sprite,'variance',0,1000);
-//				guit_declare(sprite,'kill');
-//				break;
-//			case "pulsar":
-//				gui.add(sprite,'name');
-//				guit_declare(sprite,'speed',300,9000);
-//				guit_declare(sprite,'kill');
-//				break;
-//			case "asteroid":
-//				gui.add(sprite,'name');
-//				gui.add(sprite,'radius',100,500);
-//				gui.add(sprite,'speed',0,0.01);
-//				guit_declare(sprite,'kill');
-//				break;
-//			case "dalle_moving":
-//				gui.add(sprite,'name');
-//				guit_declare(sprite,'speed',300,3000);
-//				guit_declare(sprite,'posx_in_tween',-800,800);
-//				guit_declare(sprite,'kill');
-//				break;
-//			case "dalle":
-//				gui.add(sprite,'name');
-//				guit_declare(sprite,'speed',300,3000);
-//				guit_declare(sprite,'kill');
-//				break;
-//			default:
-//				break;
-//		}
-//	}
+	console.log("logic_position");
+	logic_position(sprite);
+
+	if(debug_position){
+		hero.grid.visible=true;
+		gui && gui.destroy();
+		gui=new dat.GUI();
+		gui.start=true;
+		var guit={};
+
+		var guit_declare=function(...args){
+			var condition=args.length;
+			//obligé ...ne sait pas pourquoi
+			var parameter=args[1];
+			if (condition> 2){	
+				guit.parameter=gui.add(args[0],args[1],args[2],args[3]);
+				co(args[1],"args");
+				guit.parameter.onChange(function(value){
+					args[0].fire();
+					logic_position(args[0]);
+				});
+			}else{
+				guit.parameter=gui.add(args[0],args[1]);
+				guit.parameter.onChange(function(value){
+					args[0].kill();
+					logic_position(args[0]);
+				});
+			}
+		};
+
+		switch(sprite.name){
+			case "canon":
+				gui.add(sprite,'name');
+				guit_declare(sprite,'speed',0,5000);
+				guit_declare(sprite,'frequency',0,5000);
+				guit.kill=gui.add(sprite,'kill_with_world');
+				guit.kill.onChange(function(value) {
+					sprite.fire();// Fires on every change, drag, keypress, etc.;
+					logic_position(sprite);
+				});
+				guit.kill=gui.add(sprite,'_rotate');
+				guit.kill.onChange(function(value) {
+					sprite.fire();// Fires on every change, drag, keypress, etc.;
+					logic_position(sprite);
+				});
+				guit_declare(sprite,'_value_rotate',0,10);
+				//guit_declare(sprite,'_rotate')
+				guit.kill=gui.add(sprite,'special_color');
+				guit.kill.onChange(function(value) {
+					sprite.fire();// Fires on every change, drag, keypress, etc.;
+					logic_position(sprite);
+				});
+				guit_declare(sprite,'angular',0,360);
+				guit_declare(sprite,'variance',0,1000);
+				guit_declare(sprite,'kill');
+				break;
+			case "pulsar":
+				gui.add(sprite,'name');
+				guit_declare(sprite,'speed',300,9000);
+				guit_declare(sprite,'kill');
+				break;
+			case "asteroid":
+				gui.add(sprite,'name');
+				gui.add(sprite,'radius',100,500);
+				gui.add(sprite,'speed',0,0.01);
+				guit_declare(sprite,'kill');
+				break;
+			case "dalle_moving":
+				gui.add(sprite,'name');
+				guit_declare(sprite,'speed',300,3000);
+				guit_declare(sprite,'posx_in_tween',-800,800);
+				guit_declare(sprite,'kill');
+				break;
+			case "dalle":
+				gui.add(sprite,'name');
+				guit_declare(sprite,'speed',300,3000);
+				guit_declare(sprite,'kill');
+				break;
+			default:
+				break;
+		}
+	}
 };
 
 var logic_position=function(sprite){
