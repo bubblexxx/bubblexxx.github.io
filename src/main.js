@@ -1225,6 +1225,8 @@ var createBanner= function(){
 
 var boot = {
 	preload: function() {
+		this.load.image("loading","assets/loading.png")
+		this.load.image("loading_back","assets/loading_back.png")
 	},
 	create: function() {
 		//to scale the game
@@ -1258,11 +1260,11 @@ var boot = {
 var preloader = {
 	preload: function(){ 
 		//loadingBar
-		//var loadingBar_back = this.add.sprite(game.world.centerX,game.world.centerY,"assets/loading_back.png");
-		//loadingBar_back.anchor.setTo(0.5,0.5);
-		//var loadingBar = this.add.sprite(game.world.centerX,game.world.centerY,"assets/loading.png");
-		//loadingBar.anchor.setTo(0.5,0.5);
-		//this.load.setPreloadSprite(loadingBar);
+		var loadingBar_back = this.add.sprite(game.world.centerX,game.world.centerY,"loading_back.png");
+		loadingBar_back.anchor.setTo(0.5,0.5);
+		var loadingBar = this.add.sprite(game.world.centerX,game.world.centerY,"loading.png");
+		loadingBar.anchor.setTo(0.5,0.5);
+		this.load.setPreloadSprite(loadingBar);
 		//tuto
 		this.game.load.image("hand_tuto","assets/hand_tuto.png");
 		this.game.load.image("little_circle_tuto","assets/little_circle_tuto.png");
