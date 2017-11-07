@@ -1785,88 +1785,88 @@ var hide_weapon=function(){
 };
 
 var show_grid_on_logic_position=function(sprite){
-	console.log("logic_position");
-	logic_position(sprite);
-
-	if(debug_position){
-		hero.grid.visible=true;
-		gui && gui.destroy();
-		gui=new dat.GUI();
-		gui.start=true;
-		var guit={};
-
-		var guit_declare=function(...args){
-			var condition=args.length;
-			//obligé ...ne sait pas pourquoi
-			var parameter=args[1];
-			if (condition> 2){	
-				guit.parameter=gui.add(args[0],args[1],args[2],args[3]);
-				co(args[1],"args");
-				guit.parameter.onChange(function(value){
-					args[0].fire();
-					logic_position(args[0]);
-				});
-			}else{
-				guit.parameter=gui.add(args[0],args[1]);
-				guit.parameter.onChange(function(value){
-					args[0].kill();
-					logic_position(args[0]);
-				});
-			}
-		};
-
-		switch(sprite.name){
-			case "canon":
-				gui.add(sprite,'name');
-				guit_declare(sprite,'speed',0,5000);
-				guit_declare(sprite,'frequency',0,5000);
-				guit.kill=gui.add(sprite,'kill_with_world');
-				guit.kill.onChange(function(value) {
-					sprite.fire();// Fires on every change, drag, keypress, etc.;
-					logic_position(sprite);
-				});
-				guit.kill=gui.add(sprite,'_rotate');
-				guit.kill.onChange(function(value) {
-					sprite.fire();// Fires on every change, drag, keypress, etc.;
-					logic_position(sprite);
-				});
-				guit_declare(sprite,'_value_rotate',0,10);
-				//guit_declare(sprite,'_rotate')
-				guit.kill=gui.add(sprite,'special_color');
-				guit.kill.onChange(function(value) {
-					sprite.fire();// Fires on every change, drag, keypress, etc.;
-					logic_position(sprite);
-				});
-				guit_declare(sprite,'angular',0,360);
-				guit_declare(sprite,'variance',0,1000);
-				guit_declare(sprite,'kill');
-				break;
-			case "pulsar":
-				gui.add(sprite,'name');
-				guit_declare(sprite,'speed',300,9000);
-				guit_declare(sprite,'kill');
-				break;
-			case "asteroid":
-				gui.add(sprite,'name');
-				gui.add(sprite,'radius',100,500);
-				gui.add(sprite,'speed',0,0.01);
-				guit_declare(sprite,'kill');
-				break;
-			case "dalle_moving":
-				gui.add(sprite,'name');
-				guit_declare(sprite,'speed',300,3000);
-				guit_declare(sprite,'posx_in_tween',-800,800);
-				guit_declare(sprite,'kill');
-				break;
-			case "dalle":
-				gui.add(sprite,'name');
-				guit_declare(sprite,'speed',300,3000);
-				guit_declare(sprite,'kill');
-				break;
-			default:
-				break;
-		}
-	}
+//	console.log("logic_position");
+//	logic_position(sprite);
+//
+//	if(debug_position){
+//		hero.grid.visible=true;
+//		gui && gui.destroy();
+//		gui=new dat.GUI();
+//		gui.start=true;
+//		var guit={};
+//
+//		var guit_declare=function(...args){
+//			var condition=args.length;
+//			//obligé ...ne sait pas pourquoi
+//			var parameter=args[1];
+//			if (condition> 2){	
+//				guit.parameter=gui.add(args[0],args[1],args[2],args[3]);
+//				co(args[1],"args");
+//				guit.parameter.onChange(function(value){
+//					args[0].fire();
+//					logic_position(args[0]);
+//				});
+//			}else{
+//				guit.parameter=gui.add(args[0],args[1]);
+//				guit.parameter.onChange(function(value){
+//					args[0].kill();
+//					logic_position(args[0]);
+//				});
+//			}
+//		};
+//
+//		switch(sprite.name){
+//			case "canon":
+//				gui.add(sprite,'name');
+//				guit_declare(sprite,'speed',0,5000);
+//				guit_declare(sprite,'frequency',0,5000);
+//				guit.kill=gui.add(sprite,'kill_with_world');
+//				guit.kill.onChange(function(value) {
+//					sprite.fire();// Fires on every change, drag, keypress, etc.;
+//					logic_position(sprite);
+//				});
+//				guit.kill=gui.add(sprite,'_rotate');
+//				guit.kill.onChange(function(value) {
+//					sprite.fire();// Fires on every change, drag, keypress, etc.;
+//					logic_position(sprite);
+//				});
+//				guit_declare(sprite,'_value_rotate',0,10);
+//				//guit_declare(sprite,'_rotate')
+//				guit.kill=gui.add(sprite,'special_color');
+//				guit.kill.onChange(function(value) {
+//					sprite.fire();// Fires on every change, drag, keypress, etc.;
+//					logic_position(sprite);
+//				});
+//				guit_declare(sprite,'angular',0,360);
+//				guit_declare(sprite,'variance',0,1000);
+//				guit_declare(sprite,'kill');
+//				break;
+//			case "pulsar":
+//				gui.add(sprite,'name');
+//				guit_declare(sprite,'speed',300,9000);
+//				guit_declare(sprite,'kill');
+//				break;
+//			case "asteroid":
+//				gui.add(sprite,'name');
+//				gui.add(sprite,'radius',100,500);
+//				gui.add(sprite,'speed',0,0.01);
+//				guit_declare(sprite,'kill');
+//				break;
+//			case "dalle_moving":
+//				gui.add(sprite,'name');
+//				guit_declare(sprite,'speed',300,3000);
+//				guit_declare(sprite,'posx_in_tween',-800,800);
+//				guit_declare(sprite,'kill');
+//				break;
+//			case "dalle":
+//				gui.add(sprite,'name');
+//				guit_declare(sprite,'speed',300,3000);
+//				guit_declare(sprite,'kill');
+//				break;
+//			default:
+//				break;
+//		}
+//	}
 };
 
 var logic_position=function(sprite){
