@@ -341,6 +341,9 @@ screen_first.prototype.explosion = function(){
 
 character = function(){
 	Phaser.Sprite.call(this,game,game.world.centerX,2270+500,'particle_character');
+	this.background_white=game.add.sprite(w2,h2,'background_white');
+	this.background_white.anchor.setTo(0.5,0.5);
+	this.background_white.alpha=0;
 	this.flag_mouse=true;
 	this.flag_show_button=true;
 	this.cible_shadow=game.add.sprite(game.world.centerX,300,'cible_shadow');
@@ -396,7 +399,7 @@ character = function(){
 	this.button_next=new _button(game.world.centerX,this.cible.y,'button_next',this.next_level);
 	this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.show_reward_video);
 	//TODO;
-	this.star= this.game.add.sprite(game.world.centerX, ((2270*0.5)-380), 'star', 0);
+	this.star= this.game.add.sprite(game.world.centerX, ((2270*0.5)-300), 'star', 0);
 	this.star.anchor.setTo(0.5,0.5);
 	this.star.frame=2;
 	this.star.visible=false;
@@ -454,6 +457,11 @@ character = function(){
 character.prototype = Object.create(Phaser.Sprite.prototype);
 character.prototype.constructor = character;
 
+character.prototype.show_background_white=function(){
+	this.tw_b0 = game.add.tween(this.background_white).to({alpha:1},100,Phaser.Easing.Linear.None,true,0);
+	this.tw_b0.onComplete.add(function(){this.background_white.alpha=0;},this);
+}
+
 character.prototype.show_tuto = function() {
 	this.tw_0 = game.add.tween(this.tuto.hand).to({alpha:1},750,Phaser.Easing.Linear.None,true,0);
 	this.tw_1 = game.add.tween(this.tuto.hand.scale).to({x:1.2,y:1.2},750,Phaser.Easing.Linear.None,true,0,-1);
@@ -465,8 +473,8 @@ character.prototype.show_tuto = function() {
 	this.tw_2.onComplete.add(this.hide_tuto,this);
 };
 character.prototype.show_tuto_for_win = function() {
-	this.tw_3 = game.add.tween(this.tuto.hand_level_win).to({alpha:1},750,Phaser.Easing.Linear.None,true,0);
-	this.tw_4 = game.add.tween(this.tuto.hand_level_win.scale).to({x:1.2,y:1.2},750,Phaser.Easing.Linear.None,true,0,-1);
+	this.tw_3 = game.add.tween(this.tuto.hand_level_win).to({alpha:1},750,Phaser.Easing.Linear.None,true,2500);
+	this.tw_4 = game.add.tween(this.tuto.hand_level_win.scale).to({x:1.2,y:1.2},750,Phaser.Easing.Linear.None,true,2500,-1);
 };
 character.prototype.hide_tuto = function() {
 	game.add.tween(this.tuto.hand).to({alpha:0},700,Phaser.Easing.Linear.None,true,800);
@@ -687,6 +695,7 @@ character.prototype.next_level_with_video = function() {
 };
 
 character.prototype.launch=function(n){
+	this.show_background_white();
 	this.reset_update_circle_timer();
 	this.audio_launch();
 	this.player[n].body.enable=true;
@@ -1260,6 +1269,7 @@ var preloader = {
 		this.game.load.image("circle_tuto","assets/circle_tuto.png");
 		//interface
 		//this.game.load.image("background","assets/background.png");
+		this.game.load.image("background_white","assets/background_white.png");
 		this.game.load.image("button_back","assets/button_back.png");
 		this.game.load.image("title","assets/title.png");
 		this.game.load.spritesheet('star','assets/star.png', 450, 150);
