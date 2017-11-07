@@ -1225,8 +1225,8 @@ var createBanner= function(){
 
 var boot = {
 	preload: function() {
-		this.load.image("loading","assets/loading.png")
-		this.load.image("loading_back","assets/loading_back.png")
+		this.game.load.image("loading","assets/loading.png");
+		this.game.load.image("loading_back","assets/loading_back.png");
 	},
 	create: function() {
 		//to scale the game
@@ -1260,9 +1260,9 @@ var boot = {
 var preloader = {
 	preload: function(){ 
 		//loadingBar
-		var loadingBar_back = this.add.sprite(game.world.centerX,game.world.centerY,"loading_back.png");
+		var loadingBar_back = this.add.sprite(w2,h2,"loading_back");
 		loadingBar_back.anchor.setTo(0.5,0.5);
-		var loadingBar = this.add.sprite(game.world.centerX,game.world.centerY,"loading.png");
+		var loadingBar = this.add.sprite(w2,h2,"loading");
 		loadingBar.anchor.setTo(0.5,0.5);
 		this.load.setPreloadSprite(loadingBar);
 		//tuto
