@@ -396,7 +396,7 @@ character = function(){
 	this.button_next=new _button(game.world.centerX,this.cible.y,'button_next',this.next_level);
 	this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.show_reward_video);
 	//TODO;
-	this.star= this.game.add.sprite(game.world.centerX, game.world.centerY-320, 'star', 0);
+	this.star= this.game.add.sprite(game.world.centerX, ((2270*0.5)-380), 'star', 0);
 	this.star.anchor.setTo(0.5,0.5);
 	this.star.frame=2;
 	this.star.visible=false;
