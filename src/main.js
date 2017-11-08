@@ -110,7 +110,7 @@ var adService;
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
-		alert("mobile")
+		alert("Mobile")
 		console.log("mobile")
 		is_mobile=true;
 	} else {
@@ -586,7 +586,7 @@ character.prototype.preload_reward_video=function(){
 		alert('onMoreAppsAdHidden: ' + location);
 	};
 	window.chartboost.onRewardedVideoAdPreloaded = function(location) {
-		alert('onRewardedVideoAdPreloaded: ' + location);
+		//alert('onRewardedVideoAdPreloaded: ' + location);
 		is_preload_rewarded_video=true;
 	};
 	window.chartboost.onRewardedVideoAdLoaded = function(location) {
@@ -596,7 +596,7 @@ character.prototype.preload_reward_video=function(){
 		//alert('onRewardedVideoAdShown: ' + location);
 	};
 	window.chartboost.onRewardedVideoAdHidden = function(location) {
-		//alert('onRewardedVideoAdHidden: ' + location);
+		alert('onRewardedVideoAdHidden: ' + location);
 		is_rewarded_video_completed && this.game.state.start('intermediate_screen');
 	};
 	window.chartboost.onRewardedVideoAdCompleted = function(location) {
