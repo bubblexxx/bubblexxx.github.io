@@ -110,7 +110,7 @@ var adService;
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
-		alert("mobile")
+		alert("Mobile")
 		console.log("mobile")
 		is_mobile=true;
 	} else {
@@ -1815,7 +1815,7 @@ var intermediate_screen={
 		game.time.events.add(600,function(){this.particlex.start(true,2950,null,5);});
 		game.time.events.add(800,function(){this.particlex.on=true;});
 		var next_action = function(){
-			game.time.events.add(300,pass_level);
+			game.time.events.add(300,pass_level,this);
 		};
 		ecran_intermediaire_pour_passer_level(text_passed_level.text,next_action);
 	}
