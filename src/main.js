@@ -599,6 +599,7 @@ character.prototype.preload_reward_video=function(){
 	window.chartboost.onRewardedVideoAdHidden = function(location) {
 		alert('onRewardedVideoAdHidden: ' + location);
 		is_rewarded_video_completed=true;
+		this.game.state.start('intermediate_screen');
 	};
 	window.chartboost.onRewardedVideoAdCompleted = function(location) {
 		//alert('onRewardedVideoAdCompleted: ' + location);
@@ -1797,7 +1798,7 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 var pass_level=function(){
 	var next_niveau=level_number+1;
 	alert (next_niveau)
-	this.game.state.start('level'+ next_niveau,level_state[next_niveau]);
+	game.state.start('level'+ next_niveau,level_state[next_niveau]);
 };
 var intermediate_screen={
 	create:function(){
@@ -1815,7 +1816,7 @@ var intermediate_screen={
 		game.time.events.add(600,function(){this.particlex.start(true,2950,null,5);});
 		game.time.events.add(800,function(){this.particlex.on=true;});
 		var next_action = function(){
-			game.time.events.add(300,pass_level,this);
+			game.time.events.add(300,pass_level);
 		};
 		ecran_intermediaire_pour_passer_level(text_passed_level.text,next_action);
 	}
