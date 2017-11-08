@@ -1,7 +1,7 @@
 /* jshint expr: true */
 /* jshint esnext: true */
 /* *************************************************************************
- * 
+ * 2092 lines
  * bubblexxxL
  * __________________
  * 
@@ -69,11 +69,6 @@ var initialise_time_and_delay=function(){
 	delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+additional_time;
 };
 initialise_time_and_delay();
-var number_canon=null;
-var number_asteroid=null;
-var number_dalle_moving=null;
-var number_pulsar=null;
-var number_dalle=null;
 var count_hero;
 var level_number_adapt;
 var text_to_describe_level;
@@ -84,14 +79,8 @@ var tw_name;
 var flag_tween_en_cours=true;
 var delay_circle_timer = 2400;
 
-this.some_value=4;
 var gui;
 var PLAYER_DATA ;
-var ratio_device=window.screen.width/window.screen.height;
-//var h=1920;
-//var w=1280;
-//var h2=h*0.5;
-//var w2=640;
 var h=2270;
 var w=1480;
 var h2=h*0.5;
@@ -103,7 +92,6 @@ var debug_position=true;
 // si false pas de localStorage;
 var debug_store=true;
 var level_json={};
-//;
 var canon=[];
 var pulsar=[];
 var asteroid=[];
@@ -113,32 +101,15 @@ var hero;
 var flag_level_complete=false;
 var flag_hide=true;
 //ADS
-var bannerStatus;
-var interstitialStatus;
-
 var banner;
 var interstitial;
 var demoPosition;
 //var backgroundTexture;
-var button1Texture;
-var button2Texture;
 var adService;
-var container;
-//var boot;
-//var preloadstate;
-//var game_first_screen;
-//var levsel;
-//var intermediate_screen;
-//var level0;
-//var level1;
-//var level2;
-//var level3;
 
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
-		//document.addEventListener('deviceready',main,false)
-		//document.addEventListener('deviceready',main,true)
 		is_mobile=true;
 	} else {
 		console.log('not mobile');
@@ -148,7 +119,6 @@ var detectmob=function(){
 detectmob();
 
 var email=JSON.stringify(localStorage);
-//co(email,'localStorage')
 //class for text intitulé dans chaque level
 _text=function(message,posx,posy,taille){
 	this.text=game.add.bitmapText(posx,posy,'police',message,taille);
@@ -159,7 +129,6 @@ _text=function(message,posx,posy,taille){
 _text.prototype=Object.create(_text.prototype);
 
 _text.prototype.show = function() {
-	//this.text.visible=true;
 	this.text.scale.setTo(0,0);
 	this.tween1 = game.add.tween(this.text.scale).to({x:1,y:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text);
 	this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text);
@@ -245,7 +214,6 @@ _mechant.prototype.kill=function(){
 	this.sprite_for_body.visible=false;
 	this.particle.on=false;
 };
-
 _mechant.prototype.update2=function(){
 	if(this.sprite_for_body.visible){
 		this.sprite_for_body.x=this.x;
@@ -260,7 +228,6 @@ _mechant.prototype.particle_show = function(){
 	game.time.events.add( 650,function(){this.particle.on=false;},this);
 };
 
-
 //class button for click
 _button=function(posx,posy,image,fun_call_back){
 	this.image=image;
@@ -274,16 +241,13 @@ _button=function(posx,posy,image,fun_call_back){
 	this.flag=true;
 	this.sound_click=game.add.audio('click');
 };
-
 _button.prototype.audio_click = function() {
 	this.sound_click.play();
 };
-
 _button.prototype.show_button=function(){
 	this.button.visible=true;
 	this.tween_scale_button = game.add.tween(this.button.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,0);
 };
-
 _button.prototype.anim_on_click=function(){
 	if(this.flag){
 		this.flag=false;
@@ -302,7 +266,6 @@ screen_first = function(){
 	game.time.events.loop( 500,this.explosion,this );
 	game.time.events.add( 200,this.button_menu.show_button,this.button_menu );
 	game.time.events.add( 200,this.button_next.show_button,this.button_next );
-
 	this._x=game.rnd.integerInRange(0,w);
 	this._y=game.rnd.integerInRange(0,h);
 	this.particle = game.add.emitter(this._x,this._y);
@@ -317,27 +280,22 @@ screen_first = function(){
 	this.particle.on=false;
 	this.particle.start(true,3900,null,8);
 };
-
 screen_first.prototype = Object.create(Phaser.Sprite.prototype);
 screen_first.prototype.constructor = screen_first;
-
 screen_first.prototype.audio_click = function(){
 	this.sound_click.play();
 };
 screen_first.prototype.next_level = function(){
 	this.game.state.start("level"+level_number);
 };
-
 screen_first.prototype.next_menu = function(){
 	this.game.state.start("levsel");
 };
-
 screen_first.prototype.explosion = function(){
 	this.particle.on=true;
 	this.particle.x=game.rnd.integerInRange(0,w);
 	this.particle.y=game.rnd.integerInRange(0,h);
 };
-
 
 character = function(){
 	Phaser.Sprite.call(this,game,game.world.centerX,2270+500,'particle_character');
@@ -352,8 +310,6 @@ character = function(){
 	this.cible_shadow.alpha=0.15;
 	this.grid=game.add.sprite(0,0,'grid');
 	debug_mode ? this.grid.visible=true:this.grid.visible=false;
-	//this.grid.visible=false;
-	//cible;
 	this.cible=game.add.sprite(game.world.centerX,300,'cible');
 	this.cible.anchor.setTo(0.5,0.5);
 	game.physics.arcade.enable(this.cible,Phaser.Physics.ARCADE);
@@ -382,7 +338,6 @@ character = function(){
 	this.touch_button.anchor.setTo(0.5,0.5);
 	this.touch_button.alpha=0;
 	this.touch_button.visible=true;
-
 	this.sound_game_over=game.add.audio('game_over');
 	this.sound_launch=game.add.audio('launch');
 	this.sound_star=game.add.audio('win');
@@ -394,11 +349,9 @@ character = function(){
 	}else{
 		this.button_publish=new _button(game.world.centerX,game.world.centerY+800,'button_back',this.back_to_menu);
 	}
-
 	this.button_restart=new _button(game.world.centerX,game.world.centerY,'button_restart',this.restart_level);
 	this.button_next=new _button(game.world.centerX,this.cible.y,'button_next',this.next_level);
 	this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.show_reward_video);
-	//TODO;
 	this.star= this.game.add.sprite(game.world.centerX, ((2270*0.5)-300), 'star', 0);
 	this.star.anchor.setTo(0.5,0.5);
 	this.star.frame=2;
@@ -433,7 +386,6 @@ character = function(){
 	this.particle.maxRotation = 0;
 	this.particle.on=false;
 	this.tuto=[];
-	//this.tuto.hand=game.add.sprite(w2+(15*1.5),h2+200,'hand_tuto');
 	this.tuto.hand=game.add.sprite(w2,h2+550,'hand_tuto');
 	this.tuto.hand.anchor.setTo(0.3,0.5);
 	this.tuto.hand.alpha=0;
@@ -447,7 +399,7 @@ character = function(){
 	this.tuto.circle.anchor.setTo(0.5,0.5);
 	this.tuto.circle.alpha=0;
 	this.tuto.hand_level_win=game.add.sprite(w2,this.cible.y+90,'hand_tuto');
-	this.tuto.hand_level_win.angle=45
+	this.tuto.hand_level_win.angle=45;
 	this.tuto.hand_level_win.alpha=0;
 	if(level_number ==0){
 		this.show_tuto();
@@ -456,16 +408,14 @@ character = function(){
 
 character.prototype = Object.create(Phaser.Sprite.prototype);
 character.prototype.constructor = character;
-
 character.prototype.show_background_white=function(){
 	this.tw_b0 = game.add.tween(this.background_white).to({alpha:1},100,Phaser.Easing.Linear.None,true,0);
 	this.tw_b0.onComplete.add(function(){this.background_white.alpha=0;},this);
-}
+};
 
 character.prototype.show_tuto = function() {
 	this.tw_0 = game.add.tween(this.tuto.hand).to({alpha:1},750,Phaser.Easing.Linear.None,true,0);
 	this.tw_1 = game.add.tween(this.tuto.hand.scale).to({x:1.2,y:1.2},750,Phaser.Easing.Linear.None,true,0,-1);
-	//this.tw_1.yoyo(350,true)
 	for (var i=0; i < this.tuto.little_circle.length; i++) {
 		game.add.tween(this.tuto.little_circle[i]).to({alpha:1},750,Phaser.Easing.Linear.None,true,i*200);
 	}
@@ -481,9 +431,6 @@ character.prototype.hide_tuto = function() {
 	for (var i=0; i < this.tuto.little_circle.length; i++) {
 		game.add.tween(this.tuto.little_circle[i]).to({alpha:0},500,Phaser.Easing.Linear.None,true,i*200);
 	}
-	//for (var i=0; i < 4; i++) {
-	//this.tuto.little_circle[i].alpha=0;
-	//}
 	game.add.tween(this.tuto.circle).to({alpha:0},750,Phaser.Easing.Linear.None,true,800);
 };
 
@@ -506,56 +453,44 @@ character.prototype.reset_update_circle_timer = function() {
 	this.timer.start();
 	this.circle_timer.visible=true;
 };
-
 character.prototype.audio_click = function() {
 	this.sound_click.play();
 };
-
 character.prototype.animate_restart = function() {
 	this.restart_level();
 };
-
 character.prototype.back_to_menu = function() {
 	this.game.state.start("game_first_screen");
 };
-
 character.prototype.send_data_mail = function(){
 	var current_level=level_number+1;
 	var SubjectVariable='bubblex'+current_level;
 	var EmailVariable='espace3d@gmail.com';
 	window.location='mailto:'+EmailVariable+'?subject='+SubjectVariable+'&body='+email;
 };
-
 character.prototype.audio_game_over = function() {
 	!flag_level_complete && this.sound_game_over.play();
 };
-
 character.prototype.audio_star = function() {
 	this.sound_star.play();
 };
-
 character.prototype.audio_pop = function() {
 	this.sound_pop.play();
 };
-
 character.prototype.audio_launch = function() {
 	this.sound_launch.play();
 };
-
 character.prototype.checkicharacterisloossomewhere = function(n) {
 	if(this.player[n].flag_check){
 		this.player[n].flag_check=false;
 		game.time.events.add( 6000,function(){this.checkicharacterisloossomewhere2(n);},this );
 	}
 };
-
 character.prototype.checkicharacterisloossomewhere2 = function(n) {
 	if(flag_level_complete==false){
-		//this.explode(this.player[n].x,0,n)	
 		this.explode(n);
 	}
 };
-
 character.prototype.calculate_life_remaining= function(n){
 	switch(n){
 		case 0:
@@ -570,14 +505,12 @@ character.prototype.calculate_life_remaining= function(n){
 	}
 
 };
-
 character.prototype.anim_cible = function() {
 	this.tween6 = game.add.tween(this.cible_shadow.scale).to({x:2.0,y:2.0},750,Phaser.Easing.Linear.None,true,0,-1);
 	this.tween7 = game.add.tween(this.cible_shadow).to({alpha:0.01},750,Phaser.Easing.Exponential.In,true,0,-1);
 	this.tween6.onComplete.add(function(){this.cible_shadow.scale.setTo(0,0);},this)	;
 	this.tween7.onComplete.add(function(){this.cible_shadow.alpha=0;},this);
 };
-
 character.prototype.show_star = function() {
 	this.big_star.visible=true;
 	this.tween_big_star = game.add.tween(this.big_star.scale).to({x:1,y:1},200,Phaser.Easing.Linear.None,true,1000);
@@ -587,7 +520,6 @@ character.prototype.show_star = function() {
 	this.tween5 = game.add.tween(this.star.scale).to({x:1,y:1},200,Phaser.Easing.Linear.None,true,1000);
 	this.tween5.onComplete.add(function(){game.time.events.add(100,this.audio_star,this);},this);
 };
-
 character.prototype.wins=function(){
 	if(level_number ==0){
 		this.show_tuto_for_win();
@@ -612,7 +544,6 @@ character.prototype.restart_level = function() {
 	this.next_niveau=level_number;
 	this.game.state.start('level'+this.next_niveau,true,false);
 };
-
 character.prototype.next_level = function() {
 	var next_niveau=level_number+1;
 	this.game.state.start('level'+next_niveau,true,false);
@@ -621,8 +552,6 @@ character.prototype.preload_reward_video=function(){
 	// du site de chartboost
 	var appId = "50ae12d715ba47c00d01000c";
 	var appSignature = "95fb313c08717042903819d76f65d64d2347ac44";
-
-
 
 	// ancien identifiant
 	//var appId = "593f9e2504b0160769416382";
@@ -653,7 +582,6 @@ character.prototype.preload_reward_video=function(){
 	window.chartboost.onMoreAppsAdHidden = function(location) {
 		alert('onMoreAppsAdHidden: ' + location);
 	};
-	//
 	window.chartboost.onRewardedVideoAdPreloaded = function(location) {
 		is_preload_rewarded_video=true;
 		//alert('onRewardedVideoAdPreloaded: ' + location);
@@ -670,7 +598,7 @@ character.prototype.preload_reward_video=function(){
 	};
 	window.chartboost.onRewardedVideoAdCompleted = function(location) {
 		//alert('onRewardedVideoAdCompleted: ' + location);
-		//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
+		ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
 		//this.next_niveau=level_number+1
 		is_rewarded_video_completed=true;
 		//game.state.start('intermediate_screen');
@@ -680,9 +608,7 @@ character.prototype.preload_reward_video=function(){
 character.prototype.show_reward_video = function() {
 	window.chartboost.showRewardedVideoAd('Default');
 };
-
 character.prototype.next_level_with_video = function() {
-
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
 		this.show_reward_video();
@@ -693,7 +619,6 @@ character.prototype.next_level_with_video = function() {
 		this.game.state.start('level'+this.next_niveau,true,false);
 	}
 };
-
 character.prototype.launch=function(n){
 	this.show_background_white();
 	this.reset_update_circle_timer();
@@ -703,7 +628,6 @@ character.prototype.launch=function(n){
 	this.player[n].visible=true;
 	this.player[n].body.velocity.y=-800;
 };
-
 character.prototype.explode_cible=function(){
 	this.particle.x=this.cible.x;
 	this.particle.y=this.cible.y;
@@ -716,27 +640,7 @@ character.prototype.explode_all=function(n){
 	for(var i=n; i<3 ;i++) {
 		this.explode(i);
 	}
-
 };
-//character.prototype.explode=function(posx,posy,n){
-//	if(this.player[n].is_exploding==false){
-//		if(!flag_level_complete && n < 2){
-//			this.reset_update_circle_timer()	
-//		}
-//		count_modif_obj(this.life.text,count_hero,2)
-//		this.player[n].is_exploding=true
-//		this.calculate_life_remaining(n)
-//		this.audio_pop()
-//		this.on_explode()
-//		this.player[n].visible=false
-//		this.particle.x=posx
-//		this.particle.y=posy
-//		this.particle.on=true
-//		this.particle.start(true,3900,null,10)
-//		game.time.events.add( 100,function(){this.particle.on=false},this )
-//		this.player[n].body.enable=false
-//	}
-//}
 character.prototype.explode=function(n){
 	if(this.player[n].is_exploding==false){
 		if(!flag_level_complete && n < 2){
@@ -756,14 +660,12 @@ character.prototype.explode=function(n){
 		this.player[n].body.enable=false;
 	}
 };
-
 character.prototype.on_explode=function(){
 	this.count_dead=this.count_dead+1;
 	if(this.count_dead==3){
 		this.decide_if_show_button_restart_level();
 	}
 };
-
 character.prototype.decide_if_show_button_restart_level = function() {
 	game.time.events.add(1200,this.audio_game_over,this);
 	this.flag_hide_enemies=true;
@@ -771,7 +673,6 @@ character.prototype.decide_if_show_button_restart_level = function() {
 	is_preload_rewarded_video && game.time.events.add( 1000,this.button_video.show_button,this.button_video );
 	game.time.events.add(1000,this.button_publish.show_button,this.button_publish );
 };
-
 character.prototype.land=function(n){
 	flag_level_complete=true;
 	this.explode_all(n);
@@ -780,7 +681,6 @@ character.prototype.land=function(n){
 	this.tween0=game.add.tween(this.player[n]).to({x:game.world.centerX,y:300},500,Phaser.Easing.Linear.None,true,0);
 	this.tween0.onComplete.add(function(){this.scale_x(n);},this);
 };
-
 character.prototype.calculate_star = function() {
 	switch(count_hero){
 		case 1:
@@ -801,7 +701,6 @@ character.prototype.calculate_star = function() {
 			break;
 	}
 };
-
 character.prototype.scale_x = function(n){
 	this.tween1=game.add.tween(this.player[n].scale).to({x:4.5,y:4.5},500,Phaser.Easing.Bounce.Out,true,0);
 	this.tween1.onComplete.add(this.explode_cible,this);
@@ -810,14 +709,12 @@ character.prototype.scale_x = function(n){
 	this.calculate_star();
 	this.show_star();
 	this.wins();
-	text_to_number_level.hide()
+	text_to_number_level.hide();
 	this.button_publish.show_button();
 };
-
 character.prototype.hide_life_text = function() {
 	this.life.visible=false;
 };
-
 character.prototype.show_button_restart_level_complete = function() {
 	if(this.flag_show_button){
 		this.flag_show_button=false;
@@ -842,12 +739,9 @@ _asteroid = function(number,posx,posy,speed,radius){
 	this.particlex.maxRotation = 0;
 	this.particlex.on=false;
 	game.time.events.add(delay_for_game_begin,function(){this.particlex.on=true;this.particlex.start(true,500,5);},this);
-	//game.time.events.add(delay_for_game_begin,function(){this.particlex.on=true},this);
 	game.time.events.loop(16,this.update2,this);
 };
-
 _asteroid.prototype=Object.create(_mechant.prototype);
-
 _asteroid.prototype.update = function() {
 	if(this.flag && this.flag_wait_before_fire && game_begin){
 		var period = game.time.now * this.speed;
@@ -857,7 +751,6 @@ _asteroid.prototype.update = function() {
 		this.particlex.y=this.sprite_for_body.y;
 	}
 };
-
 _asteroid.prototype.fire = function(){
 	this.speed=this.speed;
 	this.sprite_for_body.x = this.sprite_for_body.x ;
@@ -873,7 +766,6 @@ _asteroid.prototype.hide=function(){
 	this.particlex.on=false;
 };
 
-
 _pulsar=function(number,delay,time,posx,posy,speed,scale_factor){
 	_mechant.call(this,game,"pulsar",number,posx,posy,'pulsar','sprite_for_drag');
 	this.number=number;
@@ -887,7 +779,6 @@ _pulsar=function(number,delay,time,posx,posy,speed,scale_factor){
 	game.time.events.loop(16,this.update2,this);
 };
 _pulsar.prototype=Object.create(_mechant.prototype);
-
 _pulsar.prototype.tweens = function() {
 	this.tween0=game.add.tween(this.sprite_for_body.scale).to({x:this.scale_factor,y:this.scale_factor},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1);
 	this.tween0.yoyo(true,this.speed);
@@ -910,16 +801,13 @@ _dalle = function(number,delay,posx,posy,speed){
 	game.time.events.loop(16,this.update2,this);
 };
 _dalle.prototype=Object.create(_mechant.prototype);
-
 _dalle.prototype.tweens = function() {
 	this.tween0=game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1);
 	this.tween0.yoyo(true,this.speed);
 };
-
 _dalle.prototype.update = function() {
 	this.alpha > 0.7 ? this.sprite_for_body.enable=true : this.sprite_for_body.enable=false;
 };
-
 _dalle.prototype.fire = function() {
 	game.tweens.remove(this.tween0);
 	this.sprite_for_body.alpha=0;
@@ -935,16 +823,13 @@ _dalle_moving = function(number,delay,posx,posy,speed,posx_in_tween){
 	game.time.events.add( time_appears_enemies,this.tweens,this );
 };
 _dalle_moving.prototype=Object.create(_mechant.prototype);
-
 _dalle_moving.prototype.tweens = function() {
 	this.tween0=game.add.tween(this.sprite_for_body).to({x:this.posx+this.posx_in_tween},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1);
 	this.tween0.yoyo(true,this.speed);
 };
-
 _dalle_moving.prototype.update = function() {
 	this.sprite_for_body.y=this.y;
 };
-
 _dalle_moving.prototype.fire = function() {
 	game.tweens.remove(this.tween0)	;
 	this.sprite_for_body.x=this.x;
@@ -993,10 +878,8 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 		this.particlex.maxRotation = -40;
 		this.particlex.on=false;
 	}
-
 	game.physics.arcade.enable(this);
 	this.special_color ? this.weapon=game.add.weapon(9,'bullet_color'):this.weapon=game.add.weapon(9,'bullet');
-
 	if(this.kill_with_world){
 		this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
 	}else{
@@ -1007,16 +890,12 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	}
 	//  Because our bullet is drawn facing up, we need to offset its rotation:
 	this.weapon.bulletAngleOffset = 0;
-
 	//  The speed at which the bullet is fired
 	this.weapon.bulletSpeed = this.speed;
-
 	//  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
 	this.weapon.fireRate = this.frequency ;
-
 	//  Add a variance to the bullet angle by +- this value
 	this.weapon.bulletAngleVariance = this.variance;
-
 	//  Tell the Weapon to track the 'player' Sprite, offset by 14px horizontally, 0 vertically
 	this.weapon.trackSprite(this.sprite_for_body,0,0,true);
 	game.time.events.add( this.delay,function(){this._flag=false;},this );
@@ -1026,26 +905,20 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	this.time_part=Math.round(this.time_total/this.ratio_time);
 	// pour animer le retour du canon
 	game.time.events.loop(16,this.update2,this);
-	this.signal_fire=false
-	this.weapon.onFire.add(this.explosion,this)
-	this.weapon.onFire.add(this.hide_explosion,this)
-
+	this.signal_fire=false;
+	this.weapon.onFire.add(this.explosion,this);
+	this.weapon.onFire.add(this.hide_explosion,this);
 };
-
 _canon.prototype=Object.create(_mechant.prototype);
-
 _canon.prototype.audio_pop = function() {
 	this.sound_pop.play();
 };
-
-
 _canon.prototype.update = function(){
 	if(this.flag_wait_before_fire && game_begin){
 		if(this._rotate && this.flag_for_fire){
 			//this.sprite_for_body.angle += 1
 			this.sprite_for_body.angle += this._value_rotate;
 		}
-
 		this._flag==false && this.flag_for_fire && this.weapon.fire();
 		this.particlex.x=this.x;
 		this.particlex.y=this.y;
@@ -1085,14 +958,13 @@ _canon.prototype.update = function(){
 					this.x=this.x-8;
 					this.scale.y=1.0;
 					this.time_for_count=0;
-					this.signal_fire=false
+					this.signal_fire=false;
 					//this.hide_explosion();
 					break;
 			}
 		}
 	}
 };
-
 _canon.prototype.transition = function(posx,posy,_time,delay) {
 	this.tween_characteristic = game.add.tween(this.sprite_for_body).to({x:posx,y:posy},_time,Phaser.Easing.Linear.None,true,delay);
 	this.tween_characteristic.yoyo(_time,true);
@@ -1108,7 +980,6 @@ _canon.prototype.kill = function(){
 			item.body.enable=false;
 		}});
 };
-
 _canon.prototype.fire = function() {
 	this.flag_for_fire=true;
 	this.sprite_for_body.angle=this.angular;
@@ -1116,19 +987,16 @@ _canon.prototype.fire = function() {
 	this.weapon.bulletSpeed = this.speed;
 	this.weapon.bulletAngleVariance = this.variance;
 };
-
 _canon.prototype.explosion = function() {
 	if(this.visible && game_begin){
-		this.signal_fire=true
+		this.signal_fire=true;
 		this.particlex.on=true;
 		this.particlex.start(true,450,null,1);
 	}
 };
 _canon.prototype.hide_explosion = function() {
-	game.time.events.add(20,function(){this.particlex.on=false;},this)
+	game.time.events.add(20,function(){this.particlex.on=false;},this);
 };
-
-
 _canon.prototype.explode_bullet=function(){
 	if(this.flag_explode==false){
 		this.flag_explode=true;
@@ -1229,33 +1097,14 @@ var boot = {
 		this.game.load.image("loading_back","assets/loading_back.png");
 	},
 	create: function() {
-		//to scale the game
 		this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 		this.game.scale.pageAlignHorizontally = true;
 		this.game.scale.pageAlignVertically = true;
-		//red color to see the background of the game itself
-		// you must change the background in the index.html to have the same color in the background game 
-		// > change the yellow in red it's only to see how the game is scalling
 		this.game.stage.backgroundColor = '#0d1018';
 		this.game.scale.refresh();
 		this.game.state.start('preloader');
 	},
 };
-//ancien BOOT
-//var boot= {
-	//preload: function(game){
-//		console.log("%cStarting Bubx", "color:white; background:#ff1fcd");
-//		this.load.image("loading","assets/loading.png"); 
-//		this.load.image("loading_back","assets/loading_back.png"); 
-//	},
-//	create: function(game){
-//		this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-//		this.game.scale.pageAlignHorizontally = true;
-//		this.game.scale.pageAlignVertically = true;
-//		//this.scale.refresh();
-//		this.game.state.start("preload");
-//	}
-//};
 
 var preloader = {
 	preload: function(){ 
@@ -1316,7 +1165,6 @@ var preloader = {
 		//font bitmapFont
 		this.game.load.bitmapFont('police','fonts/font.png', 'fonts/font.fnt');
 	},
-
 	create: function(){
 		this.game.time.events.add(1000,function(){this.game.state.start("game_first_screen");},this);
 		//game.state.start("intermediate_screen");
@@ -1325,26 +1173,17 @@ var preloader = {
 
 var game_first_screen = {
 	create: function(){
-
 		this.title=new screen_first();
 		game.add.existing(this.title);
 		this.initProgressData();
 		//ICI ENLEVER;
 		createBanner();
 	},
-
-
-
-
-
-
 	initProgressData: function() {
-
 		// array might be undefined at first time start up
 		if (!PLAYER_DATA) {
 			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
 			var str = window.localStorage.getItem('mygame_progress');
-
 			// error checking, localstorage might not exist yet at first time start up
 			try {
 				PLAYER_DATA = JSON.parse(str);
@@ -1358,8 +1197,6 @@ var game_first_screen = {
 		}
 	}
 };
-
-
 /*	
 	clic0 - stop anim0 >c0 -e -anim1
 	clic1 - stop anim1 >c1 -e -anim2
@@ -1373,15 +1210,12 @@ start_tw = function(obj){
 	tw_action(obj);
 	flag_tween_en_cours=true;
 };
-
 // declaration of tw_action
 tw_action= function(obj){
 	obj.scale.setTo(1,1);
 	tw_name= game.add.tween(obj.scale).to({x:1.5,y:1.5},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1);
 	tw_name = game.add.tween(obj).to({alpha:1},1000,Phaser.Easing.Linear.None,true,delay_circle_timer,-1);
 };
-
-
 //stop tween
 stop_tw = function(obj,tw){
 	if(tw != 'undefined'){
@@ -1390,17 +1224,13 @@ stop_tw = function(obj,tw){
 		flag_tween_en_cours=false;
 	}
 };
-
 animate_touch = start_tw;
 var conditional_animate_touch = function(){!flag_tween_en_cours && animate_touch(hero.touch_button);};
 
-
 function create_level(num){ 
 	initialise_time_and_delay();
-
 	game_begin=false;
 	flag_hide=false;
-
 	game.time.events.add(delay_for_game_begin,function(){flag_hide=true;});
 	game.time.events.add(delay_for_game_begin,function(){game_begin=true;});
 	game.time.events.add(delay_for_game_begin,function(){flag_level_complete=false;});
@@ -1428,22 +1258,17 @@ function logic(){
 	logic_update();
 }
 
-
 is_clic_valid =function(count,f){
 	var condition = function(count){
 		switch(count){
 			case 0:
 				return true;
-				//break
 			case 1:
 				return true;
-				//break
 			case 2:
 				return true;
-				//break
 			default:
 				return false;
-				//break;
 		}
 	};
 	var cond = condition(count);
@@ -1458,24 +1283,19 @@ is_clic_valid =function(count,f){
 condition_update_circle_timer = function(count){
 	count_modif_obj(hero.life.text,count,2);
 };
-
 action=function(count){
 	condition_update_circle_timer(count);
 	stop_tw(hero.touch_button,tw_name)	;
 	count_hero++;
 	hero.launch(count);
 };
-
-
 can_t_launch = function(count,f){
 	if(is_clic_valid(count,f)){
 		action(count);
 	}  
 };
-
 _tap = function(){
 	game.input.onTap.add(onTap);
-
 	function onTap(pointer, doubleTap) {
 		if(flag_level_complete==false){
 			if (!doubleTap && hero.flag_mouse==true && game_begin){
@@ -1487,17 +1307,13 @@ _tap = function(){
 		}
 	}
 };
-
 var levsel={
 	// define needed variables for mygame.LevelSelect
 	preload: function() {
 		this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
 		this.game.load.bitmapFont('police','fonts/font.png', 'fonts/font.fnt');
-		//this.game.load.image("background","assets/background.png");
-
 		this.initProgressData();
 	},
-
 	create: function() {
 		this.holdicons = [];
 		this.text=game.add.bitmapText(640,200,'police','Select a level!',100);
@@ -1505,22 +1321,17 @@ var levsel={
 		this.createLevelIcons();
 		this.animateLevelIcons();
 	},
-
 	update: function() {
 		// nothing to do but wait until player selects a level
 	},
-
 	render: function() {
 		// display some debug info..?
 	},
-
 	initProgressData: function() {
-
 		// array might be undefined at first time start up
 		if (!PLAYER_DATA) {
 			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
 			var str = window.localStorage.getItem('mygame_progress');
-
 			// error checking, localstorage might not exist yet at first time start up
 			try {
 				PLAYER_DATA = JSON.parse(str);
@@ -1533,7 +1344,6 @@ var levsel={
 			}
 		}
 	},
-
 	createLevelIcons: function() {
 		var levelnr = 0;
 
@@ -1541,7 +1351,6 @@ var levsel={
 			for (var x=0; x < 4; x++) {
 				// next level
 				levelnr = levelnr + 1;
-
 				// check if array not yet initialised
 				if (typeof PLAYER_DATA[levelnr-1] !== 'number') {
 					// value is null or undefined, i.e. array not defined or too short between app upgrades with more levels
@@ -1551,67 +1360,53 @@ var levsel={
 						PLAYER_DATA[levelnr-1] = -1;
 					}
 				}
-
 				// player progress info for this level
 				var playdata = PLAYER_DATA[levelnr-1];
 				console.log("playdata",playdata);
 				// decide which icon
 				var isLocked = true; // locked
 				var stars = 0; // no stars
-
 				// check if level is unlocked
 				if (playdata > -1) {
 					isLocked = false; // unlocked
 					if (playdata < 4) {stars = playdata;} // 0..3 stars
 				}
-
 				// calculate position on screen
 				var xpos = 60 + (x*300);
 				var ypos = 320 + (y*300);
-
 				// create icon
 				this.holdicons[levelnr-1] = this.createLevelIcon(xpos, ypos, levelnr, isLocked, stars);
 				var backicon = this.holdicons[levelnr-1].getAt(0);
-
 				// keep level nr, used in onclick method
 				backicon.health = levelnr;
-
 				// input handler
 				backicon.inputEnabled = true;
 				backicon.events.onInputDown.add(this.onSpriteDown, this);
 			}
 		}
 	},
-
 	// -------------------------------------
 	// Add level icon buttons
 	// -------------------------------------
 	createLevelIcon: function(xpos, ypos, levelnr, isLocked, stars) {
-
 		// create new group
 		var IconGroup = this.game.add.group();
 		IconGroup.x = xpos;
 		IconGroup.y = ypos;
-
 		// keep original position, for restoring after certain tweens
 		IconGroup.xOrg = xpos;
 		IconGroup.yOrg = ypos;
-
 		// determine background frame
 		var frame = 0;
 		if (isLocked == false) {frame = 1;}
-
 		// add background
 		var icon1 = this.game.add.sprite(0, 0, 'levelselecticons', frame);
 		IconGroup.add(icon1);
-
-
 		// add stars, if needed
 		if (isLocked == false) {
 			var txt = this.game.add.bitmapText(137, 147, 'police', ''+levelnr, 100);
 			txt.anchor.setTo(0.5,0.5);
 			var icon2 = this.game.add.sprite(0, 0, 'levelselecticons', (2+stars));
-
 			IconGroup.add(icon2);
 			IconGroup.add(txt);
 		}else{
@@ -1619,26 +1414,19 @@ var levsel={
 			txt_locked.anchor.setTo(0.5,0.5);
 			//txt_locked.tint=0x9a136b
 			IconGroup.add(txt_locked);
-
 		}
-
 		return IconGroup;
 	},
-
 	onSpriteDown: function(sprite, pointer) {
 		this.sound_menu_no=game.add.audio('menu_no');
 		this.sound_click=game.add.audio('click');
-
-
 		// retrieve the iconlevel
 		var levelnr = sprite.health;
-
 		if (PLAYER_DATA[levelnr-1] < 0) {
 			// indicate it's locked by shaking left/right
 			this.sound_menu_no.play();
 			var IconGroup = this.holdicons[levelnr-1];
 			var xpos = IconGroup.xOrg;
-
 			var tween = this.game.add.tween(IconGroup)
 				.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
 				.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
@@ -1655,27 +1443,22 @@ var levsel={
 				.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
 				.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
 				.start();
-
 			// it's a little tricky to pass selected levelnr to callback function, but this works:
 			this.onLevelSelected(levelnr-1);
 			//tween._lastChild.onComplete.add(function(){this.onLevelSelected(sprite.health);}, this);
 		}
 	},
-
 	animateLevelIcons: function() {
-
 		// slide all icons into screen
 		for (var i=0; i < this.holdicons.length; i++){
 			// get variables
 			var IconGroup = this.holdicons[i];
 			IconGroup.y = IconGroup.y + 600;
 			var y = IconGroup.y;
-
 			// tween animation
 			this.game.add.tween(IconGroup).to( {y: y-600}, 500, Phaser.Easing.Back.Out, true, (i*40));
 		}
 	},
-
 	onLevelSelected: function(levelnr) {
 		console.log(levelnr,'rr');
 		this.number_level=levelnr;
@@ -1683,17 +1466,13 @@ var levsel={
 	}
 };
 
-
-
 var logic_add=function(){
 	game.add.existing(hero);
-
 	var logic_add_intenal=function(obj){
 		if(obj[0]){
 			for_each(obj,game.add.existing.bind(game));
 		}	
 	};
-
 	logic_add_intenal(canon);
 	logic_add_intenal(dalle);
 	logic_add_intenal(dalle_moving);
@@ -1702,38 +1481,29 @@ var logic_add=function(){
 };
 var logic_update=function(){
 	game.time.events.loop( 50,function(){ 
-
-		//debug_position && logic_position()
 		for (var j = 0; j < 3; j++){
 			game.physics.arcade.collide(hero.cible,hero.player[j],function(){hero.land(j);});
 		}
-
 		//si reussi niveau
 		flag_level_complete && flag_hide && flag_level_complete==false & console.log("ok") & game.time.events.add( 9,hide_weapon,this );
-
 		//si checkicharacterisloossomewhere
 		hero.flag_hide_enemies && flag_hide && hero.flag_hide_enemies==false & game.time.events.add( 300,hide_weapon,this );
-
 		if(canon[1]){
 			game.physics.arcade.collide(canon[0].weapon.bullets,canon[1].weapon.bullets,touch_between_enemies,null,this);
 		}
-
 		if(canon[2]){
 			game.physics.arcade.collide(canon[0].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this);
 			game.physics.arcade.collide(canon[1].weapon.bullets,canon[2].weapon.bullets,touch_between_enemies,null,this);
 		}
-
 		var collide_function=function(obj){
 			if(obj[0]){
 				for (var i = 0; i < 3; i++){
 					for (var j = 0; j < obj.length; j++){
 						game.physics.arcade.collide(obj[j].sprite_for_body,hero.player[i],function(){hero.explode(i);conditional_animate_touch();});
-
 					}
 				}
 			}
 		};
-
 		if(canon[0]){
 			for (var i = 0; i < 3; i++){
 				for (var k = 0; k < canon.length; k++){
@@ -1745,18 +1515,14 @@ var logic_update=function(){
 				}
 			}
 		}
-
 		collide_function(dalle_moving);
 		collide_function(pulsar);
 		collide_function(asteroid);
 		collide_function(dalle);
-
 	});
 };
-
 var touch_between_enemies=function(){
 	console.log("touch");
-
 };
 
 var hide_weapon=function(){
@@ -1785,18 +1551,14 @@ var hide_weapon=function(){
 		for_action(pulsar,'hide');
 	}
 };
-
 var show_grid_on_logic_position=function(sprite){
-//	console.log("logic_position");
 //	logic_position(sprite);
-//
 //	if(debug_position){
 //		hero.grid.visible=true;
 //		gui && gui.destroy();
 //		gui=new dat.GUI();
 //		gui.start=true;
 //		var guit={};
-//
 //		var guit_declare=function(...args){
 //			var condition=args.length;
 //			//obligé ...ne sait pas pourquoi
@@ -1816,7 +1578,6 @@ var show_grid_on_logic_position=function(sprite){
 //				});
 //			}
 //		};
-//
 //		switch(sprite.name){
 //			case "canon":
 //				gui.add(sprite,'name');
@@ -1870,7 +1631,6 @@ var show_grid_on_logic_position=function(sprite){
 //		}
 //	}
 };
-
 var logic_position=function(sprite){
 	if (debug_position){
 		hero.grid.visible=false	;
@@ -1948,17 +1708,6 @@ var logic_position=function(sprite){
 };
 
 var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
-
-
-	//var check_in_local_storage=function(obj,num,table){
-	//	for(var i=0;i<num;i++){
-	//		try {
-	//			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number ) ) ;
-	//		} catch(e){
-	//			table[i]=[];
-	//		}
-	//	};
-	//}
 	var check_in_local_storage=function(obj,num,table){
 		for(var i=0;i<num;i++){
 			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number));
@@ -1970,7 +1719,6 @@ var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_
 	check_in_local_storage("dalle_moving",num_dalle_moving,n);
 	check_in_local_storage("pulsar",num_pulsar,p);
 	check_in_local_storage("dalle",num_dalle,d);
-
 	for(var i=0;i<num_canon;i++){
 		if (c[i]===null){
 			_create_canon();
@@ -1980,7 +1728,6 @@ var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_
 			canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color,c[i]._rotate,c[i]._value_rotate);
 		}
 	}
-
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	for(var j=0;j<num_asteroid;j++){
@@ -2024,8 +1771,6 @@ var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_
 		}
 	}
 };
-
-
 var level_config={
 	constructor_canon:_canon,
 	canon:canon,
@@ -2057,17 +1802,12 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 	this.tween_alpha = game.add.tween(obj).to({alpha:1},800,Phaser.Easing.Linear.None,true,1200);
 	this.tween_alpha.onComplete.add(next_tw,this);
 };
-
 var pass_level=function(){
 	var next_niveau=level_number+1;
 	this.game.state.start('level'+next_niveau,true,false);
 };
-
 var intermediate_screen={
 	create:function(){
-
-		//background_to_pass_level = game.add.sprite(0,0,'background');
-		//background_to_pass_level.alpha = 1;
 		text_passed_level = new _text("level passed",game.world.centerX,game.world.centerY,100);
 		this.particlex = game.add.emitter(text_passed_level.text.x,text_passed_level.text.y);
 		this.particlex.makeParticles("particle_canon");
@@ -2079,41 +1819,15 @@ var intermediate_screen={
 		this.particlex.minRotation = 0;
 		this.particlex.maxRotation = 0;
 		this.particlex.on=false;
-
 		game.time.events.add(600,function(){this.particlex.start(true,2950,null,5);});
 		game.time.events.add(800,function(){this.particlex.on=true;});
-
 		var next_action = function(){
 			game.time.events.add(300,pass_level);
 		};
 		ecran_intermediaire_pour_passer_level(text_passed_level.text,next_action);
 	}
 };
-
 var level_state=[];
 for (var i=0; i < 20; i++) {
 	level_state[i]=level_constructor(level_config,i);
 }
-//var level0=level_constructor(level_config,0);
-//var level1=level_constructor(level_config,1);
-//var level2=level_constructor(level_config,2);
-//var level3=level_constructor(level_config,3);
-//var level4=level_constructor(level_config,4);
-//var level5=level_constructor(level_config,5);
-//var level6=level_constructor(level_config,6);
-//var level7=level_constructor(level_config,7);
-//var level8=level_constructor(level_config,8);
-//var level9=level_constructor(level_config,9);
-//var level10=level_constructor(level_config,10);
-//var level11=level_constructor(level_config,11);
-//var level12=level_constructor(level_config,12);
-//var level13=level_constructor(level_config,13);
-//var level14=level_constructor(level_config,14);
-//var level15=level_constructor(level_config,15);
-//var level16=level_constructor(level_config,16);
-//var level17=level_constructor(level_config,17);
-//var level18=level_constructor(level_config,18);
-//var level19=level_constructor(level_config,19);
-
-
-

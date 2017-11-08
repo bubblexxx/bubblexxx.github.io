@@ -10,12 +10,10 @@ var logic_render=function(){
 	if(debug_mode){
 		game.debug.body(hero.cible_shadow);
 		game.debug.body(hero.cible);
-
 		//ne sait pas appliquer foreach car this.hero.player renvoit Object[Object,Object,Object]
 		for (var i = 0; i < 3;i++){
 			game.debug.body(hero.player[i]);
 		}
-
 		var debug_obj=function(obj){
 			if (obj[0]){
 				for (var i = 0; i < obj.length;i++){
@@ -36,7 +34,6 @@ var logic_render=function(){
 	}
 };
 var level_constructor=function (params,num) {
-
 	return {
 		create: function () {
 			var _num_canon;
@@ -129,7 +126,6 @@ var level_constructor=function (params,num) {
 					}
 				}
 			};
-
 			if(params.debug_store){
 				params._check_storage(create_canon,create_asteroid,create_dalle_moving,create_pulsar,create_dalle,_num_canon,_num_asteroid,_num_dalle_moving,_num_pulsar,_num_dalle);
 			}else{
