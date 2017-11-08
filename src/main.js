@@ -111,7 +111,7 @@ var detectmob=function(){
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
 		alert("Mobile")
-		console.log("Mobile")
+		console.log("mobile")
 		is_mobile=true;
 	} else {
 		console.log('not mobile');
@@ -1796,7 +1796,8 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 };
 var pass_level=function(){
 	var next_niveau=level_number+1;
-	this.game.state.start('level'+next_niveau);
+	alert (next_niveau)
+	this.game.state.start('level'+ next_niveau,level_state[next_niveau]);
 };
 var intermediate_screen={
 	create:function(){
