@@ -110,7 +110,7 @@ var adService;
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
-		alert("Mobile")
+		alert("imobile")
 		console.log("mobile")
 		is_mobile=true;
 	} else {
@@ -600,6 +600,7 @@ character.prototype.preload_reward_video=function(){
 		alert('onRewardedVideoAdHidden: ' + location);
 		is_rewarded_video_completed=true;
 		//this.game.state.start('intermediate_screen');
+		this.game.state.start('intermediate_screen');
 	};
 	window.chartboost.onRewardedVideoAdCompleted = function(location) {
 		//this.game.state.start('intermediate_screen');
