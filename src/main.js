@@ -111,7 +111,7 @@ var detectmob=function(){
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
 		alert("Mobile")
-		console.log("mobile")
+		console.log("Mobile")
 		is_mobile=true;
 	} else {
 		console.log('not mobile');
@@ -586,11 +586,12 @@ character.prototype.preload_reward_video=function(){
 		alert('onMoreAppsAdHidden: ' + location);
 	};
 	window.chartboost.onRewardedVideoAdPreloaded = function(location) {
-		//alert('onRewardedVideoAdPreloaded: ' + location);
 		is_preload_rewarded_video=true;
+		//alert('onRewardedVideoAdPreloaded: ' + location);
 	};
 	window.chartboost.onRewardedVideoAdLoaded = function(location) {
 		alert('onRewardedVideoAdLoaded: ' + location);
+		is_rewarded_video_completed=true;
 	};
 	window.chartboost.onRewardedVideoAdShown = function(location) {
 		//alert('onRewardedVideoAdShown: ' + location);
@@ -603,7 +604,6 @@ character.prototype.preload_reward_video=function(){
 		//alert('onRewardedVideoAdCompleted: ' + location);
 		//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
 		//this.next_niveau=level_number+1
-		is_rewarded_video_completed=true;
 		//game.state.start('intermediate_screen');
 	};
 	is_mobile && window.chartboost.preloadRewardedVideoAd('Default');
