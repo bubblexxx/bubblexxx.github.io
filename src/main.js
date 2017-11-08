@@ -1796,7 +1796,7 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 };
 var pass_level=function(){
 	var next_niveau=level_number+1;
-	this.game.state.start('level'+next_niveau,true,false);
+	this.game.state.start('level'+next_niveau);
 };
 var intermediate_screen={
 	create:function(){
