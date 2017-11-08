@@ -110,6 +110,8 @@ var adService;
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
+		alert("mobile")
+		console.log("mobile")
 		is_mobile=true;
 	} else {
 		console.log('not mobile');
@@ -364,6 +366,7 @@ character = function(){
 	this._levelNumber = 1;
 	this.count_dead=0;
 	this.anim_cible();
+	alert(is_mobile,"is_mobile")
 	is_mobile && this.preload_reward_video();
 	this.circle_timer = null;
 	this.counterMax = 100;
@@ -550,12 +553,12 @@ character.prototype.next_level = function() {
 };
 character.prototype.preload_reward_video=function(){
 	// du site de chartboost
-	var appId = "50ae12d715ba47c00d01000c";
-	var appSignature = "95fb313c08717042903819d76f65d64d2347ac44";
+	//var appId = "50ae12d715ba47c00d01000c";
+	//var appSignature = "95fb313c08717042903819d76f65d64d2347ac44";
 
 	// ancien identifiant
-	//var appId = "593f9e2504b0160769416382";
-	//var appSignature = "41fd9a8fc8adea90df03e94772ffa7e5373afcc6";
+	var appId = "593f9e2504b0160769416382";
+	var appSignature = "41fd9a8fc8adea90df03e94772ffa7e5373afcc6";
 	window.chartboost.setUp(appId, appSignature);
 
 	window.chartboost.onInterstitialAdPreloaded = function(location) {
@@ -598,7 +601,7 @@ character.prototype.preload_reward_video=function(){
 	};
 	window.chartboost.onRewardedVideoAdCompleted = function(location) {
 		//alert('onRewardedVideoAdCompleted: ' + location);
-		ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
+		//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
 		//this.next_niveau=level_number+1
 		is_rewarded_video_completed=true;
 		//game.state.start('intermediate_screen');
@@ -607,17 +610,6 @@ character.prototype.preload_reward_video=function(){
 };
 character.prototype.show_reward_video = function() {
 	window.chartboost.showRewardedVideoAd('Default');
-};
-character.prototype.next_level_with_video = function() {
-	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
-	){
-		this.show_reward_video();
-	}
-	else {
-		console.log('not mobile');
-		this.next_niveau=level_number+1;
-		this.game.state.start('level'+this.next_niveau,true,false);
-	}
 };
 character.prototype.launch=function(n){
 	this.show_background_white();
