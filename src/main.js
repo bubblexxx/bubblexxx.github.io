@@ -110,7 +110,7 @@ var adService;
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
-		alert("mobile")
+		alert("Mobile")
 		console.log("mobile")
 		is_mobile=true;
 	} else {
@@ -591,7 +591,7 @@ character.prototype.preload_reward_video=function(){
 	};
 	window.chartboost.onRewardedVideoAdLoaded = function(location) {
 		alert('onRewardedVideoAdLoaded: ' + location);
-		//is_rewarded_video_completed && this.game.state.start('intermediate_screen');
+		is_rewarded_video_completed && this.game.state.start('intermediate_screen');
 	};
 	window.chartboost.onRewardedVideoAdShown = function(location) {
 		//alert('onRewardedVideoAdShown: ' + location);
@@ -602,7 +602,7 @@ character.prototype.preload_reward_video=function(){
 		//this.game.state.start('intermediate_screen');
 	};
 	window.chartboost.onRewardedVideoAdCompleted = function(location) {
-		this.game.state.start('intermediate_screen');
+		//this.game.state.start('intermediate_screen');
 		//alert('onRewardedVideoAdCompleted: ' + location);
 		//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
 		//this.next_niveau=level_number+1
@@ -1814,8 +1814,8 @@ var intermediate_screen={
 		this.particlex.minRotation = 0;
 		this.particlex.maxRotation = 0;
 		this.particlex.on=false;
-		game.time.events.add(600,function(){this.particlex.start(true,2950,null,5);});
-		game.time.events.add(800,function(){this.particlex.on=true;});
+		game.time.events.add(600,function(){this.particlex.start(true,2950,null,5);},this);
+		game.time.events.add(800,function(){this.particlex.on=true;},this);
 		var next_action = function(){
 			game.time.events.add(300,pass_level);
 		};
