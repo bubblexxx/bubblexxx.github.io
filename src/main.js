@@ -1803,9 +1803,9 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 };
 var decide_if_ads_time=function(n){
 	//if(l[level_number].ads && is_preload_rewarded_video) {
-	if(l[level_number].ads) {
+	if(l[n].ads) {
 		this.game.state.start("ads_time");
-		l[level_number].ads=false
+		l[n].ads=false
 	}else{
 		this.game.state.start("level"+ n);
 	}
