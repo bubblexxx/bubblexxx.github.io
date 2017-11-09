@@ -1803,9 +1803,10 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 };
 var decide_if_ads_time=function(n){
 	//if(l[level_number].ads && is_preload_rewarded_video) {
-	if(l[n].ads) {
-		this.game.state.start("ads_time");
+	if(l[n].ads && is_preload_rewarded_video) {
 		l[n].ads=false
+		l[n].ads_show=true
+		this.game.state.start("ads_time");
 	}else{
 		this.game.state.start("level"+ n);
 	}
@@ -1861,7 +1862,7 @@ var chartboost_preload_reward_video=function(){
 		is_rewarded_video_completed=true;
 		//this.game.state.start('intermediate_screen');
 		alert('next_niveau')
-		if (l[level_number].ads==false){
+		if (l[level_number].ads == false && l[level_number].ads_show == false){
 		game.state.start('intermediate_screen');
 		}else{
 		game.state.start("level"+level_number);
@@ -1895,7 +1896,8 @@ var ads_time={
 		game.time.events.add(600,function(){this.particlex.start(true,2950,null,5);},this);
 		game.time.events.add(800,function(){this.particlex.on=true;},this);
 		var next_screen=function(){
-			this.game.state.start("level"+level_number);
+			chartboost_show_reward_video();
+			//this.game.state.start("level"+level_number);
 		};
 		var next_action = function(){
 			game.time.events.add(300,next_screen,this);

@@ -8,7 +8,7 @@ var w2=640;
 //pour peupler les levels
 var l=[];
 for (var i = 0; i < 20; i++){
-	l.push({canon:[],asteroid:[],dalle_moving:[],pulsar:[],dalle:[],ads:false});
+	l.push({canon:[],asteroid:[],dalle_moving:[],pulsar:[],dalle:[],ads:false,ads_show:false});
 }
 
 // canon example
