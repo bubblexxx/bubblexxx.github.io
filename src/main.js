@@ -288,7 +288,7 @@ screen_first.prototype.audio_click = function(){
 	this.sound_click.play();
 };
 screen_first.prototype.next_level = function(){
-	decide_if_ads_time()
+	decide_if_ads_time(level_number)
 };
 screen_first.prototype.next_menu = function(){
 	this.game.state.start("levsel");
@@ -551,7 +551,7 @@ character.prototype.restart_level = function() {
 };
 character.prototype.next_level = function() {
 	var next_niveau=level_number+1;
-	decide_if_ads_time()
+	decide_if_ads_time(next_niveau)
 	//this.game.state.start('level'+next_niveau,true,false);
 };
 character.prototype.preload_reward_video=function(){
@@ -1801,13 +1801,13 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 	this.tween_alpha = game.add.tween(obj).to({alpha:1},800,Phaser.Easing.Linear.None,true,1200);
 	this.tween_alpha.onComplete.add(next_tw,this);
 };
-var decide_if_ads_time=function(){
+var decide_if_ads_time=function(n){
 	//if(l[level_number].ads && is_preload_rewarded_video) {
 	if(l[level_number].ads) {
 		this.game.state.start("ads_time");
 		l[level_number].ads=false
 	}else{
-		this.game.state.start("level"+level_number);
+		this.game.state.start("level"+ n);
 	}
 };
 var chartboost_preload_reward_video=function(){
