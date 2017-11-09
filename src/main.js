@@ -1795,7 +1795,8 @@ var chartboost_preload_reward_video=function(){
 		is_rewarded_video_completed=true;
 		//this.game.state.start('intermediate_screen');
 		if (l[level_number].ads == true){
-			game.state.start("level"+level_number);
+			var level_number_ads=level_number+1
+			game.state.start("level"+level_number_ads);
 			l[level_number].ads=false;
 		}else{
 			game.state.start('intermediate_screen');
@@ -1809,6 +1810,7 @@ var chartboost_preload_reward_video=function(){
 		//game.state.start('intermediate_screen');
 	};
 	is_mobile && window.chartboost.preloadRewardedVideoAd('Default');
+	is_mobile && alert(level_number)
 };
 var chartboost_show_reward_video = function() {
 	window.chartboost.showRewardedVideoAd('Default');
