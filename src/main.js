@@ -1794,10 +1794,9 @@ var chartboost_preload_reward_video=function(){
 
 		is_rewarded_video_completed=true;
 		//this.game.state.start('intermediate_screen');
-		if (l[level_number].ads == true && l[level_number].ads_show == true){
+		if (l[level_number].ads == true){
 			game.state.start("level"+level_number);
 			l[level_number].ads=false;
-			return true;
 		}else{
 			game.state.start('intermediate_screen');
 		}
