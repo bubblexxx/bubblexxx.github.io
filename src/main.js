@@ -1736,6 +1736,8 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 	this.tween_alpha.onComplete.add(next_tw,this);
 };
 var decide_if_ads_time=function(n){
+	alert(l[n].ads)
+	alert(n)
 	//if(l[level_number].ads && is_preload_rewarded_video) {
 	if(l[n].ads && is_preload_rewarded_video) {
 		l[n].ads_show=true
