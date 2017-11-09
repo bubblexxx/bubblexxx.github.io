@@ -1835,7 +1835,7 @@ var ads_time={
 			//this.game.state.start("level"+level_number);
 		};
 		var next_action2 = function(){
-			game.time.events.add(300,next_screen,this);
+			game.time.events.add(500,next_screen,this);
 		};
 		next_action2();
 	}
