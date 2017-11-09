@@ -1794,12 +1794,13 @@ var chartboost_preload_reward_video=function(){
 
 		is_rewarded_video_completed=true;
 		//this.game.state.start('intermediate_screen');
-		if (l[level_number].ads == true){
+		if (l[level_number].ads == true && l[level_number].ads_show == false){
+			l[level_number].ads_show=true
 			var level_number_ads=level_number+1;
 			game.state.start("level"+level_number_ads);
 			l[level_number].ads=false;
 		}
-		if (l[level_number].next_with_video == false){
+		if (l[level_number].next_with_video == false && l[level_number].ads_show == false){
 			l[level_number].next_with_video = true;
 			game.state.start('intermediate_screen');
 		}
