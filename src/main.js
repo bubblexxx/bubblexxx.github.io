@@ -367,7 +367,6 @@ character = function(){
 	this._levelNumber = 1;
 	this.count_dead=0;
 	this.anim_cible();
-	alert(is_mobile,"is_mobile")
 	is_mobile && chartboost_preload_reward_video();
 	//is_mobile && this.preload_reward_video();
 	this.circle_timer = null;
@@ -553,70 +552,6 @@ character.prototype.next_level = function() {
 	var next_niveau=level_number+1;
 	decide_if_ads_time(next_niveau)
 	//this.game.state.start('level'+next_niveau,true,false);
-};
-character.prototype.preload_reward_video=function(){
-	// du site de chartboost
-	//var appId = "50ae12d715ba47c00d01000c";
-	//var appSignature = "95fb313c08717042903819d76f65d64d2347ac44";
-
-	// ancien identifiant
-	var appId = "593f9e2504b0160769416382";
-	var appSignature = "41fd9a8fc8adea90df03e94772ffa7e5373afcc6";
-	window.chartboost.setUp(appId, appSignature);
-
-	window.chartboost.onInterstitialAdPreloaded = function(location) {
-		alert('onInterstitialAdPreloaded: ' + location);
-	};
-	window.chartboost.onInterstitialAdLoaded = function(location) {
-		alert('onInterstitialAdLoaded: ' + location);
-	};
-	window.chartboost.onInterstitialAdShown = function(location) {
-		alert('onInterstitialAdShown: ' + location);
-	};
-	window.chartboost.onInterstitialAdHidden = function(location) {
-		alert('onInterstitialAdHidden: ' + location);
-	};
-	window.chartboost.onMoreAppsAdPreloaded = function(location) {
-		alert('onMoreAppsAdPreloaded: ' + location);
-	};
-	window.chartboost.onMoreAppsAdLoaded = function(location) {
-		alert('onMoreAppsAdLoaded: ' + location);
-	};
-	window.chartboost.onMoreAppsAdShown = function(location) {
-		alert('onMoreAppsAdShown: ' + location);
-	};
-	window.chartboost.onMoreAppsAdHidden = function(location) {
-		alert('onMoreAppsAdHidden: ' + location);
-	};
-	window.chartboost.onRewardedVideoAdPreloaded = function(location) {
-		is_preload_rewarded_video=true;
-		//alert('onRewardedVideoAdPreloaded: ' + location);
-	};
-	window.chartboost.onRewardedVideoAdLoaded = function(location) {
-		//alert('onRewardedVideoAdLoaded: ' + location);
-		//is_rewarded_video_completed && this.game.state.start('intermediate_screen');
-	};
-	window.chartboost.onRewardedVideoAdShown = function(location) {
-		//alert('onRewardedVideoAdShown: ' + location);
-	};
-	window.chartboost.onRewardedVideoAdHidden = function(location) {
-		//alert('onRewardedVideoAdHidden: ' + location);
-		is_rewarded_video_completed=true;
-		//this.game.state.start('intermediate_screen');
-		alert('next_niveau')
-		game.state.start('intermediate_screen');
-	};
-	window.chartboost.onRewardedVideoAdCompleted = function(location) {
-		//this.game.state.start('intermediate_screen');
-		//alert('onRewardedVideoAdCompleted: ' + location);
-		//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
-		//this.next_niveau=level_number+1
-		//game.state.start('intermediate_screen');
-	};
-	is_mobile && window.chartboost.preloadRewardedVideoAd('Default');
-};
-character.prototype.show_reward_video = function() {
-	window.chartboost.showRewardedVideoAd('Default');
 };
 character.prototype.launch=function(n){
 	this.show_background_white();
@@ -1804,7 +1739,6 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 var decide_if_ads_time=function(n){
 	//if(l[level_number].ads && is_preload_rewarded_video) {
 	if(l[n].ads && is_preload_rewarded_video) {
-		l[n].ads=false
 		l[n].ads_show=true
 		this.game.state.start("ads_time");
 	}else{
@@ -1861,11 +1795,11 @@ var chartboost_preload_reward_video=function(){
 
 		is_rewarded_video_completed=true;
 		//this.game.state.start('intermediate_screen');
-		alert('next_niveau')
-		if (l[level_number].ads == false && l[level_number].ads_show == false){
-		game.state.start('intermediate_screen');
+		if (l[level_number].ads == true && l[level_number].ads_show == true){
+			l[level_number].ads=false;
+			game.state.start("level"+level_number);
 		}else{
-		game.state.start("level"+level_number);
+			game.state.start('intermediate_screen');
 		}
 	};
 	window.chartboost.onRewardedVideoAdCompleted = function(location) {
