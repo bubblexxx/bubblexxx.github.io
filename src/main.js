@@ -1810,7 +1810,6 @@ var chartboost_preload_reward_video=function(){
 		//game.state.start('intermediate_screen');
 	};
 	is_mobile && window.chartboost.preloadRewardedVideoAd('Default');
-	is_mobile && alert(level_number)
 };
 var chartboost_show_reward_video = function() {
 	window.chartboost.showRewardedVideoAd('Default');
@@ -1842,7 +1841,6 @@ var ads_time={
 };
 var pass_level=function(){
 	var next_niveau=level_number+1;
-	alert (next_niveau)
 	game.state.start('level'+ next_niveau,level_state[next_niveau]);
 };
 var intermediate_screen={
