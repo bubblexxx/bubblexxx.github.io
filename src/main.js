@@ -110,7 +110,6 @@ var adService;
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
-		alert("mobile")
 		console.log("mobile")
 		is_mobile=true;
 	} else {
@@ -1741,6 +1740,7 @@ var decide_if_ads_time=function(n){
 	if(l[n].ads && is_preload_rewarded_video) {
 		l[n].ads_show=true
 		this.game.state.start("ads_time");
+		alert(n)
 	}else{
 		this.game.state.start("level"+ n);
 	}
@@ -1794,6 +1794,7 @@ var chartboost_preload_reward_video=function(){
 		//alert('onRewardedVideoAdHidden: ' + location);
 
 		is_rewarded_video_completed=true;
+		alert(level_number)
 		//this.game.state.start('intermediate_screen');
 		if (l[level_number].ads == true && l[level_number].ads_show == true){
 			l[level_number].ads=false;
