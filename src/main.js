@@ -288,7 +288,7 @@ screen_first.prototype.audio_click = function(){
 	this.sound_click.play();
 };
 screen_first.prototype.next_level = function(){
-	this.game.state.start("level"+level_number);
+	decide_if_ads_time()
 };
 screen_first.prototype.next_menu = function(){
 	this.game.state.start("levsel");
@@ -353,7 +353,8 @@ character = function(){
 	}
 	this.button_restart=new _button(game.world.centerX,game.world.centerY,'button_restart',this.restart_level);
 	this.button_next=new _button(game.world.centerX,this.cible.y,'button_next',this.next_level);
-	this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.show_reward_video);
+	//this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.show_reward_video);
+	this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',chartboost_show_reward_video);
 	this.star= this.game.add.sprite(game.world.centerX, ((2270*0.5)-300), 'star', 0);
 	this.star.anchor.setTo(0.5,0.5);
 	this.star.frame=2;
@@ -367,7 +368,8 @@ character = function(){
 	this.count_dead=0;
 	this.anim_cible();
 	alert(is_mobile,"is_mobile")
-	is_mobile && this.preload_reward_video();
+	is_mobile && chartboost_preload_reward_video();
+	//is_mobile && this.preload_reward_video();
 	this.circle_timer = null;
 	this.counterMax = 100;
 	this.counter = null;
@@ -549,7 +551,8 @@ character.prototype.restart_level = function() {
 };
 character.prototype.next_level = function() {
 	var next_niveau=level_number+1;
-	this.game.state.start('level'+next_niveau,true,false);
+	decide_if_ads_time()
+	//this.game.state.start('level'+next_niveau,true,false);
 };
 character.prototype.preload_reward_video=function(){
 	// du site de chartboost
@@ -1797,6 +1800,108 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 	this.tween_scale = game.add.tween(obj.scale).to({x:1.5,y:1.5},1100,Phaser.Easing.Elastic.Out,true,900);
 	this.tween_alpha = game.add.tween(obj).to({alpha:1},800,Phaser.Easing.Linear.None,true,1200);
 	this.tween_alpha.onComplete.add(next_tw,this);
+};
+var decide_if_ads_time=function(){
+	//if(l[level_number].ads && is_preload_rewarded_video) {
+	if(l[level_number].ads) {
+		this.game.state.start("ads_time");
+		l[level_number].ads=false
+	}else{
+		this.game.state.start("level"+level_number);
+	}
+};
+var chartboost_preload_reward_video=function(){
+	// du site de chartboost
+	//var appId = "50ae12d715ba47c00d01000c";
+	//var appSignature = "95fb313c08717042903819d76f65d64d2347ac44";
+
+	// ancien identifiant
+	var appId = "593f9e2504b0160769416382";
+	var appSignature = "41fd9a8fc8adea90df03e94772ffa7e5373afcc6";
+	window.chartboost.setUp(appId, appSignature);
+
+	window.chartboost.onInterstitialAdPreloaded = function(location) {
+		alert('onInterstitialAdPreloaded: ' + location);
+	};
+	window.chartboost.onInterstitialAdLoaded = function(location) {
+		alert('onInterstitialAdLoaded: ' + location);
+	};
+	window.chartboost.onInterstitialAdShown = function(location) {
+		alert('onInterstitialAdShown: ' + location);
+	};
+	window.chartboost.onInterstitialAdHidden = function(location) {
+		alert('onInterstitialAdHidden: ' + location);
+	};
+	window.chartboost.onMoreAppsAdPreloaded = function(location) {
+		alert('onMoreAppsAdPreloaded: ' + location);
+	};
+	window.chartboost.onMoreAppsAdLoaded = function(location) {
+		alert('onMoreAppsAdLoaded: ' + location);
+	};
+	window.chartboost.onMoreAppsAdShown = function(location) {
+		alert('onMoreAppsAdShown: ' + location);
+	};
+	window.chartboost.onMoreAppsAdHidden = function(location) {
+		alert('onMoreAppsAdHidden: ' + location);
+	};
+	window.chartboost.onRewardedVideoAdPreloaded = function(location) {
+		is_preload_rewarded_video=true;
+		//alert('onRewardedVideoAdPreloaded: ' + location);
+	};
+	window.chartboost.onRewardedVideoAdLoaded = function(location) {
+		//alert('onRewardedVideoAdLoaded: ' + location);
+		//is_rewarded_video_completed && this.game.state.start('intermediate_screen');
+	};
+	window.chartboost.onRewardedVideoAdShown = function(location) {
+		//alert('onRewardedVideoAdShown: ' + location);
+	};
+	window.chartboost.onRewardedVideoAdHidden = function(location) {
+		//alert('onRewardedVideoAdHidden: ' + location);
+
+		is_rewarded_video_completed=true;
+		//this.game.state.start('intermediate_screen');
+		alert('next_niveau')
+		if (l[level_number].ads==false){
+		game.state.start('intermediate_screen');
+		}else{
+		game.state.start("level"+level_number);
+		}
+	};
+	window.chartboost.onRewardedVideoAdCompleted = function(location) {
+		//this.game.state.start('intermediate_screen');
+		//alert('onRewardedVideoAdCompleted: ' + location);
+		//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
+		//this.next_niveau=level_number+1
+		//game.state.start('intermediate_screen');
+	};
+	is_mobile && window.chartboost.preloadRewardedVideoAd('Default');
+};
+var chartboost_show_reward_video = function() {
+	window.chartboost.showRewardedVideoAd('Default');
+};
+var ads_time={
+	create:function(){
+		text_passed_level = new _text("ads time",game.world.centerX,game.world.centerY,100);
+		this.particlex = game.add.emitter(text_passed_level.text.x,text_passed_level.text.y);
+		this.particlex.makeParticles("particle_canon");
+		this.particlex.minParticleSpeed.setTo(-900,900);
+		this.particlex.maxParticleSpeed.setTo(900,-900);
+		this.particlex.setAlpha(0.5,0.1);
+		this.particlex.minParticleScale = 0.1;
+		this.particlex.maxParticleScale = 0.4;
+		this.particlex.minRotation = 0;
+		this.particlex.maxRotation = 0;
+		this.particlex.on=false;
+		game.time.events.add(600,function(){this.particlex.start(true,2950,null,5);},this);
+		game.time.events.add(800,function(){this.particlex.on=true;},this);
+		var next_screen=function(){
+			this.game.state.start("level"+level_number);
+		};
+		var next_action = function(){
+			game.time.events.add(300,next_screen,this);
+		};
+		next_action();
+	}
 };
 var pass_level=function(){
 	var next_niveau=level_number+1;
