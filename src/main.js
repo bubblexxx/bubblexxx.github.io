@@ -1742,7 +1742,6 @@ var decide_if_ads_time=function(n){
 	if(l[n].ads && is_preload_rewarded_video) {
 		l[n].ads_show=true
 		this.game.state.start("ads_time");
-		alert(n)
 	}else{
 		this.game.state.start("level"+ n);
 	}
@@ -1799,8 +1798,8 @@ var chartboost_preload_reward_video=function(){
 		alert(level_number)
 		//this.game.state.start('intermediate_screen');
 		if (l[level_number].ads == true && l[level_number].ads_show == true){
-			l[level_number].ads=false;
 			game.state.start("level"+level_number);
+			l[level_number].ads=false;
 		}else{
 			game.state.start('intermediate_screen');
 		}
