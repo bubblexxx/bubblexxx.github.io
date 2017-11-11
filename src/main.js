@@ -287,7 +287,7 @@ screen_first.prototype.audio_click = function(){
 	this.sound_click.play();
 };
 screen_first.prototype.next_level = function(){
-	decide_if_ads_time(level_number)
+	decide_if_ads_time(level_number);
 };
 screen_first.prototype.next_menu = function(){
 	this.game.state.start("levsel");
@@ -344,6 +344,7 @@ character = function(){
 	this.sound_star=game.add.audio('win');
 	this.sound_pop=game.add.audio('pop_minder');
 	this.sound_click=game.add.audio('click');
+	this.music_ambiance=game.add.audio('ambiance');
 	//TODO:publish
 	if (debug_position){
 		this.button_publish=new _button(game.world.centerX,game.world.centerY+800,'button_publish',this.send_data_mail);
@@ -407,6 +408,7 @@ character = function(){
 	if(level_number ==0){
 		this.show_tuto();
 	}
+	this.audio_music_ambiance();
 };
 
 character.prototype = Object.create(Phaser.Sprite.prototype);
@@ -476,6 +478,9 @@ character.prototype.send_data_mail = function(){
 };
 character.prototype.audio_game_over = function() {
 	!flag_level_complete && this.sound_game_over.play();
+};
+character.prototype.audio_music_ambiance = function() {
+	this.music_ambiance.play();
 };
 character.prototype.audio_star = function() {
 	this.sound_star.play();
@@ -1066,6 +1071,7 @@ var preloader = {
 		this.game.load.image("cible_shadow","assets/cible_shadow.png");
 		this.game.load.image("grid","assets/grid.png");
 		//audio
+		this.game.load.audio("ambiance","sounds/music_ambiance/airtone_-_nightWalk.ogg");
 		this.game.load.audio("game_over","sounds/loose/melodic_lose_01.ogg");
 		this.game.load.audio("launch","sounds/launch/gum_drop_interface_53.ogg");
 		this.game.load.audio("win","sounds/win/magic_chime_alert_01.ogg");
@@ -1741,7 +1747,6 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 var decide_if_ads_time=function(n){
 	//if(l[level_number].ads && is_preload_rewarded_video) {
 	if(l[n].ads && is_preload_rewarded_video) {
-		l[n].signal_ads=true
 		this.game.state.start("ads_time");
 	}else{
 		this.game.state.start("level"+ n);
@@ -1798,7 +1803,7 @@ var chartboost_preload_reward_video=function(){
 		is_rewarded_video_completed=true;
 		//this.game.state.start('intermediate_screen');
 		if (l[level_number].ads == true && l[level_number].signal_ads == true){
-			l[level_number].signal_ads=true
+			l[level_number].signal_ads=false
 			var level_number_ads=level_number+1;
 			game.state.start("level"+level_number_ads);
 			l[level_number].ads=false;
@@ -1836,6 +1841,7 @@ var ads_time={
 		game.time.events.add(600,function(){this.particlex.start(true,2950,null,5);},this);
 		game.time.events.add(800,function(){this.particlex.on=true;},this);
 		var next_screen=function(){
+			l[level_number].signal_ads=true
 			chartboost_show_reward_video();
 			//this.game.state.start("level"+level_number);
 		};
