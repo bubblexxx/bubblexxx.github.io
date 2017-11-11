@@ -353,7 +353,7 @@ character = function(){
 	this.button_restart=new _button(game.world.centerX,game.world.centerY,'button_restart',this.restart_level);
 	this.button_next=new _button(game.world.centerX,this.cible.y,'button_next',this.next_level);
 	//this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.show_reward_video);
-	this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',chartboost_show_reward_video);
+	this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.signal_video_to_pass_level);
 	this.star= this.game.add.sprite(game.world.centerX, ((2270*0.5)-300), 'star', 0);
 	this.star.anchor.setTo(0.5,0.5);
 	this.star.frame=2;
@@ -415,7 +415,10 @@ character.prototype.show_background_white=function(){
 	this.tw_b0 = game.add.tween(this.background_white).to({alpha:1},100,Phaser.Easing.Linear.None,true,0);
 	this.tw_b0.onComplete.add(function(){this.background_white.alpha=0;},this);
 };
-
+character.prototype.signal_video_to_pass_level=function(){
+	l[level_number].signal_video_to_pass_level=true
+	chartboost_show_reward_video()
+}
 character.prototype.show_tuto = function() {
 	this.tw_0 = game.add.tween(this.tuto.hand).to({alpha:1},750,Phaser.Easing.Linear.None,true,0);
 	this.tw_1 = game.add.tween(this.tuto.hand.scale).to({x:1.2,y:1.2},750,Phaser.Easing.Linear.None,true,0,-1);
@@ -1738,7 +1741,7 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 var decide_if_ads_time=function(n){
 	//if(l[level_number].ads && is_preload_rewarded_video) {
 	if(l[n].ads && is_preload_rewarded_video) {
-		l[n].ads_show=true
+		l[n].signal_ads=true
 		this.game.state.start("ads_time");
 	}else{
 		this.game.state.start("level"+ n);
@@ -1794,14 +1797,14 @@ var chartboost_preload_reward_video=function(){
 
 		is_rewarded_video_completed=true;
 		//this.game.state.start('intermediate_screen');
-		if (l[level_number].ads == true && l[level_number].ads_show == false){
-			l[level_number].ads_show=true
+		if (l[level_number].ads == true && l[level_number].signal_ads == true){
+			l[level_number].signal_ads=true
 			var level_number_ads=level_number+1;
 			game.state.start("level"+level_number_ads);
 			l[level_number].ads=false;
 		}
-		if (l[level_number].next_with_video == false && l[level_number].ads_show == false){
-			l[level_number].next_with_video = true;
+		if (l[level_number].next_with_video == false && l[level_number].signal_video_to_pass_level == true){
+			l[level_number].signal_video_to_pass_level = false;
 			game.state.start('intermediate_screen');
 		}
 	};
