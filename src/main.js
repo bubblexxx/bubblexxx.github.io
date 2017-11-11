@@ -409,6 +409,7 @@ character = function(){
 		this.show_tuto();
 	}
 	this.audio_music_ambiance();
+	this.audio_music_ambiance_pause();
 };
 
 character.prototype = Object.create(Phaser.Sprite.prototype);
@@ -419,7 +420,8 @@ character.prototype.show_background_white=function(){
 };
 character.prototype.signal_video_to_pass_level=function(){
 	l[level_number].signal_video_to_pass_level=true
-	chartboost_show_reward_video()
+	this.audio_music_ambiance_pause();
+	chartboost_show_reward_video();
 }
 character.prototype.show_tuto = function() {
 	this.tw_0 = game.add.tween(this.tuto.hand).to({alpha:1},750,Phaser.Easing.Linear.None,true,0);
@@ -481,6 +483,12 @@ character.prototype.audio_game_over = function() {
 };
 character.prototype.audio_music_ambiance = function() {
 	this.music_ambiance.play();
+};
+character.prototype.audio_music_ambiance_resume = function() {
+	this.music_ambiance.resume();
+};
+character.prototype.audio_music_ambiance_pause = function() {
+	this.music_ambiance.pause();
 };
 character.prototype.audio_star = function() {
 	this.sound_star.play();
@@ -1179,6 +1187,7 @@ function create_level(num){
 	is_rewarded_video_completed=false;
 	is_preload_rewarded_video=false;
 	hero = new character() ;
+	hero.audio_music_ambiance_resume();
 	count_hero=0;
 	game.time.events.add(delay_for_game_begin,function(){hero.life.visible=true;});
 	game.time.events.add(delay_for_game_begin,function(){animate_touch(hero.touch_button);});
@@ -1844,6 +1853,7 @@ var ads_time={
 		var next_screen=function(){
 			var level_number_adapt3=level_number+1
 			l[level_number_adapt3].signal_ads=true
+			hero.audio_music_ambiance_pause()
 			chartboost_show_reward_video();
 			//this.game.state.start("level"+level_number);
 		};
