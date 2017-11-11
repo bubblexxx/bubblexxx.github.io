@@ -1049,7 +1049,8 @@ var boot = {
 		this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 		this.game.scale.pageAlignHorizontally = true;
 		this.game.scale.pageAlignVertically = true;
-		this.game.stage.backgroundColor = '#0d1018';
+		//this.game.stage.backgroundColor = '#0d1018';
+		this.game.stage.backgroundColor = '#101520';
 		this.game.scale.refresh();
 		this.game.state.start('preloader');
 	},
