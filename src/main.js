@@ -1747,7 +1747,9 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 var decide_if_ads_time=function(n){
 	//if(l[level_number].ads && is_preload_rewarded_video) {
 	if(l[n].ads && is_preload_rewarded_video) {
+		
 		this.game.state.start("ads_time");
+
 	}else{
 		this.game.state.start("level"+ n);
 	}
@@ -1801,12 +1803,11 @@ var chartboost_preload_reward_video=function(){
 		//alert('onRewardedVideoAdHidden: ' + location);
 
 		is_rewarded_video_completed=true;
-		//this.game.state.start('intermediate_screen');
-		if (l[level_number].ads == true && l[level_number].signal_ads == true){
-			l[level_number].signal_ads=false
+		//car on doit anticiper le prochain level
+		if (l[level_number+1].ads == true && l[level_number+1].signal_ads == true){
+			l[level_number+1].signal_ads=false
 			var level_number_ads=level_number+1;
 			game.state.start("level"+level_number_ads);
-			l[level_number].ads=false;
 		}
 		if (l[level_number].next_with_video == false && l[level_number].signal_video_to_pass_level == true){
 			l[level_number].signal_video_to_pass_level = false;
