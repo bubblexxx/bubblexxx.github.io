@@ -1841,7 +1841,8 @@ var ads_time={
 		game.time.events.add(600,function(){this.particlex.start(true,2950,null,5);},this);
 		game.time.events.add(800,function(){this.particlex.on=true;},this);
 		var next_screen=function(){
-			l[level_number].signal_ads=true
+			var level_number_adapt3=level_number+1
+			l[level_number_adapt3].signal_ads=true
 			chartboost_show_reward_video();
 			//this.game.state.start("level"+level_number);
 		};
