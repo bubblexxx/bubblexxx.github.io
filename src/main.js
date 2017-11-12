@@ -1814,14 +1814,15 @@ var chartboost_preload_reward_video=function(){
 
 		is_rewarded_video_completed=true;
 		//car on doit anticiper le prochain level
+		alert(level_number)
+		if (l[level_number+1].next_with_video == true && l[level_number+1].signal_video_to_pass_level == true){
+			l[level_number+1].signal_video_to_pass_level = false;
+			game.state.start('intermediate_screen');
+		}
 		if (l[level_number+1].ads == true && l[level_number+1].signal_ads == true){
 			l[level_number+1].signal_ads=false
 			var level_number_ads=level_number+1;
 			game.state.start("level"+level_number_ads);
-		}
-		if (l[level_number+1].next_with_video == true && l[level_number+1].signal_video_to_pass_level == true){
-			l[level_number+1].signal_video_to_pass_level = false;
-			game.state.start('intermediate_screen');
 		}
 	};
 	window.chartboost.onRewardedVideoAdCompleted = function(location) {
