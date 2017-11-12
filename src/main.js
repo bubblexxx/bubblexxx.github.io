@@ -110,7 +110,7 @@ var adService;
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
-		console.log("mobile")
+		console.log("mobile");
 		is_mobile=true;
 	} else {
 		console.log('not mobile');
@@ -419,10 +419,10 @@ character.prototype.show_background_white=function(){
 	this.tw_b0.onComplete.add(function(){this.background_white.alpha=0;},this);
 };
 character.prototype.signal_video_to_pass_level=function(){
-	l[level_number].signal_video_to_pass_level=true
+	l[level_number+1].signal_video_to_pass_level=true;
 	this.audio_music_ambiance_pause();
 	chartboost_show_reward_video();
-}
+};
 character.prototype.show_tuto = function() {
 	this.tw_0 = game.add.tween(this.tuto.hand).to({alpha:1},750,Phaser.Easing.Linear.None,true,0);
 	this.tw_1 = game.add.tween(this.tuto.hand.scale).to({x:1.2,y:1.2},750,Phaser.Easing.Linear.None,true,0,-1);
@@ -565,7 +565,7 @@ character.prototype.restart_level = function() {
 };
 character.prototype.next_level = function() {
 	var next_niveau=level_number+1;
-	decide_if_ads_time(next_niveau)
+	decide_if_ads_time(next_niveau);
 	//this.game.state.start('level'+next_niveau,true,false);
 };
 character.prototype.launch=function(n){
@@ -1819,8 +1819,8 @@ var chartboost_preload_reward_video=function(){
 			var level_number_ads=level_number+1;
 			game.state.start("level"+level_number_ads);
 		}
-		if (l[level_number].next_with_video == false && l[level_number].signal_video_to_pass_level == true){
-			l[level_number].signal_video_to_pass_level = false;
+		if (l[level_number+1].next_with_video == false && l[level_number+1].signal_video_to_pass_level == true){
+			l[level_number+1].signal_video_to_pass_level = false;
 			game.state.start('intermediate_screen');
 		}
 	};
