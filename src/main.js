@@ -1819,7 +1819,7 @@ var chartboost_preload_reward_video=function(){
 			var level_number_ads=level_number+1;
 			game.state.start("level"+level_number_ads);
 		}
-		if (l[level_number+1].next_with_video == false && l[level_number+1].signal_video_to_pass_level == true){
+		if (l[level_number+1].next_with_video == true && l[level_number+1].signal_video_to_pass_level == true){
 			l[level_number+1].signal_video_to_pass_level = false;
 			game.state.start('intermediate_screen');
 		}
@@ -1852,14 +1852,12 @@ var ads_time={
 		game.time.events.add(600,function(){this.particlex.start(true,2950,null,5);},this);
 		game.time.events.add(800,function(){this.particlex.on=true;},this);
 		var next_screen=function(){
-			var level_number_adapt3=level_number+1
-			l[level_number_adapt3].signal_ads=true
+			l[level_number+1].signal_ads=true
 			hero.audio_music_ambiance_pause()
 			chartboost_show_reward_video();
-			//this.game.state.start("level"+level_number);
 		};
 		var next_action2 = function(){
-			game.time.events.add(500,next_screen,this);
+			game.time.events.add(550,next_screen,this);
 		};
 		next_action2();
 	}
@@ -1883,6 +1881,7 @@ var intermediate_screen={
 		this.particlex.on=false;
 		game.time.events.add(600,function(){this.particlex.start(true,2950,null,5);},this);
 		game.time.events.add(800,function(){this.particlex.on=true;},this);
+
 		var next_action = function(){
 			game.time.events.add(300,pass_level);
 		};
