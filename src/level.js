@@ -18,8 +18,8 @@ var ca0_l0={
 	posx:400-200,
 	posy:500,
 	speed:2000,
-	frequency:5,
-	variance:0,
+	frequency:60,
+	variance:20,
 	angular:180,
 	kill_with_world:true,
 	special_color:false,
@@ -103,7 +103,7 @@ var ca1_l1={
 //on ajoute le canon au level concerné
 l[1].canon.push(ca0_l1);
 l[1].canon.push(ca1_l1);
-l[1].ads=true
+l[1].ads=false
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////

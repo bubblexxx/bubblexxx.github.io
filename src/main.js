@@ -354,7 +354,7 @@ character = function(){
 	this.button_restart=new _button(game.world.centerX,game.world.centerY,'button_restart',this.restart_level);
 	this.button_next=new _button(game.world.centerX,this.cible.y,'button_next',this.next_level);
 	//this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.show_reward_video);
-	this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.signal_video_to_pass_level);
+	this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.signal_video);
 	this.star= this.game.add.sprite(game.world.centerX, ((2270*0.5)-300), 'star', 0);
 	this.star.anchor.setTo(0.5,0.5);
 	this.star.frame=2;
@@ -418,7 +418,10 @@ character.prototype.show_background_white=function(){
 	this.tw_b0 = game.add.tween(this.background_white).to({alpha:1},100,Phaser.Easing.Linear.None,true,0);
 	this.tw_b0.onComplete.add(function(){this.background_white.alpha=0;},this);
 };
-character.prototype.signal_video_to_pass_level=function(){
+character.prototype.signal_video=function(){
+	alert(level_number+1)
+	alert(l[level_number+1].signal_video_to_pass_level)
+
 	l[level_number+1].signal_video_to_pass_level=true;
 	this.audio_music_ambiance_pause();
 	chartboost_show_reward_video();
@@ -1815,6 +1818,7 @@ var chartboost_preload_reward_video=function(){
 		is_rewarded_video_completed=true;
 		//car on doit anticiper le prochain level
 		alert(level_number)
+		alert(l[level_number+1].signal_video_to_pass_level)
 		if (l[level_number+1].next_with_video == true && l[level_number+1].signal_video_to_pass_level == true){
 			l[level_number+1].signal_video_to_pass_level = false;
 			game.state.start('intermediate_screen');
