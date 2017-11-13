@@ -421,7 +421,6 @@ character.prototype.show_background_white=function(){
 character.prototype.signal_video=function(){
 
 	l[level_number+1].signal_video_to_pass_level=true;
-	this.music_ambiance.pause();
 	chartboost_show_reward_video();
 };
 character.prototype.show_tuto = function() {
@@ -1835,6 +1834,7 @@ var chartboost_preload_reward_video=function(){
 	is_mobile && window.chartboost.preloadRewardedVideoAd('Default');
 };
 var chartboost_show_reward_video = function() {
+	hero.music_ambiance.pause();
 	window.chartboost.showRewardedVideoAd('Default');
 };
 var ads_time={
@@ -1854,7 +1854,7 @@ var ads_time={
 		game.time.events.add(800,function(){this.particlex.on=true;},this);
 		var next_screen=function(){
 			l[level_number+1].signal_ads=true
-			hero.audio_music_ambiance_pause()
+			//hero.audio_music_ambiance_pause()
 			chartboost_show_reward_video();
 		};
 		var next_action2 = function(){
