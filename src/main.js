@@ -419,11 +419,9 @@ character.prototype.show_background_white=function(){
 	this.tw_b0.onComplete.add(function(){this.background_white.alpha=0;},this);
 };
 character.prototype.signal_video=function(){
-	alert(level_number+1)
-	alert(l[level_number+1].signal_video_to_pass_level)
 
 	l[level_number+1].signal_video_to_pass_level=true;
-	//this.audio_music_ambiance_pause();
+	this.music_ambiance.pause();
 	chartboost_show_reward_video();
 };
 character.prototype.show_tuto = function() {
@@ -1817,8 +1815,6 @@ var chartboost_preload_reward_video=function(){
 
 		is_rewarded_video_completed=true;
 		//car on doit anticiper le prochain level
-		alert(level_number)
-		alert(l[level_number+1].signal_video_to_pass_level)
 		if (l[level_number+1].next_with_video == true && l[level_number+1].signal_video_to_pass_level == true){
 			l[level_number+1].signal_video_to_pass_level = false;
 			game.state.start('intermediate_screen');
