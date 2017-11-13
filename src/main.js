@@ -423,7 +423,7 @@ character.prototype.signal_video=function(){
 	alert(l[level_number+1].signal_video_to_pass_level)
 
 	l[level_number+1].signal_video_to_pass_level=true;
-	this.audio_music_ambiance_pause();
+	//this.audio_music_ambiance_pause();
 	chartboost_show_reward_video();
 };
 character.prototype.show_tuto = function() {
