@@ -360,7 +360,7 @@ character = function(){
 	this.star.frame=2;
 	this.star.visible=false;
 	this.star.scale.setTo(0,0);
-	this.big_star=game.add.sprite(game.world.centerX,game.world.centerY-320,'big_star');
+	this.big_star=game.add.sprite(game.world.centerX,((2270*0.5)-300),'big_star');
 	this.big_star.anchor.setTo(0.5,0.5);
 	this.big_star.visible=false;
 	this.big_star.scale.setTo(0,0);
