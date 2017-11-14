@@ -25,6 +25,10 @@
 //regler particle canon en fonction de l'inclinaison
 //mettre icone button_back à la place de publish
 //body enbale false lorsque touché un projectile violet
+var h=2270;
+var w=1480;
+var h2=h*0.5;
+var w2=w*0.5;
 var is_mobile;
 //alert("m")
 var videoreward;
@@ -69,6 +73,7 @@ var initialise_time_and_delay=function(){
 	delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+additional_time;
 };
 initialise_time_and_delay();
+var music_ambiance;
 var count_hero;
 var level_number_adapt;
 var text_to_describe_level;
@@ -81,16 +86,6 @@ var delay_circle_timer = 2400;
 
 var gui;
 var PLAYER_DATA ;
-var h=2270;
-var w=1480;
-var h2=h*0.5;
-var w2=w*0.5;
-// pour montrer la grille snap des enemis et render debug
-var debug_mode=false;
-//si false pas de possibilité de déplacer les enemis et de publier les levels;
-var debug_position=true;
-// si false pas de localStorage;
-var debug_store=true;
 var level_json={};
 var canon=[];
 var pulsar=[];
@@ -107,6 +102,8 @@ var demoPosition;
 //var backgroundTexture;
 var adService;
 
+
+
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
@@ -118,6 +115,7 @@ var detectmob=function(){
 	}
 };
 detectmob();
+
 
 var email=JSON.stringify(localStorage);
 //class for text intitulé dans chaque level
@@ -147,6 +145,17 @@ _text.prototype.hide = function() {
 	this.tween2 = game.add.tween(this.text.scale).to({x:1,y:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_hide_describe_text);
 	this.tween2 = game.add.tween(this.text).to({alpha:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_hide_describe_text);
 };
+
+//energique
+//music_ambiance=new Audio('sounds/music_ambiance/Electrodoodle.ogg');
+//relaxant
+music_ambiance=new Audio('sounds/music_ambiance/Floating Cities.ogg');
+//style mario
+//music_ambiance=new Audio('sounds/music_ambiance/Video Dungeon Boss.ogg');
+//music_ambiance.play();
+//music_ambiance.pause();
+music_ambiance.loop=true
+music_ambiance.volume=.08
 
 //class for mechant
 _mechant = function(game,name,number,posx,posy,image_body,image_drag){
@@ -300,6 +309,22 @@ screen_first.prototype.explosion = function(){
 
 character = function(){
 	Phaser.Sprite.call(this,game,game.world.centerX,2270+500,'particle_character');
+	this._x=game.rnd.integerInRange(0,w);
+	this._y=game.rnd.integerInRange(0,h);
+	this.particles_explode = game.add.emitter(this._x,this._y);
+	this.particles_explode.makeParticles("particle_character");
+	this.particles_explode.minParticleSpeed.setTo(-600,-600);
+	this.particles_explode.maxParticleSpeed.setTo(800,800);
+	this.particles_explode.setAlpha(0.3,0.1);
+	this.particles_explode.minParticleScale = 0.2;
+	this.particles_explode.maxParticleScale = 0.5;
+	this.particles_explode.minRotation = 0;
+	this.particles_explode.maxRotation = 0;
+	this.particles_explode.on=false;
+	this.particles_explode.start(true,5900,null,8);
+	this.particles_explode.flag=true
+	game.time.events.loop( 900,this.explosion_particles,this );
+
 	this.background_white=game.add.sprite(w2,h2,'background_white');
 	this.background_white.anchor.setTo(0.5,0.5);
 	this.background_white.alpha=0;
@@ -344,7 +369,6 @@ character = function(){
 	this.sound_star=game.add.audio('win');
 	this.sound_pop=game.add.audio('pop_minder');
 	this.sound_click=game.add.audio('click');
-	this.music_ambiance=game.add.audio('ambiance');
 	//TODO:publish
 	if (debug_position){
 		this.button_publish=new _button(game.world.centerX,game.world.centerY+800,'button_publish',this.send_data_mail);
@@ -408,12 +432,21 @@ character = function(){
 	if(level_number ==0){
 		this.show_tuto();
 	}
-	this.audio_music_ambiance();
-	this.audio_music_ambiance_pause();
 };
 
 character.prototype = Object.create(Phaser.Sprite.prototype);
 character.prototype.constructor = character;
+character.prototype.explosion_particles = function(){
+	if(this.particles_explode.flag){
+	this.particles_explode.on=true;
+	this.particles_explode.x=game.rnd.integerInRange(0,w);
+	this.particles_explode.y=game.rnd.integerInRange(0,h);
+	}
+};
+character.prototype.stop_particles_explode=function(){
+	this.particles_explode.flag=false
+	this.particles_explode.on=false
+};
 character.prototype.show_background_white=function(){
 	this.tw_b0 = game.add.tween(this.background_white).to({alpha:1},100,Phaser.Easing.Linear.None,true,0);
 	this.tw_b0.onComplete.add(function(){this.background_white.alpha=0;},this);
@@ -479,19 +512,10 @@ character.prototype.send_data_mail = function(){
 	window.location='mailto:'+EmailVariable+'?subject='+SubjectVariable+'&body='+email;
 };
 character.prototype.audio_game_over = function() {
-	!flag_level_complete && this.sound_game_over.play();
-};
-character.prototype.audio_music_ambiance = function() {
-	this.music_ambiance.play();
-};
-character.prototype.audio_music_ambiance_resume = function() {
-	this.music_ambiance.resume();
-};
-character.prototype.audio_music_ambiance_pause = function() {
-	this.music_ambiance.pause();
+	!flag_level_complete && this.sound_game_over.play() && music_ambiance.pause();
 };
 character.prototype.audio_star = function() {
-	this.sound_star.play();
+	this.sound_star.play() && music_ambiance.pause();
 };
 character.prototype.audio_pop = function() {
 	this.sound_pop.play();
@@ -670,6 +694,7 @@ character.prototype.show_button_restart_level_complete = function() {
 		this.button_restart.show_button();
 		this.button_next.show_button();
 		this.hide_life_text();
+		this.stop_particles_explode();
 	}
 };
 
@@ -1080,12 +1105,19 @@ var preloader = {
 		this.game.load.image("cible_shadow","assets/cible_shadow.png");
 		this.game.load.image("grid","assets/grid.png");
 		//audio
-		this.game.load.audio("ambiance","sounds/music_ambiance/airtone_-_nightWalk.ogg");
-		this.game.load.audio("game_over","sounds/loose/melodic_lose_01.ogg");
-		this.game.load.audio("launch","sounds/launch/gum_drop_interface_53.ogg");
-		this.game.load.audio("win","sounds/win/magic_chime_alert_01.ogg");
-		this.game.load.audio("pop_minder","sounds/pop2.ogg");
-		this.game.load.audio("pop","sounds/pop2.ogg");
+		//this.game.load.audio("ambiance","sounds/music_ambiance/airtone_-_nightWalk.ogg");
+		// pip pop ta ta ta 
+		//this.game.load.audio("ambiance","sounds/music_ambiance/Blip Stream.ogg");
+		//this.game.load.audio("game_over","sounds/loose/melodic_lose_01.ogg");
+		this.game.load.audio("game_over","sounds/loose/magic_crystal_interface_25.ogg");
+		//this.game.load.audio("launch","sounds/launch/gum_drop_interface_53.ogg");
+		this.game.load.audio("launch","sounds/launch/ching02.ogg");
+		//this.game.load.audio("win","sounds/win/success_elegant_04.ogg");
+		this.game.load.audio("win","sounds/win/magic_crystal_interface_04.ogg");
+		//this.game.load.audio("pop_minder","sounds/pop2.ogg");
+		this.game.load.audio("pop_minder","sounds/explode/Tiny Button Push-SoundBible.com-513260752.ogg");
+		//this.game.load.audio("pop","sounds/pop2.ogg");
+		this.game.load.audio("pop","sounds/explode/Tiny Button Push-SoundBible.com-513260752.ogg");
 		this.game.load.audio("click","sounds/button/glossy_click_25.ogg");
 		this.game.load.audio("menu_no","sounds/menu/pleasant_interface_37.ogg");
 		//images_enemy
@@ -1188,7 +1220,8 @@ function create_level(num){
 	is_rewarded_video_completed=false;
 	is_preload_rewarded_video=false;
 	hero = new character() ;
-	hero.audio_music_ambiance_resume();
+	//hero.audio_music_ambiance_resume();
+	music_ambiance.play();
 	count_hero=0;
 	game.time.events.add(delay_for_game_begin,function(){hero.life.visible=true;});
 	game.time.events.add(delay_for_game_begin,function(){animate_touch(hero.touch_button);});
@@ -1203,6 +1236,9 @@ function create_level(num){
 	text_to_number_level.alpha=0;
 	text_to_number_level.visible=false;
 	text_to_number_level.show2();
+	//button_mute=new _button(1300,h-100,'icon_audio',mute_audio)
+	
+
 }
 
 function logic(){
@@ -1834,7 +1870,7 @@ var chartboost_preload_reward_video=function(){
 	is_mobile && window.chartboost.preloadRewardedVideoAd('Default');
 };
 var chartboost_show_reward_video = function() {
-	hero.music_ambiance.pause();
+	music_ambiance.pause();
 	window.chartboost.showRewardedVideoAd('Default');
 };
 var ads_time={

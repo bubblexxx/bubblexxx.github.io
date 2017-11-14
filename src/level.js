@@ -11,6 +11,18 @@ for (var i = 0; i < 20; i++){
 	l.push({canon:[],asteroid:[],dalle_moving:[],pulsar:[],dalle:[],ads:false,signal_ads:false,next_with_video:true,signal_video_to_pass_level:false});
 }
 
+if(debug_position === false){
+	// tous les 3 levels on place une ads
+	l[2].ads=true;
+	l[5].ads=true;
+	l[8].ads=true;
+	l[11].ads=true;
+	l[14].ads=true;
+	l[17].ads=true;
+	//exeption car on est pressé de finir le jeu
+	l[18].ads=true;
+}
+
 // canon example
 var ca0_l0={
 	number:0,
