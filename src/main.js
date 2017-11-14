@@ -170,7 +170,7 @@ _mechant = function(game,name,number,posx,posy,image_body,image_drag){
 	this.flag=true;
 	Phaser.Sprite.call(this,game,this.posx,this.posy,this.image_drag);
 	this.scale.setTo(0,0);
-	debug_position ? this.alpha=0.05 : this.alpha=0;
+	debug_mode ? this.alpha=0.05 : this.alpha=0;
 	this.anchor.setTo(0.5,0.5);
 	this.inputEnabled=true;
 	this.input.enableDrag(true);
