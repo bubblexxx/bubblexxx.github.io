@@ -1109,7 +1109,8 @@ var preloader = {
 		// pip pop ta ta ta 
 		//this.game.load.audio("ambiance","sounds/music_ambiance/Blip Stream.ogg");
 		//this.game.load.audio("game_over","sounds/loose/melodic_lose_01.ogg");
-		this.game.load.audio("game_over","sounds/loose/magic_crystal_interface_25.ogg");
+		//this.game.load.audio("game_over","sounds/loose/magic_crystal_interface_25.ogg");
+		this.game.load.audio("game_over","sounds/loose/magic_crystal_interface_28.ogg");
 		//this.game.load.audio("launch","sounds/launch/gum_drop_interface_53.ogg");
 		this.game.load.audio("launch","sounds/launch/ching02.ogg");
 		//this.game.load.audio("win","sounds/win/success_elegant_04.ogg");
