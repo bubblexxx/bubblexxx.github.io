@@ -155,7 +155,7 @@ music_ambiance=new Audio('sounds/music_ambiance/Floating Cities.ogg');
 //music_ambiance.play();
 //music_ambiance.pause();
 music_ambiance.loop=true
-music_ambiance.volume=.08
+music_ambiance.volume=.20
 
 //class for mechant
 _mechant = function(game,name,number,posx,posy,image_body,image_drag){
