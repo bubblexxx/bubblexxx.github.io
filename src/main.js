@@ -37,7 +37,6 @@ var a=[];
 var n=[];
 var p=[];
 var d=[];
-co(debug_position,"debug_position")
 var level_name=[
 	"1. for beginners :)",
 	"2. let easy",
@@ -117,8 +116,8 @@ var detectmob=function(){
 };
 detectmob();
 
-
-var email=JSON.stringify(localStorage);
+var email=JSON.stringify(localStorage, null, "\t");
+//var email=JSON.stringify(localStorage);
 co(email,"email")
 //class for text intitulé dans chaque level
 _text=function(message,posx,posy,taille){
@@ -158,7 +157,12 @@ music_ambiance=new Audio('sounds/music_ambiance/Floating Cities.ogg');
 //music_ambiance.pause();
 music_ambiance.loop=true
 music_ambiance.volume=.20
-
+music_ambiance_mute=function(){
+music_ambiance.volume=0
+}
+music_ambiance_activate=function(){
+music_ambiance.volume=.20
+}
 //class for mechant
 _mechant = function(game,name,number,posx,posy,image_body,image_drag){
 	//this = this.sprite_for_drag
@@ -239,14 +243,13 @@ _mechant.prototype.particle_show = function(){
 	this.particle.start(true,650,null,5);
 	game.time.events.add( 650,function(){this.particle.on=false;},this);
 };
-
 //class button for click
 _button=function(posx,posy,image,fun_call_back){
 	this.image=image;
 	this.posx=posx;
 	this.posy=posy;
 	this.fun_call_back=fun_call_back;
-	this.button=game.add.button(this.posx,this.posy,this.image,this.anim_on_click,this);
+	this.button=game.add.button(this.posx,this.posy,this.image,this.anim_on_click,this,0,1,2);
 	this.button.visible=false;
 	this.button.anchor.setTo(0.5,0.5);
 	this.button.scale.setTo(0,0);
@@ -269,12 +272,51 @@ _button.prototype.anim_on_click=function(){
 	}
 };
 
+//class button for click but not the button not dissapear on click
+_button_stay=function(posx,posy,image){
+	this.image=image;
+	this.posx=posx;
+	this.posy=posy;
+	this.button=game.add.button(this.posx,this.posy,this.image,this.anim_on_click,this);
+	this.button.visible=false;
+	this.button.anchor.setTo(0.5,0.5);
+	this.button.scale.setTo(0,0);
+	this.flag=true;
+	this.sound_click=game.add.audio('click');
+};
+_button_stay.prototype.audio_click = function() {
+	this.sound_click.play();
+};
+_button_stay.prototype.show_button=function(){
+	this.button.visible=true;
+	this.tween_scale_button = game.add.tween(this.button.scale).to({x:1,y:1},500,Phaser.Easing.Bounce.Out,true,0);
+};
+_button_stay.prototype.anim_on_click=function(){
+		if(this.button.frame==0){
+		//this.flag=false;
+		this.audio_click();
+			music_ambiance_mute();
+		this.button.frame=1
+			return true;
+		}else{
+		//this.flag=false;
+		this.audio_click();
+			music_ambiance_activate();
+		this.button.frame=0
+			return true;
+		}
+};
+
 //var level={}
 screen_first = function(){
 	Phaser.Sprite.call(this,game,game.world.centerX,450,'title');
+	music_ambiance.play()
 	this.anchor.setTo(0.5,0.5);
 	this.button_menu=new _button(game.world.centerX,game.world.centerY+400,'button_menu',this.next_menu);
 	this.button_next=new _button(game.world.centerX,game.world.centerY,'button_play',this.next_level);
+	this.button_sound=new _button_stay(game.world.centerX,game.world.centerY+800,'button_sound');
+	game.time.events.add( 200,this.button_sound.show_button,this.button_sound );
+
 	game.time.events.loop( 500,this.explosion,this );
 	game.time.events.add( 200,this.button_menu.show_button,this.button_menu );
 	game.time.events.add( 200,this.button_next.show_button,this.button_next );
@@ -299,6 +341,7 @@ screen_first.prototype.audio_click = function(){
 };
 screen_first.prototype.next_level = function(){
 	decide_if_ads_time(level_number);
+
 };
 screen_first.prototype.next_menu = function(){
 	this.game.state.start("levsel");
@@ -337,7 +380,7 @@ character = function(){
 	this.cible_shadow.scale.setTo(1.5,1.5);
 	this.cible_shadow.alpha=0.15;
 	this.grid=game.add.sprite(0,0,'grid');
-	debug_position ? this.grid.visible=true:this.grid.visible=false;
+	this.grid.visible=false
 	this.cible=game.add.sprite(game.world.centerX,300,'cible');
 	this.cible.anchor.setTo(0.5,0.5);
 	game.physics.arcade.enable(this.cible,Phaser.Physics.ARCADE);
@@ -431,7 +474,7 @@ character = function(){
 	this.tuto.hand_level_win=game.add.sprite(w2,this.cible.y+90,'hand_tuto');
 	this.tuto.hand_level_win.angle=45;
 	this.tuto.hand_level_win.alpha=0;
-	if(level_number ==0){
+	if(level_number ==0 && debug_position==false){
 		this.show_tuto();
 	}
 };
@@ -1097,6 +1140,7 @@ var preloader = {
 		this.game.load.image("circle_tuto","assets/circle_tuto.png");
 		//interface
 		//this.game.load.image("background","assets/background.png");
+		this.game.load.spritesheet('button_sound','assets/button_sound.png', 300, 300);
 		this.game.load.image("background_white","assets/background_white.png");
 		this.game.load.image("button_back","assets/button_back.png");
 		this.game.load.image("title","assets/title.png");
@@ -1695,7 +1739,7 @@ var logic_position=function(sprite){
 		this.level=level_number;
 		this.name_level='lev';
 		this.combined_level=this.name_level+this.level;
-		debug_store && localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]));
+		debug_store && localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]),null,"\t");
 	}
 };
 
@@ -1795,6 +1839,7 @@ ecran_intermediaire_pour_passer_level=function(obj,next_action){
 	this.tween_alpha.onComplete.add(next_tw,this);
 };
 var decide_if_ads_time=function(n){
+	music_ambiance.pause()
 	//if(l[level_number].ads && is_preload_rewarded_video) {
 	if(l[n].ads && is_preload_rewarded_video) {
 		
