@@ -103,7 +103,6 @@ var demoPosition;
 var adService;
 
 
-
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
@@ -115,9 +114,10 @@ var detectmob=function(){
 	}
 };
 detectmob();
-
-var email=JSON.stringify(localStorage, null, "\t");
+var le=JSON.stringify(l[level_number],null, "\t")
+var email=JSON.stringify(sto[level_number],null, "\t")
 //var email=JSON.stringify(localStorage);
+co(le,"le")
 co(email,"email")
 //class for text intitulé dans chaque level
 _text=function(message,posx,posy,taille){
@@ -176,7 +176,7 @@ _mechant = function(game,name,number,posx,posy,image_body,image_drag){
 	this.flag=true;
 	Phaser.Sprite.call(this,game,this.posx,this.posy,this.image_drag);
 	this.scale.setTo(0,0);
-	debug_mode ? this.alpha=0.05 : this.alpha=0;
+	debug_mode ? this.alpha=0.5 : this.alpha=0;
 	this.anchor.setTo(0.5,0.5);
 	this.inputEnabled=true;
 	this.input.enableDrag(true);
@@ -554,7 +554,10 @@ character.prototype.send_data_mail = function(){
 	var current_level=level_number+1;
 	var SubjectVariable='bubblex'+current_level;
 	var EmailVariable='espace3d@gmail.com';
-	window.location='mailto:'+EmailVariable+'?subject='+SubjectVariable+'&body='+email;
+	var email=JSON.stringify(sto[0],null, "\t")
+	//var email=JSON.stringify(localStorage);
+	co(email,"email")
+	//window.location='mailto:'+EmailVariable+'?subject='+SubjectVariable+'&body='+email;
 };
 character.prototype.audio_game_over = function() {
 	!flag_level_complete && this.sound_game_over.play() && music_ambiance.pause();
@@ -758,6 +761,7 @@ _asteroid = function(number,posx,posy,speed,radius){
 	this.particlex.maxRotation = 0;
 	this.particlex.on=false;
 	game.time.events.add(delay_for_game_begin,function(){this.particlex.on=true;this.particlex.start(true,500,5);},this);
+	this.fire()
 	game.time.events.loop(16,this.update2,this);
 };
 _asteroid.prototype=Object.create(_mechant.prototype);
@@ -1595,6 +1599,14 @@ var show_grid_on_logic_position=function(sprite){
 			gui=new dat.GUI();
 			gui.start=true;
 			var guit={};
+/**
+ * declare param with dat.gui and if  
+ * @param {args[]}  
+ * @callback _create_canon - the function who create the enemy.
+ * @callback canon - the function who create the enemy via sto.
+ */
+
+
 			var guit_declare=function(...args){
 				var condition=args.length;
 				//obligé ...ne sait pas pourquoi
@@ -1646,9 +1658,10 @@ var show_grid_on_logic_position=function(sprite){
 					guit_declare(sprite,'kill');
 					break;
 				case "asteroid":
+					//erreur pas de guit_declare donc les valeurs ne sont pas stockées
 					gui.add(sprite,'name');
-					gui.add(sprite,'radius',100,500);
-					gui.add(sprite,'speed',0,0.01);
+					guit_declare(sprite,'radius',50,500);
+					guit_declare(sprite,'speed',0,0.01);
 					guit_declare(sprite,'kill');
 					break;
 				case "dalle_moving":
@@ -1672,9 +1685,12 @@ var logic_position=function(sprite){
 		hero.grid.visible=false	;
 		var _table;
 		var _name_json;
+		var _name_sprite=sprite.name
+		co(_name_sprite)
 		switch(sprite.name){
 			case 'canon':
-				_table=c;
+				//_table=c;
+				_table=sto[level_number][sprite.name];
 				_name_json='canon';
 				_table[sprite.number] = {
 					number:sprite.number,
@@ -1693,9 +1709,10 @@ var logic_position=function(sprite){
 				};
 				break;
 			case 'asteroid':
-				_table=a;
+				_table=sto[level_number][sprite.name];
 				_name_json='asteroid';
 				_table[sprite.number] = {
+					number:sprite.number,
 					x:Math.round(sprite.x),
 					y:Math.round(sprite.y),
 					speed:sprite.speed,
@@ -1703,9 +1720,10 @@ var logic_position=function(sprite){
 				};
 				break;
 			case 'dalle_moving':
-				_table=n;
+				_table=sto[level_number][sprite.name];
 				_name_json='dalle_moving';
 				_table[sprite.number] = {
+					number:sprite.number,
 					delay:Math.round(sprite.delay),
 					x:Math.round(sprite.x),
 					y:Math.round(sprite.y),
@@ -1714,9 +1732,10 @@ var logic_position=function(sprite){
 				};
 				break;
 			case 'pulsar':
-				_table=p;
+				_table=sto[level_number][sprite.name];
 				_name_json='pulsar';
 				_table[sprite.number] = {
+					number:sprite.number,
 					delay:Math.round(sprite.delay),
 					time:Math.round(sprite.time),
 					x:Math.round(sprite.x),
@@ -1726,9 +1745,10 @@ var logic_position=function(sprite){
 				};
 				break;
 			case 'dalle':
-				_table=d;
+				_table=sto[level_number][sprite.name];
 				_name_json='dalle';
 				_table[sprite.number] = {
+					number:sprite.number,
 					delay:Math.round(sprite.delay),
 					x:Math.round(sprite.x),
 					y:Math.round(sprite.y),
@@ -1739,9 +1759,16 @@ var logic_position=function(sprite){
 		this.level=level_number;
 		this.name_level='lev';
 		this.combined_level=this.name_level+this.level;
-		debug_store && localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]),null,"\t");
+		//debug_store && localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]),null,"\t");
+		debug_store && localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]));
 	}
 };
+/**
+ * check in the localStorage if enemy exist if no create them.
+ * @param {sto[]} table to store the enemy sto[level_number].obj[0].param 
+ * @callback _create_canon - the function who create the enemy.
+ * @callback canon - the function who create the enemy via sto.
+ */
 
 var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_create_pulsar,_create_dalle,num_canon,num_asteroid,num_dalle_moving,num_pulsar,num_dalle){
 	var check_in_local_storage=function(obj,num,table){
@@ -1749,61 +1776,76 @@ var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_
 			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number));
 		}
 	};
-
-	check_in_local_storage("canon",num_canon,c);
-	check_in_local_storage("asteroid",num_asteroid,a);
-	check_in_local_storage("dalle_moving",num_dalle_moving,n);
-	check_in_local_storage("pulsar",num_pulsar,p);
-	check_in_local_storage("dalle",num_dalle,d);
+	//check_in_local_storage("canon",num_canon,c);
+	check_in_local_storage("canon",num_canon,sto[level_number].canon);
+	check_in_local_storage("asteroid",num_asteroid,sto[level_number].asteroid);
+	check_in_local_storage("dalle_moving",num_dalle_moving,sto[level_number].dalle_moving);
+	check_in_local_storage("pulsar",num_pulsar,sto[level_number].pulsar);
+	check_in_local_storage("dalle",num_dalle,sto[level_number].dalle);
+	//for(var i=0;i<num_canon;i++){
+	//	if (c[i]===null){
+	//		_create_canon();
+	//		break;
+	//	}else{
+	//		c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number));
+	//		//canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color,c[i]._rotate,c[i]._value_rotate);
+	//		canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color,c[i]._rotate,c[i]._value_rotate);
+	//	}
+	//}
 	for(var i=0;i<num_canon;i++){
-		if (c[i]===null){
+		if (sto[level_number].canon[i]===null){
 			_create_canon();
 			break;
 		}else{
-			c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number));
-			canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color,c[i]._rotate,c[i]._value_rotate);
+			co(level_number)
+			//sto[level_number].canon[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number));
+			//co(sto[level_number].canon[0])
+			//canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color,c[i]._rotate,c[i]._value_rotate);
+			canon[i]=new _canon(i,sto[level_number].canon[i].delay,sto[level_number].canon[i].x,sto[level_number].canon[i].y,sto[level_number].canon[i].speed,sto[level_number].canon[i].frequency,sto[level_number].canon[i].variance,sto[level_number].canon[i].angular,flag_level_complete,sto[level_number].canon[i].kill_with_world,sto[level_number].canon[i].special_color,sto[level_number].canon[i]._rotate,sto[level_number].canon[i]._value_rotate);
 		}
 	}
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	for(var j=0;j<num_asteroid;j++){
-		if (a[j]===null){
+		if (sto[level_number].asteroid[j]===null){
 			_create_asteroid();
+			//ceci marche mais radius semble être à 0 dans sto
+			//asteroid[j]=new _asteroid(j,l[level_number].asteroid[j].x,l[level_number].asteroid[j].y,l[level_number].asteroid[j].speed,l[level_number].asteroid[j].radius);
 			break;
 		}else{
 			//asteroid = function(number,posx,posy,speed,radius)
-			asteroid[j]=new _asteroid(j,a[j].x,a[j].y,a[j].speed,a[j].radius);
+			asteroid[j]=new _asteroid(j,sto[level_number].asteroid[j].x,sto[level_number].asteroid[j].y,sto[level_number].asteroid[j].speed,sto[level_number].asteroid[j].radius);
 		}
 	}
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	for(var k=0;k<num_dalle_moving;k++){
-		if (n[k]===null){
+		if (sto[level_number].dalle_moving[k]===null){
 			_create_dalle_moving();
 			break;
 		}else{
 			//dalle_moving = function(number,delay,posx,posy,speed)
-			dalle_moving[k]=new _dalle_moving(k,n[k].delay,n[k].x,n[k].y,n[k].speed,n[k].posx_in_tween);
+			dalle_moving[k]=new _dalle_moving(k,sto[level_number].dalle_moving[k].delay,sto[level_number].dalle_moving[k].x,sto[level_number].dalle_moving[k].y,sto[level_number].dalle_moving[k].speed,sto[level_number].dalle_moving[k].posx_in_tween);
 		}
 	}
 	///////////////////////////////////////////////////////////////////////////////////////////
 	for(var n=0;n<num_pulsar;n++){
-		if (p[n]===null){
+		if (sto[level_number].pulsar[n]===null){
 			_create_pulsar();
 			break;
 		}else{
 			//pulsar = function(number,delay,time,posx,posy,speed,scale_factor)
-			pulsar[n]=new _pulsar(n,p[n].delay,p[n].time,p[n].x,p[n].y,p[n].speed,p[n].scale_factor);
+			pulsar[n]=new _pulsar(n,sto[level_number].pulsar[n].delay,sto[level_number].pulsar[n].time,sto[level_number].pulsar[n].x,sto[level_number].pulsar[n].y,sto[level_number].pulsar[n].speed,sto[level_number].pulsar[n].scale_factor);
 		}
 	}
 
 	for(var m=0;m<num_dalle;m++){
-		if (d[m]===null){
+		if (sto[level_number].dalle[m]===null){
 			_create_dalle();
 			break;
 		}else{
 			//dalle = function(number,delay,posx,posy,speed)
-			dalle[m]=new _dalle(m,d[m].delay,d[m].x,d[m].y,d[m].speed);
+			dalle[m]=new _dalle(m,sto[level_number].dalle[m].delay,sto[level_number].dalle[m].x,sto[level_number].dalle[m].y,sto[level_number].dalle[m].speed);
 		}
 	}
 };

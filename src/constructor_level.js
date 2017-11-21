@@ -76,10 +76,10 @@ var level_constructor=function (params,num) {
 					for (var i = 0; i < l[num].asteroid.length; i++){
 						params.asteroid[i]=new params.constructor_asteroid(
 							number=l[num].asteroid[i].number,
-							radius=l[num].asteroid[i].radius,
 							posx=l[num].asteroid[i].posx,
 							posy=l[num].asteroid[i].posy,
-							speed=l[num].asteroid[i].speed
+							speed=l[num].asteroid[i].speed,
+							radius=l[num].asteroid[i].radius
 						);
 					}
 				}

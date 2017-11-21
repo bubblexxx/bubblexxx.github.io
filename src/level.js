@@ -10,6 +10,10 @@ var l=[];
 for (var i = 0; i < 20; i++){
 	l.push({canon:[],asteroid:[],dalle_moving:[],pulsar:[],dalle:[],ads:false,signal_ads:false,next_with_video:true,signal_video_to_pass_level:false});
 }
+var sto=[];
+for (var i = 0; i < 20; i++){
+	sto.push({canon:[],asteroid:[],dalle_moving:[],pulsar:[],dalle:[],ads:false,signal_ads:false,next_with_video:true,signal_video_to_pass_level:false});
+}
 
 if(debug_position === false){
 	// tous les 3 levels on place une ads
@@ -41,10 +45,10 @@ var ca0_l0={
 // asteroid example
 var as0_l0={
 	number:0,
-	radius:0,
-	posx:400-200,
-	posy:500,
-	speed:900
+	posx:800,
+	posy:800,
+	radius:195,
+	speed:0.002
 };
 // dalle example
 var da0_l0={
@@ -59,7 +63,7 @@ var dm0_l0={
 	number:0,
 	delay:100,
 	posx:240,
-	posy:500,
+	posy:1900,
 	posx_in_tween:300,
 	speed:300
 };
@@ -67,15 +71,19 @@ var dm0_l0={
 var pu0_l0={
 	number:0,
 	delay:100,
-	time:100,
+	time:100000,
 	posx:w2,
 	posy:840,
-	speed:2000,
-	scale_factor:2
+	speed:2,
+	scale_factor:.0001
 };
 //
 //on ajoute le canon au level concerné
 l[0].canon.push(ca0_l0);
+l[0].asteroid.push(as0_l0);
+//l[0].dalle.push(da0_l0);
+//l[0].dalle_moving.push(dm0_l0);
+//l[0].pulsar.push(pu0_l0);
 //////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 //LEVEL 2///////////////////////////////////////////////////////////////////
