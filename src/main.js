@@ -164,7 +164,7 @@ music_ambiance_activate=function(){
 music_ambiance.volume=.20
 }
 
-window.onbeforeunload = function(){
+window.onblur = function(){
   music_ambiance.pause();
 };//
 
