@@ -163,6 +163,11 @@ music_ambiance.volume=0
 music_ambiance_activate=function(){
 music_ambiance.volume=.20
 }
+
+window.onbeforeunload = function(){
+  music_ambiance.pause();
+};//
+
 //class for mechant
 _mechant = function(game,name,number,posx,posy,image_body,image_drag){
 	//this = this.sprite_for_drag
