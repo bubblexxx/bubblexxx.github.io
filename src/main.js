@@ -30,7 +30,7 @@ var w=1480;
 var h2=h*0.5;
 var w2=w*0.5;
 var is_mobile;
-//alert("m")
+alert("m")
 var videoreward;
 var c=[];
 var a=[];
@@ -164,7 +164,8 @@ music_ambiance_activate=function(){
 music_ambiance.volume=.20
 }
 
-window.onblur = function(){
+window.blur = function(){
+	console.log("perte de focus")
   music_ambiance.pause();
 };//
 
