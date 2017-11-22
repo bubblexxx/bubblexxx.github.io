@@ -80,7 +80,7 @@ var pu0_l0={
 //
 //on ajoute le canon au level concerné
 l[0].canon.push(ca0_l0);
-l[0].asteroid.push(as0_l0);
+//l[0].asteroid.push(as0_l0);
 //l[0].dalle.push(da0_l0);
 //l[0].dalle_moving.push(dm0_l0);
 //l[0].pulsar.push(pu0_l0);
@@ -164,5 +164,46 @@ var ca1_l2={
 //on ajoute le canon au level concerné
 l[2].canon.push(ca0_l2);
 l[2].canon.push(ca1_l2);
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+//LEVEL 4///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+
+// canon example
+var ca0_l3={
+	number:0,
+	delay:0,
+	posx:400-200,
+	posy:500,
+	speed:900,
+	frequency:500,
+	variance:0,
+	angular:180,
+	kill_with_world:true,
+	special_color:false,
+	rotate:false,
+	value_rotate:10
+};
+
+var ca1_l3={
+	number:1,
+	delay:100,
+	posx:100,
+	posy:800,
+	speed:900,
+	frequency:500,
+	variance:10,
+	angular:180,
+	kill_with_world:true,
+	special_color:false,
+	rotate:false,
+	value_rotate:10
+};
+//
+//on ajoute le canon au level concerné
+l[3].canon.push(ca0_l3);
+l[3].canon.push(ca1_l3);
 //////////////////////////////////////////////////////////////////////////////
 

@@ -1356,7 +1356,7 @@ var levsel={
 	},
 	create: function() {
 		this.holdicons = [];
-		this.text=game.add.bitmapText(640,200,'police','Select a level!',100);
+		this.text=game.add.bitmapText(w2,200,'police','Select a level!',100);
 		this.text.anchor.setTo(0.5,0.5);
 		this.createLevelIcons();
 		this.animateLevelIcons();
@@ -1412,8 +1412,10 @@ var levsel={
 					if (playdata < 4) {stars = playdata;} // 0..3 stars
 				}
 				// calculate position on screen
-				var xpos = 60 + (x*300);
-				var ypos = 320 + (y*300);
+				//var xpos = 60 + (x*300);
+				//var ypos = 320 + (y*300);
+				var xpos = 135 + (x*435);
+				var ypos = 395 + (y*435);
 				// create icon
 				this.holdicons[levelnr-1] = this.createLevelIcon(xpos, ypos, levelnr, isLocked, stars);
 				var backicon = this.holdicons[levelnr-1].getAt(0);
@@ -1776,41 +1778,30 @@ var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_
 			table[i] = JSON.parse( localStorage.getItem( obj+i+'lev'+level_number));
 		}
 	};
-	//check_in_local_storage("canon",num_canon,c);
 	check_in_local_storage("canon",num_canon,sto[level_number].canon);
 	check_in_local_storage("asteroid",num_asteroid,sto[level_number].asteroid);
 	check_in_local_storage("dalle_moving",num_dalle_moving,sto[level_number].dalle_moving);
 	check_in_local_storage("pulsar",num_pulsar,sto[level_number].pulsar);
 	check_in_local_storage("dalle",num_dalle,sto[level_number].dalle);
-	//for(var i=0;i<num_canon;i++){
-	//	if (c[i]===null){
-	//		_create_canon();
-	//		break;
-	//	}else{
-	//		c[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number));
-	//		//canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color,c[i]._rotate,c[i]._value_rotate);
-	//		canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color,c[i]._rotate,c[i]._value_rotate);
-	//	}
-	//}
+
 	for(var i=0;i<num_canon;i++){
 		if (sto[level_number].canon[i]===null){
 			_create_canon();
 			break;
 		}else{
-			co(level_number)
-			//sto[level_number].canon[i]=JSON.parse(localStorage.getItem('canon'+i+'lev'+level_number));
-			//co(sto[level_number].canon[0])
-			//canon[i]=new _canon(i,c[i].delay,c[i].x,c[i].y,c[i].speed,c[i].frequency,c[i].variance,c[i].angular,flag_level_complete,c[i].kill_with_world,c[i].special_color,c[i]._rotate,c[i]._value_rotate);
 			canon[i]=new _canon(i,sto[level_number].canon[i].delay,sto[level_number].canon[i].x,sto[level_number].canon[i].y,sto[level_number].canon[i].speed,sto[level_number].canon[i].frequency,sto[level_number].canon[i].variance,sto[level_number].canon[i].angular,flag_level_complete,sto[level_number].canon[i].kill_with_world,sto[level_number].canon[i].special_color,sto[level_number].canon[i]._rotate,sto[level_number].canon[i]._value_rotate);
 		}
 	}
 	///////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * check in the localStorage if enemy exist if no create them.
+ * @param {number} number of object to create
+ * @callback _create_canon - the function who create the enemy.
+ */
 
 	for(var j=0;j<num_asteroid;j++){
 		if (sto[level_number].asteroid[j]===null){
 			_create_asteroid();
-			//ceci marche mais radius semble être à 0 dans sto
-			//asteroid[j]=new _asteroid(j,l[level_number].asteroid[j].x,l[level_number].asteroid[j].y,l[level_number].asteroid[j].speed,l[level_number].asteroid[j].radius);
 			break;
 		}else{
 			//asteroid = function(number,posx,posy,speed,radius)
@@ -1849,40 +1840,13 @@ var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_
 		}
 	}
 };
-var level_config={
-	constructor_canon:_canon,
-	canon:canon,
-	_flag_level_complete:flag_level_complete,
-	asteroid:asteroid,
-	constructor_asteroid:_asteroid,
-	dalle_moving:dalle_moving,
-	constructor_dalle_moving:_dalle_moving,
-	pulsar:pulsar,
-	constructor_pulsar:_pulsar,
-	dalle:dalle,
-	constructor_dalle:_dalle,
-	debug_store:debug_store,
-	_check_storage:check_storage,
-	create_level:create_level,
-	logic:logic,
-	tap:_tap,
-};
-ecran_intermediaire_pour_passer_level=function(obj,next_action){
-	co(obj,next_action);
-	obj.alpha =1;
-	obj.scale.setTo(0,0);
-	next_tw=function(){
-		this.tween_scale2 = game.add.tween(obj.scale).to({x:0,y:0},600,Phaser.Easing.Elastic.In,true,100);
-		this.tween_scale2.onComplete.add(next_action);
-	};
-	this.tween_rotate = game.add.tween(obj).to({angle:45},1100,Phaser.Easing.Elastic.Out,true,900);
-	this.tween_scale = game.add.tween(obj.scale).to({x:1.5,y:1.5},1100,Phaser.Easing.Elastic.Out,true,900);
-	this.tween_alpha = game.add.tween(obj).to({alpha:1},800,Phaser.Easing.Linear.None,true,1200);
-	this.tween_alpha.onComplete.add(next_tw,this);
-};
+/**
+ * intermediate_screen after the videoreward to signify the level passed 
+ * @param {obj} text 
+ * @callback next_action => pass_level 
+ */
 var decide_if_ads_time=function(n){
 	music_ambiance.pause()
-	//if(l[level_number].ads && is_preload_rewarded_video) {
 	if(l[n].ads && is_preload_rewarded_video) {
 		
 		this.game.state.start("ads_time");
@@ -1892,10 +1856,6 @@ var decide_if_ads_time=function(n){
 	}
 };
 var chartboost_preload_reward_video=function(){
-	// du site de chartboost
-	//var appId = "50ae12d715ba47c00d01000c";
-	//var appSignature = "95fb313c08717042903819d76f65d64d2347ac44";
-
 	// ancien identifiant
 	var appId = "593f9e2504b0160769416382";
 	var appSignature = "41fd9a8fc8adea90df03e94772ffa7e5373afcc6";
@@ -1952,11 +1912,6 @@ var chartboost_preload_reward_video=function(){
 		}
 	};
 	window.chartboost.onRewardedVideoAdCompleted = function(location) {
-		//this.game.state.start('intermediate_screen');
-		//alert('onRewardedVideoAdCompleted: ' + location);
-		//ecran_intermediaire_pour_passer_level(background_to_pass_level,this.pass_level)
-		//this.next_niveau=level_number+1
-		//game.state.start('intermediate_screen');
 	};
 	is_mobile && window.chartboost.preloadRewardedVideoAd('Default');
 };
@@ -1994,6 +1949,19 @@ var pass_level=function(){
 	var next_niveau=level_number+1;
 	game.state.start('level'+ next_niveau,level_state[next_niveau]);
 };
+ecran_intermediaire_pour_passer_level=function(obj,next_action){
+	co(obj,next_action);
+	obj.alpha =1;
+	obj.scale.setTo(0,0);
+	next_tw=function(){
+		this.tween_scale2 = game.add.tween(obj.scale).to({x:0,y:0},600,Phaser.Easing.Elastic.In,true,100);
+		this.tween_scale2.onComplete.add(next_action);
+	};
+	this.tween_rotate = game.add.tween(obj).to({angle:45},1100,Phaser.Easing.Elastic.Out,true,900);
+	this.tween_scale = game.add.tween(obj.scale).to({x:1.5,y:1.5},1100,Phaser.Easing.Elastic.Out,true,900);
+	this.tween_alpha = game.add.tween(obj).to({alpha:1},800,Phaser.Easing.Linear.None,true,1200);
+	this.tween_alpha.onComplete.add(next_tw,this);
+};
 var intermediate_screen={
 	create:function(){
 		text_passed_level = new _text("level passed",game.world.centerX,game.world.centerY,100);
@@ -2015,6 +1983,24 @@ var intermediate_screen={
 		};
 		ecran_intermediaire_pour_passer_level(text_passed_level.text,next_action);
 	}
+};
+var level_config={
+	constructor_canon:_canon,
+	canon:canon,
+	_flag_level_complete:flag_level_complete,
+	asteroid:asteroid,
+	constructor_asteroid:_asteroid,
+	dalle_moving:dalle_moving,
+	constructor_dalle_moving:_dalle_moving,
+	pulsar:pulsar,
+	constructor_pulsar:_pulsar,
+	dalle:dalle,
+	constructor_dalle:_dalle,
+	debug_store:debug_store,
+	_check_storage:check_storage,
+	create_level:create_level,
+	logic:logic,
+	tap:_tap,
 };
 var level_state=[];
 for (var i=0; i < 20; i++) {

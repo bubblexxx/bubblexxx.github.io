@@ -126,6 +126,7 @@ var level_constructor=function (params,num) {
 					}
 				}
 			};
+			// si on retire la fonction store 
 			if(params.debug_store){
 				params._check_storage(create_canon,create_asteroid,create_dalle_moving,create_pulsar,create_dalle,_num_canon,_num_asteroid,_num_dalle_moving,_num_pulsar,_num_dalle);
 			}else{
