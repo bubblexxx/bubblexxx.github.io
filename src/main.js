@@ -21,32 +21,23 @@
  */
 //TODO
 // regler sensibilité de touch lorsque player launch
-// radius asteroid n'est pas pris en compte avec storage
 //regler particle canon en fonction de l'inclinaison
-//mettre icone button_back à la place de publish
-//body enbale false lorsque touché un projectile violet
 var h=2270;
 var w=1480;
 var h2=h*0.5;
 var w2=w*0.5;
 var is_mobile;
-alert("m")
 var videoreward;
-var c=[];
-var a=[];
-var n=[];
-var p=[];
-var d=[];
 var level_name=[
 	"1. for beginners :)",
 	"2. let easy",
 	"3. oh it hurts",
 "4. beginners out !",
 ];
+var music;
 var is_rewarded_video_completed=false;
 var is_preload_rewarded_video=false;
 var text_passed_level;
-//var background_to_pass_level;
 var game_begin=false;
 var delay_for_show_describe_text;
 var delay_for_hide_describe_text;
@@ -101,8 +92,6 @@ var interstitial;
 var demoPosition;
 //var backgroundTexture;
 var adService;
-
-
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
 	){
@@ -114,9 +103,29 @@ var detectmob=function(){
 	}
 };
 detectmob();
+var storage_level;
+var memoryze_progress_in_level= function(){
+	// array might be undefined at first time start up
+	if (!PLAYER_DATA) {
+		// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
+		storage_level = window.localStorage.getItem('mygame_progress');
+		// error checking, localstorage might not exist yet at first time start up
+		try {
+			PLAYER_DATA = JSON.parse(storage_level);
+		} catch(e){
+			PLAYER_DATA = []; //error in the above string(in this case,yes)!
+		}
+		// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
+		if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
+			PLAYER_DATA = [];
+		}
+	}
+	co(PLAYER_DATA,"storage_level")
+	level_number=PLAYER_DATA.length
+}
+
 var le=JSON.stringify(l[level_number],null, "\t")
 var email=JSON.stringify(sto[level_number],null, "\t")
-//var email=JSON.stringify(localStorage);
 co(le,"le")
 co(email,"email")
 //class for text intitulé dans chaque level
@@ -131,6 +140,7 @@ _text.prototype=Object.create(_text.prototype);
 _text.prototype.show = function() {
 	this.text.scale.setTo(0,0);
 	this.tween1 = game.add.tween(this.text.scale).to({x:1,y:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text);
+	console.log(game,"game")
 	this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text);
 	this.tween1.onComplete.add(this.hide,this);
 	this.tween1.onStart.add(function(){this.text.visible=true;},this);
@@ -153,20 +163,19 @@ _text.prototype.hide = function() {
 music_ambiance=new Audio('sounds/music_ambiance/Floating Cities.ogg');
 //style mario
 //music_ambiance=new Audio('sounds/music_ambiance/Video Dungeon Boss.ogg');
-//music_ambiance.play();
-//music_ambiance.pause();
 music_ambiance.loop=true
-music_ambiance.volume=.20
+//music_ambiance.volume=.20
+music_ambiance.volume=.0
 music_ambiance_mute=function(){
 music_ambiance.volume=0
 }
 music_ambiance_activate=function(){
-music_ambiance.volume=.20
+//music_ambiance.volume=.20
+music_ambiance.volume=.00
 }
-
 window.blur = function(){
 	console.log("perte de focus")
-  music_ambiance.pause();
+	music_ambiance.pause();
 };//
 
 //class for mechant
@@ -301,12 +310,14 @@ _button_stay.prototype.anim_on_click=function(){
 		if(this.button.frame==0){
 		//this.flag=false;
 		this.audio_click();
+			music.pause();
 			music_ambiance_mute();
 		this.button.frame=1
 			return true;
 		}else{
 		//this.flag=false;
 		this.audio_click();
+			music.resume();
 			music_ambiance_activate();
 		this.button.frame=0
 			return true;
@@ -316,6 +327,7 @@ _button_stay.prototype.anim_on_click=function(){
 //var level={}
 screen_first = function(){
 	Phaser.Sprite.call(this,game,game.world.centerX,450,'title');
+	
 	music_ambiance.play()
 	this.anchor.setTo(0.5,0.5);
 	this.button_menu=new _button(game.world.centerX,game.world.centerY+400,'button_menu',this.next_menu);
@@ -345,9 +357,9 @@ screen_first.prototype.constructor = screen_first;
 screen_first.prototype.audio_click = function(){
 	this.sound_click.play();
 };
+//level_number is get from PLAYER_DATA.length trough localStorage to avoid to rebegin the game incessaly
 screen_first.prototype.next_level = function(){
 	decide_if_ads_time(level_number);
-
 };
 screen_first.prototype.next_menu = function(){
 	this.game.state.start("levsel");
@@ -428,7 +440,6 @@ character = function(){
 	}
 	this.button_restart=new _button(game.world.centerX,game.world.centerY,'button_restart',this.restart_level);
 	this.button_next=new _button(game.world.centerX,this.cible.y,'button_next',this.next_level);
-	//this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.show_reward_video);
 	this.button_video=new _button(game.world.centerX,game.world.centerY+400,'button_video',this.signal_video);
 	this.star= this.game.add.sprite(game.world.centerX, ((2270*0.5)-300), 'star', 0);
 	this.star.anchor.setTo(0.5,0.5);
@@ -443,7 +454,6 @@ character = function(){
 	this.count_dead=0;
 	this.anim_cible();
 	is_mobile && chartboost_preload_reward_video();
-	//is_mobile && this.preload_reward_video();
 	this.circle_timer = null;
 	this.counterMax = 100;
 	this.counter = null;
@@ -561,14 +571,17 @@ character.prototype.send_data_mail = function(){
 	var SubjectVariable='bubblex'+current_level;
 	var EmailVariable='espace3d@gmail.com';
 	var email=JSON.stringify(sto[0],null, "\t")
-	//var email=JSON.stringify(localStorage);
 	co(email,"email")
-	//window.location='mailto:'+EmailVariable+'?subject='+SubjectVariable+'&body='+email;
+	window.location='mailto:'+EmailVariable+'?subject='+SubjectVariable+'&body='+email;
 };
 character.prototype.audio_game_over = function() {
+	!flag_level_complete && this.sound_game_over.play() && music.pause();
 	!flag_level_complete && this.sound_game_over.play() && music_ambiance.pause();
 };
 character.prototype.audio_star = function() {
+	music.pause();
+	this.sound_star.play();
+	//music.pause() && this.sound_star.play();
 	this.sound_star.play() && music_ambiance.pause();
 };
 character.prototype.audio_pop = function() {
@@ -1163,6 +1176,7 @@ var preloader = {
 		//audio
 		//this.game.load.audio("ambiance","sounds/music_ambiance/airtone_-_nightWalk.ogg");
 		// pip pop ta ta ta 
+		this.game.load.audio("music",'sounds/music_ambiance/Floating Cities.ogg');
 		//this.game.load.audio("ambiance","sounds/music_ambiance/Blip Stream.ogg");
 		//this.game.load.audio("game_over","sounds/loose/melodic_lose_01.ogg");
 		//this.game.load.audio("game_over","sounds/loose/magic_crystal_interface_25.ogg");
@@ -1213,18 +1227,24 @@ var preloader = {
 };
 
 var game_first_screen = {
+	background_music: function(){
+		music=game.add.audio('music');
+		music.volume=.4;
+		music.play();
+	},
 	create: function(){
+		memoryze_progress_in_level();
+		this.background_music();	
+		//this.initProgressData();
 		this.title=new screen_first();
 		game.add.existing(this.title);
-		this.initProgressData();
-		//ICI ENLEVER;
-		createBanner();
 	},
 	initProgressData: function() {
 		// array might be undefined at first time start up
 		if (!PLAYER_DATA) {
 			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
 			var str = window.localStorage.getItem('mygame_progress');
+			co(str,"game_progress")
 			// error checking, localstorage might not exist yet at first time start up
 			try {
 				PLAYER_DATA = JSON.parse(str);
@@ -1269,6 +1289,7 @@ animate_touch = start_tw;
 var conditional_animate_touch = function(){!flag_tween_en_cours && animate_touch(hero.touch_button);};
 
 function create_level(num){ 
+	music.resume();
 	initialise_time_and_delay();
 	game_begin=false;
 	flag_hide=false;
@@ -1358,7 +1379,8 @@ var levsel={
 	preload: function() {
 		this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
 		this.game.load.bitmapFont('police','fonts/font.png', 'fonts/font.fnt');
-		this.initProgressData();
+		memoryze_progress_in_level();
+		//this.initProgressData();
 	},
 	create: function() {
 		this.holdicons = [];
@@ -1852,6 +1874,7 @@ var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_
  * @callback next_action => pass_level 
  */
 var decide_if_ads_time=function(n){
+	music.pause();
 	music_ambiance.pause()
 	if(l[n].ads && is_preload_rewarded_video) {
 		
@@ -1922,6 +1945,7 @@ var chartboost_preload_reward_video=function(){
 	is_mobile && window.chartboost.preloadRewardedVideoAd('Default');
 };
 var chartboost_show_reward_video = function() {
+	music.pause();
 	music_ambiance.pause();
 	window.chartboost.showRewardedVideoAd('Default');
 };

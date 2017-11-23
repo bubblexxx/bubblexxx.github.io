@@ -77,6 +77,7 @@ document.addEventListener("deviceready", function() {
 	 extra_width = safe_zone_height / aspect_ratio_device - safe_zone_width;
  }
  game = new Phaser.Game( safe_zone_width + extra_width, safe_zone_height + extra_height, Phaser.CANVAS, 'game');
+ //play_sound=window.game.add.audio('game_over');
  //game = new Phaser.Game( 1280,1920, Phaser.CANVAS, 'game');
  game.state.add('boot',boot);
  game.state.add('preloader',preloader);
