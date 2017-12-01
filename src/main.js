@@ -19,6 +19,7 @@
  * from Gregory Dailly - espace3d@gmail.com - 0032486/925736 
  * rue de Brionsart 36a-5340 Gesves-Belgium
  */
+	
 //TODO
 // regler sensibilité de touch lorsque player launch
 //regler particle canon en fonction de l'inclinaison
@@ -30,9 +31,10 @@ var is_mobile;
 var videoreward;
 var level_name=[
 	"1. for beginners :)",
-	"2. let easy",
-	"3. oh it hurts",
+	"2. be carefull",
+	"3. ha ha ha",
 "4. beginners out !",
+	"5. grass mode",
 ];
 var music;
 var is_rewarded_video_completed=false;
@@ -140,7 +142,6 @@ _text.prototype=Object.create(_text.prototype);
 _text.prototype.show = function() {
 	this.text.scale.setTo(0,0);
 	this.tween1 = game.add.tween(this.text.scale).to({x:1,y:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text);
-	console.log(game,"game")
 	this.tween1 = game.add.tween(this.text).to({alpha:1},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_show_describe_text);
 	this.tween1.onComplete.add(this.hide,this);
 	this.tween1.onStart.add(function(){this.text.visible=true;},this);
@@ -234,8 +235,8 @@ _mechant.prototype.hide=function(){
 
 _mechant.prototype.show=function(){
 	game.time.events.add( delay_for_game_begin,this.particle_show,this );
-	this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_appears_enemies,Phaser.Easing.Elastic.Out,true,delay_for_game_begin);
-	this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_appears_enemies,Phaser.Easing.Elastic.Out,true,delay_for_game_begin);
+	this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_appears_enemies,Phaser.Easing.Bounce.Out,true,delay_for_game_begin);
+	this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_appears_enemies,Phaser.Easing.Bounce.Out,true,delay_for_game_begin);
 };
 
 _mechant.prototype.kill=function(){
@@ -255,7 +256,8 @@ _mechant.prototype.particle_show = function(){
 	this.particle.x=this.x;
 	this.particle.y=this.y;
 	this.particle.on=true;
-	this.particle.start(true,650,null,5);
+	//this.particle.start(true,650,null,5);
+	this.particle.start(true,650,null,9);
 	game.time.events.add( 650,function(){this.particle.on=false;},this);
 };
 //class button for click
@@ -897,6 +899,7 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	this.sound_pop=game.add.audio('pop');
 	this.flag_for_fire=true;
 	this._flag=true;
+	//particle pour animation lors du tir
 	if(this.x < game.world.centerX){
 		this.particlex = game.add.emitter(this.x+40,this.y);
 		this.particlex.makeParticles("particle_canon");
@@ -950,6 +953,8 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	this.signal_fire=false;
 	this.weapon.onFire.add(this.explosion,this);
 	this.weapon.onFire.add(this.hide_explosion,this);
+	this.sprite_for_body.angle=this.angular;
+	
 };
 _canon.prototype=Object.create(_mechant.prototype);
 _canon.prototype.audio_pop = function() {
@@ -958,12 +963,12 @@ _canon.prototype.audio_pop = function() {
 _canon.prototype.update = function(){
 	if(this.flag_wait_before_fire && game_begin){
 		if(this._rotate && this.flag_for_fire){
-			//this.sprite_for_body.angle += 1
 			this.sprite_for_body.angle += this._value_rotate;
 		}
 		this._flag==false && this.flag_for_fire && this.weapon.fire();
 		this.particlex.x=this.x;
 		this.particlex.y=this.y;
+		// animation lors du tir
 		if(this.signal_fire){
 			this.time_for_count=this.time_for_count+1;
 			switch(this.time_for_count){
@@ -1025,6 +1030,7 @@ _canon.prototype.kill = function(){
 _canon.prototype.fire = function() {
 	this.flag_for_fire=true;
 	this.sprite_for_body.angle=this.angular;
+	//this.angular=this.sprite_for_body.angle;
 	this.weapon.fireRate = this.frequency;
 	this.weapon.bulletSpeed = this.speed;
 	this.weapon.bulletAngleVariance = this.variance;

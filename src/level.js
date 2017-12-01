@@ -2,9 +2,13 @@ var h=1920;
 var w=1280;
 var h2=h*0.5;
 var w2=640;
-////////////////////////////////////////////////////////////////////////////
-//LEVEL 1///////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
+var w0=280;
+var w4=1400;
+
+// -------------------------------------
+// LEVEL 1
+// -------------------------------------
+
 //pour peupler les levels
 var l=[];
 for (var i = 0; i < 20; i++){
@@ -31,12 +35,12 @@ if(debug_position === false){
 var ca0_l0={
 	number:0,
 	delay:0,
-	posx:400-200,
-	posy:500,
-	speed:2000,
-	frequency:60,
-	variance:20,
-	angular:180,
+	posx:w0,
+	posy:1720,
+	speed:1000,
+	frequency:480,
+	variance:0,
+	angular:0,
 	kill_with_world:true,
 	special_color:false,
 	rotate:false,
@@ -84,22 +88,22 @@ l[0].canon.push(ca0_l0);
 //l[0].dalle.push(da0_l0);
 //l[0].dalle_moving.push(dm0_l0);
 //l[0].pulsar.push(pu0_l0);
-//////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
-//LEVEL 2///////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
+ 
+// -------------------------------------
+// LEVEL 2
+// -------------------------------------
 
 // canon example
 var ca0_l1={
 	number:0,
 	delay:0,
-	posx:400-200,
+	posx:w0,
 	posy:500,
 	speed:900,
 	frequency:190,
 	variance:0,
-	angular:180,
-	kill_with_world:false,
+	angular:45,
+	kill_with_world:true,
 	special_color:false,
 	rotate:false,
 	value_rotate:10
@@ -108,12 +112,12 @@ var ca0_l1={
 var ca1_l1={
 	number:1,
 	delay:100,
-	posx:100,
-	posy:800,
+	posx:w4,
+	posy:500,
 	speed:900,
-	frequency:50,
-	variance:10,
-	angular:180,
+	frequency:250,
+	variance:0,
+	angular:135,
 	kill_with_world:true,
 	special_color:false,
 	rotate:false,
@@ -124,78 +128,60 @@ var ca1_l1={
 l[1].canon.push(ca0_l1);
 l[1].canon.push(ca1_l1);
 l[1].ads=false
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
-//LEVEL 3///////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
+
+// -------------------------------------
+// LEVEL 3
+// -------------------------------------
 
 // canon example
 var ca0_l2={
 	number:0,
 	delay:0,
-	posx:400-200,
-	posy:500,
-	speed:900,
-	frequency:500,
-	variance:0,
-	angular:180,
-	kill_with_world:true,
+	posx:w0,
+	posy:1720,
+	speed:1500,
+	frequency:210,
+	variance:20,
+	angular:0,
+	kill_with_world:false,
 	special_color:false,
 	rotate:false,
 	value_rotate:10
 };
 
-var ca1_l2={
-	number:1,
-	delay:100,
-	posx:100,
-	posy:800,
-	speed:900,
-	frequency:500,
-	variance:10,
-	angular:180,
-	kill_with_world:true,
-	special_color:false,
-	rotate:false,
-	value_rotate:10
-};
 //
 //on ajoute le canon au level concerné
 l[2].canon.push(ca0_l2);
-l[2].canon.push(ca1_l2);
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
-//LEVEL 4///////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
+
+// -------------------------------------
+// LEVEL 4
+// -------------------------------------
 
 // canon example
 var ca0_l3={
 	number:0,
 	delay:0,
-	posx:400-200,
-	posy:500,
+	posx:w4,
+	posy:1500,
 	speed:900,
-	frequency:500,
+	frequency:900,
 	variance:0,
 	angular:180,
 	kill_with_world:true,
-	special_color:false,
+	special_color:true,
 	rotate:false,
 	value_rotate:10
 };
 
 var ca1_l3={
 	number:1,
-	delay:100,
-	posx:100,
+	delay:200,
+	posx:w0,
 	posy:800,
-	speed:900,
-	frequency:500,
-	variance:10,
-	angular:180,
+	speed:2000,
+	frequency:50,
+	variance:0,
+	angular:0,
 	kill_with_world:true,
 	special_color:false,
 	rotate:false,
@@ -205,5 +191,44 @@ var ca1_l3={
 //on ajoute le canon au level concerné
 l[3].canon.push(ca0_l3);
 l[3].canon.push(ca1_l3);
+ 
+// -------------------------------------
+// LEVEL 5
+// -------------------------------------
+
+// canon example
+var ca0_l4={
+	number:0,
+	delay:0,
+	posx:w4,
+	posy:1500,
+	speed:900,
+	frequency:900,
+	variance:0,
+	angular:180,
+	kill_with_world:true,
+	special_color:false,
+	rotate:false,
+	value_rotate:10
+};
+
+var ca1_l4={
+	number:1,
+	delay:200,
+	posx:w0,
+	posy:800,
+	speed:2000,
+	frequency:50,
+	variance:0,
+	angular:0,
+	kill_with_world:true,
+	special_color:false,
+	rotate:true,
+	value_rotate:10
+};
+//
+//on ajoute le canon au level concerné
+l[4].canon.push(ca0_l4);
+l[4].canon.push(ca1_l4);
 //////////////////////////////////////////////////////////////////////////////
 
