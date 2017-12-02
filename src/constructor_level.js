@@ -1,9 +1,5 @@
 /* jshint expr: true */
 /* jshint esnext: true */
-var h=1920;
-var w=1280;
-var h2=h*0.05;
-var w2=640;
 var level_number=0;
 
 var logic_render=function(){

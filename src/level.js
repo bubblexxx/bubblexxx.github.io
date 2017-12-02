@@ -11,11 +11,11 @@ var w4=1400;
 
 //pour peupler les levels
 var l=[];
-for (var i = 0; i < 20; i++){
+for (var i = 0; i < NUMBER_OF_LEVELS; i++){
 	l.push({canon:[],asteroid:[],dalle_moving:[],pulsar:[],dalle:[],ads:false,signal_ads:false,next_with_video:true,signal_video_to_pass_level:false});
 }
 var sto=[];
-for (var i = 0; i < 20; i++){
+for (var i = 0; i < NUMBER_OF_LEVELS; i++){
 	sto.push({canon:[],asteroid:[],dalle_moving:[],pulsar:[],dalle:[],ads:false,signal_ads:false,next_with_video:true,signal_video_to_pass_level:false});
 }
 
@@ -100,7 +100,7 @@ var ca0_l1={
 	posx:w0,
 	posy:500,
 	speed:900,
-	frequency:190,
+	frequency:550,
 	variance:0,
 	angular:45,
 	kill_with_world:true,
@@ -111,11 +111,11 @@ var ca0_l1={
 
 var ca1_l1={
 	number:1,
-	delay:100,
+	delay:time_appears_enemies+1500,
 	posx:w4,
 	posy:500,
 	speed:900,
-	frequency:250,
+	frequency:850,
 	variance:0,
 	angular:135,
 	kill_with_world:true,
