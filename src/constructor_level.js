@@ -117,7 +117,8 @@ var level_constructor=function (params,num) {
 							delay=l[num].dalle[i].delay,
 							posx=l[num].dalle[i].posx,
 							posy=l[num].dalle[i].posy,
-							speed=l[num].dalle[i].speed
+							speed=l[num].dalle[i].speed,
+							wait=l[num].dalle[i].wait
 						);
 					}
 				}

@@ -14,9 +14,9 @@ var super_dev=true;
 var NUMBER_OF_LEVELS=25
 
 // param window
-var h=1920;
-var w=1280;
-var h2=h*0.05;
+var h=2270;
+var w=1480;
+var h2=h*0.5;
 var w2=640;
 
 var time_appears_enemies=800;

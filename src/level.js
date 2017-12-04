@@ -230,5 +230,156 @@ var ca1_l4={
 //on ajoute le canon au level concerné
 l[4].canon.push(ca0_l4);
 l[4].canon.push(ca1_l4);
+
+// -------------------------------------
+// LEVEL 6
+// -------------------------------------
+
+// canon example
+var ca1_l5={
+	number:0,
+	delay:200,
+	posx:w0,
+	posy:h2,
+	speed:2000,
+	frequency:50,
+	variance:100,
+	angular:0,
+	kill_with_world:false,
+	special_color:false,
+	rotate:false,
+	value_rotate:10
+};
+//
+//on ajoute le canon au level concerné
+//l[5].canon.push(ca0_l5);
+l[5].canon.push(ca1_l5);
+//////////////////////////////////////////////////////////////////////////////
+
+// -------------------------------------
+// LEVEL 7
+// -------------------------------------
+
+// dalle example
+// attention wait doit toujours être supérieur à speed + delay
+var da0_l6={
+	number:0,
+	delay:0,
+	posx:760,
+	posy:1680,
+	speed:450,
+	wait:1450
+};
+
+//on ajoute le canon au level concerné
+l[6].dalle.push(da0_l6);
+//////////////////////////////////////////////////////////////////////////////
+
+// -------------------------------------
+// LEVEL 8
+// -------------------------------------
+
+// dalle example
+// attention wait doit toujours être supérieur à speed + delay
+var da0_l7={
+	number:0,
+	delay:0,
+	posx:760,
+	posy:1680,
+	speed:450,
+	wait:450
+};
+
+// dalle example
+var da1_l7={
+	number:1,
+	delay:100,
+	posx:760,
+	posy:1440,
+	speed:450,
+	wait:450
+};
+
+//on ajoute le canon au level concerné
+l[7].dalle.push(da0_l7);
+l[7].dalle.push(da1_l7);
+//////////////////////////////////////////////////////////////////////////////
+
+// -------------------------------------
+// LEVEL 9
+// -------------------------------------
+// le canon est entre les deux dalles 
+
+var ca0_l8={
+	number:0,
+	delay:0,
+	posx:w0,
+	posy:1350,
+	speed:1000,
+	frequency:880,
+	variance:0,
+	angular:0,
+	kill_with_world:true,
+	special_color:false,
+	rotate:false,
+	value_rotate:10
+};
+
+// dalle example
+// attention wait doit toujours être supérieur à speed + delay
+
+var da0_l8={
+	number:0,
+	delay:0,
+	posx:760,
+	posy:1680,
+	speed:1950,
+	wait:2000,
+};
+
+// dalle example
+var da1_l8={
+	number:1,
+	delay:1000,
+	posx:760,
+	posy:1000,
+	speed:2950,
+	wait:4000
+};
+
+//on ajoute le canon au level concerné
+l[8].canon.push(ca0_l8);
+l[8].dalle.push(da0_l8);
+l[8].dalle.push(da1_l8);
+//////////////////////////////////////////////////////////////////////////////
+
+// -------------------------------------
+// LEVEL 10
+// -------------------------------------
+// les dalles sont invibles au début mais apparaissent toutes 
+
+// dalle example
+var da0_l9={
+	number:0,
+	delay:0,
+	posx:760,
+	posy:1680,
+	speed:450,
+	wait:4000
+};
+
+// dalle example
+var da1_l9={
+	number:1,
+	delay:5000,
+	posx:760,
+	posy:1000,
+	speed:450,
+	wait:2000
+};
+
+//on ajoute le canon au level concerné
+l[9].dalle.push(da0_l9);
+l[9].dalle.push(da1_l9);
 //////////////////////////////////////////////////////////////////////////////
 

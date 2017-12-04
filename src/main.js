@@ -19,15 +19,15 @@
  * from Gregory Dailly - espace3d@gmail.com - 0032486/925736 
  * rue de Brionsart 36a-5340 Gesves-Belgium
  */
-
+//
 //TODO
 // regler sensibilité de touch lorsque player launch
 //regler particle canon en fonction de l'inclinaison
-var h=2270;
-var w=1480;
-var h2=h*0.5;
-var w2=w*0.5;
-var is_mobile;
+//var h=2270;
+//var w=1480;
+//var h2=h*0.5;
+//var w2=w*0.5;
+//var is_mobile;
 var videoreward;
 var level_name=[
 	"1. for beginners :)",
@@ -295,7 +295,7 @@ _button_stay=function(posx,posy,image){
 	this.image=image;
 	this.posx=posx;
 	this.posy=posy;
-	this.button=game.add.button(this.posx,this.posy,this.image,this.anim_on_click,this,1);
+	this.button=game.add.button(this.posx,this.posy,this.image,this.anim_on_click,this);
 	
 	this.button.visible=false;
 	this.button.anchor.setTo(0.5,0.5);
@@ -839,27 +839,55 @@ _pulsar.prototype.fire = function() {
 	this.tween0.yoyo(true,this.speed);
 };
 
-_dalle = function(number,delay,posx,posy,speed){
+_dalle = function(number,delay,posx,posy,speed,wait){
 	_mechant.call(this,game,"dalle",number,posx,posy,'dalle','sprite_for_drag');
 	this.delay=delay;
 	this.speed=speed;
+	this.wait=wait;
 	this.sprite_for_body.alpha=0;
 	this.tweens();
 	game.time.events.loop(16,this.update2,this);
 };
 _dalle.prototype=Object.create(_mechant.prototype);
+// fire
 _dalle.prototype.tweens = function() {
-	this.tween0=game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1);
-	this.tween0.yoyo(true,this.speed);
+	this.start_tw=function(){
+		//start - delay - repeat - yoyo
+		this.tween0 = game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Linear.None,true,this.delay,0,true);
+	}
+	this.start_tw();
+	this.loop=game.time.events.loop( this.wait,this.start_tw,this);
+
+
+
+
+	//this.tween0=game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Linear.None,true,this.delay);
+	//this.tween_alpha = game.add.tween(this.sprite_for_body).to({alpha:0},this.speed,Phaser.Easing.Linear.None,true,this.delay*2+this.speed*2);
+	//this.tween_alpha.onComplete.add(this.tween0)
+	//this.tween0.yoyo(true,this.speed);
 };
 _dalle.prototype.update = function() {
-	this.alpha > 0.7 ? this.sprite_for_body.enable=true : this.sprite_for_body.enable=false;
+	if (this.sprite_for_body.alpha > 0.5) {
+		this.sprite_for_body.body.enable=true;
+	} else {
+		this.sprite_for_body.body.enable=false;
+	
+	}
 };
+/**
+ * fire => store data
+ *
+ * @returns {undefined}
+ */
 _dalle.prototype.fire = function() {
+
 	game.tweens.remove(this.tween0);
+	game.time.events.remove(this.loop);
 	this.sprite_for_body.alpha=0;
-	this.tween0=game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Linear.None,true,this.delay,-1);
-	this.tween0.yoyo(true,this.speed);
+	this.tweens();
+	//this.tween0=game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Bounce.Out,true,this.delay,-1);
+	//this.tween0=game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Bounce.In,true,this.delay,this.speed*2,true);
+	//this.tween0.yoyo(true,this.speed);
 };
 
 _dalle_moving = function(number,delay,posx,posy,speed,posx_in_tween){
@@ -1554,32 +1582,6 @@ var levsel={
 			}
 		}
 
-
-	//	if (PLAYER_DATA[levelnr-1] < 0) {
-	//		// indicate it's locked by shaking left/right
-	//		this.sound_menu_no.play();
-	//		var IconGroup = this.holdicons[levelnr-1];
-	//		var xpos = IconGroup.xOrg;
-	//		var tween = this.game.add.tween(IconGroup)
-	//			.to({ x: xpos+6 }, 20, Phaser.Easing.Linear.None)
-	//			.to({ x: xpos-5 }, 20, Phaser.Easing.Linear.None)
-	//			.to({ x: xpos+4 }, 20, Phaser.Easing.Linear.None)
-	//			.to({ x: xpos-3 }, 20, Phaser.Easing.Linear.None)
-	//			.to({ x: xpos+2 }, 20, Phaser.Easing.Linear.None)
-	//			.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
-	//			.start();
-	//	} else {
-	//		this.sound_click.play();
-	//		// simulate button press animation to indicate selection
-	//		var IconGroup = this.holdicons[levelnr-1];
-	//		var tween = this.game.add.tween(IconGroup.scale)
-	//			.to({ x: 0.9, y: 0.9}, 100, Phaser.Easing.Linear.None)
-	//			.to({ x: 1.0, y: 1.0}, 100, Phaser.Easing.Linear.None)
-	//			.start();
-	//		// it's a little tricky to pass selected levelnr to callback function, but this works:
-	//		this.onLevelSelected(levelnr-1);
-	//		//tween._lastChild.onComplete.add(function(){this.onLevelSelected(sprite.health);}, this);
-	//	}
 	},
 	animateLevelIcons: function() {
 		// slide all icons into screen
@@ -1767,6 +1769,7 @@ var show_grid_on_logic_position=function(sprite){
 				gui.add(sprite,'name');
 				guit_declare(sprite,'speed',300,3000);
 				guit_declare(sprite,'kill');
+				guit_declare(sprite,'wait',100,9000);
 				break;
 			default:
 				break;
@@ -1782,7 +1785,6 @@ var logic_position=function(sprite){
 		co(_name_sprite)
 		switch(sprite.name){
 			case 'canon':
-				//_table=c;
 				_table=sto[level_number][sprite.name];
 				_name_json='canon';
 				_table[sprite.number] = {
@@ -1846,13 +1848,13 @@ var logic_position=function(sprite){
 					x:Math.round(sprite.x),
 					y:Math.round(sprite.y),
 					speed:Math.round(sprite.speed),
+					wait:Math.round(sprite.wait),
 				};
 				break;
 		}
 		this.level=level_number;
 		this.name_level='lev';
 		this.combined_level=this.name_level+this.level;
-		//debug_store && localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]),null,"\t");
 		debug_store && localStorage.setItem(_name_json+sprite.number+this.combined_level, JSON.stringify(_table[sprite.number]));
 	}
 };
@@ -1927,7 +1929,7 @@ var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_
 			break;
 		}else{
 			//dalle = function(number,delay,posx,posy,speed)
-			dalle[m]=new _dalle(m,sto[level_number].dalle[m].delay,sto[level_number].dalle[m].x,sto[level_number].dalle[m].y,sto[level_number].dalle[m].speed);
+			dalle[m]=new _dalle(m,sto[level_number].dalle[m].delay,sto[level_number].dalle[m].x,sto[level_number].dalle[m].y,sto[level_number].dalle[m].speed,sto[level_number].dalle[m].wait);
 		}
 	}
 };
