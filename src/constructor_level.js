@@ -1,6 +1,6 @@
 /* jshint expr: true */
 /* jshint esnext: true */
-var level_number=0;
+//var level_number=0;
 
 var logic_render=function(){
 	if(debug_mode){

@@ -21,13 +21,7 @@
  */
 //
 //TODO
-// regler sensibilité de touch lorsque player launch
 //regler particle canon en fonction de l'inclinaison
-//var h=2270;
-//var w=1480;
-//var h2=h*0.5;
-//var w2=w*0.5;
-//var is_mobile;
 var videoreward;
 var level_name=[
 	"1. for beginners :)",
@@ -37,6 +31,7 @@ var level_name=[
 	"5. grass mode",
 
 ];
+
 var music;
 var is_rewarded_video_completed=false;
 var is_preload_rewarded_video=false;
@@ -47,9 +42,7 @@ var delay_for_hide_describe_text;
 var time_to_show_describe_text;
 var additional_time;
 var delay_for_game_begin;
-//var time_appears_enemies;
 var time_hide;
-var level_number=0;
 var initialise_time_and_delay=function(){
 	additional_time=800;
 	delay_for_hide_describe_text=400;
@@ -123,14 +116,11 @@ var memoryze_progress_in_level= function(){
 			PLAYER_DATA = [];
 		}
 	}
-	co(PLAYER_DATA,"storage_level")
 	level_number=PLAYER_DATA.length
 }
 
-var le=JSON.stringify(l[level_number],null, "\t")
 var email=JSON.stringify(sto[level_number],null, "\t")
-co(le,"le")
-co(email,"email")
+//co(email,"email")
 //class for text intitulé dans chaque level
 _text=function(message,posx,posy,taille){
 	this.text=game.add.bitmapText(posx,posy,'police',message,taille);
@@ -205,7 +195,7 @@ _mechant = function(game,name,number,posx,posy,image_body,image_drag){
 	game.physics.arcade.enable(this.sprite_for_body);
 	this.sprite_for_body.immovable=true;
 	this.sprite_for_body.scale.setTo(0,0);
-	this.sprite_for_body.visible=true;
+	this.sprite_for_body.visible=false;
 	this.sprite_for_body.alpha=1;
 	//particle pour apparaitre et die
 	this.particle = game.add.emitter(this._x,this._y);
@@ -236,6 +226,7 @@ _mechant.prototype.hide=function(){
 
 _mechant.prototype.show=function(){
 	game.time.events.add( delay_for_game_begin,this.particle_show,this );
+	game.time.events.add( delay_for_game_begin,function(){this.sprite_for_body.visible=true;},this );
 	this.tween1=game.add.tween(this.scale).to({x:1,y:1},time_appears_enemies,Phaser.Easing.Bounce.Out,true,delay_for_game_begin);
 	this.tween2=game.add.tween(this.sprite_for_body.scale).to({x:1,y:1},time_appears_enemies,Phaser.Easing.Bounce.Out,true,delay_for_game_begin);
 };
@@ -845,27 +836,34 @@ _dalle = function(number,delay,posx,posy,speed,wait){
 	this.speed=speed;
 	this.wait=wait;
 	this.sprite_for_body.alpha=0;
-	this.tweens();
 	game.time.events.loop(16,this.update2,this);
+	// démarre + this delay
+	game.time.events.add( delay_for_game_begin+this.delay,this.start_tween0,this );
 };
 _dalle.prototype=Object.create(_mechant.prototype);
 // fire
-_dalle.prototype.tweens = function() {
-	this.start_tw=function(){
-		//start - delay - repeat - yoyo
-		this.tween0 = game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Linear.None,true,this.delay,0,true);
-	}
-	this.start_tw();
-	this.loop=game.time.events.loop( this.wait,this.start_tw,this);
 
-
-
-
-	//this.tween0=game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Linear.None,true,this.delay);
-	//this.tween_alpha = game.add.tween(this.sprite_for_body).to({alpha:0},this.speed,Phaser.Easing.Linear.None,true,this.delay*2+this.speed*2);
-	//this.tween_alpha.onComplete.add(this.tween0)
-	//this.tween0.yoyo(true,this.speed);
+_dalle.prototype.start_tween0 = function() {
+	//start B - delay N - repeat N - yoyo B
+	this.tween0 = game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Linear.None,true,0,0,false);
+	this.tween0.onComplete.add(function(){this.retartadeur_tween(this.start_tween1)},this)
 };
+_dalle.prototype.start_tween1 = function() {
+	//start B - delay N - repeat N - yoyo B
+	this.tween1=game.add.tween(this.sprite_for_body).to({alpha:0},this.speed,Phaser.Easing.Linear.None,true,0,0,false);
+	this.tween1.onComplete.add(function(){this.retartadeur_tween(this.start_tween0)},this)
+};
+
+/**
+ * retartadeur_tween
+ *
+ * @param tween
+ * @returns {tween0 or tween1}
+ */
+_dalle.prototype.retartadeur_tween = function(param) {
+game.time.events.add( this.wait,param,this );
+};
+
 _dalle.prototype.update = function() {
 	if (this.sprite_for_body.alpha > 0.5) {
 		this.sprite_for_body.body.enable=true;
@@ -877,17 +875,14 @@ _dalle.prototype.update = function() {
 /**
  * fire => store data
  *
- * @returns {undefined}
+ * @returns {begin_to_exist => tween0 and tween1}
  */
 _dalle.prototype.fire = function() {
 
-	game.tweens.remove(this.tween0);
-	game.time.events.remove(this.loop);
+	game.time.events.remove(this.tween0);
+	game.time.events.remove(this.tween1);
 	this.sprite_for_body.alpha=0;
-	this.tweens();
-	//this.tween0=game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Bounce.Out,true,this.delay,-1);
-	//this.tween0=game.add.tween(this.sprite_for_body).to({alpha:1},this.speed,Phaser.Easing.Bounce.In,true,this.delay,this.speed*2,true);
-	//this.tween0.yoyo(true,this.speed);
+	this.start_tween0();
 };
 
 _dalle_moving = function(number,delay,posx,posy,speed,posx_in_tween){
@@ -1175,6 +1170,9 @@ var createBanner= function(){
 
 var boot = {
 	preload: function() {
+		// on definit ici car game subit un scale et les valeurs w2 ,h2 sont faussées après global.js
+		w2=game.world.centerX;
+		h2=game.world.centerY;
 		this.game.load.image("loading","assets/loading.png");
 		this.game.load.image("loading_back","assets/loading_back.png");
 	},
@@ -1186,15 +1184,15 @@ var boot = {
 		this.game.stage.backgroundColor = '#101520';
 		this.game.scale.refresh();
 		this.game.state.start('preloader');
-	},
+	}
 };
 
 var preloader = {
 	preload: function(){ 
 		//loadingBar
-		var loadingBar_back = this.add.sprite(w2,h2,"loading_back");
+		var loadingBar_back = this.add.sprite(game.width/2,h2,"loading_back");
 		loadingBar_back.anchor.setTo(0.5,0.5);
-		var loadingBar = this.add.sprite(w2,h2,"loading");
+		var loadingBar = this.add.sprite(game.width/2,h2,"loading");
 		loadingBar.anchor.setTo(0.5,0.5);
 		this.load.setPreloadSprite(loadingBar);
 		//tuto
@@ -1327,7 +1325,6 @@ stop_tw = function(obj,tw){
 };
 animate_touch = start_tw;
 var conditional_animate_touch = function(){!flag_tween_en_cours && animate_touch(hero.touch_button);};
-
 function create_level(num){ 
 	music.resume();
 	initialise_time_and_delay();
@@ -1454,9 +1451,10 @@ var levsel={
 	},
 	createLevelIcons: function() {
 		var levelnr = 0;
-
+		var nbr_colonnes=4
+		var nbr_lines=(NUMBER_OF_LEVELS-1)/4
 		for (var y=0; y < (NUMBER_OF_LEVELS-1)/4; y++) {
-			for (var x=0; x < 4; x++) {
+			for (var x=0; x < nbr_colonnes; x++) {
 				// next level
 				levelnr = levelnr + 1;
 				// check if array not yet initialised
@@ -1470,7 +1468,6 @@ var levsel={
 				}
 				// player progress info for this level
 				var playdata = PLAYER_DATA[levelnr-1];
-				console.log("playdata",playdata);
 				// decide which icon
 				var isLocked = true; // locked
 				var stars = 0; // no stars
@@ -1486,9 +1483,16 @@ var levsel={
 					}
 				}
 				// calculate position on screen
-				//var xpos = 60 + (x*300);
-				//var ypos = 320 + (y*300);
-				var xpos = 135 + (x*300);
+				// la formule est la suivante
+				// w - 300x(nbr de colonnes -1) -2x marges à gauche et droite =0
+				//marges à gauche et droite = w-300x(nbr de colonnes -1)*.5
+				co(game.world.centerX,640)
+				co(window.innerWidth)
+				//1280-100/2  100 vient de 200/2 1280+200 =1480
+				var marge=((1280-300*(nbr_colonnes-1))/2)
+				//var marge=((1480-((1480-1280))-300*(nbr_colonnes-1))/2)
+				//var marge=(1230-300*(nbr_colonnes-1))/2
+				var xpos = marge + (x*300);
 				var ypos = 395 + (y*300);
 				// create icon
 				this.holdicons[levelnr-1] = this.createLevelIcon(xpos, ypos, levelnr, isLocked, stars);

@@ -1,14 +1,6 @@
-var h=1920;
-var w=1280;
-var h2=h*0.5;
-var w2=640;
-var w0=280;
-var w4=1400;
-
 // -------------------------------------
 // LEVEL 1
 // -------------------------------------
-
 //pour peupler les levels
 var l=[];
 for (var i = 0; i < NUMBER_OF_LEVELS; i++){
@@ -261,7 +253,6 @@ l[5].canon.push(ca1_l5);
 // -------------------------------------
 
 // dalle example
-// attention wait doit toujours être supérieur à speed + delay
 var da0_l6={
 	number:0,
 	delay:0,
@@ -280,24 +271,23 @@ l[6].dalle.push(da0_l6);
 // -------------------------------------
 
 // dalle example
-// attention wait doit toujours être supérieur à speed + delay
 var da0_l7={
 	number:0,
-	delay:0,
-	posx:760,
+	delay:10,
+	posx:w2,
 	posy:1680,
-	speed:450,
-	wait:450
+	speed:1650,
+	wait:550
 };
 
 // dalle example
 var da1_l7={
 	number:1,
-	delay:100,
-	posx:760,
+	delay:20,
+	posx:w2,
 	posy:1440,
-	speed:450,
-	wait:450
+	speed:950,
+	wait:250
 };
 
 //on ajoute le canon au level concerné
@@ -326,7 +316,6 @@ var ca0_l8={
 };
 
 // dalle example
-// attention wait doit toujours être supérieur à speed + delay
 
 var da0_l8={
 	number:0,
@@ -382,4 +371,3 @@ var da1_l9={
 l[9].dalle.push(da0_l9);
 l[9].dalle.push(da1_l9);
 //////////////////////////////////////////////////////////////////////////////
-

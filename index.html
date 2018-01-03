@@ -55,15 +55,15 @@ document.addEventListener("deviceready", function() {
  //1920 +350 > 2270 (350 is 200*1.5 > ratio from 1920/1280)
  var safe_zone_width=1480;
  var safe_zone_height=2270;
- var w = window.innerWidth ;//* pixelRatio,
- var h = window.innerHeight ;//* pixelRatio;
+ var width = window.innerWidth ;//* pixelRatio,
+ var height = window.innerHeight ;//* pixelRatio;
  var lw, lh; 
- if ( h > w ) {
- lw = h;
- lh = w;
+ if ( height > width ) {
+ lw = height;
+ lh = width;
  } else {
- lw = w;
- lh = h;
+ lw = width;
+ lh = height;
  }
  var aspect_ratio_device = lw/lh;
 
@@ -79,17 +79,19 @@ document.addEventListener("deviceready", function() {
  game = new Phaser.Game( safe_zone_width + extra_width, safe_zone_height + extra_height, Phaser.CANVAS, 'game');
  //play_sound=window.game.add.audio('game_over');
  //game = new Phaser.Game( 1280,1920, Phaser.CANVAS, 'game');
+ game.state.add('global',global);
  game.state.add('boot',boot);
  game.state.add('preloader',preloader);
  game.state.add('game_first_screen',game_first_screen);
  game.state.add('intermediate_screen',intermediate_screen);
  game.state.add('ads_time',ads_time);
- for (var i=0; i < 20; i++) {
-	 console.log('level'+i);
+ for (var i=0; i < 25; i++) {
+	 //console.log('level'+i);
 	 game.state.add('level'+ i,level_state[i]);
  }
  game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
- game.state.start('boot');
+ //game.state.start('boot');
+ game.state.start('global');
 })();
 </script>
 
