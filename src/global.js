@@ -1,5 +1,5 @@
 // pour montrer la grille snap des enemis et render debug
-var debug_mode=false;
+var debug_mode=true;
 
 //si false pas de possibilité de déplacer les enemis et de publier les levels;
 var debug_position=true;

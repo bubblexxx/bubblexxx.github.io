@@ -34,8 +34,10 @@ var level_name=[
 	"8",
 	"9 take the time",
 	"10 surprise !!!",
-"15 Olé!"
-
+"15. Olé!",
+"18. car crusher",
+"19. accordion",
+"20. boxing"
 ];
 
 var music;
@@ -876,6 +878,7 @@ _dalle.prototype.fire = function() {
 _dalle_moving = function(number,delay,posx,posy,speed,posx_in_tween){
 	_mechant.call(this,game,"dalle_moving",number,posx,posy,'dalle_moving','sprite_for_drag_dalle_moving');
 	this.posx_in_tween=posx_in_tween;
+	co(this.posx_in_tween)
 	this.delay=delay;
 	this.speed=speed;
 	game.time.events.add( time_appears_enemies,this.tweens,this );
@@ -1587,7 +1590,8 @@ var levsel={
 	},
 	onLevelSelected: function(levelnr) {
 		this.number_level=levelnr;
-		this.game.state.start('level'+this.number_level,true,false);
+		co('level'+this.number_level)
+		this.game.state.start('level'+ this.number_level,true,false);
 	}
 };
 
@@ -1745,14 +1749,14 @@ var show_grid_on_logic_position=function(sprite){
 			case "asteroid":
 				//erreur pas de guit_declare donc les valeurs ne sont pas stockées
 				gui.add(sprite,'name');
-				guit_declare(sprite,'radius',50,500);
+				guit_declare(sprite,'radius',50,900);
 				guit_declare(sprite,'speed',0,0.01);
 				guit_declare(sprite,'kill');
 				break;
 			case "dalle_moving":
 				gui.add(sprite,'name');
-				guit_declare(sprite,'speed',300,3000);
-				guit_declare(sprite,'posx_in_tween',-800,800);
+				guit_declare(sprite,'speed',100,3000);
+				guit_declare(sprite,'posx_in_tween',-900,900);
 				guit_declare(sprite,'kill');
 				break;
 			case "dalle":
@@ -2088,6 +2092,6 @@ var level_config={
 	tap:_tap,
 };
 var level_state=[];
-for (var i=0; i < 20; i++) {
+for (var i=0; i < NUMBER_OF_LEVELS; i++) {
 	level_state[i]=level_constructor(level_config,i);
 }
