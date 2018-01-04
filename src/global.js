@@ -1,5 +1,5 @@
 // pour montrer la grille snap des enemis et render debug
-var debug_mode=true;
+var debug_mode=false;
 
 //si false pas de possibilité de déplacer les enemis et de publier les levels;
 var debug_position=true;
@@ -7,7 +7,7 @@ var debug_position=true;
 // si false pas de localStorage;
 var debug_store=true;
 
-// si true tous les levels sont débloqués
+// si true tous les levels sont débloqués et la musique est arrêtée
 var super_dev=true;
 
 // nombre de levels -1
@@ -32,7 +32,6 @@ var global={
 	},
 
 	create: function() {
-		co(w)
 		//
 		this.game.state.start('boot');
 	},

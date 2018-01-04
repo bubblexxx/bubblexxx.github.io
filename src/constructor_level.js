@@ -97,14 +97,13 @@ var level_constructor=function (params,num) {
 			create_pulsar=function(){
 				if (_num_pulsar != 0){
 					for (var i = 0; i < l[num].pulsar.length; i++){
-						params.asteroid[i]=new params.constructor_pulsar(
+						params.pulsar[i]=new params.constructor_pulsar(
 							number=l[num].pulsar[i].number,
 							delay=l[num].pulsar[i].delay,
-							time=l[num].pulsar[i].time,
-							scale_factor=l[num].pulsar[i].scale_factor,
 							posx=l[num].pulsar[i].posx,
 							posy=l[num].pulsar[i].posy,
-							speed=l[num].pulsar[i].speed
+							speed=l[num].pulsar[i].speed,
+							scale_factor=l[num].pulsar[i].scale_factor
 						);
 					}
 				}

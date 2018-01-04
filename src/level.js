@@ -233,7 +233,7 @@ var ca1_l5={
 	delay:200,
 	posx:w0,
 	posy:h2,
-	speed:2000,
+	speed:1400,
 	frequency:50,
 	variance:100,
 	angular:0,
@@ -332,7 +332,7 @@ var da1_l8={
 	delay:1000,
 	posx:760,
 	posy:1000,
-	speed:2950,
+	speed:3950,
 	wait:4000
 };
 
@@ -370,4 +370,181 @@ var da1_l9={
 //on ajoute le canon au level concerné
 l[9].dalle.push(da0_l9);
 l[9].dalle.push(da1_l9);
+
 //////////////////////////////////////////////////////////////////////////////
+
+// -------------------------------------
+// LEVEL 11
+// -------------------------------------
+// apparation des pulsars
+// pulsar légèrement sur la droite  
+// pulsar example
+var pu0_l10={
+	number:0,
+	delay:100,
+	posx:800,
+	posy:840,
+	speed:1000,
+	scale_factor:2
+};
+
+//on ajoute le canon au level concerné
+l[10].pulsar.push(pu0_l10);
+//////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////
+// -------------------------------------
+// LEVEL 12
+// -------------------------------------
+// apparation des pulsars
+// pulsar légèrement sur la droite  
+// pulsar example
+var pu0_l11={
+	number:0,
+	delay:100,
+	posx:880,
+	posy:840,
+	speed:3000,
+	scale_factor:2
+};
+var pu1_l11={
+	number:1,
+	delay:900,
+	posx:280,
+	posy:1160,
+	speed:2000,
+	scale_factor:6
+};
+
+//on ajoute le canon au level concerné
+l[11].pulsar.push(pu0_l11);
+l[11].pulsar.push(pu1_l11);
+//////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////
+// -------------------------------------
+// LEVEL 13
+// -------------------------------------
+// apparation des pulsars
+// pulsar légèrement sur la droite  
+// pulsar example
+var pu0_l12={
+	number:0,
+	delay:100,
+	posx:880,
+	posy:800,
+	speed:3000,
+	scale_factor:2
+};
+var pu1_l12={
+	number:1,
+	delay:900,
+	posx:480,
+	posy:1080,
+	speed:2000,
+	scale_factor:6
+};
+var pu2_l12={
+	number:2,
+	delay:900,
+	posx:1260,
+	posy:1720,
+	speed:2000,
+	scale_factor:6
+};
+
+//on ajoute le canon au level concerné
+l[12].pulsar.push(pu0_l12);
+l[12].pulsar.push(pu1_l12);
+l[12].pulsar.push(pu2_l12);
+//////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////
+// -------------------------------------
+// LEVEL 14
+// -------------------------------------
+// apparation des pulsars
+// pulsar légèrement sur la droite  
+// pulsar example
+var pu0_l13={
+	number:0,
+	delay:100,
+	posx:1000,
+	posy:1120,
+	speed:3000,
+	scale_factor:3
+};
+var pu1_l13={
+	number:1,
+	delay:900,
+	posx:360,
+	posy:760,
+	speed:2000,
+	scale_factor:4.5
+};
+var ca0_l13={
+	number:0,
+	delay:0,
+	posx:w0,
+	posy:1720,
+	speed:1000,
+	frequency:1000,
+	variance:0,
+	angular:0,
+	kill_with_world:true,
+	special_color:false,
+	rotate:false,
+	value_rotate:10
+};
+
+//on ajoute le canon au level concerné
+l[13].pulsar.push(pu0_l13);
+l[13].pulsar.push(pu1_l13);
+l[13].canon.push(ca0_l13);
+//////////////////////////////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////////////
+// -------------------------------------
+// LEVEL 15
+// -------------------------------------
+// apparation des pulsars
+// pulsar légèrement sur la droite  
+// pulsar example
+var pu0_l14={
+	number:0,
+	delay:100,
+	posx:w2-200,
+	posy:1720,
+	speed:500,
+	scale_factor:2.2
+};
+var pu1_l14={
+	number:1,
+	delay:100,
+	posx:w2-200,
+	posy:1360,
+	speed:1000,
+	scale_factor:2.2
+};
+var pu2_l14={
+	number:2,
+	delay:100,
+	posx:w2-200,
+	posy:1000,
+	speed:2000,
+	scale_factor:2.2
+};
+var pu3_l14={
+	number:3,
+	delay:100,
+	posx:w2-200,
+	posy:600,
+	speed:4500,
+	scale_factor:2.2
+};
+
+//on ajoute le canon au level concerné
+l[14].pulsar.push(pu0_l14);
+l[14].pulsar.push(pu1_l14);
+l[14].pulsar.push(pu2_l14);
+l[14].pulsar.push(pu3_l14);

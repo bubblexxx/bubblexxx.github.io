@@ -29,6 +29,12 @@ var level_name=[
 	"3. ha ha ha",
 "4. think!",
 	"5. grass mode",
+	"6.",
+	"7.",
+	"8",
+	"9 take the time",
+	"10 surprise !!!",
+"15 Olé!"
 
 ];
 
@@ -60,7 +66,6 @@ var initialise_time_and_delay=function(){
 	delay_for_game_begin=delay_for_show_describe_text+ time_to_show_describe_text+ time_to_show_describe_text+additional_time;
 };
 initialise_time_and_delay();
-var music_ambiance;
 var count_hero;
 var level_number_adapt;
 var text_to_describe_level;
@@ -148,28 +153,12 @@ _text.prototype.hide = function() {
 	this.tween2 = game.add.tween(this.text.scale).to({x:1,y:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_hide_describe_text);
 	this.tween2 = game.add.tween(this.text).to({alpha:0},time_to_show_describe_text,Phaser.Easing.Linear.None,true,delay_for_hide_describe_text);
 };
-
 //energique
 //music_ambiance=new Audio('sounds/music_ambiance/Electrodoodle.ogg');
 //relaxant
-music_ambiance=new Audio('sounds/music_ambiance/Floating Cities.ogg');
+//music_ambiance=new Audio('sounds/music_ambiance/Floating Cities.ogg');
 //style mario
 //music_ambiance=new Audio('sounds/music_ambiance/Video Dungeon Boss.ogg');
-music_ambiance.loop=true
-//music_ambiance.volume=.20
-music_ambiance.volume=.0
-music_ambiance_mute=function(){
-	music_ambiance.volume=0
-}
-music_ambiance_activate=function(){
-	//music_ambiance.volume=.20
-	music_ambiance.volume=.00
-}
-window.blur = function(){
-	console.log("perte de focus")
-	music_ambiance.pause();
-};//
-
 //class for mechant
 _mechant = function(game,name,number,posx,posy,image_body,image_drag){
 	//this = this.sprite_for_drag
@@ -324,7 +313,7 @@ _button_stay.prototype.anim_on_click=function(){
 screen_first = function(){
 	Phaser.Sprite.call(this,game,game.world.centerX,450,'title');
 
-	music_ambiance.play()
+	//music_ambiance.play()
 	this.anchor.setTo(0.5,0.5);
 	this.button_menu=new _button(game.world.centerX,game.world.centerY+400,'button_menu',this.next_menu);
 	this.button_next=new _button(game.world.centerX,game.world.centerY,'button_play',this.next_level);
@@ -429,7 +418,7 @@ character = function(){
 	this.sound_pop=game.add.audio('pop_minder');
 	this.sound_click=game.add.audio('click');
 	//TODO:publish
-	if (debug_position){
+	if (!super_dev){
 		this.button_publish=new _button(game.world.centerX,game.world.centerY+800,'button_publish',this.send_data_mail);
 	}else{
 		this.button_publish=new _button(game.world.centerX,game.world.centerY+800,'button_back',this.back_to_menu);
@@ -572,13 +561,13 @@ character.prototype.send_data_mail = function(){
 };
 character.prototype.audio_game_over = function() {
 	!flag_level_complete && this.sound_game_over.play() && music.pause();
-	!flag_level_complete && this.sound_game_over.play() && music_ambiance.pause();
+	//!flag_level_complete && this.sound_game_over.play() && music_ambiance.pause();
 };
 character.prototype.audio_star = function() {
 	music.pause();
 	this.sound_star.play();
 	//music.pause() && this.sound_star.play();
-	this.sound_star.play() && music_ambiance.pause();
+	//this.sound_star.play() && music_ambiance.pause();
 };
 character.prototype.audio_pop = function() {
 	this.sound_pop.play();
@@ -804,11 +793,10 @@ _asteroid.prototype.hide=function(){
 	this.particlex.on=false;
 };
 
-_pulsar=function(number,delay,time,posx,posy,speed,scale_factor){
+_pulsar=function(number,delay,posx,posy,speed,scale_factor){
 	_mechant.call(this,game,"pulsar",number,posx,posy,'pulsar','sprite_for_drag');
 	this.number=number;
 	this.delay=delay;
-	this.time=time;
 	this.speed=speed;
 	this.scale_factor=scale_factor;
 	game.time.events.add( delay_for_game_begin,this.tweens,this );
@@ -1267,7 +1255,8 @@ var preloader = {
 var game_first_screen = {
 	background_music: function(){
 		music=game.add.audio('music');
-		music.volume=.4;
+		// si super dev est sur true alors pas de music d'ambiance
+		super_dev ? music.volume=0 : music.volume=0.4
 		music.play();
 	},
 	create: function(){
@@ -1337,7 +1326,7 @@ function create_level(num){
 	is_preload_rewarded_video=false;
 	hero = new character() ;
 	//hero.audio_music_ambiance_resume();
-	music_ambiance.play();
+	//music_ambiance.play();
 	count_hero=0;
 	game.time.events.add(delay_for_game_begin,function(){hero.life.visible=true;});
 	game.time.events.add(delay_for_game_begin,function(){animate_touch(hero.touch_button);});
@@ -1486,8 +1475,6 @@ var levsel={
 				// la formule est la suivante
 				// w - 300x(nbr de colonnes -1) -2x marges à gauche et droite =0
 				//marges à gauche et droite = w-300x(nbr de colonnes -1)*.5
-				co(game.world.centerX,640)
-				co(window.innerWidth)
 				//1280-100/2  100 vient de 200/2 1280+200 =1480
 				var marge=((1280-300*(nbr_colonnes-1))/2)
 				//var marge=((1480-((1480-1280))-300*(nbr_colonnes-1))/2)
@@ -1599,7 +1586,6 @@ var levsel={
 		}
 	},
 	onLevelSelected: function(levelnr) {
-		console.log(levelnr,'rr');
 		this.number_level=levelnr;
 		this.game.state.start('level'+this.number_level,true,false);
 	}
@@ -1831,12 +1817,12 @@ var logic_position=function(sprite){
 				};
 				break;
 			case 'pulsar':
+				co(sprite.x)
 				_table=sto[level_number][sprite.name];
 				_name_json='pulsar';
 				_table[sprite.number] = {
 					number:sprite.number,
 					delay:Math.round(sprite.delay),
-					time:Math.round(sprite.time),
 					x:Math.round(sprite.x),
 					y:Math.round(sprite.y),
 					speed:Math.round(sprite.speed),
@@ -1923,7 +1909,7 @@ var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_
 			break;
 		}else{
 			//pulsar = function(number,delay,time,posx,posy,speed,scale_factor)
-			pulsar[n]=new _pulsar(n,sto[level_number].pulsar[n].delay,sto[level_number].pulsar[n].time,sto[level_number].pulsar[n].x,sto[level_number].pulsar[n].y,sto[level_number].pulsar[n].speed,sto[level_number].pulsar[n].scale_factor);
+			pulsar[n]=new _pulsar(n,sto[level_number].pulsar[n].delay,sto[level_number].pulsar[n].x,sto[level_number].pulsar[n].y,sto[level_number].pulsar[n].speed,sto[level_number].pulsar[n].scale_factor);
 		}
 	}
 
@@ -1944,7 +1930,7 @@ var check_storage=function(_create_canon,_create_asteroid,_create_dalle_moving,_
  */
 var decide_if_ads_time=function(n){
 	music.pause();
-	music_ambiance.pause()
+	//music_ambiance.pause()
 	if(l[n].ads && is_preload_rewarded_video) {
 
 		this.game.state.start("ads_time");
@@ -2015,7 +2001,7 @@ var chartboost_preload_reward_video=function(){
 };
 var chartboost_show_reward_video = function() {
 	music.pause();
-	music_ambiance.pause();
+	//music_ambiance.pause();
 	window.chartboost.showRewardedVideoAd('Default');
 };
 var ads_time={
