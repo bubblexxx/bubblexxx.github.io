@@ -85,12 +85,12 @@ document.addEventListener("deviceready", function() {
  game.state.add('game_first_screen',game_first_screen);
  game.state.add('intermediate_screen',intermediate_screen);
  game.state.add('ads_time',ads_time);
+ game.state.add('message_end_level',message_end_level);
  for (var i=0; i < 25; i++) {
 	 //console.log('level'+i);
 	 game.state.add('level'+ i,level_state[i]);
  }
  game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
- //game.state.start('boot');
  game.state.start('global');
 })();
 </script>

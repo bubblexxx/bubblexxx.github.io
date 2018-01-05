@@ -36,10 +36,20 @@ var level_name=[
 	"8",
 	"9 take the time",
 	"10 surprise !!!",
+	"11. ",
+	"12. ",
+	"13. ",
+	"14. ",
 "15. Olé!",
+"16. ",
+"17. ",
 "18. car crusher",
 "19. accordion",
-"20. boxing"
+"20. boxing",
+"21. ",
+"22. ",
+"23. ",
+"24. end carreful !"
 ];
 
 var music;
@@ -125,7 +135,12 @@ var memoryze_progress_in_level= function(){
 			PLAYER_DATA = [];
 		}
 	}
-	level_number=PLAYER_DATA.length
+	co(PLAYER_DATA.length)
+	if (PLAYER_DATA.length >= 24) {
+		level_number=23	
+	} else {
+		level_number=PLAYER_DATA.length
+	}
 }
 
 var email=JSON.stringify(sto[level_number],null, "\t")
@@ -176,13 +191,15 @@ _mechant = function(game,name,number,posx,posy,image_body,image_drag){
 	this.flag=true;
 	Phaser.Sprite.call(this,game,this.posx,this.posy,this.image_drag);
 	this.scale.setTo(0,0);
-	debug_mode ? this.alpha=0.5 : this.alpha=0;
+	debug_position ? this.alpha=0.5 : this.alpha=0;
 	this.anchor.setTo(0.5,0.5);
-	this.inputEnabled=true;
-	this.input.enableDrag(true);
-	this.input.enableSnap(40,40,true,true);
-	this.events.onDragStop.add(logic_position,this);
-	this.events.onDragStart.add(show_grid_on_logic_position,this);
+	if (debug_position) {
+		this.inputEnabled=true	
+		this.input.enableDrag(true);
+		this.input.enableSnap(40,40,true,true);
+		this.events.onDragStop.add(logic_position,this);
+		this.events.onDragStart.add(show_grid_on_logic_position,this);
+	}
 	this.sprite_for_body=game.add.sprite(this.posx,this.posy,this.image_body);
 	this.sprite_for_body.anchor.setTo(0.5,0.5);
 	game.physics.arcade.enable(this.sprite_for_body);
@@ -348,7 +365,7 @@ screen_first.prototype.audio_click = function(){
 };
 //level_number is get from PLAYER_DATA.length trough localStorage to avoid to rebegin the game incessaly
 screen_first.prototype.next_level = function(){
-	decide_if_ads_time(level_number);
+		decide_if_ads_time(level_number);
 };
 screen_first.prototype.next_menu = function(){
 	this.game.state.start("levsel");
@@ -645,8 +662,12 @@ character.prototype.restart_level = function() {
 };
 character.prototype.next_level = function() {
 	var next_niveau=level_number+1;
+	if (next_niveau > 23) {
+		this.game.state.start("message_end_level")
+	} else {
 	decide_if_ads_time(next_niveau);
 	//this.game.state.start('level'+next_niveau,true,false);
+	}
 };
 character.prototype.launch=function(n){
 	this.show_background_white();
@@ -857,11 +878,13 @@ game.time.events.add( this.wait,param,this );
 };
 
 _dalle.prototype.update = function() {
-	if (this.sprite_for_body.alpha > 0.5) {
-		this.sprite_for_body.body.enable=true;
-	} else {
-		this.sprite_for_body.body.enable=false;
-	
+	if(this.sprite_for_body.body != null ){
+		if (this.sprite_for_body.alpha > 0.5) {
+			this.sprite_for_body.body.enable=true;
+		} else {
+			this.sprite_for_body.body.enable=false;
+
+		}
 	}
 };
 /**
@@ -1253,7 +1276,6 @@ var preloader = {
 	},
 	create: function(){
 		this.game.time.events.add(1000,function(){this.game.state.start("game_first_screen");},this);
-		//game.state.start("intermediate_screen");
 	}
 };
 
@@ -2075,6 +2097,26 @@ var intermediate_screen={
 		ecran_intermediaire_pour_passer_level(text_passed_level.text,next_action);
 	}
 };
+
+var message_end_level={
+	create:function(){
+		this.message_text="Congratulations !!!\nyou have finish the Game\nPlease rate us :)"
+		this.message = new _text(this.message_text,game.world.centerX,game.world.centerY,100);
+		this.message.text.anchor.x=.5 
+		this.particlex = game.add.emitter(this.message.text.x,this.message.text.y);
+		this.particlex.makeParticles("particle_bullet_color");
+		this.particlex.minParticleSpeed.setTo(-900,900);
+		this.particlex.maxParticleSpeed.setTo(900,-900);
+		this.particlex.setAlpha(0.5,0.1);
+		this.particlex.minParticleScale = 0.3;
+		this.particlex.maxParticleScale = 0.8;
+		this.particlex.minRotation = 0;
+		this.particlex.maxRotation = 0;
+		this.particlex.on=false;
+		game.time.events.add(300,function(){this.particlex.start(true,3000,null,90);},this);
+	}
+};
+
 var level_config={
 	constructor_canon:_canon,
 	canon:canon,

@@ -1,7 +1,7 @@
 // si true montre la grille snap des enemis et render debug
 var debug_mode=false;
 
-//si false pas de possibilité de déplacer les enemis et de publier les levels;
+//si true possibilité de déplacer les enemis avec repere du sprite_for_drag et publication des levels;
 var debug_position=false;
 
 // si false pas de localStorage;
