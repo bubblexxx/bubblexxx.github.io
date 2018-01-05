@@ -1,8 +1,10 @@
 /* jshint expr: true */
 /* jshint esnext: true */
+// sj inception VV
 /* *************************************************************************
  * 2092 lines
- * bubblexxxL
+ * bubx
+ * 0o0o0ogames@gmail.com
  * __________________
  * 
  *  [2016] - [2017] Gregory Dailly  
@@ -16,7 +18,7 @@
  * patents in process, and are protected by trade secret or copyright law.
  * Dissemination of this information or reproduction of this material
  * is strictly forbidden unless prior written permission is obtained
- * from Gregory Dailly - espace3d@gmail.com - 0032486/925736 
+ * from Gregory Dailly - 0o0o0ogames@gmail.com - 0032486/925736 
  * rue de Brionsart 36a-5340 Gesves-Belgium
  */
 //

@@ -1,11 +1,14 @@
-// pour montrer la grille snap des enemis et render debug
-var debug_mode=true;
+// si true montre la grille snap des enemis et render debug
+var debug_mode=false;
 
 //si false pas de possibilité de déplacer les enemis et de publier les levels;
-var debug_position=true;
+var debug_position=false;
 
 // si false pas de localStorage;
 var debug_store=true;
+
+// si true pas de pub entre les niveaux
+var debug_ads=false
 
 // si true tous les levels sont débloqués et la musique est arrêtée
 var super_dev=true;

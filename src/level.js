@@ -11,7 +11,7 @@ for (var i = 0; i < NUMBER_OF_LEVELS; i++){
 	sto.push({canon:[],asteroid:[],dalle_moving:[],pulsar:[],dalle:[],ads:false,signal_ads:false,next_with_video:true,signal_video_to_pass_level:false});
 }
 
-if(debug_position === false){
+if(debug_ads === true){
 	// tous les 3 levels on place une ads
 	l[2].ads=true;
 	l[5].ads=true;
