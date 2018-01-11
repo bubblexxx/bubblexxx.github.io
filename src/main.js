@@ -127,6 +127,8 @@ var memoryze_progress_in_level= function(){
 		// error checking, localstorage might not exist yet at first time start up
 		try {
 			PLAYER_DATA = JSON.parse(storage_level);
+			//TODO : 
+			
 		} catch(e){
 			PLAYER_DATA = []; //error in the above string(in this case,yes)!
 		}
@@ -135,12 +137,12 @@ var memoryze_progress_in_level= function(){
 			PLAYER_DATA = [];
 		}
 	}
-	co(PLAYER_DATA.length)
-	if (PLAYER_DATA.length >= 24) {
-		level_number=23	
-	} else {
-		level_number=PLAYER_DATA.length
-	}
+			if (PLAYER_DATA[23] >= 1) {
+				level_number=23	
+			} else {
+				level_number=PLAYER_DATA.length
+			}
+			co(PLAYER_DATA)
 }
 
 var email=JSON.stringify(sto[level_number],null, "\t")
@@ -314,17 +316,18 @@ _button_stay.prototype.show_button=function(){
 _button_stay.prototype.anim_on_click=function(){
 
 	if(this.button.frame==1){
+
 		this.button.frame=0
 		//this.flag=false;
 		this.audio_click();
 		music.pause();
-		music_ambiance_mute();
+		//music_ambiance_mute();
 		return true;
 	}else{
 		//this.flag=false;
 		this.audio_click();
 		music.resume();
-		music_ambiance_activate();
+		//music_ambiance_activate();
 		this.button.frame=1
 		return true;
 	}
@@ -332,7 +335,7 @@ _button_stay.prototype.anim_on_click=function(){
 
 //var level={}
 screen_first = function(){
-	Phaser.Sprite.call(this,game,game.world.centerX,450,'title');
+	Phaser.Sprite.call(this,game,game.world.centerX,800,'title');
 
 	//music_ambiance.play()
 	this.anchor.setTo(0.5,0.5);
@@ -439,7 +442,7 @@ character = function(){
 	this.sound_pop=game.add.audio('pop_minder');
 	this.sound_click=game.add.audio('click');
 	//TODO:publish
-	if (!super_dev){
+	if (super_dev){
 		this.button_publish=new _button(game.world.centerX,game.world.centerY+800,'button_publish',this.send_data_mail);
 	}else{
 		this.button_publish=new _button(game.world.centerX,game.world.centerY+800,'button_back',this.back_to_menu);
@@ -503,6 +506,11 @@ character = function(){
 
 character.prototype = Object.create(Phaser.Sprite.prototype);
 character.prototype.constructor = character;
+character.prototype.update = function() {
+	if(this.game.stage.disableVisibilityChange){
+		music.pause()
+	}	
+};
 character.prototype.explosion_particles = function(){
 	if(this.particles_explode.flag){
 		this.particles_explode.on=true;
@@ -1218,6 +1226,7 @@ var preloader = {
 		//interface
 		//this.game.load.image("background","assets/background.png");
 		this.game.load.spritesheet('button_sound','assets/button_sound.png', 300, 300);
+		this.game.load.image("mention","assets/mention.png");
 		this.game.load.image("background_white","assets/background_white.png");
 		this.game.load.image("button_back","assets/button_back.png");
 		this.game.load.image("title","assets/title.png");
@@ -1291,26 +1300,28 @@ var game_first_screen = {
 		this.background_music();	
 		//this.initProgressData();
 		this.title=new screen_first();
+		this.mention=game.add.sprite(w2,h+175,'mention')
+		this.mention.anchor.setTo(.5,1)
 		game.add.existing(this.title);
 	},
-	initProgressData: function() {
-		// array might be undefined at first time start up
-		if (!PLAYER_DATA) {
-			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
-			var str = window.localStorage.getItem('mygame_progress');
-			co(str,"game_progress")
-			// error checking, localstorage might not exist yet at first time start up
-			try {
-				PLAYER_DATA = JSON.parse(str);
-			} catch(e){
-				PLAYER_DATA = []; //error in the above string(in this case,yes)!
-			}
-			// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
-			if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
-				PLAYER_DATA = [];
-			}
-		}
-	}
+//	initProgressData: function() {
+//		// array might be undefined at first time start up
+//		if (!PLAYER_DATA) {
+//			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
+//			var str = window.localStorage.getItem('mygame_progress');
+//			co(str,"game_progress")
+//			// error checking, localstorage might not exist yet at first time start up
+//			try {
+//				PLAYER_DATA = JSON.parse(str);
+//			} catch(e){
+//				PLAYER_DATA = []; //error in the above string(in this case,yes)!
+//			}
+//			// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
+//			if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
+//				PLAYER_DATA = [];
+//			}
+//		}
+//	}
 };
 /*	
 	clic0 - stop anim0 >c0 -e -anim1
@@ -1705,94 +1716,94 @@ var hide_weapon=function(){
 	}
 };
 var show_grid_on_logic_position=function(sprite){
-	logic_position(sprite);
-	if(debug_position){
-		hero.grid.visible=true;
-		gui && gui.destroy();
-		gui=new dat.GUI();
-		gui.start=true;
-		var guit={};
-		/**
-		 * declare param with dat.gui and if  
-		 * @param {args[]}  
-		 * @callback _create_canon - the function who create the enemy.
-		 * @callback canon - the function who create the enemy via sto.
-		 */
-
-
-		var guit_declare=function(...args){
-			var condition=args.length;
-			//obligé ...ne sait pas pourquoi
-			var parameter=args[1];
-			if (condition> 2){	
-				guit.parameter=gui.add(args[0],args[1],args[2],args[3]);
-				co(args[1],"args");
-				guit.parameter.onChange(function(value){
-					args[0].fire();
-					logic_position(args[0]);
-				});
-			}else{
-				guit.parameter=gui.add(args[0],args[1]);
-				guit.parameter.onChange(function(value){
-					args[0].kill();
-					logic_position(args[0]);
-				});
-			}
-		};
-		switch(sprite.name){
-			case "canon":
-				gui.add(sprite,'name');
-				guit_declare(sprite,'speed',0,5000);
-				guit_declare(sprite,'frequency',0,5000);
-				guit.kill=gui.add(sprite,'kill_with_world');
-				guit.kill.onChange(function(value) {
-					sprite.fire();// Fires on every change, drag, keypress, etc.;
-					logic_position(sprite);
-				});
-				guit.kill=gui.add(sprite,'_rotate');
-				guit.kill.onChange(function(value) {
-					sprite.fire();// Fires on every change, drag, keypress, etc.;
-					logic_position(sprite);
-				});
-				guit_declare(sprite,'_value_rotate',0,10);
-				//guit_declare(sprite,'_rotate')
-				guit.kill=gui.add(sprite,'special_color');
-				guit.kill.onChange(function(value) {
-					sprite.fire();// Fires on every change, drag, keypress, etc.;
-					logic_position(sprite);
-				});
-				guit_declare(sprite,'angular',0,360);
-				guit_declare(sprite,'variance',0,1000);
-				guit_declare(sprite,'kill');
-				break;
-			case "pulsar":
-				gui.add(sprite,'name');
-				guit_declare(sprite,'speed',300,9000);
-				guit_declare(sprite,'kill');
-				break;
-			case "asteroid":
-				//erreur pas de guit_declare donc les valeurs ne sont pas stockées
-				gui.add(sprite,'name');
-				guit_declare(sprite,'radius',50,900);
-				guit_declare(sprite,'speed',0,0.01);
-				guit_declare(sprite,'kill');
-				break;
-			case "dalle_moving":
-				gui.add(sprite,'name');
-				guit_declare(sprite,'speed',100,3000);
-				guit_declare(sprite,'posx_in_tween',-900,900);
-				guit_declare(sprite,'kill');
-				break;
-			case "dalle":
-				gui.add(sprite,'name');
-				guit_declare(sprite,'speed',300,3000);
-				guit_declare(sprite,'kill');
-				guit_declare(sprite,'wait',100,9000);
-				break;
-			default:
-				break;
-		}
-	}
+//	logic_position(sprite);
+//	if(debug_position){
+//		hero.grid.visible=true;
+//		gui && gui.destroy();
+//		gui=new dat.GUI();
+//		gui.start=true;
+//		var guit={};
+//		/**
+//		 * declare param with dat.gui and if  
+//		 * @param {args[]}  
+//		 * @callback _create_canon - the function who create the enemy.
+//		 * @callback canon - the function who create the enemy via sto.
+//		 */
+//
+//
+//		var guit_declare=function(...args){
+//			var condition=args.length;
+//			//obligé ...ne sait pas pourquoi
+//			var parameter=args[1];
+//			if (condition> 2){	
+//				guit.parameter=gui.add(args[0],args[1],args[2],args[3]);
+//				co(args[1],"args");
+//				guit.parameter.onChange(function(value){
+//					args[0].fire();
+//					logic_position(args[0]);
+//				});
+//			}else{
+//				guit.parameter=gui.add(args[0],args[1]);
+//				guit.parameter.onChange(function(value){
+//					args[0].kill();
+//					logic_position(args[0]);
+//				});
+//			}
+//		};
+//		switch(sprite.name){
+//			case "canon":
+//				gui.add(sprite,'name');
+//				guit_declare(sprite,'speed',0,5000);
+//				guit_declare(sprite,'frequency',0,5000);
+//				guit.kill=gui.add(sprite,'kill_with_world');
+//				guit.kill.onChange(function(value) {
+//					sprite.fire();// Fires on every change, drag, keypress, etc.;
+//					logic_position(sprite);
+//				});
+//				guit.kill=gui.add(sprite,'_rotate');
+//				guit.kill.onChange(function(value) {
+//					sprite.fire();// Fires on every change, drag, keypress, etc.;
+//					logic_position(sprite);
+//				});
+//				guit_declare(sprite,'_value_rotate',0,10);
+//				//guit_declare(sprite,'_rotate')
+//				guit.kill=gui.add(sprite,'special_color');
+//				guit.kill.onChange(function(value) {
+//					sprite.fire();// Fires on every change, drag, keypress, etc.;
+//					logic_position(sprite);
+//				});
+//				guit_declare(sprite,'angular',0,360);
+//				guit_declare(sprite,'variance',0,1000);
+//				guit_declare(sprite,'kill');
+//				break;
+//			case "pulsar":
+//				gui.add(sprite,'name');
+//				guit_declare(sprite,'speed',300,9000);
+//				guit_declare(sprite,'kill');
+//				break;
+//			case "asteroid":
+//				//erreur pas de guit_declare donc les valeurs ne sont pas stockées
+//				gui.add(sprite,'name');
+//				guit_declare(sprite,'radius',50,900);
+//				guit_declare(sprite,'speed',0,0.01);
+//				guit_declare(sprite,'kill');
+//				break;
+//			case "dalle_moving":
+//				gui.add(sprite,'name');
+//				guit_declare(sprite,'speed',100,3000);
+//				guit_declare(sprite,'posx_in_tween',-900,900);
+//				guit_declare(sprite,'kill');
+//				break;
+//			case "dalle":
+//				gui.add(sprite,'name');
+//				guit_declare(sprite,'speed',300,3000);
+//				guit_declare(sprite,'kill');
+//				guit_declare(sprite,'wait',100,9000);
+//				break;
+//			default:
+//				break;
+//		}
+//	}
 };
 var logic_position=function(sprite){
 	if (debug_position){
@@ -2114,6 +2125,8 @@ var message_end_level={
 		this.particlex.maxRotation = 0;
 		this.particlex.on=false;
 		game.time.events.add(300,function(){this.particlex.start(true,3000,null,90);},this);
+		var link="https://www.google.com"
+		game.time.events.add(1000,function(){window.location.href = link}) 
 	}
 };
 

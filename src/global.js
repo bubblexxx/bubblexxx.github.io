@@ -7,11 +7,11 @@ var debug_position=false;
 // si false pas de localStorage;
 var debug_store=true;
 
-// si true pas de pub entre les niveaux
-var debug_ads=false
+// si true pub entre les niveaux
+var debug_ads=true
 
 // si true tous les levels sont débloqués et la musique est arrêtée
-var super_dev=true;
+var super_dev=false;
 
 // nombre de levels -1
 var NUMBER_OF_LEVELS=25;

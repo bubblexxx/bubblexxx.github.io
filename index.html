@@ -93,6 +93,11 @@ document.addEventListener("deviceready", function() {
  game.state.add('levsel', levsel); // note: first parameter is only the name used to refer to the state
  game.state.start('global');
 })();
+document.addEventListener("pause",onPause,false)
+function onPause(){
+	music.pause();
+
+}
 </script>
 
 </html>
