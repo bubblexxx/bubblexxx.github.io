@@ -728,7 +728,14 @@ character.prototype.decide_if_show_button_restart_level = function() {
 	game.time.events.add(1200,this.audio_game_over,this);
 	this.flag_hide_enemies=true;
 	game.time.events.add( 1000,this.button_restart.show_button,this.button_restart );
-	is_preload_rewarded_video && game.time.events.add( 1000,this.button_video.show_button,this.button_video );
+	var not_last_level;
+	if (level_number != 23){
+		not_last_level=true
+	}else{
+		not_last_level=false
+	};
+
+	is_preload_rewarded_video && not_last_level && game.time.events.add( 1000,this.button_video.show_button,this.button_video );
 	game.time.events.add(1000,this.button_publish.show_button,this.button_publish );
 };
 character.prototype.land=function(n){
@@ -2069,8 +2076,18 @@ var ads_time={
 		next_action2();
 	}
 };
+
+var store_level_in_game_progress=function(n){
+	//on définit que le niveau concerné vaut 0 pas d'étoiles
+	PLAYER_DATA[n] = 0;
+	//on écrit les données dans le localStorage
+	window.localStorage.setItem('mygame_progress', JSON.stringify(PLAYER_DATA));
+};
+
 var pass_level=function(){
 	var next_niveau=level_number+1;
+	//TODO : 
+	store_level_in_game_progress(level_number);
 	game.state.start('level'+ next_niveau,level_state[next_niveau]);
 };
 ecran_intermediaire_pour_passer_level=function(obj,next_action){

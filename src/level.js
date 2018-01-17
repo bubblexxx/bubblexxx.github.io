@@ -321,7 +321,7 @@ var ca0_l8={
 var da0_l8={
 	number:0,
 	delay:0,
-	posx:760,
+	posx:w2,
 	posy:1680,
 	speed:1950,
 	wait:2000,
@@ -331,7 +331,7 @@ var da0_l8={
 var da1_l8={
 	number:1,
 	delay:1000,
-	posx:760,
+	posx:w2,
 	posy:1000,
 	speed:3950,
 	wait:4000
@@ -352,7 +352,7 @@ l[8].dalle.push(da1_l8);
 var da0_l9={
 	number:0,
 	delay:0,
-	posx:760,
+	posx:w2,
 	posy:1680,
 	speed:450,
 	wait:4000
@@ -362,7 +362,7 @@ var da0_l9={
 var da1_l9={
 	number:1,
 	delay:5000,
-	posx:760,
+	posx:w2,
 	posy:1000,
 	speed:450,
 	wait:2000
@@ -559,10 +559,10 @@ l[14].pulsar.push(pu3_l14);
 var dm0_l15={
 	number:0,
 	delay:100,
-	posx:80,
+	posx:480,
 	posy:1680,
-	posx_in_tween:800,
-	speed:300
+	posx_in_tween:600,
+	speed:500
 };
 //on ajoute le canon au level concerné
 l[15].dalle_moving.push(dm0_l15);
