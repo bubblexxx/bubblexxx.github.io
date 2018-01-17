@@ -124,6 +124,7 @@ var memoryze_progress_in_level= function(){
 	if (!PLAYER_DATA) {
 		// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
 		storage_level = window.localStorage.getItem('mygame_progress');
+		co(storage_level)
 		// error checking, localstorage might not exist yet at first time start up
 		try {
 			PLAYER_DATA = JSON.parse(storage_level);
@@ -137,12 +138,12 @@ var memoryze_progress_in_level= function(){
 			PLAYER_DATA = [];
 		}
 	}
-			if (PLAYER_DATA[23] >= 1) {
-				level_number=23	
-			} else {
-				level_number=PLAYER_DATA.length
-			}
-			co(PLAYER_DATA)
+		//	if (PLAYER_DATA[23] >= 1) {
+		//		level_number=23	
+		//	} else {
+		//		level_number=PLAYER_DATA.length
+		//	}
+		//	co(PLAYER_DATA)
 }
 
 var email=JSON.stringify(sto[level_number],null, "\t")
@@ -368,7 +369,10 @@ screen_first.prototype.audio_click = function(){
 };
 //level_number is get from PLAYER_DATA.length trough localStorage to avoid to rebegin the game incessaly
 screen_first.prototype.next_level = function(){
-		decide_if_ads_time(level_number);
+	if (level_number > (NUMBER_OF_LEVELS - 2) ) { //NUMBER_OF_LEVELS=25 => 25-2 =23 last level
+		level_number = NUMBER_OF_LEVELS-2	
+	}
+	decide_if_ads_time(level_number);
 };
 screen_first.prototype.next_menu = function(){
 	this.game.state.start("levsel");
@@ -499,7 +503,7 @@ character = function(){
 	this.tuto.hand_level_win=game.add.sprite(w2,this.cible.y+90,'hand_tuto');
 	this.tuto.hand_level_win.angle=45;
 	this.tuto.hand_level_win.alpha=0;
-	if(level_number ==0){
+	if(level_number ==0 ){
 		this.show_tuto();
 	}
 };
@@ -645,7 +649,7 @@ character.prototype.show_star = function() {
 	this.tween5.onComplete.add(function(){game.time.events.add(100,this.audio_star,this);},this);
 };
 character.prototype.wins=function(){
-	if(level_number ==0){
+	if(level_number == 0 ){
 		this.show_tuto_for_win();
 	}
 	this._levelNumber=level_number+1;
@@ -654,7 +658,7 @@ character.prototype.wins=function(){
 	var randstars = this.star.frame;
 	//this._stars = this.game.add.bitmapText(160, 200, 'police', 'You get '+randstars+' stars!', 48);
 	// set nr of stars for this level;
-	PLAYER_DATA[this._levelNumber-1] = randstars;
+	PLAYER_DATA[level_number] = randstars;
 	// unlock next level;
 	if (this._levelNumber < PLAYER_DATA.length) {
 		if (PLAYER_DATA[this._levelNumber] < 0) { // currently locked (=-1)
@@ -1360,6 +1364,7 @@ stop_tw = function(obj,tw){
 animate_touch = start_tw;
 var conditional_animate_touch = function(){!flag_tween_en_cours && animate_touch(hero.touch_button);};
 function create_level(num){ 
+	level_number=num;
 	music.resume();
 	initialise_time_and_delay();
 	game_begin=false;
@@ -1375,13 +1380,12 @@ function create_level(num){
 	count_hero=0;
 	game.time.events.add(delay_for_game_begin,function(){hero.life.visible=true;});
 	game.time.events.add(delay_for_game_begin,function(){animate_touch(hero.touch_button);});
-	level_number=num;
-	level_number_adapt=level_number+1;
 	var _level_name=level_name[level_number];
 	text_to_describe_level=new _text(_level_name,game.world.centerX,game.world.centerY,100);
 	text_to_describe_level.visible=false;
 	text_to_describe_level.alpha=0;
 	text_to_describe_level.show();
+	level_number_adapt=level_number+1;
 	text_to_number_level=new _text(level_number_adapt,game.world.centerX,320,140);
 	text_to_number_level.alpha=0;
 	text_to_number_level.visible=false;
