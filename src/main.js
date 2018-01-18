@@ -140,8 +140,8 @@ var memoryze_progress_in_level= function(){
 	}
 		//	if (PLAYER_DATA[23] >= 1) {
 		//		level_number=23	
-		//	} else {
-		//		level_number=PLAYER_DATA.length
+	//	} else {
+	level_number=PLAYER_DATA.length
 		//	}
 		//	co(PLAYER_DATA)
 }
@@ -370,7 +370,7 @@ screen_first.prototype.audio_click = function(){
 //level_number is get from PLAYER_DATA.length trough localStorage to avoid to rebegin the game incessaly
 screen_first.prototype.next_level = function(){
 	if (level_number > (NUMBER_OF_LEVELS - 2) ) { //NUMBER_OF_LEVELS=25 => 25-2 =23 last level
-		level_number = NUMBER_OF_LEVELS-2	
+		level_number = NUMBER_OF_LEVELS-2 // to reset to 23 => =24 last level 	
 	}
 	decide_if_ads_time(level_number);
 };
@@ -677,10 +677,11 @@ character.prototype.next_level = function() {
 	if (next_niveau > 23) {
 		this.game.state.start("message_end_level")
 	} else {
-	decide_if_ads_time(next_niveau);
-	//this.game.state.start('level'+next_niveau,true,false);
+		decide_if_ads_time(next_niveau);
+		//this.game.state.start('level'+next_niveau,true,false);
 	}
 };
+
 character.prototype.launch=function(n){
 	this.show_background_white();
 	this.reset_update_circle_timer();
@@ -1305,6 +1306,7 @@ var game_first_screen = {
 		// si super dev est sur true alors pas de music d'ambiance
 		super_dev ? music.volume=0 : music.volume=0.4
 		music.play();
+		music.loopFull();
 	},
 	create: function(){
 		memoryze_progress_in_level();
