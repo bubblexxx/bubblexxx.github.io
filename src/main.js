@@ -369,11 +369,14 @@ screen_first.prototype.audio_click = function(){
 };
 //level_number is get from PLAYER_DATA.length trough localStorage to avoid to rebegin the game incessaly
 screen_first.prototype.next_level = function(){
-	if (level_number > (NUMBER_OF_LEVELS - 2) ) { //NUMBER_OF_LEVELS=25 => 25-2 =23 last level
-		level_number = NUMBER_OF_LEVELS-2 // to reset to 23 => =24 last level 	
+	if(!PLAYER_DATA[23] || PLAYER_DATA == -1){
+		decide_if_ads_time(level_number);
+	}else{
+		level_number=23
+		decide_if_ads_time(level_number);
 	}
-	decide_if_ads_time(level_number);
 };
+
 screen_first.prototype.next_menu = function(){
 	this.game.state.start("levsel");
 };
