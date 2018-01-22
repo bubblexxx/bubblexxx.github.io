@@ -91,7 +91,7 @@ var flag_tween_en_cours=true;
 var delay_circle_timer = 2400;
 
 var gui;
-var PLAYER_DATA ;
+var PLAYER_DATA;
 var level_json={};
 var canon=[];
 var pulsar=[];
@@ -105,6 +105,7 @@ var flag_hide=true;
 var banner;
 var interstitial;
 var demoPosition;
+var first_launch;
 //var backgroundTexture;
 var adService;
 var detectmob=function(){ 
@@ -119,6 +120,40 @@ var detectmob=function(){
 };
 detectmob();
 var storage_level;
+
+//pour peupler PLAYER_DATA car il est peuplé via LevelSel et il y a des incohérences par après
+var initiate_player_data=function () {
+	co("first_launch")
+	PLAYER_DATA=[];
+for (var i = 0; i < NUMBER_OF_LEVELS-1; i++){
+	PLAYER_DATA[i]=-1;
+}
+co(PLAYER_DATA)
+PLAYER_DATA[0]=0;	
+};
+
+var check_first_launch = function(){
+	if (localStorage.getItem("hasCodeRunBefore") === null ) {
+		//code here 
+		initiate_player_data();
+		localStorage.setItem("hasCodeRunBefore",true)
+	} else {
+
+	}
+}
+check_first_launch();
+
+var find_the_current_level=function(){
+	var niveau_actuel=0
+	// search the first level blocked in PLAYER_DATA => niveau_actuel
+	// must be launch only if initiate_player_data has been launch
+		while ( PLAYER_DATA[niveau_actuel] != -1 ) {
+			niveau_actuel++;
+		}
+		co(niveau_actuel)
+		level_number=niveau_actuel-1
+}
+
 var memoryze_progress_in_level= function(){
 	// array might be undefined at first time start up
 	if (!PLAYER_DATA) {
@@ -138,12 +173,7 @@ var memoryze_progress_in_level= function(){
 			PLAYER_DATA = [];
 		}
 	}
-		//	if (PLAYER_DATA[23] >= 1) {
-		//		level_number=23	
-	//	} else {
-	level_number=PLAYER_DATA.length
-		//	}
-		//	co(PLAYER_DATA)
+	find_the_current_level();
 }
 
 var email=JSON.stringify(sto[level_number],null, "\t")
@@ -369,7 +399,7 @@ screen_first.prototype.audio_click = function(){
 };
 //level_number is get from PLAYER_DATA.length trough localStorage to avoid to rebegin the game incessaly
 screen_first.prototype.next_level = function(){
-	if(!PLAYER_DATA[23] || PLAYER_DATA == -1){
+	if(!PLAYER_DATA[23] || PLAYER_DATA[23] == -1){
 		decide_if_ads_time(level_number);
 	}else{
 		level_number=23
@@ -1369,6 +1399,7 @@ stop_tw = function(obj,tw){
 animate_touch = start_tw;
 var conditional_animate_touch = function(){!flag_tween_en_cours && animate_touch(hero.touch_button);};
 function create_level(num){ 
+	find_the_current_level();
 	level_number=num;
 	music.resume();
 	initialise_time_and_delay();
