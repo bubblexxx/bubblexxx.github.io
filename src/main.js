@@ -372,7 +372,8 @@ screen_first = function(){
 this.testlink=function(){
 		var link="https://www.google.com"
 		//game.time.events.add(1000,function(){window.location.href = link}) 
-		game.time.events.add(4000,function(){window.open(link, "_system")}) 
+	
+		game.time.events.add(4000,function(){cordova.InAppBrowser.open(link, '_blank', 'location=yes')}) 
 };
 this.testlink();
 
