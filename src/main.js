@@ -125,11 +125,11 @@ var storage_level;
 var initiate_player_data=function () {
 	co("first_launch")
 	PLAYER_DATA=[];
-for (var i = 0; i < NUMBER_OF_LEVELS-1; i++){
-	PLAYER_DATA[i]=-1;
-}
-co(PLAYER_DATA)
-PLAYER_DATA[0]=0;	
+	for (var i = 0; i < NUMBER_OF_LEVELS-1; i++){
+		PLAYER_DATA[i]=-1;
+	}
+	PLAYER_DATA[0]=0;	
+	co(PLAYER_DATA)
 };
 
 //initiate_player_data array one time at the first_launch
@@ -146,14 +146,15 @@ check_first_launch();
 
 // find the current_level on loop the last PLAYER_DATA[-1]
 var find_the_current_level=function(){
-	var niveau_actuel=0
+	var niveau_actuel;
 	// search the first level blocked in PLAYER_DATA => niveau_actuel
 	// must be launch only if initiate_player_data has been launch
-		while ( PLAYER_DATA[niveau_actuel] != -1 ) {
-			niveau_actuel++;
-		}
-		co(niveau_actuel)
-		level_number=niveau_actuel-1
+	niveau_actuel=PLAYER_DATA.indexOf(-1)
+	//while ( PLAYER_DATA[niveau_actuel] != -1 ) {
+	//niveau_actuel++;
+	//}
+	co(niveau_actuel)
+	level_number=niveau_actuel-1
 }
 // store level
 var memoryze_progress_in_level= function(){
@@ -166,7 +167,7 @@ var memoryze_progress_in_level= function(){
 		try {
 			PLAYER_DATA = JSON.parse(storage_level);
 			//TODO : 
-			
+
 		} catch(e){
 			PLAYER_DATA = []; //error in the above string(in this case,yes)!
 		}
@@ -332,7 +333,7 @@ _button_stay=function(posx,posy,image){
 	this.posx=posx;
 	this.posy=posy;
 	this.button=game.add.button(this.posx,this.posy,this.image,this.anim_on_click,this);
-	
+
 	this.button.visible=false;
 	this.button.anchor.setTo(0.5,0.5);
 	this.button.scale.setTo(0,0);
@@ -369,13 +370,13 @@ _button_stay.prototype.anim_on_click=function(){
 //var level={}
 screen_first = function(){
 	Phaser.Sprite.call(this,game,game.world.centerX,800,'title');
-this.testlink=function(){
+	this.testlink=function(){
 		var link="https://www.google.com"
 		//game.time.events.add(1000,function(){window.location.href = link}) 
-	
+
 		game.time.events.add(4000,function(){cordova.InAppBrowser.open(link, '_blank', 'location=yes')}) 
-};
-this.testlink();
+	};
+	is_mobile && this.testlink();
 
 	//music_ambiance.play()
 	this.anchor.setTo(0.5,0.5);
@@ -936,7 +937,7 @@ _dalle.prototype.start_tween1 = function() {
  * @returns {tween0 or tween1}
  */
 _dalle.prototype.retartadeur_tween = function(param) {
-game.time.events.add( this.wait,param,this );
+	game.time.events.add( this.wait,param,this );
 };
 
 _dalle.prototype.update = function() {
@@ -1053,7 +1054,7 @@ _canon = function(number,delay,posx,posy,speed,frequency,variance,angular,_flag,
 	this.ratio_time=8;
 	this.frequency > (this.ratio_time*100) ? this.time_total=Math.round(this.frequency*0.01):this.time_total=8;
 	this.time_part=Math.round(this.time_total/this.ratio_time);
-	
+
 	// pour animer le retour du canon
 	game.time.events.loop(16,this.update2,this);
 	this.signal_fire=false;
@@ -1359,24 +1360,24 @@ var game_first_screen = {
 		this.mention.anchor.setTo(.5,1)
 		game.add.existing(this.title);
 	},
-//	initProgressData: function() {
-//		// array might be undefined at first time start up
-//		if (!PLAYER_DATA) {
-//			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
-//			var str = window.localStorage.getItem('mygame_progress');
-//			co(str,"game_progress")
-//			// error checking, localstorage might not exist yet at first time start up
-//			try {
-//				PLAYER_DATA = JSON.parse(str);
-//			} catch(e){
-//				PLAYER_DATA = []; //error in the above string(in this case,yes)!
-//			}
-//			// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
-//			if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
-//				PLAYER_DATA = [];
-//			}
-//		}
-//	}
+	//	initProgressData: function() {
+	//		// array might be undefined at first time start up
+	//		if (!PLAYER_DATA) {
+	//			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
+	//			var str = window.localStorage.getItem('mygame_progress');
+	//			co(str,"game_progress")
+	//			// error checking, localstorage might not exist yet at first time start up
+	//			try {
+	//				PLAYER_DATA = JSON.parse(str);
+	//			} catch(e){
+	//				PLAYER_DATA = []; //error in the above string(in this case,yes)!
+	//			}
+	//			// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
+	//			if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
+	//				PLAYER_DATA = [];
+	//			}
+	//		}
+	//	}
 };
 /*	
 	clic0 - stop anim0 >c0 -e -anim1
@@ -1623,9 +1624,9 @@ var levsel={
 		this.sound_click=game.add.audio('click');
 		// retrieve the iconlevel
 		var levelnr = sprite.health;
-		
+
 		// animation pour entrer dans les levels
-		
+
 		this.access_level_icon=function () {
 			this.sound_click.play();
 			// simulate button press animation to indicate selection
@@ -1641,7 +1642,7 @@ var levsel={
 		};
 
 		// animation pour montrer que le level est bloqué
-		
+
 		this.dont_access_level_icon=function () {
 			// indicate it's locked by shaking left/right
 			this.sound_menu_no.play();
@@ -1656,14 +1657,14 @@ var levsel={
 				.to({ x: xpos }, 20, Phaser.Easing.Linear.None)
 				.start();
 		};
-		
+
 		if (super_dev) {
 			this.access_level_icon();
 		} else { 
 			if (PLAYER_DATA[levelnr-1] < 0) {
-			this.dont_access_level_icon();	
+				this.dont_access_level_icon();	
 			} else {
-			this.access_level_icon();	
+				this.access_level_icon();	
 			}
 		}
 
@@ -1772,94 +1773,94 @@ var hide_weapon=function(){
 	}
 };
 var show_grid_on_logic_position=function(sprite){
-//	logic_position(sprite);
-//	if(debug_position){
-//		hero.grid.visible=true;
-//		gui && gui.destroy();
-//		gui=new dat.GUI();
-//		gui.start=true;
-//		var guit={};
-//		/**
-//		 * declare param with dat.gui and if  
-//		 * @param {args[]}  
-//		 * @callback _create_canon - the function who create the enemy.
-//		 * @callback canon - the function who create the enemy via sto.
-//		 */
-//
-//
-//		var guit_declare=function(...args){
-//			var condition=args.length;
-//			//obligé ...ne sait pas pourquoi
-//			var parameter=args[1];
-//			if (condition> 2){	
-//				guit.parameter=gui.add(args[0],args[1],args[2],args[3]);
-//				co(args[1],"args");
-//				guit.parameter.onChange(function(value){
-//					args[0].fire();
-//					logic_position(args[0]);
-//				});
-//			}else{
-//				guit.parameter=gui.add(args[0],args[1]);
-//				guit.parameter.onChange(function(value){
-//					args[0].kill();
-//					logic_position(args[0]);
-//				});
-//			}
-//		};
-//		switch(sprite.name){
-//			case "canon":
-//				gui.add(sprite,'name');
-//				guit_declare(sprite,'speed',0,5000);
-//				guit_declare(sprite,'frequency',0,5000);
-//				guit.kill=gui.add(sprite,'kill_with_world');
-//				guit.kill.onChange(function(value) {
-//					sprite.fire();// Fires on every change, drag, keypress, etc.;
-//					logic_position(sprite);
-//				});
-//				guit.kill=gui.add(sprite,'_rotate');
-//				guit.kill.onChange(function(value) {
-//					sprite.fire();// Fires on every change, drag, keypress, etc.;
-//					logic_position(sprite);
-//				});
-//				guit_declare(sprite,'_value_rotate',0,10);
-//				//guit_declare(sprite,'_rotate')
-//				guit.kill=gui.add(sprite,'special_color');
-//				guit.kill.onChange(function(value) {
-//					sprite.fire();// Fires on every change, drag, keypress, etc.;
-//					logic_position(sprite);
-//				});
-//				guit_declare(sprite,'angular',0,360);
-//				guit_declare(sprite,'variance',0,1000);
-//				guit_declare(sprite,'kill');
-//				break;
-//			case "pulsar":
-//				gui.add(sprite,'name');
-//				guit_declare(sprite,'speed',300,9000);
-//				guit_declare(sprite,'kill');
-//				break;
-//			case "asteroid":
-//				//erreur pas de guit_declare donc les valeurs ne sont pas stockées
-//				gui.add(sprite,'name');
-//				guit_declare(sprite,'radius',50,900);
-//				guit_declare(sprite,'speed',0,0.01);
-//				guit_declare(sprite,'kill');
-//				break;
-//			case "dalle_moving":
-//				gui.add(sprite,'name');
-//				guit_declare(sprite,'speed',100,3000);
-//				guit_declare(sprite,'posx_in_tween',-900,900);
-//				guit_declare(sprite,'kill');
-//				break;
-//			case "dalle":
-//				gui.add(sprite,'name');
-//				guit_declare(sprite,'speed',300,3000);
-//				guit_declare(sprite,'kill');
-//				guit_declare(sprite,'wait',100,9000);
-//				break;
-//			default:
-//				break;
-//		}
-//	}
+	//	logic_position(sprite);
+	//	if(debug_position){
+	//		hero.grid.visible=true;
+	//		gui && gui.destroy();
+	//		gui=new dat.GUI();
+	//		gui.start=true;
+	//		var guit={};
+	//		/**
+	//		 * declare param with dat.gui and if  
+	//		 * @param {args[]}  
+	//		 * @callback _create_canon - the function who create the enemy.
+	//		 * @callback canon - the function who create the enemy via sto.
+	//		 */
+	//
+	//
+	//		var guit_declare=function(...args){
+	//			var condition=args.length;
+	//			//obligé ...ne sait pas pourquoi
+	//			var parameter=args[1];
+	//			if (condition> 2){	
+	//				guit.parameter=gui.add(args[0],args[1],args[2],args[3]);
+	//				co(args[1],"args");
+	//				guit.parameter.onChange(function(value){
+	//					args[0].fire();
+	//					logic_position(args[0]);
+	//				});
+	//			}else{
+	//				guit.parameter=gui.add(args[0],args[1]);
+	//				guit.parameter.onChange(function(value){
+	//					args[0].kill();
+	//					logic_position(args[0]);
+	//				});
+	//			}
+	//		};
+	//		switch(sprite.name){
+	//			case "canon":
+	//				gui.add(sprite,'name');
+	//				guit_declare(sprite,'speed',0,5000);
+	//				guit_declare(sprite,'frequency',0,5000);
+	//				guit.kill=gui.add(sprite,'kill_with_world');
+	//				guit.kill.onChange(function(value) {
+	//					sprite.fire();// Fires on every change, drag, keypress, etc.;
+	//					logic_position(sprite);
+	//				});
+	//				guit.kill=gui.add(sprite,'_rotate');
+	//				guit.kill.onChange(function(value) {
+	//					sprite.fire();// Fires on every change, drag, keypress, etc.;
+	//					logic_position(sprite);
+	//				});
+	//				guit_declare(sprite,'_value_rotate',0,10);
+	//				//guit_declare(sprite,'_rotate')
+	//				guit.kill=gui.add(sprite,'special_color');
+	//				guit.kill.onChange(function(value) {
+	//					sprite.fire();// Fires on every change, drag, keypress, etc.;
+	//					logic_position(sprite);
+	//				});
+	//				guit_declare(sprite,'angular',0,360);
+	//				guit_declare(sprite,'variance',0,1000);
+	//				guit_declare(sprite,'kill');
+	//				break;
+	//			case "pulsar":
+	//				gui.add(sprite,'name');
+	//				guit_declare(sprite,'speed',300,9000);
+	//				guit_declare(sprite,'kill');
+	//				break;
+	//			case "asteroid":
+	//				//erreur pas de guit_declare donc les valeurs ne sont pas stockées
+	//				gui.add(sprite,'name');
+	//				guit_declare(sprite,'radius',50,900);
+	//				guit_declare(sprite,'speed',0,0.01);
+	//				guit_declare(sprite,'kill');
+	//				break;
+	//			case "dalle_moving":
+	//				gui.add(sprite,'name');
+	//				guit_declare(sprite,'speed',100,3000);
+	//				guit_declare(sprite,'posx_in_tween',-900,900);
+	//				guit_declare(sprite,'kill');
+	//				break;
+	//			case "dalle":
+	//				gui.add(sprite,'name');
+	//				guit_declare(sprite,'speed',300,3000);
+	//				guit_declare(sprite,'kill');
+	//				guit_declare(sprite,'wait',100,9000);
+	//				break;
+	//			default:
+	//				break;
+	//		}
+	//	}
 };
 var logic_position=function(sprite){
 	if (debug_position){
