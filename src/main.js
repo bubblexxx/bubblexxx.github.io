@@ -132,6 +132,7 @@ co(PLAYER_DATA)
 PLAYER_DATA[0]=0;	
 };
 
+//initiate_player_data array one time at the first_launch
 var check_first_launch = function(){
 	if (localStorage.getItem("hasCodeRunBefore") === null ) {
 		//code here 
@@ -143,6 +144,7 @@ var check_first_launch = function(){
 }
 check_first_launch();
 
+// find the current_level on loop the last PLAYER_DATA[-1]
 var find_the_current_level=function(){
 	var niveau_actuel=0
 	// search the first level blocked in PLAYER_DATA => niveau_actuel
@@ -153,7 +155,7 @@ var find_the_current_level=function(){
 		co(niveau_actuel)
 		level_number=niveau_actuel-1
 }
-
+// store level
 var memoryze_progress_in_level= function(){
 	// array might be undefined at first time start up
 	if (!PLAYER_DATA) {
@@ -367,6 +369,12 @@ _button_stay.prototype.anim_on_click=function(){
 //var level={}
 screen_first = function(){
 	Phaser.Sprite.call(this,game,game.world.centerX,800,'title');
+this.testlink=function(){
+		var link="https://www.google.com"
+		//game.time.events.add(1000,function(){window.location.href = link}) 
+		game.time.events.add(4000,function(){window.open(link, "_system")}) 
+};
+this.testlink();
 
 	//music_ambiance.play()
 	this.anchor.setTo(0.5,0.5);
@@ -620,7 +628,7 @@ character.prototype.back_to_menu = function() {
 character.prototype.send_data_mail = function(){
 	var current_level=level_number+1;
 	var SubjectVariable='bubblex'+current_level;
-	var EmailVariable='espace3d@gmail.com';
+	var EmailVariable='o0o0ogames@gmail.com';
 	var email=JSON.stringify(sto[0],null, "\t")
 	co(email,"email")
 	window.location='mailto:'+EmailVariable+'?subject='+SubjectVariable+'&body='+email;
@@ -2165,7 +2173,6 @@ var intermediate_screen={
 		ecran_intermediaire_pour_passer_level(text_passed_level.text,next_action);
 	}
 };
-
 var message_end_level={
 	create:function(){
 		this.message_text="Congratulations !!!\nyou have finish the Game\nPlease rate us :)"
@@ -2183,7 +2190,8 @@ var message_end_level={
 		this.particlex.on=false;
 		game.time.events.add(300,function(){this.particlex.start(true,3000,null,90);},this);
 		var link="https://www.google.com"
-		game.time.events.add(1000,function(){window.location.href = link}) 
+		//game.time.events.add(1000,function(){window.location.href = link}) 
+		game.time.events.add(1000,function(){window.open(link, "_system")}) 
 	}
 };
 
