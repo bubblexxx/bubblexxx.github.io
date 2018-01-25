@@ -31,25 +31,25 @@ var level_name=[
 	"3. ha ha ha",
 "4. think!",
 	"5. grass mode",
-	"6.",
-	"7.",
-	"8",
+	"6. spider",
+	"7. on...off",
+	"8 red fire",
 	"9 take the time",
 	"10 surprise !!!",
-	"11. ",
-	"12. ",
-	"13. ",
-	"14. ",
-"15. Olé!",
-"16. ",
-"17. ",
+	"11. your heart ? ",
+	"12. difficult is not it?",
+	"13. a step above !",
+	"14. two big eyes in the dark",
+"15. olé!",
+"16. old printer",
+"17. stop imitating me",
 "18. car crusher",
 "19. accordion",
 "20. boxing",
-"21. ",
-"22. ",
-"23. ",
-"24. end carreful !"
+"21. comet",
+"22. don't touch circles",
+"23. mama mia !",
+"24. oh my god !"
 ];
 
 var music;
@@ -66,8 +66,7 @@ var time_hide;
 var initialise_time_and_delay=function(){
 	additional_time=800;
 	delay_for_hide_describe_text=400;
-	time_to_show_describe_text = 100;
-	//time_appears_enemies=800;
+	time_to_show_describe_text = 200;
 	time_hide=500;
 	if(level_number===0){
 		delay_for_show_describe_text=3000;
@@ -106,7 +105,6 @@ var banner;
 var interstitial;
 var demoPosition;
 var first_launch;
-//var backgroundTexture;
 var adService;
 var detectmob=function(){ 
 	if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
@@ -150,11 +148,13 @@ var find_the_current_level=function(){
 	// search the first level blocked in PLAYER_DATA => niveau_actuel
 	// must be launch only if initiate_player_data has been launch
 	niveau_actuel=PLAYER_DATA.indexOf(-1)
-	//while ( PLAYER_DATA[niveau_actuel] != -1 ) {
-	//niveau_actuel++;
-	//}
-	co(niveau_actuel)
-	level_number=niveau_actuel-1
+	//parce que lorsqu'on relance trop vite le premier level => user qui quitte et relance il donne le premier level
+	//égal à -1 ce qui conduit à une erreur car le niveau_actuel =-2 
+	if (niveau_actuel === -1) {
+		level_number=0
+	}	else{
+		level_number=niveau_actuel-1
+	}
 }
 // store level
 var memoryze_progress_in_level= function(){
@@ -176,7 +176,7 @@ var memoryze_progress_in_level= function(){
 			PLAYER_DATA = [];
 		}
 	}
-	find_the_current_level();
+			find_the_current_level();
 }
 
 var email=JSON.stringify(sto[level_number],null, "\t")
@@ -215,6 +215,7 @@ _text.prototype.hide = function() {
 //style mario
 //music_ambiance=new Audio('sounds/music_ambiance/Video Dungeon Boss.ogg');
 //class for mechant
+
 _mechant = function(game,name,number,posx,posy,image_body,image_drag){
 	//this = this.sprite_for_drag
 	this.visible=true;
@@ -407,7 +408,6 @@ screen_first.prototype.constructor = screen_first;
 screen_first.prototype.audio_click = function(){
 	this.sound_click.play();
 };
-//level_number is get from PLAYER_DATA.length trough localStorage to avoid to rebegin the game incessaly
 screen_first.prototype.next_level = function(){
 	if(!PLAYER_DATA[23] || PLAYER_DATA[23] == -1){
 		decide_if_ads_time(level_number);
@@ -1191,62 +1191,6 @@ _canon.prototype.explode_bullet=function(){
 	}
 };
 
-var createBanner= function(){
-	//		if( navigator.userAgent.match(/Android/i)
-	//			|| navigator.userAgent.match(/webOS/i)
-	//			|| navigator.userAgent.match(/iPhone/i)
-	//			|| navigator.userAgent.match(/iPad/i)
-	//			|| navigator.userAgent.match(/iPod/i)
-	//			|| navigator.userAgent.match(/BlackBerry/i)
-	//			|| navigator.userAgent.match(/Windows Phone/i)
-	//		){
-	//			if (!window.Cocoon || !Cocoon.Ad || !Cocoon.Ad.AdMob) {
-	//				//alert('Cocoon AdMob plugin not installed');
-	//				return;
-	//			}
-	//			// nécessaire 
-	//			adService = Cocoon.Ad.AdMob;
-	//			adService.configure({
-	//				ios: {
-	//					banner:"ca-app-pub-7686972479101507/8873903476",
-	//					interstitial:"ca-app-pub-7686972479101507/8873903476",
-	//				},
-	//				android: {
-	//					banner:"ca-app-pub-7686972479101507/4443703872",
-	//					interstitial:"ca-app-pub-7686972479101507/4443703872"
-	//				}
-	//			});
-	//
-	//			console.log('createBanner')
-	//			banner = adService.createBanner();
-	//
-	//			banner.on("load", function(){
-	//				console.log("Banner loaded " + banner.width, banner.height);
-	//			});
-	//
-	//			banner.on("fail", function(){
-	//				console.log("Banner failed to load");
-	//			});
-	//
-	//			banner.on("show", function(){
-	//				console.log("Banner shown a modal content");
-	//			});
-	//
-	//			banner.on("dismiss", function(){
-	//				console.log("Banner dismissed the modal content");
-	//			});
-	//
-	//			//load banner
-	//			banner.load();
-	//
-	//			//show banner
-	//			banner.show()
-	//			demoPosition = Cocoon.Ad.BannerLayout.BOTTOM_CENTER;
-	//			banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
-	//			game.time.events.add( 1000,function(){banner.setLayout(Cocoon.Ad.BannerLayout.BOTTOM_CENTER)})
-	//		}
-};
-
 var boot = {
 	preload: function() {
 		// on definit ici car game subit un scale et les valeurs w2 ,h2 sont faussées après global.js
@@ -1360,24 +1304,6 @@ var game_first_screen = {
 		this.mention.anchor.setTo(.5,1)
 		game.add.existing(this.title);
 	},
-	//	initProgressData: function() {
-	//		// array might be undefined at first time start up
-	//		if (!PLAYER_DATA) {
-	//			// retrieve from local storage (to view in Chrome, Ctrl+Shift+J -> Resources -> Local Storage)
-	//			var str = window.localStorage.getItem('mygame_progress');
-	//			co(str,"game_progress")
-	//			// error checking, localstorage might not exist yet at first time start up
-	//			try {
-	//				PLAYER_DATA = JSON.parse(str);
-	//			} catch(e){
-	//				PLAYER_DATA = []; //error in the above string(in this case,yes)!
-	//			}
-	//			// error checking just to be sure, if localstorage contains something else then a JSON array (hackers?)
-	//			if (Object.prototype.toString.call( PLAYER_DATA ) !== '[object Array]' ) {
-	//				PLAYER_DATA = [];
-	//			}
-	//		}
-	//	}
 };
 /*	
 	clic0 - stop anim0 >c0 -e -anim1
@@ -1421,8 +1347,6 @@ function create_level(num){
 	is_rewarded_video_completed=false;
 	is_preload_rewarded_video=false;
 	hero = new character() ;
-	//hero.audio_music_ambiance_resume();
-	//music_ambiance.play();
 	count_hero=0;
 	game.time.events.add(delay_for_game_begin,function(){hero.life.visible=true;});
 	game.time.events.add(delay_for_game_begin,function(){animate_touch(hero.touch_button);});
@@ -1436,9 +1360,6 @@ function create_level(num){
 	text_to_number_level.alpha=0;
 	text_to_number_level.visible=false;
 	text_to_number_level.show2();
-	//button_mute=new _button(1300,h-100,'icon_audio',mute_audio)
-
-
 }
 
 function logic(){
@@ -1501,7 +1422,6 @@ var levsel={
 		this.game.load.spritesheet('levelselecticons', 'assets/levelselecticons.png', 275, 300);
 		this.game.load.bitmapFont('police','fonts/font.png', 'fonts/font.fnt');
 		memoryze_progress_in_level();
-		//this.initProgressData();
 	},
 	create: function() {
 		this.holdicons = [];
@@ -1624,9 +1544,7 @@ var levsel={
 		this.sound_click=game.add.audio('click');
 		// retrieve the iconlevel
 		var levelnr = sprite.health;
-
 		// animation pour entrer dans les levels
-
 		this.access_level_icon=function () {
 			this.sound_click.play();
 			// simulate button press animation to indicate selection
@@ -1637,12 +1555,9 @@ var levsel={
 				.start();
 			// it's a little tricky to pass selected levelnr to callback function, but this works:
 			this.onLevelSelected(levelnr-1);
-			//tween._lastChild.onComplete.add(function(){this.onLevelSelected(sprite.health);}, this);
-
 		};
 
 		// animation pour montrer que le level est bloqué
-
 		this.dont_access_level_icon=function () {
 			// indicate it's locked by shaking left/right
 			this.sound_menu_no.play();
@@ -1772,6 +1687,7 @@ var hide_weapon=function(){
 		for_action(pulsar,'hide');
 	}
 };
+//must be comment when canvas mode because .onChange()
 var show_grid_on_logic_position=function(sprite){
 	//	logic_position(sprite);
 	//	if(debug_position){
@@ -2117,7 +2033,6 @@ var ads_time={
 		game.time.events.add(800,function(){this.particlex.on=true;},this);
 		var next_screen=function(){
 			l[level_number+1].signal_ads=true
-			//hero.audio_music_ambiance_pause()
 			chartboost_show_reward_video();
 		};
 		var next_action2 = function(){
@@ -2136,7 +2051,6 @@ var store_level_in_game_progress=function(n){
 
 var pass_level=function(){
 	var next_niveau=level_number+1;
-	//TODO : 
 	store_level_in_game_progress(level_number);
 	game.state.start('level'+ next_niveau,level_state[next_niveau]);
 };
@@ -2192,7 +2106,6 @@ var message_end_level={
 		this.particlex.on=false;
 		game.time.events.add(300,function(){this.particlex.start(true,3000,null,90);},this);
 		var link="https://www.google.com"
-		//game.time.events.add(1000,function(){window.location.href = link}) 
 		game.time.events.add(1000,function(){window.open(link, "_system")}) 
 	}
 };
